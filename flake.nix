@@ -46,6 +46,12 @@
                     inherit system;
                     modules = [
                         ./hosts/${hostname}
+                        home-manager.darwinModules.home-manager
+                        {
+                            home-manager.useGlobalPkgs = true;
+                            home-manager.useUserPackages = true;
+                            home-manager.users.samwillis = import ./users/samwillis;
+                        }
                     ] ++ extraModules;
                     specialArgs = {
                         inherit system;

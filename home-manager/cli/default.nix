@@ -1,8 +1,8 @@
 { config, lib, pkgs, ... }:
 {
     imports = [
-        ./zsh
-        ./tmux
+        ./zsh.nix
+        ./tmux.nix
         ../nvim
     ];
 

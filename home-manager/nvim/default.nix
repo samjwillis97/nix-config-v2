@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 {
-    home.programs.neovim = {
+    programs.neovim = {
         enable = true;
         defaultEditor = true;
     };
