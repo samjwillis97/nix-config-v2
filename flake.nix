@@ -27,7 +27,7 @@
         nixosHosts = [];
         darwinHosts = [
             {
-                hostname = "Sams-Macbook-Air";
+                hostname = "Sams-MacBook-Air";
                 system = "aarch64-darwin";
                 username = "samwillis";
                 homePath = "/Users";
