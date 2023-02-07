@@ -5,4 +5,13 @@
         ./meta.nix
         ./system.nix
     ];
+
+    # TODO:
+    #   - See About MacOS Apps:
+    #       - Raycast
+    #       - Rectangle
+    #       - Displaylink Manager
+    #       - ProtonVPN
+
+    # TODO: Tailscale
 }

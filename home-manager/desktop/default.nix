@@ -1,0 +1,4 @@
+# TODO:
+#   - Flameshot
+#   - OBS
+#   - Solaar
