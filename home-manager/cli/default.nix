@@ -3,6 +3,7 @@
     imports = [
         ./zsh.nix
         ./tmux.nix
+        ./git.nix
         ../nvim
     ];
 
@@ -14,5 +15,7 @@
         ripgrep
         wget
         zip
+        difftastic
+        htop
     ];
 }
