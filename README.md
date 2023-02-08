@@ -42,3 +42,10 @@ Nix allows for easy to manage, collaborative, reproducible deployments. This mea
 - work comm's
 - rest of aliases
 - secrets
+
+## To Look Into
+
+- https://github.com/ryantm/agenix
+- https://github.com/nix-community/nixos-generators
+- https://github.com/NixOS/nixos-hardware
+- https://nixos.wiki/wiki/Overlays
