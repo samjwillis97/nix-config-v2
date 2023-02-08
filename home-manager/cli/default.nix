@@ -17,5 +17,7 @@
         zip
         difftastic
         htop
+        fzf
+        direnv
     ];
 }

@@ -2,6 +2,7 @@
 {
     imports = [
         ../../home-manager/cli
+        ../../home-manager/alacritty
     ];
 
     home.stateVersion = "22.11";

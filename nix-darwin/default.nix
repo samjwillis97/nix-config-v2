@@ -4,6 +4,7 @@
         ./home.nix
         ./meta.nix
         ./system.nix
+        ./fonts.nix
     ];
 
     # TODO:

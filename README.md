@@ -22,8 +22,8 @@ Nix allows for easy to manage, collaborative, reproducible deployments. This mea
 - zsh
 
 ## TODOs:
-    
-- alacritty
+
+- font-switching in alacritty depending on OS
 - i3
     - dunst
     - status
@@ -32,8 +32,13 @@ Nix allows for easy to manage, collaborative, reproducible deployments. This mea
     - audio
     - network
     - rofi
+    - logitech
+    - obs
+    - picom
 - ide's
 - gaming
 - socials
 - media players
 - work comm's
+- rest of aliases
+- secrets
