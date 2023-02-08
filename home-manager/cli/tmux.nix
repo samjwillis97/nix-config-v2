@@ -1,12 +1,15 @@
 { config, pkgs, lib, flake, ... }:
+    # TODO: Auto Reconnect
 {
     programs.tmux = {
         enable = true;
+        sensibleOnTop = false;
+        package = pkgs.tmux;
 
         aggressiveResize = true;
         baseIndex = 1;
         historyLimit = 10000;
-        newSession = true;
+        newSession = false;
 
         prefix = "C-b";
         terminal = "screen-256color";

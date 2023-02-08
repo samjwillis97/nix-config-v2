@@ -26,9 +26,10 @@ require'nvim-treesitter.configs'.setup {
         "nix",
   },
   sync_install = false,
-  parser_install_dir = "~/.local/share/nvim/site/parser",
+  parser_install_dir = "~/.local/share/nvim/site/",
 }
 
+vim.opt.runtimepath:append("~/.local/share/nvim/site/")
 
 function ContextSetup(show_all_context)
     require("treesitter-context").setup({

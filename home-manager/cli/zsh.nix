@@ -5,6 +5,10 @@
     #   - Direnv hook
     #   - Bash aliases
 
+    home.packages = with pkgs; [
+        bat
+    ];
+
     programs.zsh = {
         enable = true;
 
@@ -18,6 +22,10 @@
             share = true;
         };
 
+        shellAliases = {
+            cat = "bat";
+        };
+
         oh-my-zsh = {
             enable = true;
             plugins = [
@@ -29,5 +37,6 @@
             ];
             theme = "ys";
         };
+
     };
 }
