@@ -9,7 +9,7 @@
             ];
 
             font.size = 12; # need this to change depending on systems
-            font.family = "FiraCode Nerd Font Mono";
+            font.family = "FiraCode Nerd Font Mono Light";
             font.style = "Light";
         };
     };
