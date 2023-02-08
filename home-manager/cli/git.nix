@@ -11,6 +11,9 @@
             merge = {
                 tool = "fugitive";
             };
+            push = {
+                autoSetupRemote = true;
+            };
             /* mergetool = { */
             /*     fugitive = """ */
             /*         nvim -f -c \"Gvdiffsplit!\" \"$MERGED\" */
