@@ -44,7 +44,7 @@ jobs:
       - name: Set default git branch (to reduce log spam)
         run: git config --global init.defaultBranch master
       - name: Build Home-Manager configs
-        run: nix build '.#homeConfigurations.Sams-MacBook-Air.activationPackages'
+        run: nix build '.#homeConfigurations.Sams-MacBook-Air.activationPackage'
       - name: Build NixOS configs
         run: nix build '.#darwinConfigurations.Sams-MacBook-Air.system'
 name: build-and-cache
