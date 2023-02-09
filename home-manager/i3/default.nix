@@ -70,11 +70,11 @@ in {
     # TODO: nnn
     # TODO: autorandr
     # TODO: gammastep????
-    # TODO: i3status-rust
     # TODO: picom
     # TODO: x11
     imports = [
         ./rofi.nix
+        ./i3status-rust.nix
     ];
 
     home = {
