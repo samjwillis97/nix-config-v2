@@ -3,7 +3,9 @@
 
     inputs = {
         # Nixpkgs Source
-        nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+        nixpkgs = {
+            url = "github:nixos/nixpkgs/nixos-unstable";
+        };
 
         # nix-darwin module
         darwin = {

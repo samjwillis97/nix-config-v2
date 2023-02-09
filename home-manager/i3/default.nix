@@ -4,3 +4,9 @@
 #   - Rofi
 #   - i3Lock
 #   - AutoRandr
+{ config, lib, pkgs, ... }:
+{
+    imports = [
+        ./rofi.nix
+    ];
+}
