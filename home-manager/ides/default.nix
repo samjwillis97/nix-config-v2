@@ -7,4 +7,6 @@
         jetbrains.goland
         vscodium
     ];
+
+    # TODO: .idea config
 }
