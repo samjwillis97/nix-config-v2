@@ -19,5 +19,6 @@
         htop
         fzf
         direnv
+        _1password
     ];
 }
