@@ -73,6 +73,11 @@
         ];
 
         extraPackages = with pkgs; [
+        ## Base Reqs
+            gcc
+            clang
+            zig
+
         ## Languages
             nodejs
             go

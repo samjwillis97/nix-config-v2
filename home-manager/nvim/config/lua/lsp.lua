@@ -1,24 +1,20 @@
 require("symbols-outline").setup()
-require("mason").setup()
-require("mason-lspconfig").setup({
-	ensure_installed = {
-		"pyright",
-		"tsserver",
-		"eslint",
-		"gopls",
-		"golangci_lint_ls",
-		"svelte",
-		"angularls",
-		"omnisharp",
-		"bashls",
-		"yamlls",
-		"jsonls",
-		"cssls",
-		"rnix",
-		"rust_analyzer",
-	},
-	automatic_installation = false,
-})
+local lsp_to_configure = {
+	"pyright",
+	"tsserver",
+	"eslint",
+	"gopls",
+	"golangci_lint_ls",
+	"svelte",
+	"angularls",
+	"omnisharp",
+	"bashls",
+	"yamlls",
+	"jsonls",
+	"cssls",
+	"rnix",
+	"rust_analyzer",
+}
 
 local cmp = require("cmp")
 local lspkind = require("lspkind")
@@ -123,16 +119,14 @@ local lsp_flags = {
 local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 local lspconfig = require("lspconfig")
-require("mason-lspconfig").setup_handlers({
-	function(server_name)
-		lspconfig[server_name].setup({
-			on_attach = on_attach,
-			flags = lsp_flags,
-			capabilities = capabilities,
-			-- handlers = handlers,
-		})
-	end,
-})
+for i, lsp in ipairs(lsp_to_configure) do
+	require("lspconfig")[lsp].setup({
+		on_attach = on_attach,
+		flags = lsp_flags,
+		capabilities = capabilities,
+	})
+end
+
 -- Set configuration for specific filetype.
 cmp.setup.filetype("gitcommit", {
 	sources = cmp.config.sources({
