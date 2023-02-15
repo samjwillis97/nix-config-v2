@@ -35,6 +35,12 @@
                 homePath = "/Users";
             }
         ];
+        homeManagerUsers = [
+            {
+                system = "x86_64-linux";
+                username = "sam";
+            }
+        ];
 
         mkDarwinSystem = {
             hostname
@@ -76,7 +82,7 @@
             };
         };
 
-        mkHomeManager = {
+        mkHomeManagerSystem = {
             hostname
             ,username ? "sam"
             ,homePath ? "/home"
@@ -108,6 +114,29 @@
             # see apps... in thiagoko
         };
 
+        mkHomeManagerUser = {
+            username ? "sam"
+            ,homePath ? "/home"
+            ,system ? "x86_64-linux"
+            ,homeManagerConfiguration ? home-manager.lib.homeManagerConfiguration
+            ,...
+        }:
+        let
+            pkgs = import nixpkgs { inherit system; };
+            homeDirectory = "${homePath}/${username}";
+        in
+        {
+            homeConfigurations.${username} = homeManagerConfiguration rec {
+                inherit pkgs;
+                modules = [
+                    ({...}: {
+                        home = { inherit username homeDirectory; };
+                        imports = [ ./users/${username} ];
+                    })
+                ];
+            };
+        };
+
         # Thoughts on how to compose this - Jays config is making more sense now...
         # Need a way to define systems, i.e. I have a macbook that runs aarch64-darwin and has these users
         # Need a way to define users properly, and what imports they will require no matter what (think of this like normal dotfiles)
@@ -120,6 +149,7 @@
         (recursiveMergeAttrs [
             (mergeMap (map mkNixosSystem nixosHosts))
             (mergeMap (map mkDarwinSystem darwinHosts))
-            (mergeMap (map mkHomeManager darwinHosts))
+            (mergeMap (map mkHomeManagerSystem darwinHosts))
+            (mergeMap (map mkHomeManagerUser homeManagerUsers))
         ]);
 }
