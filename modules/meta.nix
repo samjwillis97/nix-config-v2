@@ -8,10 +8,10 @@ with lib;
       type = types.str;
       default = "sam";
     };
-    /* configPath = mkOption { */
-    /*   description = "Location of this config"; */
-    /*   type = types.path; */
-    /*   default = "/etc/nixos"; */
-    /* }; */
+    configPath = mkOption {
+      description = "Location of this config";
+      type = types.path;
+      default = "/etc/nixos";
+    };
   };
 }
