@@ -86,11 +86,9 @@
             ,...
         }:
         {
-            nixosConfigurations."${hostname}" = {
-                hostname = nixpkgs.lib.nixosSystem {
-                    inherit system;
-                    modules = [ ../hosts/${hostname} ] ++ extraModules;
-                };
+            nixosConfigurations."${hostname}" = nixpkgs.lib.nixosSystem {
+                inherit system;
+                modules = [ ../hosts/${hostname} ] ++ extraModules;
             };
         };
 
