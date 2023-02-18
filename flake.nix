@@ -33,6 +33,9 @@
                 system = "aarch64-darwin";
                 username = "samwillis";
                 homePath = "/Users";
+                extraHomeModules = [
+                    ./home-manager/gaming
+                ];
             }
         ];
         homeManagerUsers = [
@@ -45,7 +48,9 @@
         mkDarwinSystem = {
             hostname
             ,system
+            ,username
             ,extraModules ? []
+            ,extraHomeModules ? []
             ,...
         }:
         {
@@ -58,7 +63,7 @@
                         {
                             home-manager.useGlobalPkgs = true;
                             home-manager.useUserPackages = true;
-                            home-manager.users.samwillis = import ./users/samwillis;
+                            home-manager.users.${username} = import ./users/${username};
                         }
                     ] ++ extraModules;
                     specialArgs = {
@@ -68,9 +73,11 @@
         };
 
         mkNixosSystem = {
-            hostname,
-            system,
-            ...
+            hostname
+            ,system
+            ,username
+            ,extraModules ? []
+            ,...
         }:
         {
             nixosConfigurations."${hostname}" = {
@@ -87,6 +94,7 @@
             ,username ? "sam"
             ,homePath ? "/home"
             ,system ? "x86_64-linux"
+            ,extraHomeModules ? []
             ,homeManagerConfiguration ? home-manager.lib.homeManagerConfiguration
             ,...
         }:
@@ -100,7 +108,7 @@
                 modules = [
                     ({...}: {
                         home = { inherit username homeDirectory; };
-                        imports = [ ./users/${username} ];
+                        imports = [ ./users/${username} ] ++ extraHomeModules;
                     })
                 ];
                 extraSpecialArgs = {
@@ -118,6 +126,7 @@
             username ? "sam"
             ,homePath ? "/home"
             ,system ? "x86_64-linux"
+            ,extraHomeModules ? []
             ,homeManagerConfiguration ? home-manager.lib.homeManagerConfiguration
             ,...
         }:
@@ -131,7 +140,9 @@
                 modules = [
                     ({...}: {
                         home = { inherit username homeDirectory; };
-                        imports = [ ./users/${username} ];
+                        imports = [ 
+                            ./users/${username}
+                        ];
                     })
                 ];
             };
@@ -145,11 +156,21 @@
         # A simple way to define sets of packages could be good as well
         # Then think of a way to replace docker.. i.e. pihole.nix
         # Still need to work out how to know what output to use...
-    in 
+    in
+
+       /*
+        Notes taken from reading thiagokokada repo
+        He treats the system seperately to the home-manager
+        this doesn't sound too bad actually.
+       */
+
         (recursiveMergeAttrs [
             (mergeMap (map mkNixosSystem nixosHosts))
+            (mergeMap (map mkHomeManagerSystem nixosHosts))
+
             (mergeMap (map mkDarwinSystem darwinHosts))
-            (mergeMap (map mkHomeManagerSystem darwinHosts))
+            # (mergeMap (map mkHomeManagerSystem darwinHosts))
+
             (mergeMap (map mkHomeManagerUser homeManagerUsers))
         ]);
 }
