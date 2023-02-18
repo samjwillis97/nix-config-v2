@@ -4,7 +4,7 @@
         ./home.nix
         ./meta.nix
         ./system.nix
-        ../modules/fonts.nix
+        ./fonts.nix
     ];
 
     # TODO:

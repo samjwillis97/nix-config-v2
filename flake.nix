@@ -26,7 +26,13 @@
         lib = nixpkgs.lib;
         inherit (import ./lib/attrsets.nix { inherit (nixpkgs) lib; }) recursiveMergeAttrs mergeMap;
 
-        nixosHosts = [];
+        nixosHosts = [
+            {
+                hostname = "test-vm";
+                system = "x86_64-linux";
+                username = "sam";
+            }
+        ];
         darwinHosts = [
             {
                 hostname = "Sams-MacBook-Air";
@@ -82,9 +88,8 @@
         {
             nixosConfigurations."${hostname}" = {
                 hostname = nixpkgs.lib.nixosSystem {
-                    system = system;
-                    modules = [
-                    ];
+                    inherit system;
+                    modules = [ ../hosts/${hostname} ] ++ extraModules;
                 };
             };
         };
