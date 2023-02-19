@@ -9,7 +9,7 @@
   config = {
     home-manager = {
       useUserPackages = true;
-      users.${config.meta.username} = ../home-manager/default;
+      users.${config.meta.username} = import ../users/${config.meta.username};
       extraSpecialArgs = {
         inherit flake system;
         super = config;
