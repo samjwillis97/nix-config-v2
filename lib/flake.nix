@@ -21,7 +21,7 @@ in
     {
         nixosConfigurations.${hostname} = nixosSystem {
             inherit system;
-            modules = [ ./hosts/${hostname} ] ++ extraModules;
+            modules = [ ../hosts/${hostname} ] ++ extraModules;
             specialArgs = {
                 inherit system;
                 flake = self;
@@ -43,12 +43,12 @@ in
         darwinConfigurations.${hostname} = darwinSystem {
             inherit system;
             modules = [
-                ./hosts/${hostname}
+                ../hosts/${hostname}
                 home-manager.darwinModules.home-manager
                 {
                     home-manager.useGlobalPkgs = true;
                     home-manager.useUserPackages = true;
-                    home-manager.users.${username} = import ./users/${username};
+                    home-manager.users.${username} = import ../users/${username};
                 }
             ] ++ extraModules;
             specialArgs = {
@@ -77,7 +77,7 @@ in
             modules = [
                 ({...}: {
                     home = { inherit username homeDirectory; };
-                    imports = [ ./users/${username} ] ++ extraHomeModules;
+                    imports = [ ../users/${username} ] ++ extraHomeModules;
                 })
             ];
             extraSpecialArgs = {
