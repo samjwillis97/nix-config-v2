@@ -2,7 +2,7 @@
 
 {
   imports = [
-    flake.inputs.home.nixosModules.home-manager
+    flake.inputs.home-manager.nixosModules.home-manager
     ../modules/meta.nix
   ];
 
