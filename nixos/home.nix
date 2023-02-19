@@ -9,7 +9,7 @@
   config = {
     home-manager = {
       useUserPackages = true;
-      users.${config.nixos.home.username} = ../home-manager/default;
+      users.${config.meta.username} = ../home-manager/default;
       extraSpecialArgs = {
         inherit flake system;
         super = config;
