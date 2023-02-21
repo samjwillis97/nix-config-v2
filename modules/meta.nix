@@ -10,7 +10,7 @@ with lib;
     };
     extraHomeModules = mkOption {
         description = "list of extra modules to be loaded on the main user";
-        type = types.list;
+        type = types.listOf types.path;
         default = [];
     };
     /* configPath = mkOption { */
