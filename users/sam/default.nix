@@ -1,9 +1,9 @@
-{ config, home, ... }:
+{ super, config, home, ... }:
 {
     imports = [
         ../../home-manager/meta
         ../../home-manager/cli
-    ] ++ super.meta.extraHomeModules;
+    ] ++ config.extraHomeModules;
 
     # TODO: Put in initial hashed password etc.
 }
