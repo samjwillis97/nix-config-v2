@@ -14,6 +14,9 @@
             push = {
                 autoSetupRemote = true;
             };
+            safe = {
+                directory = "*";
+            };
             /* mergetool = { */
             /*     fugitive = """ */
             /*         nvim -f -c \"Gvdiffsplit!\" \"$MERGED\" */
