@@ -10,6 +10,8 @@ require("format")
 require("settings")
 
 vim.g.catppuccin_flavour = "macchiato"
-require("catppuccin").setup()
+require("catppuccin").setup({
+	compile_path = "~/.local/share/nvim/color",
+})
 vim.cmd([[colorscheme catppuccin]])
 require("colorizer").setup()
