@@ -75,6 +75,7 @@ in {
     imports = [
         ./rofi.nix
         ./i3status-rust.nix
+        ./x11.nix
     ];
 
     home = {

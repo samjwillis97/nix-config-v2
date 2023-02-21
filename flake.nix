@@ -44,6 +44,10 @@
                 hostname = "test-vm";
                 system = "x86_64-linux";
                 username = "sam";
+                extraHomeModules = [
+                    ./home-manager/desktop
+                    ./home-manager/i3
+                ];
             })
 
             (mkDarwinSystem {

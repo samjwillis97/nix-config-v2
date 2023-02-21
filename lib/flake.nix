@@ -15,6 +15,7 @@ in
         ,system
         ,username
         ,extraModules ? []
+        ,extraHomeModules ? []
         ,nixosSystem ? nixpkgs.lib.nixosSystem
         ,...
     }:
@@ -25,6 +26,9 @@ in
             specialArgs = {
                 inherit system;
                 flake = self;
+                super = {
+                    meta.extraHomeModules = extraHomeModules;
+                };
             };
         };
     };
