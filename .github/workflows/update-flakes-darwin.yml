@@ -1,31 +1,31 @@
-jobs:
-  update-flakes-macos:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: cachix/install-nix-action@v18
-        with:
-          extra_nix_config: access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-          nix_path: nixpkgs=channel:nixos-unstable
-      - uses: cachix/cachix-action@v12
-        with:
-          authToken: ${{ secrets.CACHIX_TOKEN }}
-          extraPullNames: nix-community
-          name: samjwillis97-nix-configs
-      - name: Set default git branch (to reduce log spam)
-        run: git config --global init.defaultBranch master
-      - name: Build Home-Manager configs
-        run: nix build '.#homeConfigurations.Sams-MacBook-Air.activationPackage'
-      - name: Build NixOS configs
-        run: nix build '.#darwinConfigurations.Sams-MacBook-Air.system'
-name: update-flakes-darwin
-"on":
-  schedule:
-    - cron: 40 4 * * 0,2,4,6
-  workflow_dispatch: null
-  workflow_run:
-    types:
-      - completed
-    workflows:
-      - update-flakes
+# jobs:
+#   update-flakes-macos:
+#     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+#     runs-on: macos-latest
+#     steps:
+#       - uses: actions/checkout@v3
+#       - uses: cachix/install-nix-action@v18
+#         with:
+#           extra_nix_config: access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+#           nix_path: nixpkgs=channel:nixos-unstable
+#       - uses: cachix/cachix-action@v12
+#         with:
+#           authToken: ${{ secrets.CACHIX_TOKEN }}
+#           extraPullNames: nix-community
+#           name: samjwillis97-nix-configs
+#       - name: Set default git branch (to reduce log spam)
+#         run: git config --global init.defaultBranch master
+#       - name: Build Home-Manager configs
+#         run: nix build '.#homeConfigurations.Sams-MacBook-Air.activationPackage'
+#       - name: Build NixOS configs
+#         run: nix build '.#darwinConfigurations.Sams-MacBook-Air.system'
+# name: update-flakes-darwin
+# "on":
+#   schedule:
+#     - cron: 40 4 * * 0,2,4,6
+#   workflow_dispatch: null
+#   workflow_run:
+#     types:
+#       - completed
+#     workflows:
+#       - update-flakes

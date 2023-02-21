@@ -2,7 +2,7 @@
 {
     imports = [
         ./home.nix
-        ./users.nix
+        ./user.nix
         ./fonts.nix
     ];
 }

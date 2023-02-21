@@ -2,23 +2,14 @@
 
 {
   imports = [
-    flake.inputs.home.nixosModules.home-manager
+    flake.inputs.home-manager.nixosModules.home-manager
     ../modules/meta.nix
   ];
 
-  options.nixos.home = {
-    enable = pkgs.lib.mkDefaultOption "home config";
-    username = lib.mkOption {
-      description = "Main username";
-      type = lib.types.str;
-      default = config.meta.username;
-    };
-  };
-
-  config = lib.mkIf config.nixos.home.enable {
+  config = {
     home-manager = {
       useUserPackages = true;
-      users.${config.nixos.home.username} = ../home-manager/nixos.nix;
+      users.${config.meta.username} = import ../users/${config.meta.username};
       extraSpecialArgs = {
         inherit flake system;
         super = config;

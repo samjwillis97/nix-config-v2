@@ -19,138 +19,17 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
+        flake-utils = {
+            url = "github:numtide/flake-utils";
+        };
     };
 
-    outputs = { nixpkgs, home-manager, darwin, ... }:
+    outputs = { self, nixpkgs, flake-utils, ... }@inputs:
     let
         lib = nixpkgs.lib;
         inherit (import ./lib/attrsets.nix { inherit (nixpkgs) lib; }) recursiveMergeAttrs mergeMap;
-
-        nixosHosts = [
-            {
-                hostname = "test-vm";
-                system = "x86_64-linux";
-                username = "sam";
-            }
-        ];
-        darwinHosts = [
-            {
-                hostname = "Sams-MacBook-Air";
-                system = "aarch64-darwin";
-                username = "samwillis";
-                homePath = "/Users";
-                extraHomeModules = [
-                    ./home-manager/gaming
-                ];
-            }
-        ];
-        homeManagerUsers = [
-            {
-                system = "x86_64-linux";
-                username = "sam";
-            }
-        ];
-
-        mkDarwinSystem = {
-            hostname
-            ,system
-            ,username
-            ,extraModules ? []
-            ,extraHomeModules ? []
-            ,...
-        }:
-        {
-            darwinConfigurations.${hostname} =
-                darwin.lib.darwinSystem {
-                    inherit system;
-                    modules = [
-                        ./hosts/${hostname}
-                        home-manager.darwinModules.home-manager
-                        {
-                            home-manager.useGlobalPkgs = true;
-                            home-manager.useUserPackages = true;
-                            home-manager.users.${username} = import ./users/${username};
-                        }
-                    ] ++ extraModules;
-                    specialArgs = {
-                        inherit system;
-                    };
-                };
-        };
-
-        mkNixosSystem = {
-            hostname
-            ,system
-            ,username
-            ,extraModules ? []
-            ,...
-        }:
-        {
-            nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
-                inherit system;
-                modules = [ ./hosts/${hostname} ] ++ extraModules;
-            };
-        };
-
-        mkHomeManagerSystem = {
-            hostname
-            ,username ? "sam"
-            ,homePath ? "/home"
-            ,system ? "x86_64-linux"
-            ,extraHomeModules ? []
-            ,homeManagerConfiguration ? home-manager.lib.homeManagerConfiguration
-            ,...
-        }:
-        let
-            pkgs = import nixpkgs { inherit system; };
-            homeDirectory = "${homePath}/${username}";
-        in
-        {
-            homeConfigurations.${hostname} = homeManagerConfiguration rec {
-                inherit pkgs;
-                modules = [
-                    ({...}: {
-                        home = { inherit username homeDirectory; };
-                        imports = [ ./users/${username} ] ++ extraHomeModules;
-                    })
-                ];
-                extraSpecialArgs = {
-                    inherit system;
-                    super = {
-                        meta.username = username;
-                        # see configPath in thiagoko
-                    };
-                };
-            };
-            # see apps... in thiagoko
-        };
-
-        mkHomeManagerUser = {
-            username ? "sam"
-            ,homePath ? "/home"
-            ,system ? "x86_64-linux"
-            ,extraHomeModules ? []
-            ,homeManagerConfiguration ? home-manager.lib.homeManagerConfiguration
-            ,...
-        }:
-        let
-            pkgs = import nixpkgs { inherit system; };
-            homeDirectory = "${homePath}/${username}";
-        in
-        {
-            homeConfigurations.${username} = homeManagerConfiguration rec {
-                inherit pkgs;
-                modules = [
-                    ({...}: {
-                        home = { inherit username homeDirectory; };
-                        imports = [ 
-                            ./users/${username}
-                        ];
-                    })
-                ];
-            };
-        };
-
+        inherit (import ./lib/flake.nix inputs) mkNixosSystem mkDarwinSystem mkHomeManager;
+    in
         # Thoughts on how to compose this - Jays config is making more sense now...
         # Need a way to define systems, i.e. I have a macbook that runs aarch64-darwin and has these users
         # Need a way to define users properly, and what imports they will require no matter what (think of this like normal dotfiles)
@@ -159,21 +38,26 @@
         # A simple way to define sets of packages could be good as well
         # Then think of a way to replace docker.. i.e. pihole.nix
         # Still need to work out how to know what output to use...
-    in
-
-       /*
-        Notes taken from reading thiagokokada repo
-        He treats the system seperately to the home-manager
-        this doesn't sound too bad actually.
-       */
 
         (recursiveMergeAttrs [
-            (mergeMap (map mkNixosSystem nixosHosts))
-            (mergeMap (map mkHomeManagerSystem nixosHosts))
+            (mkNixosSystem {
+                hostname = "test-vm";
+                system = "x86_64-linux";
+                username = "sam";
+            })
 
-            (mergeMap (map mkDarwinSystem darwinHosts))
-            # (mergeMap (map mkHomeManagerSystem darwinHosts))
+            (mkDarwinSystem {
+                hostname = "Sams-MacBook-Air";
+                system = "aarch64-darwin";
+                username = "samwillis";
+                homePath = "/Users";
+                extraHomeModules = [
+                    ./home-manager/gaming
+                ];
+            })
 
-            (mergeMap (map mkHomeManagerUser homeManagerUsers))
+            (mkHomeManager {
+                hostname = "amp-8060";
+            })
         ]);
-}
+    }
