@@ -109,8 +109,8 @@
                 padding = mkLiteral "10px";
                 background-color = mkLiteral "@bg-col-light";
                 text-color = mkLiteral "@grey";
-                vertical-align = 0.5; 
-                horizontal-align = 0.5;
+                vertical-align = "0.5"; 
+                horizontal-align = "0.5";
             };
 
             "button selected" = {
