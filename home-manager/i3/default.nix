@@ -90,6 +90,7 @@ in {
             xss-lock
             pamixer
             nnn
+            arandr
         ];
     };
 
