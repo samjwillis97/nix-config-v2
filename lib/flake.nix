@@ -26,9 +26,10 @@ in
             specialArgs = {
                 inherit system;
                 flake = self;
-                config = {
+                super = {
                     meta.extraHomeModules = extraHomeModules;
                 };
+                /* super.meta.extraHomeModules = extraHomeModules; */
             };
         };
     };

@@ -1,4 +1,4 @@
-{ config, lib, pkgs, flake, system, ... }:
+{ super, config, lib, pkgs, flake, system, ... }:
 
 {
   imports = [
@@ -11,8 +11,7 @@
       useUserPackages = true;
       users.${config.meta.username} = import ../users/${config.meta.username};
       extraSpecialArgs = {
-        inherit flake system;
-        super = config;
+        inherit flake system super;
       };
     };
   };

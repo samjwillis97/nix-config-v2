@@ -84,7 +84,7 @@ in {
             feh
             ffmpegthumbnailer # Just a thumbnailer
             libnotify
-            main # This is a screenshotter - flameshot replacement
+            maim # This is a screenshotter - flameshot replacement
             playerctl # Some sort of media player
             wmctrl # Window manager control?
             xsecurelock

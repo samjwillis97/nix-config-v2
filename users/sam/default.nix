@@ -1,4 +1,4 @@
-{ super, home, ... }:
+{ super, config, home, ... }:
 {
     imports = [
         ../../home-manager/meta
