@@ -4,4 +4,6 @@
     fonts.fonts = with pkgs; [
         (nerdfonts.override { fonts = [ "FiraCode" ]; })
     ];
+
+    # TODO: default Fonts
 }
