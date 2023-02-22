@@ -89,6 +89,7 @@ in {
             xsecurelock
             xss-lock
             pamixer
+            nnn
         ];
     };
 
