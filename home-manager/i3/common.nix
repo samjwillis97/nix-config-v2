@@ -280,7 +280,7 @@ in
       } // extraModes;
 
     workspaceAutoBackAndForth = true;
-    workspaceLayout = "tabbed";
+    workspaceLayout = "default";
 
     window = {
       border = 2;

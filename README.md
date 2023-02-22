@@ -16,6 +16,7 @@ Nix allows for easy to manage, collaborative, reproducible deployments. This mea
 
 - darwin systems
 - darwin users
+- basic nixos
 - neovim
 - tmux
 - git
@@ -27,11 +28,10 @@ Nix allows for easy to manage, collaborative, reproducible deployments. This mea
 - i3
     - dunst
     - status
-    - lock
     - monitor management
-    - audio
-    - network
-    - rofi
+    - audio (pamixer?)
+    - network?
+    - rofi formatting
     - logitech
     - obs
     - picom

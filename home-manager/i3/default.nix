@@ -2,13 +2,12 @@
 { config, lib, pkgs, ... }:
 let
     # Aliases
-    alt = "Mod1";
-    modifier = "Mod4";
+    alt = "Mod4";
+    modifier = "Mod1";
 
     commonOptions = 
         let
             dunstctl = "${pkgs.dunst}/bin/dunstctl";
-            rofi = "${config.programs.rofi.package}/bin/rofi";
             screenShotName = with config.xdg.userDirs;
         "${pictures}/$(${pkgs.coreutils}/bin/date +%Y-%m-%d_%H-%M-%S)-screenshot.png";
         in import ./common.nix rec {
@@ -18,7 +17,7 @@ let
             fileManager = "${terminal} ${pkgs.nnn}/bin/nnn -a -P p";
             statusCommand = with config;
                 "${programs.i3status-rust.package}/bin/i3status-rs ${xdg.configHome}/i3status-rust/config-i3.toml";
-            menu = "${rofi} -show drun";
+            menu = "rofi -show drun";
             # light needs to be installed in system, so not defining a path here
             light = "light";
             pamixer = "${pkgs.pamixer}/bin/pamixer";
@@ -36,7 +35,7 @@ let
             '';
 
             extraBindings = {
-                "${modifier}+Tab" = "exec ${rofi} -show window -modi window";
+                "${modifier}+Tab" = "exec rofi -show window -modi window";
                 "Ctrl+space" = "exec ${dunstctl} close";
                 "Ctrl+Shift+space" = "exec ${dunstctl} close-all";
             };
