@@ -20,6 +20,7 @@
         htop
         fzf
         direnv
+        neofetch
         _1password
     ];
 }

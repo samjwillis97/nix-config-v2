@@ -40,12 +40,17 @@
         # Still need to work out how to know what output to use...
 
         (recursiveMergeAttrs [
+        # TODO: Convert these to a whole lot of enables
+        # - i3
+        # - Audio
+        # - Dev
             (mkNixosSystem {
                 hostname = "test-vm";
                 system = "x86_64-linux";
                 username = "sam";
                 extraModules = [
                     ./nixos/xserver.nix
+                    ./nixos/audio.nix
                 ];
                 extraHomeModules = [
                     ./home-manager/desktop

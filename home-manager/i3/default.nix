@@ -68,13 +68,13 @@ let
 in {
     # TODO: nnn
     # TODO: autorandr
-    # TODO: gammastep????
-    # TODO: picom
-    # TODO: x11
     imports = [
         ./rofi.nix
         ./i3status-rust.nix
         ./x11.nix
+        ./dunst.nix
+        ./picom.nix
+        ./gammastep.nix
     ];
 
     home = {
