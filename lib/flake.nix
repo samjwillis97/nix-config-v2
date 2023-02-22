@@ -26,7 +26,7 @@ in
             specialArgs = {
                 inherit system;
                 flake = self;
-                super = {
+                config = {
                     meta.extraHomeModules = extraHomeModules;
                 };
             };
