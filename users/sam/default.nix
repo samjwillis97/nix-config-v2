@@ -3,7 +3,7 @@
     imports = [
         ../../home-manager/meta
         ../../home-manager/cli
-    ] ++ config.extraHomeModules;
+    ] ++ super.meta.extraHomeModules;
 
     # TODO: Put in initial hashed password etc.
 }
