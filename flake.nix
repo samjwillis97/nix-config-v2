@@ -44,6 +44,9 @@
                 hostname = "test-vm";
                 system = "x86_64-linux";
                 username = "sam";
+                extraModules = [
+                    ./nixos/xserver.nix
+                ];
                 extraHomeModules = [
                     ./home-manager/desktop
                     ./home-manager/i3
