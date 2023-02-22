@@ -80,7 +80,6 @@ in {
 
     home = {
         packages = with pkgs; [
-            dex
             feh
             ffmpegthumbnailer # Just a thumbnailer
             libnotify
@@ -91,5 +90,13 @@ in {
             xss-lock
             pamixer
         ];
+    };
+
+    xsession.windowManager.i3 = with commonOptions; {
+        enable = true;
+
+        inherit extraConfig;
+
+        config = commonOptions.config;
     };
 }
