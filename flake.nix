@@ -45,8 +45,8 @@
                 system = "x86_64-linux";
                 username = "sam";
                 extraHomeModules = [
-                    ./home-manager/desktop
-                    ./home-manager/i3
+                    ../../home-manager/desktop
+                    ../../home-manager/i3
                 ];
             })
 
