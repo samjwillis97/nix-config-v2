@@ -4,5 +4,6 @@
         ./home.nix
         ./user.nix
         ./fonts.nix
+        ./ssh.nix
     ];
 }

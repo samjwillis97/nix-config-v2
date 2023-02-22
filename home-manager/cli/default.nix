@@ -4,6 +4,7 @@
         ./zsh.nix
         ./tmux.nix
         ./git.nix
+        ./ssh.nix
         ../nvim
         ../scripts
     ];
