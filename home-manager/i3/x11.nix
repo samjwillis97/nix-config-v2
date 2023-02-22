@@ -46,25 +46,25 @@ in
                     ];
             };
         };
-        /* wallpaper = { */
-        /*     Unit = { */
-        /*         Description = "Set wallpaper"; */
-        /*         After = [ "graphical-session-pre.target" ]; */
-        /*         PartOf = [ "graphical-session.target" ]; */
-        /*     }; */
+        wallpaper = {
+            Unit = {
+                Description = "Set wallpaper";
+                After = [ "graphical-session-pre.target" ];
+                PartOf = [ "graphical-session.target" ];
+            };
 
-        /*     Install = { WantedBy = [ "graphical-session.target" ]; }; */
+            Install = { WantedBy = [ "graphical-session.target" ]; };
 
-        /*     Service = { */
-        /*         ExecStart = lib.concatStringsSep " " [ */
-        /*             "${pkgs.feh}/bin/feh" */
-        /*             "--no-fehbg" */
-        /*             "--bg-${config.theme.wallpaper.scale}" */
-        /*             "${config.theme.wallpaper.path}" */
-        /*         ]; */
-        /*         Type = "oneshot"; */
-        /*     }; */
-        /* }; */
+            Service = {
+                ExecStart = lib.concatStringsSep " " [
+                    "${pkgs.feh}/bin/feh"
+                    "--no-fehbg"
+                    "--bg-${config.theme.wallpaper.scale}"
+                    "${config.theme.wallpaper.path}"
+                ];
+                Type = "oneshot";
+            };
+        };
     };
 
     xresources.properties = {

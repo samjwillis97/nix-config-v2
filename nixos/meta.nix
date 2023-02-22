@@ -3,11 +3,14 @@
 {
   # TODO: Look at Cachix
   # TODO: Look at Overlays
+  imports = [
+    ../overlays
+  ];
 
   # Add some Nix related packages
   environment.systemPackages = with pkgs; [
     cachix
-    nixos-cleanup
+    /* nixos-cleanup */
   ];
 
   # This value determines the NixOS release with which your system is to be
