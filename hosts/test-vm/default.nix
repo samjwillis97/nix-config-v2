@@ -1,4 +1,4 @@
-{ config, pkgs, flake, ... }:
+{ config, pkgs, lib, flake, ... }:
 let
     inherit (flake) inputs;
 in
@@ -12,5 +12,5 @@ in
     boot.loader.grub.version = 2;
     boot.loader.grub.device = "/dev/sda"; # or "nodev" for efi only
 
-    system.stateVersion = "22.11";
+    home-manager.users.${config.meta.username}.theme.wallpaper.path = pkgs.wallpapers.nixos-catppuccin-magenta-blue;
 }

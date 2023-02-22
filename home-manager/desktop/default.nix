@@ -10,6 +10,7 @@
         ../firefox
         ../alacritty
         ../nvim
+        ../theme
     ];
 
     home.packages = with pkgs; [
