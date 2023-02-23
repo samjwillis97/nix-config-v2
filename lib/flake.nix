@@ -26,8 +26,8 @@ in
             specialArgs = {
                 inherit system;
                 flake = self;
-                super = {
-                    meta.extraHomeModules = extraHomeModules;
+                super.meta = {
+                    inherit username extraHomeModules;
                 };
                 /* super.meta.extraHomeModules = extraHomeModules; */
             };
@@ -37,28 +37,23 @@ in
     mkDarwinSystem = {
         hostname
         ,system
-        ,username
+        ,username ? "samwillis"
         ,extraModules ? []
         ,extraHomeModules ? []
         ,darwinSystem ? darwin.lib.darwinSystem
         ,...
     }:
     {
-        /* TODO: Migrate this to be more similar to nixos (don't include user here) */
         darwinConfigurations.${hostname} = darwinSystem {
             inherit system;
-            modules = [
-                ../hosts/${hostname}
-                home-manager.darwinModules.home-manager
-                {
-                    home-manager.useGlobalPkgs = true;
-                    home-manager.useUserPackages = true;
-                    home-manager.users.${username} = import ../users/${username};
-                }
-            ] ++ extraModules;
+            modules = [ ../hosts/${hostname} ] ++ extraModules;
             specialArgs = {
                 inherit system;
                 flake = self;
+                super.meta = {
+                    username = username;
+                    extraHomeModules = extraHomeModules;
+                };
             };
         };
     };

@@ -63,9 +63,6 @@
                 system = "aarch64-darwin";
                 username = "samwillis";
                 homePath = "/Users";
-                extraHomeModules = [
-                    ./home-manager/gaming
-                ];
             })
 
             (mkHomeManager {

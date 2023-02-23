@@ -1,10 +1,9 @@
-{ home, ... }:
+{ super, config, home, ... }:
 {
     imports = [
         ../../home-manager/meta
         ../../home-manager/cli
-        ../../home-manager/alacritty
-    ];
+    ] ++ super.meta.extraHomeModules;
 
     # TODO: Put in initial hashed password etc.
 }
