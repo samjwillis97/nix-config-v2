@@ -19,30 +19,18 @@ These Repo's are where I took major inspiration and chunks of code from :)
 - https://github.com/LnL7/nix-darwin
 - https://github.com/nix-community/home-manager
 
-## What Appears to be Completed
-
-- darwin systems
-- darwin users
-- basic nixos
-- neovim
-- tmux
-- git
-- zsh
-
 ## TODOs:
 
 - font-switching in alacritty depending on OS
+- second tmux session script, think its on fedora PC
 - i3
-    - gaps
+    - picom - might already be working
     - monitor management
     - network?
     - logitech
     - obs
-    - picom
-- ide's
-- gaming
-- rest of aliases
-- secrets
+- ide's (Jetbrains for Work reasons)
+- secrets?
 
 ## To Look Into
 
