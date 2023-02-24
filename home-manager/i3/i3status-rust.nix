@@ -8,20 +8,20 @@
                 settings = {
                     theme = {
                         name = "plain";
-						/* overrides = with config.theme.colors; { */
-                            /* idle_bg = "#282A36"; */
-                            /* idle_fg = base05; */
-                            /* info_bg = base0D; */
-                            /* info_fg = "#282A36"; */
-                            /* good_bg = base00; */
-                            /* good_fg = base05; */
-                            /* warning_bg = base0A; */
-                            /* warning_fg = "#282A36"; */
-                            /* critical_bg = base08; */
-                            /* critical_fg = base00; */
-                            /* separator_bg = "#282A36"; */
-                            /* separator = " "; */
-                        /* }; */
+						overrides = with config.theme.colors; {
+                            idle_bg = base00;
+                            idle_fg = base05;
+                            info_bg = base0D;
+                            info_fg = base00;
+                            good_bg = base00;
+                            good_fg = base05;
+                            warning_bg = base0A;
+                            warning_fg = base00;
+                            critical_bg = base08;
+                            critical_fg = base00;
+                            separator_bg = base00;
+                            separator = " ";
+                        };
                     };
                     icons = {
                         name = "awesome5";
