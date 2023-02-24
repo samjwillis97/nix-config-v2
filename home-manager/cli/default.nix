@@ -24,4 +24,9 @@
         neofetch
         _1password
     ];
+
+    programs.bat = {
+        enable = true;
+        theme = "base16";
+    };
 }
