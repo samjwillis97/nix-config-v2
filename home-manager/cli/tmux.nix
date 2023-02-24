@@ -14,7 +14,7 @@
         prefix = "C-b";
         terminal = "screen-256color";
 
-        extraConfig = ''
+        extraConfig = with config.theme.colors; ''
 
         # Better splitting
         bind | split-window -h -c "#{pane_current_path}"
@@ -63,20 +63,19 @@
         bind-key r source-file ~/.tmux.conf \; display-message "~/.tmux.conf reloaded"
 
 
-        # --> Catppuccin (Macchiato)
-        thm_bg="#1e1e2e"
-        thm_fg="#cad3f5"
-        thm_cyan="#91d7e3"
-        thm_black="#1e2030"
-        thm_gray="#363a4f"
-        thm_magenta="#c6a0f6"
-        thm_pink="#f5bde6"
-        thm_red="#ed8796"
-        thm_green="#a6da95"
-        thm_yellow="#eed49f"
-        thm_blue="#8aadf4"
-        thm_orange="#f5a97f"
-        thm_black4="#5b6078"
+        thm_bg="${base00}"
+        thm_fg="${base05}"
+        thm_cyan="${base0C}"
+        thm_black="${base00}"
+        thm_gray="${base02}"
+        thm_magenta="${base0E}"
+        thm_pink="${base0F}"
+        thm_red="${base08}"
+        thm_green="${base0B}"
+        thm_yellow="${base0A}"
+        thm_blue="${base0D}"
+        thm_orange="${base09}"
+        thm_black4="${base04}"
 
         # ----------------------------=== Theme ===--------------------------
         # status
