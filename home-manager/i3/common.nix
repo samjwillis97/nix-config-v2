@@ -12,38 +12,38 @@
 , statusCommand
 , alt ? "Mod1"
 , modifier ? "Mod4"
-, bars ? [{
+, bars ? with config.theme.colors;  [{
     inherit fonts statusCommand;
 
     position = "top";
     colors = {
-      background = "#282A36";
-      separator = "#44475A";
-      statusline = "#F8F8F2";
+      background = base00;
+      separator = base01;
+      statusline = base04;
       activeWorkspace = {
-        border = "#282A36";
-        background =  "#44475A";
-        text = "#F8F8F2";
+        border = base03;
+        background = base03;
+        text = base00;
       };
       bindingMode = {
-        border = "#FF5555";
-        background =  "#FF5555";
-        text = "#F8F8F2";
+        border = base0A;
+        background = base0A;
+        text = base00;
       };
       focusedWorkspace = {
-        border = "#44475A";
-        background =  "#44475A";
-        text = "#F8F8F2";
+        border = base0D;
+        background = base0D;
+        text = base00;
       };
       inactiveWorkspace = {
-        border = "#282A36";
-        background =  "#282A36";
-        text = "#BFBFBF";
+        border = base01;
+        background = base01;
+        text = base05;
       };
       urgentWorkspace = {
-        border = "#FF5555";
-        background =  "#FF5555";
-        text = "#F8F8F2";
+        border = base08;
+        background = base08;
+        text = base00;
       };
     };
   }]
@@ -151,42 +151,42 @@ in
   config = {
     inherit bars fonts modifier menu terminal;
 
-    colors = {
-      background = "#F8F8F2";
+    colors = with config.theme.colors; {
+      background = base07;
       focused = {
-        background = "#6272A44";
-        border = "#6272A4";
-        childBorder = "#6272A4";
-        indicator = "#6272A4";
-        text = "#F8F8F2";
+        background = base0D;
+        border = base0D;
+        childBorder = base0C;
+        indicator = base0D;
+        text = base00;
       };
       focusedInactive = {
-        background = "#44475A";
-        border = "#44475A";
-        childBorder = "#44475A";
-        indicator = "#44475A";
-        text = "#F8F8F2";
+        background = base01;
+        border = base01;
+        childBorder = base01;
+        indicator = base03;
+        text = base05;
       };
       placeholder = {
-        background = "#282A36";
-        border = "#282A36";
-        childBorder = "#282A36";
-        indicator = "#282A36";
-        text = "#F8F8F2";
+        background = base00;
+        border = base00;
+        childBorder = base00;
+        indicator = base00;
+        text = base05;
       };
       unfocused = {
-        background = "#282A36";
-        border = "282A36";
-        childBorder = "#FF5555";
-        indicator = "#FF5555";
-        text = "#BFBFBF";
+        background = base00;
+        border = base01;
+        childBorder = base01;
+        indicator = base01;
+        text = base05;
       };
       urgent = {
-        background = "#44475A";
-        border = "#FF5555";
-        childBorder = "#FF5555";
-        indicator = "#FF5555";
-        text = "#F8F8F2";
+        background = base08;
+        border = base08;
+        childBorder = base08;
+        indicator = base08;
+        text = base00;
       };
     };
 
