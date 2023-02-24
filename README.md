@@ -33,10 +33,7 @@ These Repo's are where I took major inspiration and chunks of code from :)
 
 - font-switching in alacritty depending on OS
 - i3
-    - theming
-    - rofi fix up the CSS thing
-    - dunst prettifying
-    - status themeing
+    - gaps
     - monitor management
     - network?
     - logitech
