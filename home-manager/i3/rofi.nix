@@ -16,6 +16,8 @@
             hide-scrollbar = true;
         };
 
+        font = with config.theme.fonts; "${gui.package} 14";
+
         theme = 
         let l = config.lib.formats.rasi.mkLiteral;
           in
