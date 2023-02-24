@@ -27,6 +27,6 @@
 
     programs.bat = {
         enable = true;
-        theme = "base16";
+        config.theme = "base16-256";
     };
 }
