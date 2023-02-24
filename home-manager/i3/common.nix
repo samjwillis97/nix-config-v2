@@ -109,6 +109,9 @@ let
   powerManagementMode =
     " : Screen [l]ock, [e]xit, [s]uspend, [h]ibernate, [R]eboot, [S]hutdown";
   resizeMode = " : [h]  , [j]  , [k]  , [l] ";
+  gapMode = "[o]n, of[f], [i]nner, ou[t]er";
+  innerGapMode = "Inner: [+] add, [-] minus, 0 [off] - [Shift] modifier, all";
+  outerGapMode = "Outer: [+] add, [-] minus, 0 [off] - [Shift] modifier, all";
 
   # Helpers
   mapDirection = { prefixKey ? null, leftCmd, downCmd, upCmd, rightCmd }:
@@ -220,6 +223,8 @@ in
       "${modifier}+Control+k" = "resize shrink height 10px or 10ppt";
       "${modifier}+Control+l" = "resize grow width 10px or 10ppt";
 
+      "${modifier}+g" = ''mode "${gapMode}"'';
+
       "${modifier}+Escape" = ''mode "${powerManagementMode}"'';
 
       "${modifier}+Shift+c" = "reload";
@@ -277,6 +282,28 @@ in
           "Shift+r" = "mode default, exec systemctl reboot";
           "Shift+s" = "mode fault, exec systemctl poweroff";
         } // exitMode;
+        ${gapMode} = {
+          o = "gaps inner all set 15, mode default";
+          f = "gaps inner all set 0, gaps outer all set 0, mode default";
+          i = ''mode "${innerGapMode}"'';
+          t = ''mode "${outerGapMode}"'';
+        } // exitMode;
+        ${innerGapMode} = {
+          plus = "gaps inner current plus 5";
+          minus = "gaps inner current minus 5";
+          "0" = "gaps inner current set 0";
+          "Shift+plus" = "gaps inner all plus 5";
+          "Shift+minus" = "gaps inner all minus 5";
+          "Shift+0" = "gaps inner all set 0";
+        } // exitMode;
+        ${outerGapMode} = {
+          plus = "gaps outer current plus 5";
+          minus = "gaps outer current minus 5";
+          "0" = "gaps outer current set 0";
+          "Shift+plus" = "gaps outer all plus 5";
+          "Shift+minus" = "gaps outer all minus 5";
+          "Shift+0" = "gaps outer all set 0";
+        } // exitMode;
       } // extraModes;
 
     workspaceAutoBackAndForth = true;
@@ -311,5 +338,7 @@ in
     ''
       ${workspaceStr}
       ${extraConfig}
+
+      gaps inner 15
     '';
 }

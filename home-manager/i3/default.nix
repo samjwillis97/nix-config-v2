@@ -96,6 +96,7 @@ in {
     xsession.windowManager.i3 = with commonOptions; {
         enable = true;
 
+        package = pkgs.i3-gaps;
         inherit extraConfig;
 
         config = commonOptions.config;
