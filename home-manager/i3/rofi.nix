@@ -30,6 +30,13 @@
               width = l "512px";
             };
 
+            window = {
+              height = l "360px";
+              border = l "3px";
+              border-color = l base01;
+              background-color = l base00;
+            };
+
             inputbar = {
               border = l "0 0 1px 0";
               children = map l [ "prompt" "entry" ];
