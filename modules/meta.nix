@@ -13,6 +13,11 @@ with lib;
         type = types.listOf types.path;
         default = [];
     };
+    networkAdapterName = mkOption {
+        description = "Name of network adapter";
+        type = types.str;
+        default = "en01";
+    };
     /* configPath = mkOption { */
     /*   description = "Location of this config"; */
     /*   type = types.path; */

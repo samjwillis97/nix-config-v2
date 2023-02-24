@@ -26,7 +26,7 @@ in
       dpi = mkOption {
         type = types.int;
         description = "Font dpi";
-        default = 135;
+        default = 96;
       };
     };
 

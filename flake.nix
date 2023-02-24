@@ -48,6 +48,7 @@
                 hostname = "test-vm";
                 system = "x86_64-linux";
                 username = "sam";
+                networkAdapterName = "enp0s3";
                 extraModules = [
                     ./nixos/xserver.nix
                     ./nixos/audio.nix

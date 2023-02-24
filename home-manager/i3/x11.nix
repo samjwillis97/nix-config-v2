@@ -68,7 +68,7 @@ in
     };
 
     xresources.properties = {
-        "Xft.dpi" = "144";
+        "Xft.dpi" = "96";
     };
 
     xsession = {

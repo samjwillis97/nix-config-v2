@@ -86,7 +86,7 @@
                 ];
             };
 
-            font.size = 8; # need this to change depending on systems
+            font.size = 9; # need this to change depending on systems
             font.normal.family = "FiraCode Nerd Font Mono";
             font.normal.style = "Light";
         };

@@ -14,6 +14,7 @@ in
         hostname
         ,system
         ,username
+        ,networkAdapterName ? "en01"
         ,extraModules ? []
         ,extraHomeModules ? []
         ,nixosSystem ? nixpkgs.lib.nixosSystem
@@ -27,7 +28,7 @@ in
                 inherit system;
                 flake = self;
                 super.meta = {
-                    inherit username extraHomeModules;
+                    inherit username extraHomeModules networkAdapterName;
                 };
                 /* super.meta.extraHomeModules = extraHomeModules; */
             };

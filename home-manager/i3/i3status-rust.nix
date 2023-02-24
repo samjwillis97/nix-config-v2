@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ super, config, lib, pkgs, ... }:
 {
     programs.i3status-rust = {
         enable = true;
@@ -38,7 +38,7 @@
 
                 netBlock = {
                     block = "net";
-                    device = "wlp2s0";
+                    device = "${super.meta.networkAdapterName}";
                     format = "{ip} {speed_down;K*b} {graph_down;K*b}";
                     interval = 5;
                 };
