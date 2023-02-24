@@ -91,9 +91,4 @@
             font.normal.style = "Light";
         };
     };
-
-    xdg.configFile.alacritty = {
-        source = ./config;
-        recursive = true;
-    };
 }
