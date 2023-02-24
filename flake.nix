@@ -52,11 +52,14 @@
                 extraModules = [
                     ./nixos/xserver.nix
                     ./nixos/audio.nix
+                    ./nixos/gaming.nix
                 ];
                 extraHomeModules = [
                     ./home-manager/nixos.nix
                     ./home-manager/desktop
                     ./home-manager/i3
+                    ./home-manager/gaming
+                    ./home-manager/dev
                 ];
             })
 
