@@ -54,6 +54,7 @@
                     ./nixos/audio.nix
                 ];
                 extraHomeModules = [
+                    ./home-manager/nixos.nix
                     ./home-manager/desktop
                     ./home-manager/i3
                 ];

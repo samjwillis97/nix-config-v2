@@ -30,7 +30,6 @@ in
                 super.meta = {
                     inherit username extraHomeModules networkAdapterName;
                 };
-                /* super.meta.extraHomeModules = extraHomeModules; */
             };
         };
     };

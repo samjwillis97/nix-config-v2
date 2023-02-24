@@ -11,10 +11,7 @@
       useUserPackages = true;
       users.${super.meta.username} = import ../users/${super.meta.username};
       extraSpecialArgs = {
-        inherit flake system;
-        super = super // {
-          super.meta.extraHomeModules = super.meta.extraHomeModules ++ [ ../home-manager/nixos.nix ];
-        };
+        inherit flake system super;
       };
     };
   };
