@@ -1,4 +1,4 @@
-{ config, pkgs, lib, flake, ... }:
+{ super, config, pkgs, lib, flake, ... }:
 {
     home.packages = with pkgs; [
         bat
@@ -32,6 +32,8 @@
         };
 
         initExtra = with config.theme.colors; ''
+            export MONGOMS_SYSTEM_BINARY=/etc/profiles/per-user/${super.meta.username}/bin/mongod
+
             bindkey -s ^f "tmux-sessionizer\n"
 
             export FZF_DEFAULT_OPTS=" \

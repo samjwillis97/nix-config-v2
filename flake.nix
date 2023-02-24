@@ -60,6 +60,7 @@
                     ./home-manager/i3
                     ./home-manager/gaming
                     ./home-manager/dev
+                    ./home-manager/work
                 ];
             })
 

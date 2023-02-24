@@ -16,6 +16,27 @@
             telescope-fzf-native-nvim
             nvim-treesitter
             nvim-treesitter-context
+            # DO NOT REMOVE OUTER BRACKETS
+            (nvim-treesitter.withPlugins (p: [
+                p.c
+                p.java
+                p.json
+                p.jsonc
+                p.yaml
+                p.toml
+                p.lua
+                p.go
+                p.typescript
+                p.javascript
+                p.python
+                p.rust
+                p.c_sharp
+                p.svelte
+                p.vue
+                p.css
+                p.html
+                p.nix
+            ]))
 
         ## QoL
             indent-blankline-nvim
