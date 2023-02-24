@@ -34,6 +34,13 @@
             untar = "tar -zxvf";
         };
 
+        initExtra = with config.theme.colors; ''
+            export FZF_DEFAULT_OPTS=" \
+                --color=bg+:${base02},bg:${base00},spinner:${base06},hl:${base08} \
+                --color=fg:${base05},header:${base08},info:${base0E},pointer:${base06} \
+                --color=marker:${base06},fg+:${base05},prompt:${base0E},hl+:${base08}"
+        '';
+
         oh-my-zsh = {
             enable = true;
             plugins = [
