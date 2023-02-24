@@ -1,5 +1,6 @@
 { super, config, pkgs, lib, ... }:
 {
+  # TODO: See if this applied to home-manager non nixos as well
   home = {
     pointerCursor = {
         package = pkgs.gnome.adwaita-icon-theme;

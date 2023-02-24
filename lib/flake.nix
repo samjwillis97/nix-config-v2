@@ -84,9 +84,8 @@ in
             extraSpecialArgs = {
                 inherit system;
                 flake = self;
-                super = {
-                    meta.username = username;
-                    # see configPath in thiagoko
+                super.meta = {
+                    username = username;
                 };
             };
         };
