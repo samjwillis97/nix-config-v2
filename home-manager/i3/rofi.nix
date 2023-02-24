@@ -16,107 +16,59 @@
             hide-scrollbar = true;
         };
 
-        theme = let
-            inherit (config.lib.formats.rasi) mkLiteral;
-        in {
+        theme = 
+        let l = config.lib.formats.rasi.mkLiteral;
+          in
+          with config.theme.colors; {
             "*" = {
-                bg-col =  mkLiteral "#24273a";
-                bg-col-light = mkLiteral "#24273a";
-                border-col = mkLiteral "#24273a";
-                selected-col = mkLiteral "#363a4f";
-                blue = "#8aadf4";
-                fg-col = "#cad3f5";
-                fg-col2 = "#ed8796";
-                grey = "#6e738d";
-                width = 600;
-                font = "JetBrains Mono Nerd Font 12";
+              background-color = l base00;
+              border-color = l base01;
+              text-color = l base05;
+              spacing = 0;
+              width = l "512px";
             };
 
-            "element-text, element-icon, mode-switcher" = {
-                background-color = mkLiteral "inherit";
-                text-color = mkLiteral "inherit";
+            inputbar = {
+              border = l "0 0 1px 0";
+              children = map l [ "prompt" "entry" ];
             };
 
-            "window" = {
-                height = mkLiteral "360px";
-                border = mkLiteral "3px";
-                border-color = mkLiteral "@border-col";
-                background-color = mkLiteral "@bg-col";
+            prompt = {
+              padding = l "16px";
+              border = l "0 1px 0 0";
             };
 
-            "mainbox" = {
-                background-color = "@bg-col";
+            textbox = {
+              background-color = l base01;
+              border = l "0 0 1px 0";
+              border-color = l base00;
+              padding = l "8px 16px";
             };
 
-            "inputbar" = {
-                children = map mkLiteral [ "prompt" "entry"];
-                background-color = mkLiteral "@bg-col";
-                border-radius = mkLiteral "5px";
-                padding = mkLiteral "2px";
+            entry = { padding = l "16px"; };
+
+            listview = {
+              cycle = true;
+              margin = l "0 0 -1px 0";
+              scrollbar = false;
             };
 
-            "prompt" = {
-                background-color = mkLiteral "@blue";
-                padding = mkLiteral "6px";
-                text-color = mkLiteral "@bg-col";
-                border-radius = mkLiteral "3px";
-                margin = mkLiteral "20px 0px 0px 20px";
+            element = {
+              border = l "2px";
+              border-color = l base00;
+              padding = l "8px";
             };
 
-            "textbox-prompt-colon" = {
-                expand = false;
-                str = ":";
-            };
-
-            "entry" = {
-                padding = mkLiteral "6px";
-                margin = mkLiteral "20px 0px 0px 10px";
-                text-color = mkLiteral "@fg-col";
-                background-color = mkLiteral "@bg-col";
-            };
-
-            "listview" = {
-                border = mkLiteral "0px 0px 0px";
-                padding = mkLiteral "6px 0px 4px";
-                margin = mkLiteral "10px 0px 0px 20px";
-                columns = 1;
-                lines = 5;
-                background-color = mkLiteral "@bg-col";
-            };
-
-            "element" = {
-                padding = mkLiteral "3px 3px 3px 20px";
-                margin = mkLiteral "0px 20px 0px 0px";
-                background-color = mkLiteral "@bg-col";
-                text-color = mkLiteral "@fg-col";
-            };
-
-            "element-icon" = {
-                size = mkLiteral "20px";
+            element-icon = {
+              size = l "28px";
+              border = l "0 4px";
+              border-color = l base00;
             };
 
             "element selected" = {
-                background-color =  mkLiteral "@selected-col";
-                text-color = mkLiteral "@fg-col";
-                border-radius = mkLiteral "3px";
+              border-color = l base0D;
+              color = l base00;
             };
-
-            "mode-switcher" = {
-                spacing = 0;
-            };
-
-            "button" = {
-                padding = mkLiteral "10px";
-                background-color = mkLiteral "@bg-col-light";
-                text-color = mkLiteral "@grey";
-                vertical-align = "0.5"; 
-                horizontal-align = "0.5";
-            };
-
-            "button selected" = {
-            background-color = mkLiteral "@bg-col";
-            text-color = mkLiteral "@blue";
-            };
-        };
+          };
     };
 }
