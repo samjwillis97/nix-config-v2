@@ -1,6 +1,7 @@
 { super, config, home, ... }:
 {
     imports = [
+        ../../home-manager/theme
         ../../home-manager/meta
         ../../home-manager/cli
     ] ++ super.meta.extraHomeModules;

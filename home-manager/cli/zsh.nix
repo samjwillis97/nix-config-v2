@@ -1,8 +1,5 @@
 { config, pkgs, lib, flake, ... }:
 {
-    # TODO: 
-    #   - Tmux Sessionizer
-
     home.packages = with pkgs; [
         bat
         rsync
