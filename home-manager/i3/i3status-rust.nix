@@ -9,17 +9,17 @@
                     theme = {
                         name = "plain";
 						overrides = with config.theme.colors; {
-                            idle_bg = base00;
+                            idle_bg = base02;
                             idle_fg = base05;
                             info_bg = base0D;
-                            info_fg = base00;
+                            info_fg = base02;
                             good_bg = base00;
                             good_fg = base05;
                             warning_bg = base0A;
-                            warning_fg = base00;
+                            warning_fg = base02;
                             critical_bg = base08;
                             critical_fg = base00;
-                            separator_bg = base00;
+                            separator_bg = base02;
                             separator = " ";
                         };
                     };
