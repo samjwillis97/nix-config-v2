@@ -5,6 +5,7 @@
         jetbrains.rider
         jetbrains.pycharm-professional
         jetbrains.goland
+        jetbrains.gateway
         vscodium
     ];
 

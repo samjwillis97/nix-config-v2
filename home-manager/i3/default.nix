@@ -67,7 +67,6 @@ let
         };
 in {
     # TODO: nnn
-    # TODO: autorandr
     imports = [
         ./rofi.nix
         ./i3status-rust.nix
@@ -75,6 +74,7 @@ in {
         ./dunst.nix
         ./picom.nix
         ./gammastep.nix
+        ../autorandr
     ];
 
     home = {

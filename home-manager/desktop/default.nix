@@ -20,6 +20,11 @@
         pamixer
         udiskie
         xclip
+        chromium
+        filezilla
+        xfce.thunar
+        xfce.thunar-archive-plugin
+        obs-studio
     ];
 
     services.udiskie = {

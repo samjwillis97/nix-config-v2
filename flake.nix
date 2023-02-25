@@ -53,6 +53,7 @@
                     ./nixos/xserver.nix
                     ./nixos/audio.nix
                     ./nixos/gaming.nix
+                    ./nixos/logitech.nix
                 ];
                 extraHomeModules = [
                     ./home-manager/nixos.nix
@@ -61,6 +62,7 @@
                     ./home-manager/gaming
                     ./home-manager/dev
                     ./home-manager/work
+                    ./home-manager/ides
                 ];
             })
 

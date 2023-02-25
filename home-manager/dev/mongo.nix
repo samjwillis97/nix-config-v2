@@ -1,10 +1,8 @@
-# TODO:
-#   - Teams
 { pkgs, ... }:
 {
     home.packages = with pkgs; [
-        # Clashing or something?
-        /* teams */
+        mongodb-5_0
+        robo3t
     ];
 
     # TODO: Get mongodb-memory-server working by exporting the path

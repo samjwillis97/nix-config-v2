@@ -27,9 +27,6 @@ These Repo's are where I took major inspiration and chunks of code from :)
     - picom - might already be working
     - monitor management
     - network?
-    - logitech
-    - obs
-- ide's (Jetbrains for Work reasons)
 - secrets?
 
 ## To Look Into
