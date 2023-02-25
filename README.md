@@ -22,11 +22,10 @@ These Repo's are where I took major inspiration and chunks of code from :)
 ## TODOs:
 
 - font-switching in alacritty depending on OS
-- second tmux session script, think its on fedora PC
 - i3
     - picom - might already be working
-    - monitor management
-    - network?
+    - monitor management - maybe done now
+    - network - Hardware config problem I hope
 - secrets?
 
 ## To Look Into
