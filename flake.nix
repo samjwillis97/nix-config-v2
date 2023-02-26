@@ -22,9 +22,13 @@
         flake-utils = {
             url = "github:numtide/flake-utils";
         };
+
+        nur = {
+            url = "github:nix-community/NUR";
+        };
     };
 
-    outputs = { self, nixpkgs, flake-utils, ... }@inputs:
+    outputs = { self, nixpkgs, nur, flake-utils, ... }@inputs:
     let
         lib = nixpkgs.lib;
         inherit (import ./lib/attrsets.nix { inherit (nixpkgs) lib; }) recursiveMergeAttrs mergeMap;

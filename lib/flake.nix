@@ -23,7 +23,9 @@ in
     {
         nixosConfigurations.${hostname} = nixosSystem {
             inherit system;
-            modules = [ ../hosts/${hostname} ] ++ extraModules;
+            modules = [ 
+                ../hosts/${hostname} 
+            ] ++ extraModules;
             specialArgs = {
                 inherit system;
                 flake = self;
