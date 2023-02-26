@@ -45,6 +45,28 @@
         # - Audio
         # - Dev
             (mkNixosSystem {
+                hostname = "personal-desktop";
+                system = "x86_64-linux";
+                username = "sam";
+                networkAdapterName = "enp9s0";
+                extraModules = [
+                    ./nixos/xserver.nix
+                    ./nixos/audio.nix
+                    ./nixos/gaming.nix
+                    ./nixos/logitech.nix
+                ];
+                extraHomeModules = [
+                    ./home-manager/nixos.nix
+                    ./home-manager/desktop
+                    ./home-manager/i3
+                    ./home-manager/gaming
+                    ./home-manager/dev
+                    ./home-manager/work
+                    ./home-manager/ides
+                ];
+            })
+
+            (mkNixosSystem {
                 hostname = "test-vm";
                 system = "x86_64-linux";
                 username = "sam";

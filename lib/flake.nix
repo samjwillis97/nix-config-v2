@@ -28,7 +28,7 @@ in
                 inherit system;
                 flake = self;
                 super.meta = {
-                    inherit username extraHomeModules networkAdapterName;
+                    inherit username extraHomeModules networkAdapterName hostname;
                 };
             };
         };

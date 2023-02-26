@@ -3,6 +3,11 @@
 with lib;
 {
   options.meta = {
+    hostname = mkOption {
+      description = "PC Hostname";
+      type = types.str;
+      default = "nixos";
+    };
     username = mkOption {
       description = "Main username";
       type = types.str;

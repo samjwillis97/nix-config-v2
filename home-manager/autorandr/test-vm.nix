@@ -3,7 +3,7 @@
     programs.autorandr.profiles = {
         "primary" = {
             fingerprint = {
-                Virtual1 = "--CONNECTED-BUT-EDID-UNAVAILABLE--Virtual1"
+                Virtual1 = "--CONNECTED-BUT-EDID-UNAVAILABLE--Virtual1";
             };
             config = {
                 Virtual1 = {

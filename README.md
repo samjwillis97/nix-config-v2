@@ -21,11 +21,10 @@ These Repo's are where I took major inspiration and chunks of code from :)
 
 ## TODOs:
 
+- NTP
+- firefox addons
 - font-switching in alacritty depending on OS
-- i3
-    - picom - might already be working
-    - monitor management - maybe done now
-    - network - Hardware config problem I hope
+- i3 move across monitors
 - secrets?
 
 ## To Look Into
