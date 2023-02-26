@@ -1,5 +1,5 @@
 { pkgs, flake, ... }:
-
+# TODO: Add to HM and Darwin Configs
 let
   inherit (flake) inputs;
 in

@@ -21,8 +21,8 @@ These Repo's are where I took major inspiration and chunks of code from :)
 
 ## TODOs:
 
-- NTP
-- firefox addons
+- Remove window labels i3
+- AMD Drivers
 - font-switching in alacritty depending on OS
 - i3 move across monitors
 - secrets?

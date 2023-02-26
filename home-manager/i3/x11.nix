@@ -73,6 +73,7 @@ in
 
     xsession = {
         enable = true;
+        numlock.enable = true;
         initExtra =
           # Automatically loads the best layout from autorandr
           ''
