@@ -203,7 +203,7 @@ in
 
       "${modifier}+f" = "fullscreen toggle";
       "${modifier}+s" = "split v";
-      "${modifier}+h" = "split h";
+      "${modifier}+v" = "split h";
 
       "${modifier}+Shift+s" = "layout stacking";
       "${modifier}+Shift+w" = "layout tabbed";
