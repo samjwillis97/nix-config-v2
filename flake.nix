@@ -97,10 +97,23 @@
                 system = "aarch64-darwin";
                 username = "samwillis";
                 homePath = "/Users";
+                extraHomeModules = [
+                    ./home-manager/alacritty
+                ];
             })
 
             (mkHomeManager {
+                hostname = "amp-7150";
+            })
+            (mkHomeManager {
                 hostname = "amp-8060";
+                extrahomemodules = [
+                    # TODO: firefox
+                    ./home-manager/nixos.nix
+                    ./home-manager/alacritty
+                    ./home-manager/dev
+                    ./home-manager/work
+                ];
             })
         ]);
     }
