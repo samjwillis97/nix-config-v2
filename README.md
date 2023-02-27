@@ -12,6 +12,7 @@ These Repo's are where I took major inspiration and chunks of code from :)
 
 - https://github.com/thiagokokada/nix-configs
 - https://github.com/JayRovacsek/nix-config
+- https://github.com/domenkozar/homelab
 
 ## Nix Components
 

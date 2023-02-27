@@ -5,11 +5,13 @@
   # TODO: Look at Overlays
   imports = [
     ../overlays
+    ../cachix.nix
   ];
 
   # Add some Nix related packages
   environment.systemPackages = with pkgs; [
     cachix
+    nix-build-uncached
     /* nixos-cleanup */
   ];
 
