@@ -107,7 +107,7 @@
             })
             (mkHomeManager {
                 hostname = "amp-8060";
-                extrahomemodules = [
+                extraHomeModules = [
                     # TODO: firefox
                     ./home-manager/nixos.nix
                     ./home-manager/alacritty

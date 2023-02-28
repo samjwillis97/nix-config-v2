@@ -87,6 +87,7 @@ in
                 flake = self;
                 super.meta = {
                     username = username;
+                    extraHomeModules = extraHomeModules;
                 };
             };
         };
