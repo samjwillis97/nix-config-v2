@@ -124,6 +124,7 @@
             # angularls
             omnisharp-roslyn
             nodePackages.bash-language-server
+            nodePackages.vscode-langservers-extracted
             nodePackages.vscode-json-languageserver
             nodePackages.yaml-language-server
             nodePackages.vscode-css-languageserver-bin
