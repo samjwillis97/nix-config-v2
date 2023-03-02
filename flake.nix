@@ -67,6 +67,7 @@
                     ./home-manager/dev
                     ./home-manager/work
                     ./home-manager/ides
+                    ./home-manager/tailscale
                 ];
             })
 

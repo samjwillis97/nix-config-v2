@@ -2,7 +2,8 @@
 {
     home.packages = with pkgs; [
         mongodb-5_0
-        robo3t
+        /* robo3t */
+        mongodb-compass
     ];
 
     # TODO: Get mongodb-memory-server working by exporting the path
