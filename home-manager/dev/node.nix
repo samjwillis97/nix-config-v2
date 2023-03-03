@@ -5,5 +5,6 @@
         nodePackages.npm
         nodePackages.typescript
         nodePackages.prettier
+        nodePackages.pnpm
     ];
 }

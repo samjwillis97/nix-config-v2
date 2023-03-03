@@ -7,7 +7,7 @@ in
   users.users.${username} = {
     isNormalUser = true;
     uid = 1000;
-    extraGroups = [ "wheel" "networkmanager" "video" ];
+    extraGroups = [ "wheel" "networkmanager" "video" "docker" ];
     shell = pkgs.zsh;
     password = "nixos";
   };

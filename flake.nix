@@ -26,9 +26,13 @@
         nur = {
             url = "github:nix-community/NUR";
         };
+
+        devenv = {
+            url = "github:cachix/devenv/latest";
+        };
     };
 
-    outputs = { self, nixpkgs, nur, flake-utils, ... }@inputs:
+    outputs = { self, nixpkgs, nur, flake-utils, devenv,... }@inputs:
     let
         lib = nixpkgs.lib;
         inherit (import ./lib/attrsets.nix { inherit (nixpkgs) lib; }) recursiveMergeAttrs mergeMap;
@@ -58,6 +62,7 @@
                     ./nixos/audio.nix
                     ./nixos/gaming.nix
                     ./nixos/logitech.nix
+                    ./nixos/docker.nix
                 ];
                 extraHomeModules = [
                     ./home-manager/nixos.nix
@@ -67,7 +72,6 @@
                     ./home-manager/dev
                     ./home-manager/work
                     ./home-manager/ides
-                    ./home-manager/tailscale
                 ];
             })
 
