@@ -1,4 +1,4 @@
-{ config, pkgs, flake, ... }:
+{ config, pkgs, flake, system, ... }:
 
 {
   # TODO: Look at Cachix
@@ -24,6 +24,9 @@
   system.stateVersion = "22.11"; # Did you read the comment?
 
   # TODO: Look at ../shared/nix.nix in Thio
+
+    # TODO: Get formatter working
+  /* formatter = pkgs.legacyPackages.${system}.nixfmt; */
 
   # Enable unfree packages
   nixpkgs.config.allowUnfree = true;

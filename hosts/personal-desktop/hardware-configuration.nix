@@ -33,6 +33,10 @@
   # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
   networking.useDHCP = lib.mkDefault true;
   networking.interfaces.enp9s0.useDHCP = lib.mkDefault true;
+  networking.nameservers = [
+    "1.1.1.1"
+    "8.8.8.8"
+  ];
   # networking.interfaces.wlp7s0.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
