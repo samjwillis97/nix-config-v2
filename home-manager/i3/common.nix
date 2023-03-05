@@ -10,8 +10,8 @@
 , browser
 , fileManager
 , statusCommand
-, alt ? "Mod1"
-, modifier ? "Mod4"
+, alt ? "Mod4" # Super Key
+, modifier ? "Mod1" # Alt Key
 , bars ? with config.theme.colors;  [{
     inherit fonts statusCommand;
 

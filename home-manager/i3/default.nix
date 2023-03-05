@@ -1,10 +1,6 @@
 # Config by: https://github.com/thiagokokada/nix-configs/blob/master/home-manager/i3/default.nix
 { config, lib, pkgs, ... }:
 let
-    # Aliases
-    alt = "Mod4";
-    modifier = "Mod1";
-
     commonOptions = 
         let
             dunstctl = "${pkgs.dunst}/bin/dunstctl";

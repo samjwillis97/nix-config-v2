@@ -4,21 +4,26 @@
 { config, lib, pkgs, modulesPath, ... }:
 
 {
-  imports = [ ];
+  imports = [ <nixpkgs/nixos/modules/virtualisation/qemu-vm.nix> ];
 
-  boot.initrd.availableKernelModules = [ "ata_piix" "ohci_pci" "ehci_pci" "ahci" "sd_mod" "sr_mod" ];
-  boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ ];
-  boot.extraModulePackages = [ ];
+  virtualisation = {
+      memorySize = 4096;
+      cores = 8;
+  };
 
-  fileSystems."/" =
-    { device = "/dev/disk/by-uuid/bda6e682-bbae-44b5-933e-9c4b52c2ded2";
-      fsType = "ext4";
-    };
+  /* boot.initrd.availableKernelModules = [ "ata_piix" "ohci_pci" "ehci_pci" "ahci" "sd_mod" "sr_mod" ]; */
+  /* boot.initrd.kernelModules = [ ]; */
+  /* boot.kernelModules = [ ]; */
+  /* boot.extraModulePackages = [ ]; */
 
-  swapDevices =
-    [ { device = "/dev/disk/by-uuid/aa80d8c2-1851-4b12-a079-61efd69ff884"; }
-    ];
+  /* fileSystems."/" = */
+  /*   { device = "/dev/disk/by-uuid/bda6e682-bbae-44b5-933e-9c4b52c2ded2"; */
+  /*     fsType = "ext4"; */
+  /*   }; */
+
+  /* swapDevices = */
+  /*   [ { device = "/dev/disk/by-uuid/aa80d8c2-1851-4b12-a079-61efd69ff884"; } */
+  /*   ]; */
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
@@ -29,5 +34,5 @@
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-  virtualisation.virtualbox.guest.enable = true;
+  /* virtualisation.virtualbox.guest.enable = true; */
 }
