@@ -5,6 +5,7 @@
         ./meta.nix
         ./system.nix
         ./fonts.nix
+        ../overlays
     ];
 
     # TODO:
