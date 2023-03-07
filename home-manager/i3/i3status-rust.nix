@@ -96,6 +96,20 @@
                         timeBlock
                     ];
                 };
+
+                sway = {
+                    inherit settings;
+
+                    blocks = lib.lists.flatten [
+                        netBlock
+                        diskBlock
+                        memoryBlock
+                        cpuBlock
+                        loadBlock
+                        soundBlock
+                        timeBlock
+                    ];
+                };
             };
     };
 }

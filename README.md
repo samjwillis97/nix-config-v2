@@ -22,6 +22,7 @@ These Repo's are where I took major inspiration and chunks of code from :)
 
 ## TODOs:
 
+- Screensharing may be broken in wayland (IDK) - https://github.com/thiagokokada/nix-configs/blob/bb27b5dd3b2e35631753c39455fdd17797f1838b/nixos/desktop.nix#L20
 - Remove window labels i3
 - AMD Drivers
 - font-switching in alacritty depending on OS

@@ -42,6 +42,7 @@
 
       # Enable sx, a lightweight startx alternative
       displayManager.sx.enable = true;
+      /* displayManager.lightdm.enable = true; */
 
       # Enable libinput
       libinput = {

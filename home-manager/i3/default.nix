@@ -1,6 +1,10 @@
 # Config by: https://github.com/thiagokokada/nix-configs/blob/master/home-manager/i3/default.nix
 { config, lib, pkgs, ... }:
 let
+    # Aliases
+    alt = "Mod4";
+    modifier = "Mod1";
+
     commonOptions = 
         let
             dunstctl = "${pkgs.dunst}/bin/dunstctl";
@@ -78,7 +82,7 @@ in {
             feh
             ffmpegthumbnailer # Just a thumbnailer
             libnotify
-            maim # This is a screenshotter - flameshot replacement
+            maim # This is a screenshotter - flameshot replacement - TODO: Replace with flameshot
             playerctl # Some sort of media player
             wmctrl # Window manager control?
             xsecurelock
@@ -86,6 +90,7 @@ in {
             pamixer
             nnn
             arandr
+            dex
         ];
     };
 
@@ -95,6 +100,13 @@ in {
         package = pkgs.i3-gaps;
         inherit extraConfig;
 
-        config = commonOptions.config;
+        config = commonOptions.config // {
+            startup = [
+                {
+                    command = "${pkgs.dex}/bin/dex --autostart";
+                    notification = false;
+                }
+            ];
+        };
     };
 }
