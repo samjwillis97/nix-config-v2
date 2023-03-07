@@ -4,7 +4,6 @@ vim.g.mapleader = "\\"
 vim.opt.encoding = "utf-8"
 vim.opt.errorbells = false
 vim.opt.updatetime = 50
-vim.opt.shortmess:append("c") -- Why??
 
 -- Swap Files
 vim.opt.swapfile = false
@@ -86,8 +85,6 @@ vim.api.nvim_create_autocmd("BufEnter", {
 		end
 	end,
 })
-
--- Reopening A File - at same line (TODO)
 
 -- Insert Mode Remaps
 vim.api.nvim_set_keymap("i", "jk", "<Esc>", { noremap = true })

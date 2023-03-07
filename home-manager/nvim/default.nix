@@ -93,7 +93,7 @@
             nvim-dap-virtual-text
 
         ## Nice Startup Screen :)
-            pkgs.vimExtraPlugins.startup-nvim
+            dashboard-nvim
         ];
 
         extraPackages = with pkgs; [
