@@ -83,7 +83,7 @@
                 extraModules = [
                     # Might still need xserver here
                     ./nixos/xserver.nix
-                    ./nixos/wayland.nix
+                    /* ./nixos/wayland.nix */
                     ./nixos/audio.nix
                     ./nixos/gaming.nix
                     ./nixos/logitech.nix
@@ -91,7 +91,7 @@
                 extraHomeModules = [
                     ./home-manager/nixos.nix
                     ./home-manager/desktop
-                    ./home-manager/sway
+                    /* ./home-manager/sway */
                     ./home-manager/i3
                     ./home-manager/gaming
                     ./home-manager/dev
