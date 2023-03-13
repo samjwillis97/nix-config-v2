@@ -125,7 +125,7 @@
                     ./home-manager/nixos.nix
                     ./home-manager/cli
                     # ./home-manager/alacritty
-                    /* ./home-manager/dev */
+                    ./home-manager/dev
                     ./home-manager/work
                 ];
             })
