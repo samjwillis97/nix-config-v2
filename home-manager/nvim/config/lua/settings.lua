@@ -126,9 +126,10 @@ vim.api.nvim_set_keymap("n", "<leader>2", ':lua require("harpoon.ui").nav_file(2
 vim.api.nvim_set_keymap("n", "<leader>3", ':lua require("harpoon.ui").nav_file(3)<CR>', { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>4", ':lua require("harpoon.ui").nav_file(4)<CR>', { noremap = true })
 ---- Telescope
+vim.api.nvim_set_keymap("n", "<leader>g", ":Git<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>f", ":Telescope git_files<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>F", ":Telescope live_grep<CR>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>s", ":Telescope grep_string<CR>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>w", ":Telescope grep_string<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>b", ":Telescope buffers<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>h", ":Telescope help_tags<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>B", ":Telescope current_buffer_fuzzy_find<CR>", { noremap = true })
