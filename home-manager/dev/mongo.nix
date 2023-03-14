@@ -4,6 +4,7 @@
         /* mongodb-5_0 */
         /* robo3t */
         mongodb-compass
+        mongodb-tools
     ];
 
     # TODO: Get mongodb-memory-server working by exporting the path
