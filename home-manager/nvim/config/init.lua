@@ -8,7 +8,7 @@ require("outline")
 require("debugger")
 require("format")
 require("settings")
-require("dashboard")
+-- require("dashboard")
 
 vim.g.catppuccin_flavour = "macchiato"
 require("catppuccin").setup({
