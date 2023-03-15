@@ -24,6 +24,8 @@
         direnv
         neofetch
         _1password
+
+        nodePackages.wrangler
     ];
 
     programs.bat = {
