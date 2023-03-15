@@ -33,6 +33,7 @@
 
         initExtra = with config.theme.colors; ''
             export MONGOMS_SYSTEM_BINARY=/etc/profiles/per-user/${super.meta.username}/bin/mongod
+            export OMNISHARP_DIR=${pkgs.omnisharp-roslyn}/lib/omnisharp-roslyn/
 
             bindkey -s ^f "tmux-sessionizer\n"
 

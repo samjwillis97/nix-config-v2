@@ -79,6 +79,7 @@
             cmp-path
             cmp-cmdline
             lspkind-nvim
+            omnisharp-extended-lsp-nvim
 
         ## VSnip
             vim-vsnip

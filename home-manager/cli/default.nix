@@ -17,6 +17,7 @@
         ripgrep
         wget
         zip
+        unzip
         difftastic
         htop
         fzf
