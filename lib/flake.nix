@@ -31,6 +31,7 @@ in
                 flake = self;
                 super.meta = {
                     inherit username extraHomeModules networkAdapterName hostname;
+                    isDarwin = false;
                 };
             };
         };
@@ -67,6 +68,7 @@ in
         ,homePath ? "/home"
         ,system ? "x86_64-linux"
         ,extraHomeModules ? []
+        ,isDarwin ? false
         ,homeManagerConfiguration ? home-manager.lib.homeManagerConfiguration
         ,...
     }:
@@ -89,6 +91,7 @@ in
                 super.meta = {
                     username = username;
                     extraHomeModules = extraHomeModules;
+                    isDarwin = isDarwin;
                 };
             };
         };
