@@ -23,6 +23,11 @@ with lib;
         type = types.str;
         default = "en01";
     };
+    isDarwin = mkOption {
+        description = "Whether system is darwin";
+        type = types.bool;
+        default = false;
+    };
     /* configPath = mkOption { */
     /*   description = "Location of this config"; */
     /*   type = types.path; */

@@ -53,6 +53,7 @@ in
                 inherit system;
                 flake = self;
                 super.meta = {
+                    isDarwin = true;
                     username = username;
                     extraHomeModules = extraHomeModules;
                 };

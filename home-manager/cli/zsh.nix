@@ -1,4 +1,7 @@
 { super, config, pkgs, lib, flake, ... }:
+let
+    homeDirectory = if super.meta.isDarwin then "/Users/${super.meta.username}" else "/home/${super.meta.username}";
+in
 {
     home.packages = with pkgs; [
         bat
@@ -32,6 +35,7 @@
         };
 
         initExtra = with config.theme.colors; ''
+            export PATH="$PATH:${homeDirectory}/.dotnet/tools"
             export MONGOMS_SYSTEM_BINARY=/etc/profiles/per-user/${super.meta.username}/bin/mongod
             export OMNISHARP_DIR=${pkgs.omnisharp-roslyn}/lib/omnisharp-roslyn/
 
