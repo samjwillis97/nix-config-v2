@@ -211,6 +211,7 @@ in
 
       "${modifier}+space" = "floating toggle";
       "${modifier}+Shift+space" = "focus mode_toggle";
+      "${modifier}+Control+space" = "sticky toggle";
 
       "${modifier}+a" = "focus parent";
 
