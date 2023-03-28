@@ -25,6 +25,7 @@
         xfce.thunar
         xfce.thunar-archive-plugin
         obs-studio
+        peek
     ];
 
     services.udiskie = {
