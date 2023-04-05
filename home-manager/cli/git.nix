@@ -52,4 +52,8 @@
             tug = "!git fetch && git pull";
         };
     };
+
+    home.packages = with pkgs; [
+        gptcommit
+    ];
 }
