@@ -7,6 +7,8 @@
         jetbrains.goland
         jetbrains.gateway
         vscodium
+        insomnia
+        dbeaver
     ];
 
     # TODO: .idea config
