@@ -112,6 +112,7 @@
                 homePath = "/Users";
                 extraHomeModules = [
                     ./home-manager/alacritty
+                    ./home-manager/dev/rust.nix
                 ];
             })
 
