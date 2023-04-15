@@ -1,9 +1,3 @@
-{ pkgs, ... }:
-{
-    home.packages = with pkgs; [
-        rustc
-        rustfmt
-        rust-analyzer
-        cargo
-    ];
+{ pkgs, ... }: {
+  home.packages = with pkgs; [ cargo rustc rustfmt rust-analyzer ];
 }

@@ -30,6 +30,10 @@
         devenv = {
             url = "github:cachix/devenv/latest";
         };
+        
+        my-neovim= {
+            url = "github:samjwillis97/neovim-flake";
+        };
 
         # Additional Neovim Plugins
         nixneovimplugins = {
@@ -37,7 +41,7 @@
         };
     };
 
-    outputs = { self, nixpkgs, nur, flake-utils, devenv, nixneovimplugins,... }@inputs:
+    outputs = { self, nixpkgs, nur, flake-utils, devenv, my-neovim, nixneovimplugins,... }@inputs:
     let
         lib = nixpkgs.lib;
         inherit (import ./lib/attrsets.nix { inherit (nixpkgs) lib; }) recursiveMergeAttrs mergeMap;

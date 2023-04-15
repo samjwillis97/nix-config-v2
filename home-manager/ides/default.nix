@@ -6,7 +6,7 @@
         jetbrains.pycharm-professional
         jetbrains.goland
         jetbrains.gateway
-        vscodium
+        vscode
         insomnia
         dbeaver
     ];
