@@ -6,7 +6,7 @@ in {
     (final: prev: {
       # gaming = flake.inputs.nix-gaming.packages.${system};
       wallpapers = prev.callPackage ../packages/wallpapers { };
-      # my-neovim = flake.inputs.my-neovim.packages.${system}.nvim;
+      my-neovim = flake.inputs.my-neovim.packages.${system}.default;
     })
     inputs.nixneovimplugins.overlays.default
   ];

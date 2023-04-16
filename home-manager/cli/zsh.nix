@@ -37,7 +37,7 @@ in {
       export PATH="$PATH:${homeDirectory}/go/bin"
       export MONGOMS_SYSTEM_BINARY=/etc/profiles/per-user/${super.meta.username}/bin/mongod
       export OMNISHARP_DIR=${pkgs.omnisharp-roslyn}/lib/omnisharp-roslyn/
-      alias nvim="nix run github:samjwillis97/neovim-flake --"
+      # alias nvim="nix run github:samjwillis97/neovim-flake --"
 
       bindkey -s ^f "tmux-sessionizer\n"
 

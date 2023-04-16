@@ -3,16 +3,14 @@
 {
   # TODO: Look at Cachix
   # TODO: Look at Overlays
-  imports = [
-    ../overlays
-    ../cachix.nix
-  ];
+  imports = [ ../overlays ../cachix.nix ];
 
   # Add some Nix related packages
   environment.systemPackages = with pkgs; [
     cachix
     nix-build-uncached
-    /* nixos-cleanup */
+    my-neovim
+    # nixos-cleanup
   ];
 
   nix = import ../shared/nix.nix { inherit pkgs flake; };
@@ -25,8 +23,8 @@
 
   # TODO: Look at ../shared/nix.nix in Thio
 
-    # TODO: Get formatter working
-  /* formatter = pkgs.legacyPackages.${system}.nixfmt; */
+  # TODO: Get formatter working
+  # formatter = pkgs.legacyPackages.${system}.nixfmt;
 
   # Enable unfree packages
   nixpkgs.config.allowUnfree = true;
