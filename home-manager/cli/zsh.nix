@@ -4,10 +4,34 @@ let
     "/Users/${super.meta.username}"
   else
     "/home/${super.meta.username}";
+
+  baseInit = with config.theme.colors; ''
+    export PATH="$PATH:${homeDirectory}/.dotnet/tools"
+    export PATH="$PATH:${homeDirectory}/go/bin"
+    export MONGOMS_SYSTEM_BINARY=/etc/profiles/per-user/${super.meta.username}/bin/mongod
+    export OMNISHARP_DIR=${pkgs.omnisharp-roslyn}/lib/omnisharp-roslyn/
+    # alias nvim="nix run github:samjwillis97/neovim-flake --"
+
+    bindkey -s ^f "tmux-sessionizer\n"
+
+    export FZF_DEFAULT_OPTS=" \
+        --color=bg+:${base02},bg:${base00},spinner:${base06},hl:${base08} \
+        --color=fg:${base05},header:${base08},info:${base0E},pointer:${base06} \
+        --color=marker:${base06},fg+:${base05},prompt:${base0E},hl+:${base08}"
+  '';
+
+  initExtra = if super.meta.hostname == "amp-8060" then
+    ''
+      alias nvim="nix run github:samjwillis97/neovim-flake --"
+    '' + baseInit
+  else
+    baseInit;
 in {
   home.packages = with pkgs; [ bat rsync gnutar ];
 
   programs.zsh = {
+    inherit initExtra;
+
     enable = true;
 
     enableSyntaxHighlighting = true;
@@ -31,21 +55,6 @@ in {
       '';
       untar = "tar -zxvf";
     };
-
-    initExtra = with config.theme.colors; ''
-      export PATH="$PATH:${homeDirectory}/.dotnet/tools"
-      export PATH="$PATH:${homeDirectory}/go/bin"
-      export MONGOMS_SYSTEM_BINARY=/etc/profiles/per-user/${super.meta.username}/bin/mongod
-      export OMNISHARP_DIR=${pkgs.omnisharp-roslyn}/lib/omnisharp-roslyn/
-      # alias nvim="nix run github:samjwillis97/neovim-flake --"
-
-      bindkey -s ^f "tmux-sessionizer\n"
-
-      export FZF_DEFAULT_OPTS=" \
-          --color=bg+:${base02},bg:${base00},spinner:${base06},hl:${base08} \
-          --color=fg:${base05},header:${base08},info:${base0E},pointer:${base06} \
-          --color=marker:${base06},fg+:${base05},prompt:${base0E},hl+:${base08}"
-    '';
 
     oh-my-zsh = {
       enable = true;
