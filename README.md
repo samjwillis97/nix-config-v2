@@ -6,6 +6,12 @@ This repository is home to the nix code that builds my systems 🎉.
 
 Nix allows for easy to manage, collaborative, reproducible deployments. This means that once something is setup and configured once, it works forever. If someone else shares their configuration, anyone can make use of it.
 
+## How To
+
+### Update Flake Input
+
+`nix flake lock --update-input my-neovim`
+
 ## Credits
 
 These Repo's are where I took major inspiration and chunks of code from :)

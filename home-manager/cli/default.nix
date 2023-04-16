@@ -23,6 +23,7 @@
     direnv
     neofetch
     _1password
+    my-neovim
 
     nodePackages.wrangler
   ];

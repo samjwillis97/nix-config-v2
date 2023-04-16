@@ -9,7 +9,6 @@
   environment.systemPackages = with pkgs; [
     cachix
     nix-build-uncached
-    my-neovim
     # nixos-cleanup
   ];
 
