@@ -28,6 +28,9 @@ These Repo's are where I took major inspiration and chunks of code from :)
 
 ## TODOs:
 
+- qutebrowser plugins
+- qutebrowser config
+- qutebrowser bookmarks/searches
 - Screensharing may be broken in wayland (IDK) - https://github.com/thiagokokada/nix-configs/blob/bb27b5dd3b2e35631753c39455fdd17797f1838b/nixos/desktop.nix#L20
 - Remove window labels i3
 - AMD Drivers
