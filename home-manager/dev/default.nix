@@ -5,5 +5,6 @@
     ./mongo.nix
     # ./csharp.nix
     ./rust.nix
+    ./devenv.nix
   ];
 }
