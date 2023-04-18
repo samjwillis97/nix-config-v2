@@ -104,8 +104,11 @@
         system = "aarch64-darwin";
         username = "samwillis";
         homePath = "/Users";
-        extraHomeModules =
-          [ ./home-manager/alacritty ./home-manager/dev/rust.nix ];
+        extraHomeModules = [
+          ./home-manager/alacritty
+          ./home-manager/dev/rust.nix
+          ./home-manager/dev/devenv.nix
+        ];
       })
 
       (mkHomeManager { hostname = "amp-7150"; })
