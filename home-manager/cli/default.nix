@@ -1,12 +1,5 @@
 { config, lib, pkgs, ... }: {
-  imports = [
-    ./zsh.nix
-    ./tmux.nix
-    ./git.nix
-    ./ssh.nix
-    # ../nvim
-    ../scripts
-  ];
+  imports = [ ./zsh.nix ./tmux.nix ./git.nix ./ssh.nix ../scripts ];
 
   home.packages = with pkgs; [
     bat
