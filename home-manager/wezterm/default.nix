@@ -1,36 +1,43 @@
-{ pkgs, ... }: {
+{ config, pkgs, ... }: {
   programs.wezterm = {
     enable = true;
     colorSchemes = {
-      base16 = {
-        ansi = [
-          "#222222"
-          "#D14949"
-          "#48874F"
-          "#AFA75A"
-          "#599797"
-          "#8F6089"
-          "#5C9FA8"
-          "#8C8C8C"
-        ];
-        brights = [
-          "#444444"
-          "#FF6D6D"
-          "#89FF95"
-          "#FFF484"
-          "#97DDFF"
-          "#FDAAF2"
-          "#85F5DA"
-          "#E9E9E9"
-        ];
-        background = "#1B1B1B";
-        cursor_bg = "#BEAF8A";
-        cursor_border = "#BEAF8A";
-        cursor_fg = "#1B1B1B";
-        foreground = "#BEAF8A";
-        selection_bg = "#444444";
-        selection_fg = "#E9E9E9";
+      base16 = with config.theme.colors; {
+        # ansi = [    
+        #     "black"
+        #     "maroon"
+        #     "green"
+        #     "olive"
+        #     "navy"
+        #     "purple"
+        #     "teal"
+        #     "silver"
+        # ];
+        # brights = [    
+        #     "grey"
+        #     "red"
+        #     "lime"
+        #     "yellow"
+        #     "blue"
+        #     "fuchsia"
+        #     "aqua"
+        #     "white"
+        # ];
+        ansi = [ base00 base08 base0B base0A base0D base0E base0C base05 ];
+        brights = [ base03 base08 base0B base0A base0D base0E base0C base05 ];
+        background = base00;
+        cursor_bg = base06;
+        cursor_border = base06;
+        cursor_fg = base00;
+        foreground = base05;
+        selection_bg = base06;
+        selection_fg = base00;
       };
     };
+    extraConfig = ''
+      return {
+        color_scheme = "base16",
+      }
+    '';
   };
 }
