@@ -107,6 +107,7 @@
         homePath = "/Users";
         extraHomeModules = [
           ./home-manager/alacritty
+          ./home-manager/wezterm
           ./home-manager/dev/rust.nix
           ./home-manager/dev/devenv.nix
         ];
