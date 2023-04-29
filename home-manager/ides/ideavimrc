@@ -1,0 +1,59 @@
+"" Minimum Settings
+let mapleader="\\"
+set number
+set relativenumber
+set showmode
+set so=8
+inoremap jk <Esc>
+
+""" Plugins  --------------------------------
+set surround
+set commentary
+set NERDTree
+
+"" SEARCHING
+set incsearch
+set hlsearch
+nnoremap <leader><space> :nohlsearch<CR>
+
+"" FOLDING
+set foldenable
+set foldlevelstart=10
+set foldnestmax=10
+set foldmethod=indent
+
+"" MOVEMENT
+nnoremap j gj
+nnoremap k gk
+
+"" SPLIT NAVIGATIONS
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+nnoremap <C-w>q :q<CR>
+
+set splitbelow
+set splitright
+
+""" Common settings -------------------------
+map <C-n> g:NERDTreeToggle
+map .n g:NERDTreeMapPreview
+
+"" Finding
+nnoremap <leader>f :action FindUsages<CR>
+nnoremap <leader>h :action CallHierarchy<CR>
+
+nnoremap <C-o> :action Back<CR>
+nnoremap gb :action Back<CR>
+nnoremap gf :action Forward<CR>
+
+"" IdeaVIM
+map <leader>e :e ~/.ideavimrc<CR>
+map <leader>r :action IdeaVim.ReloadVimRc.reload<CR>
+map <leader>z <Action>(ToggleDistractionFreeMode)
+map <leader>B <Action>(ToggleLineBreakpoint)
+
+map <leader>d <Action>(Debug)
+map <leader>r <Action>(RenameElement)
