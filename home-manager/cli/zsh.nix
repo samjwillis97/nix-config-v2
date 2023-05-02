@@ -14,6 +14,31 @@ let
 
     bindkey -s ^f "tmux-sessionizer\n"
 
+    # for ZSH
+    # for BASH use $(which git) instead of whence
+    function do_git {
+      cmd=$1
+
+      if [ -n "$cmd" ]; then
+          shift
+          extra=""
+
+          if [ "$cmd" '==' "blame" ]; then
+            cmd="blamer"
+          fi
+
+          to_run="`whence -p git`"
+          if [ -n "$cmd" ]; then
+              to_run="$to_run $cmd"
+          fi
+          if [ -n "$extra" ]; then
+              to_run="$to_run $extra"
+          fi
+
+          eval "$to_run $@" else "`whence -p git`"
+      fi
+    }
+
     export FZF_DEFAULT_OPTS=" \
         --color=bg+:${base02},bg:${base00},spinner:${base06},hl:${base08} \
         --color=fg:${base05},header:${base08},info:${base0E},pointer:${base06} \
@@ -47,6 +72,7 @@ in {
         find /proc/*/fd -user "$USER" -lname anon_inode:inotify -printf "%hinfo/%f\n" 2>/dev/null | xargs cat | grep -c "^inotify"
       '';
       untar = "tar -zxvf";
+      git = "do_git";
     };
 
     oh-my-zsh = {
