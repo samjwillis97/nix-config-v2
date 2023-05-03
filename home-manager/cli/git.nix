@@ -47,7 +47,7 @@
       sp = "switch $1 && !git pull";
       tug = "!git fetch && git pull";
       blamer =
-        ''!f() { git blame "$@" | sed 's/Sam Willis/Jeremy Carter/g'; }; f'';
+        ''!f() { git blame "$@" | sed 's/Sam Willis/Alan Rutherford/g'; }; f'';
     };
   };
 }
