@@ -119,6 +119,7 @@
         extraHomeModules = [
           # TODO: firefox
           ./home-manager/nixos.nix
+          ./home-manager/kitty
           # ./home-manager/alacritty
           ./home-manager/dev
           ./home-manager/work
