@@ -17,6 +17,7 @@
     neofetch
     _1password
     my-neovim
+    ncdu
 
     nodePackages.wrangler
   ];
