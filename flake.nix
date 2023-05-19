@@ -110,6 +110,7 @@
           ./home-manager/wezterm
           ./home-manager/dev/rust.nix
           ./home-manager/dev/devenv.nix
+          ./home-manager/dev/node.nix
         ];
       })
 
