@@ -13,4 +13,7 @@ let
     personal-desktop
     personal-laptop
   ];
-in { "tailscale_pre-auth.age".publicKeys = keys; }
+in {
+  # See: https://github.com/ryantm/agenix/issues/17#issuecomment-797174338
+  "tailscale_pre-auth.age".publicKeys = keys;
+}
