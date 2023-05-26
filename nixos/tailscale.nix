@@ -1,6 +1,6 @@
 # thank you: https://tailscale.com/blog/nixos-minecraft/
 # and: https://github.com/ghuntley/ghuntley/blob/cb78de98fbaf1ea97d5c8465e155516f3e72132d/ops/nixos-modules/tailscale.nix
-{ pkgs, config, ... }: {
+{ pkgs, config, lib, ... }: {
   services.tailscale.enable = true;
 
   networking.firewall = {
@@ -20,6 +20,10 @@
     "net.ipv6.conf.all.forwarding" = "1"; # for tailscale exit node
   };
 
+  age.secrets."tailscale_pre-auth" = rec {
+    file = ../secrets/tailscale_pre-auth.age;
+  };
+
   systemd.services.tailscale-autoconnect = {
     description = "Automatic connection to Tailscale";
 
@@ -36,13 +40,13 @@
       # wait for tailscaled to settle
       sleep 2
 
+      key=`cat ${config.age.secrets."tailscale_pre-auth".path}`
+
       # check if we are already authenticated to tailscale
       status="$(${tailscale}/bin/tailscale status -json | ${jq}/bin/jq -r .BackendState)"
       if [ $status = "Running" ]; then # if so, then do nothing
         exit 0
       fi
-
-      key=`cat ${config.age.secrets.tailscale_pre-auth.path}`
 
       # otherwise authenticate with tailscale
       ${tailscale}/bin/tailscale up -authkey $key
