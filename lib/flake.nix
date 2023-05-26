@@ -13,7 +13,8 @@ in {
     , nixosSystem ? nixpkgs.lib.nixosSystem, ... }: {
       nixosConfigurations.${hostname} = nixosSystem {
         inherit system;
-        modules = [ ../hosts/${hostname} ] ++ extraModules;
+        modules = [ ../hosts/${hostname} inputs.agenix.nixosModules.default ]
+          ++ extraModules;
         specialArgs = {
           inherit system;
           flake = self;
@@ -30,7 +31,8 @@ in {
     , darwinSystem ? darwin.lib.darwinSystem, ... }: {
       darwinConfigurations.${hostname} = darwinSystem {
         inherit system;
-        modules = [ ../hosts/${hostname} ] ++ extraModules;
+        modules = [ ../hosts/${hostname} inputs.agenix.darwinModules.default ]
+          ++ extraModules;
         specialArgs = {
           inherit system;
           flake = self;

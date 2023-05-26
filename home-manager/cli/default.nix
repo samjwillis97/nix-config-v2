@@ -21,6 +21,7 @@ in {
       neofetch
       _1password
       my-neovim
+      agenix
 
       nodePackages.wrangler
     ] ++ osSpecificPackages;

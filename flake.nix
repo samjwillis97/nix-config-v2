@@ -25,12 +25,14 @@
 
     my-neovim = { url = "github:samjwillis97/neovim-flake"; };
 
+    agenix = { url = "github:ryantm/agenix"; };
+
     # Additional Neovim Plugins
     nixneovimplugins = { url = "github:jooooscha/nixpkgs-vim-extra-plugins"; };
   };
 
   outputs = { self, nixpkgs, nur, flake-utils, devenv, my-neovim
-    , nixneovimplugins, ... }@inputs:
+    , nixneovimplugins, agenix, ... }@inputs:
     let
       lib = nixpkgs.lib;
       inherit (import ./lib/attrsets.nix { inherit (nixpkgs) lib; })

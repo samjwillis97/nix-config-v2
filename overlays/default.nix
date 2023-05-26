@@ -8,6 +8,7 @@ in {
       wallpapers = prev.callPackage ../packages/wallpapers { };
       my-neovim = flake.inputs.my-neovim.packages.${system}.default;
       devenv = flake.inputs.devenv.packages.${system}.devenv;
+      agenix = flake.inputs.agenix.packages.${system}.default;
     })
     inputs.nixneovimplugins.overlays.default
   ];
