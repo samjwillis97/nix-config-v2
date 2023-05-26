@@ -58,6 +58,7 @@
         networkAdapterName = "enp9s0";
         extraModules = [
           ./nixos/xserver.nix
+          ./nixos/fonts.nix
           ./nixos/audio.nix
           ./nixos/gaming.nix
           ./nixos/logitech.nix
@@ -79,25 +80,8 @@
         hostname = "test-vm";
         system = "x86_64-linux";
         username = "sam";
-        networkAdapterName = "enp0s3";
-        extraModules = [
-          # Might still need xserver here
-          ./nixos/xserver.nix
-          # ./nixos/wayland.nix
-          ./nixos/audio.nix
-          ./nixos/gaming.nix
-          ./nixos/logitech.nix
-        ];
-        extraHomeModules = [
-          ./home-manager/nixos.nix
-          ./home-manager/desktop
-          # ./home-manager/sway
-          ./home-manager/i3
-          ./home-manager/gaming
-          ./home-manager/dev
-          ./home-manager/work
-          ./home-manager/ides
-        ];
+        extraModules = [ ./services/coder.nix ];
+        extraHomeModules = [ ];
       })
 
       (mkDarwinSystem {
