@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{
   virtualisation.oci-containers.containers = {
     hello-world = {
       image = "nginxdemos/hello";
