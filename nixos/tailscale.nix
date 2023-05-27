@@ -40,13 +40,17 @@
       # wait for tailscaled to settle
       sleep 2
 
-      key=`cat ${config.age.secrets."tailscale_pre-auth".path}`
+      if [ ! -f ${config.age.secrets."tailscale_pre-auth".path} ]; then
+          exit 0
+      fi
 
       # check if we are already authenticated to tailscale
       status="$(${tailscale}/bin/tailscale status -json | ${jq}/bin/jq -r .BackendState)"
       if [ $status = "Running" ]; then # if so, then do nothing
         exit 0
       fi
+
+      key=`cat ${config.age.secrets."tailscale_pre-auth".path}`
 
       # otherwise authenticate with tailscale
       ${tailscale}/bin/tailscale up -authkey $key
