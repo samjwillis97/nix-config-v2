@@ -4,6 +4,6 @@ in {
   imports = [ ./meta.nix ./user.nix ./ssh.nix ./locale.nix ./tailscale.nix ]
     ++ homeManager;
 
-  networking.hostName = super.meta.hostanem;
+  networking.hostName = super.meta.hostname;
   environment.systemPackages = with pkgs; [ vim git wget agenix ];
 }
