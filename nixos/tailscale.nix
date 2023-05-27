@@ -20,7 +20,7 @@
     "net.ipv6.conf.all.forwarding" = "1"; # for tailscale exit node
   };
 
-  age.secrets."tailscale_pre-auth" = rec {
+  age.secrets."tailscale_pre-auth" = {
     file = ../secrets/tailscale_pre-auth.age;
   };
 
