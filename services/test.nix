@@ -8,11 +8,9 @@
     recommendedProxySettings = true;
   };
 
-  services.nginx.virtualHosts.${super.meta.hostname} = {
+  services.nginx.virtualHosts."nginx.${super.meta.hostname}" = {
     forceSSL = false;
     enableACME = false;
-
-    serverName = "nginx.${super.meta.hostname}";
 
     locations."/" = {
       extraConfig = ''
