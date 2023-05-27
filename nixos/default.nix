@@ -4,5 +4,5 @@ in {
   imports = [ ./meta.nix ./user.nix ./ssh.nix ./locale.nix ./tailscale.nix ]
     ++ homeManager;
 
-  environment.systemPackages = with pkgs; [ vim git wget ];
+  environment.systemPackages = with pkgs; [ vim git wget agenix ];
 }
