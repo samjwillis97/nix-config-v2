@@ -1,4 +1,4 @@
-{ config, pkgs, lib, flake, ... }:
+{ super, flake, ... }:
 let inherit (flake) inputs;
 in {
   imports = [ ./hardware-configuration.nix ../../nixos ];

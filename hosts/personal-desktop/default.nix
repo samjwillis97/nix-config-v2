@@ -7,9 +7,6 @@ in {
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # TODO: Get this from config
-  networking.hostName = "personal-desktop";
-
   home-manager.users.${super.meta.username}.theme.wallpaper.path =
     pkgs.wallpapers.nixos-catppuccin-magenta-blue;
 }
