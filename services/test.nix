@@ -12,6 +12,8 @@
     forceSSL = false;
     enableACME = false;
 
+    serverName = "nginx.${super.meta.hostname}";
+
     locations."/" = {
       extraConfig = ''
         proxy_pass http://localhost:8080;
