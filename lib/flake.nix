@@ -19,9 +19,9 @@ in {
           inherit system;
           flake = self;
           super.meta = {
-            inherit username extraHomeModules networkAdapterName hostname;
+            inherit username extraHomeModules networkAdapterName hostname
+              useHomeManager;
             isDarwin = false;
-            useHomeManager = useHomeManager;
           };
         };
       };

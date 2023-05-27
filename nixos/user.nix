@@ -1,5 +1,5 @@
-{ config, lib, pkgs, ... }:
-let inherit (config.meta) username;
+{ super, lib, pkgs, ... }:
+let inherit (super.meta) username;
 in {
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.${username} = {

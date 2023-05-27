@@ -1,5 +1,5 @@
-{ config, lib, pkgs, ... }:
-let inherit (config.meta) username;
+{ super, lib, pkgs, ... }:
+let inherit (super.meta) username;
 in {
   services.openssh = {
     enable = true;
