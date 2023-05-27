@@ -86,6 +86,14 @@
         extraHomeModules = [ ];
       })
 
+      (mkNixosSystem {
+        hostname = "linux-amd64-vm";
+        system = "aarch64-linux";
+        username = "sam";
+        extraModules = [ ./services/coder.nix ];
+        extraHomeModules = [ ];
+      })
+
       (mkDarwinSystem {
         hostname = "Sams-MacBook-Air";
         system = "aarch64-darwin";
