@@ -33,7 +33,7 @@
       image = "nginxdemos/hello";
       user = "root";
       extraOptions = [ "--network=host" ];
-      ports = [ "8080:8080" ];
+      ports = [ "8080:80" ];
     };
   };
 }
