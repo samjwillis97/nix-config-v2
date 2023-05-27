@@ -32,8 +32,7 @@
     hello-world = {
       image = "nginxdemos/hello";
       user = "root";
-      extraOptions = [ "--network=host" ];
-      ports = [ "8080:80" ];
+      ports = [ "8080:80" ]; # this should.. map container 80 to host 8080
     };
   };
 }
