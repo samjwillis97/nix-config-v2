@@ -1,6 +1,6 @@
 { super, ... }: {
   services.nginx = {
-    enable = true;
+    enable = false;
 
     # Use recommended settings
     recommendedGzipSettings = true;
