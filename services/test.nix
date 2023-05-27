@@ -1,10 +1,39 @@
-{
+{ super, ... }: {
+  services.nginx = {
+    enable = true;
+
+    # Use recommended settings
+    recommendedGzipSettings = true;
+    recommendedOptimisation = true;
+    recommendedProxySettings = true;
+  };
+
+  services.nginx.virtualHosts.${super.meta.hostname} = {
+    forceSSL = false;
+    enableACME = true;
+
+    locations."/" = {
+      extraConfig = ''
+        proxy_pass http://localhost:8080;
+        proxy_pass_header Authorization;
+        proxy_http_version 1.1;
+        proxy_ssl_server_name on;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Host $host;
+      '';
+    };
+  };
+
   virtualisation.oci-containers.containers = {
     hello-world = {
       image = "nginxdemos/hello";
       user = "root";
       extraOptions = [ "--network=host" ];
-      ports = [ "80:80" ];
+      ports = [ "8080:8080" ];
     };
   };
 }
