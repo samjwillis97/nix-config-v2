@@ -10,7 +10,7 @@ in {
 
   mkNixosSystem = { hostname, system, username, networkAdapterName ? "en01"
     , extraModules ? [ ], extraHomeModules ? [ ]
-    , nixosSystem ? nixpkgs.lib.nixosSystem, ... }: {
+    , nixosSystem ? nixpkgs.lib.nixosSystem, useHomeManager ? true, ... }: {
       nixosConfigurations.${hostname} = nixosSystem {
         inherit system;
         modules = [ ../hosts/${hostname} inputs.agenix.nixosModules.default ]
@@ -21,6 +21,7 @@ in {
           super.meta = {
             inherit username extraHomeModules networkAdapterName hostname;
             isDarwin = false;
+            useHomeManager = useHomeManager;
           };
         };
       };

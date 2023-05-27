@@ -92,6 +92,7 @@
         username = "sam";
         extraModules = [ ./services/coder.nix ];
         extraHomeModules = [ ];
+        useHomeManager = false;
       })
 
       (mkDarwinSystem {
