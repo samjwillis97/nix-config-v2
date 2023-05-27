@@ -10,7 +10,7 @@
 
   services.nginx.virtualHosts.${super.meta.hostname} = {
     forceSSL = false;
-    enableACME = true;
+    enableACME = false;
 
     locations."/" = {
       extraConfig = ''
