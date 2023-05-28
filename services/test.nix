@@ -1,26 +1,38 @@
 { super, ... }: {
-  services.nginx = {
+  caddy = {
     enable = true;
-
-    # Use recommended settings
-    recommendedGzipSettings = true;
-    recommendedOptimisation = true;
-    recommendedProxySettings = true;
+    virtualHosts."${super.meta.hostname}".extraConfig = ''
+      reverse_proxy http://localhost:8080
+    '';
   };
+  # services.nginx = {
+  #   enable = true;
 
-  services.nginx.virtualHosts."nginx.${super.meta.hostname}" = {
-    forceSSL = false;
-    enableACME = false;
+  #   # Use recommended settings
+  #   recommendedGzipSettings = true;
+  #   recommendedOptimisation = true;
+  #   recommendedProxySettings = true;
+  # };
 
-    locations."/" = {
-      extraConfig = ''
-        proxy_pass http://127.0.0.1:8080;
-        proxy_set_header Host "127.0.0.1:8080";
-        proxy_set_header Referer "";
-        proxy_set_header Origin "127.0.0.1:8080";
-      '';
-    };
-  };
+  # services.nginx.virtualHosts."nginx.${super.meta.hostname}" = {
+  #   forceSSL = false;
+  #   enableACME = false;
+
+  #   locations."/" = {
+  #     extraConfig = ''
+  #       proxy_pass http://localhost:8080;
+  #       proxy_pass_header Authorization;
+  #       proxy_http_version 1.1;
+  #       proxy_ssl_server_name on;
+  #       proxy_set_header Upgrade $http_upgrade;
+  #       proxy_set_header Connection "upgrade";
+  #       proxy_set_header X-Real-IP $remote_addr;
+  #       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  #       proxy_set_header X-Forwarded-Proto $scheme;
+  #       proxy_set_header Host $host;
+  #     '';
+  #   };
+  # };
 
   virtualisation.oci-containers.containers = {
     hello-world = {
