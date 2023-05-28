@@ -1,5 +1,5 @@
 { super, ... }: {
-  caddy = {
+  service.caddy = {
     enable = true;
     virtualHosts."${super.meta.hostname}".extraConfig = ''
       reverse_proxy http://localhost:8080
