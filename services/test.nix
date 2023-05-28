@@ -14,7 +14,10 @@
 
     locations."/" = {
       extraConfig = ''
-        proxy_pass http://localhost:8080;
+        proxy_pass http://127.0.0.1:8080;
+        proxy_set_header Host "127.0.0.1:8080";
+        proxy_set_header Referer "";
+        proxy_set_header Origin "127.0.0.1:8080";
       '';
     };
   };
