@@ -9,16 +9,15 @@
     recommendedProxySettings = true;
   };
 
-  services.nginx.virtualHosts."nginx.${super.meta.hostname}.tailfba7c.ts.net" =
-    {
-      forceSSL = false;
-      enableACME = false;
+  services.nginx.virtualHosts."${super.meta.hostname}" = {
+    forceSSL = false;
+    enableACME = false;
 
-      locations."/" = {
-        proxyPass = "http://localhost:8080";
-        recommendedProxySettings = true;
-      };
+    locations."/" = {
+      proxyPass = "http://localhost:8080";
+      recommendedProxySettings = true;
     };
+  };
 
   virtualisation.oci-containers.containers = {
     hello-world = {
