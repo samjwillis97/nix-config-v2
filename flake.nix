@@ -82,7 +82,7 @@
         hostname = "linux-vm";
         system = "x86_64-linux";
         username = "sam";
-        extraModules = [ ./services/coder.nix ];
+        extraModules = [ ./services/coder ];
         extraHomeModules = [ ];
         useHomeManager = false;
       })
@@ -91,7 +91,7 @@
         hostname = "linux-amd64-vm";
         system = "aarch64-linux";
         username = "sam";
-        extraModules = [ ./services/coder.nix ];
+        extraModules = [ ./services/coder ];
         extraHomeModules = [ ];
         useHomeManager = false;
       })
