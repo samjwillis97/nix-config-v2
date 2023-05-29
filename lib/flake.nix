@@ -17,7 +17,7 @@ in {
       nixosConfigurations.${hostname} = nixosSystem {
         inherit system;
         modules = (if useSystemConfiguration then [
-          ../../nixos
+          ../nixos
           /etc/nixos/configuration.nix
         ] else [
           ../hosts/${hostname}
