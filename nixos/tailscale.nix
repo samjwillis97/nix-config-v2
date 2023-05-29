@@ -1,6 +1,8 @@
 # thank you: https://tailscale.com/blog/nixos-minecraft/
 # and: https://github.com/ghuntley/ghuntley/blob/cb78de98fbaf1ea97d5c8465e155516f3e72132d/ops/nixos-modules/tailscale.nix
-{ pkgs, config, lib, ... }: {
+{ pkgs, config, ... }: {
+  imports = [ ../secrets ];
+
   services.tailscale.enable = true;
 
   networking.firewall = {
@@ -18,10 +20,6 @@
 
   boot.kernel.sysctl = {
     "net.ipv6.conf.all.forwarding" = "1"; # for tailscale exit node
-  };
-
-  age.secrets."tailscale_pre-auth" = {
-    file = ../secrets/tailscale_pre-auth.age;
   };
 
   systemd.services.tailscale-autoconnect = {
