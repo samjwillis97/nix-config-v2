@@ -94,6 +94,7 @@
         extraModules = [ ./services/test.nix ];
         extraHomeModules = [ ];
         useHomeManager = false;
+        useSystemConfiguration = true;
       })
 
       (mkDarwinSystem {
