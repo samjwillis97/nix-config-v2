@@ -12,11 +12,17 @@ in {
   # would mean don't have to commit in those files for every machine I want to spin up etc.
   mkNixosSystem = { hostname, system, username, networkAdapterName ? "en01"
     , extraModules ? [ ], extraHomeModules ? [ ]
-    , nixosSystem ? nixpkgs.lib.nixosSystem, useHomeManager ? true, ... }: {
+    , nixosSystem ? nixpkgs.lib.nixosSystem, useHomeManager ? true
+    , useSystemConfiguration ? false, ... }: {
       nixosConfigurations.${hostname} = nixosSystem {
         inherit system;
-        modules = [ ../hosts/${hostname} inputs.agenix.nixosModules.default ]
-          ++ extraModules;
+        modules = (if useSystemConfiguration then [
+          ../../nixos
+          /etc/nixos/configuration.nix
+        ] else [
+          ../hosts/${hostname}
+          inputs.agenix.nixosModules.default
+        ]) ++ extraModules;
         specialArgs = {
           inherit system;
           flake = self;
