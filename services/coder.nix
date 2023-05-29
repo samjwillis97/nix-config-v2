@@ -46,6 +46,7 @@ in {
       extraOptions = [ "--network=host" ];
       ports = [ "3000:3000" ];
       environment = {
+        CODER_ACCESS_URL = "http://${super.meta.hostname}";
         CODER_PG_CONNECTION_URL =
           "postgres://coder:coder@localhost/coder?sslmode=disable";
       };
