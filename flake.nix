@@ -91,7 +91,7 @@
         hostname = "linux-amd64-vm";
         system = "aarch64-linux";
         username = "sam";
-        extraModules = [ ./services/test.nix ];
+        extraModules = [ ./services/coder.nix ];
         extraHomeModules = [ ];
         useHomeManager = false;
       })

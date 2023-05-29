@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ super, pkgs, ... }:
 let
   # FIXME: WHy doesn't ghuntely need all this user stuff?
   postgres_config = pkgs.writeTextFile {
@@ -19,6 +19,25 @@ in {
   services.postgresqlBackup.enable = true;
   services.postgresqlBackup.databases = [ "coder" ];
   services.postgresqlBackup.location = "/var/lib/postgresql/backups";
+
+  services.nginx = {
+    enable = true;
+
+    # Use recommended settings
+    recommendedGzipSettings = true;
+    recommendedOptimisation = true;
+    recommendedProxySettings = true;
+  };
+
+  services.nginx.virtualHosts."${super.meta.hostname}" = {
+    forceSSL = false;
+    enableACME = false;
+
+    locations."/" = {
+      proxyPass = "http://localhost:3000";
+      recommendedProxySettings = true;
+    };
+  };
 
   virtualisation.oci-containers.containers = {
     coder = {
