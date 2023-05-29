@@ -29,7 +29,7 @@ in {
     recommendedProxySettings = true;
   };
 
-  services.nginx.virtualHosts."${super.meta.hostname}" = {
+  services.nginx.virtualHosts."${super.meta.hostname}.tailfba7c.ts.net" = {
     forceSSL = false;
     enableACME = false;
 
@@ -43,10 +43,9 @@ in {
     coder = {
       image = "ghcr.io/coder/coder:latest";
       user = "root";
-      extraOptions = [ "--network=host" ];
       ports = [ "3000:3000" ];
       environment = {
-        CODER_ACCESS_URL = "http://${super.meta.hostname}";
+        CODER_ACCESS_URL = "http://${super.meta.hostname}.tailfba7c.ts.net";
         CODER_PG_CONNECTION_URL =
           "postgres://coder:coder@localhost/coder?sslmode=disable";
       };
