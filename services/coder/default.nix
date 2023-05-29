@@ -40,18 +40,24 @@ in {
   };
 
   # See: https://github.com/ghuntley/ghuntley/blob/c234e2180693304bc6ea17c4862bbb2f807e8727/.github/workflows/services-dev-ghuntley-templates-push.yml#L12
-  virtualisation.oci-containers.containers = {
-    coder = {
-      image = "ghcr.io/coder/coder:latest";
-      user = "root";
-      extraOptions = [ "--network=host" ];
-      ports = [ "3000:3000" ];
-      volumes = [ "/srv/coder:/home/coder:cached" ];
-      environment = {
-        CODER_ACCESS_URL = "http://${super.meta.hostname}.tailfba7c.ts.net";
-        CODER_DISABLE_PASSWORD_AUTH = "true";
-        CODER_PG_CONNECTION_URL =
-          "postgres://coder:coder@localhost/coder?sslmode=disable";
+  virtualisation.oci-containers = {
+    backend = "docker";
+    containers = {
+      coder = {
+        image = "ghcr.io/coder/coder:latest";
+        user = "root";
+        extraOptions = [ "--network=host" ];
+        ports = [ "3000:3000" ];
+        volumes = [
+          "/srv/coder:/home/coder:cached"
+          "/var/run/docker.sock:/var/run/docker.sock"
+        ];
+        environment = {
+          CODER_ACCESS_URL = "http://${super.meta.hostname}.tailfba7c.ts.net";
+          CODER_DISABLE_PASSWORD_AUTH = "true";
+          CODER_PG_CONNECTION_URL =
+            "postgres://coder:coder@localhost/coder?sslmode=disable";
+        };
       };
     };
   };
