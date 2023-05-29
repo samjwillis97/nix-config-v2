@@ -46,10 +46,7 @@ in {
       user = "root";
       extraOptions = [ "--network=host" ];
       ports = [ "3000:3000" ];
-      volumes = [
-        "/srv/coder:/home/coder:cached"
-        "/var/run/docker.sock:/var/run/docker.sock"
-      ];
+      volumes = [ "/srv/coder:/home/coder:cached" ];
       environment = {
         CODER_ACCESS_URL = "http://${super.meta.hostname}.tailfba7c.ts.net";
         CODER_DISABLE_PASSWORD_AUTH = "true";
