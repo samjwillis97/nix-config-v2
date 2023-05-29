@@ -8,21 +8,13 @@ in {
      - What is self?
   */
 
-  # TODO: An option to skip the `../hosts/${hostname}` and just use the /etc/nixos/configuration.nix instead
-  # would mean don't have to commit in those files for every machine I want to spin up etc.
   mkNixosSystem = { hostname, system, username, networkAdapterName ? "en01"
     , extraModules ? [ ], extraHomeModules ? [ ]
-    , nixosSystem ? nixpkgs.lib.nixosSystem, useHomeManager ? true
-    , useSystemConfiguration ? false, ... }: {
+    , nixosSystem ? nixpkgs.lib.nixosSystem, useHomeManager ? true, ... }: {
       nixosConfigurations.${hostname} = nixosSystem {
         inherit system;
-        modules = (if useSystemConfiguration then [
-          ../nixos
-          /etc/nixos/configuration.nix
-        ] else [
-          ../hosts/${hostname}
-          inputs.agenix.nixosModules.default
-        ]) ++ extraModules;
+        modules = [ ../hosts/${hostname} inputs.agenix.nixosModules.default ]
+          ++ extraModules;
         specialArgs = {
           inherit system;
           flake = self;
