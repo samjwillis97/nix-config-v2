@@ -12,6 +12,9 @@ in {
   # TODO: Think about how this could interract if another service wanted postgres...
   # what would be the best way forward there?
 
+  # FIXME: So what I'm thinking is create a new nixos module for docker and nginx and import them into this
+  # Include the oci-contianers backend in that too 
+
   services.postgresql.package = pkgs.postgresql_14;
   services.postgresql.enable = true;
   services.postgresql.initialScript = postgres_config;
