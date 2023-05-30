@@ -54,7 +54,7 @@ in {
         ];
         environment = {
           CODER_ACCESS_URL = "http://${super.meta.hostname}.tailfba7c.ts.net";
-          CODER_DISABLE_PASSWORD_AUTH = "true";
+          CODER_DISABLE_PASSWORD_AUTH = "false";
           CODER_PG_CONNECTION_URL =
             "postgres://coder:coder@localhost/coder?sslmode=disable";
         };
