@@ -7,5 +7,6 @@
     # ./csharp.nix
     ./rust.nix
     ./devenv.nix
+    ./github.nix
   ];
 }
