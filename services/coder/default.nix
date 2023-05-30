@@ -42,7 +42,7 @@ in {
   virtualisation.docker.enable = true;
   # See: https://github.com/ghuntley/ghuntley/blob/c234e2180693304bc6ea17c4862bbb2f807e8727/.github/workflows/services-dev-ghuntley-templates-push.yml#L12
   virtualisation.oci-containers = {
-    backend = "podman";
+    backend = "docker";
     containers = {
       coder = {
         image = "ghcr.io/coder/coder:latest";
