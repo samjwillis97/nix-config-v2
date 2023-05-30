@@ -40,6 +40,12 @@ in {
   };
 
   virtualisation.docker.enable = true;
+  virtualisation.docker.extraOptions = "--iptables=false --ip6tables=false";
+  networking.firewall = {
+    # always allow traffic from your docker0 network
+    trustedInterfaces = [ "docker0" ];
+  };
+
   # See: https://github.com/ghuntley/ghuntley/blob/c234e2180693304bc6ea17c4862bbb2f807e8727/.github/workflows/services-dev-ghuntley-templates-push.yml#L12
   virtualisation.oci-containers = {
     backend = "docker";
