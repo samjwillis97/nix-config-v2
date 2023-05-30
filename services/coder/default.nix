@@ -46,6 +46,7 @@ in {
     containers = {
       coder = {
         image = "ghcr.io/coder/coder:latest";
+        hostname = "coder";
         user = "root";
         extraOptions = [ "--network=host" ];
         ports = [ "3000:3000" ];
