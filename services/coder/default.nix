@@ -34,9 +34,8 @@ in {
     enableACME = false;
 
     locations."/" = {
-      proxyPass = "http://localhost:3000";
-      recommendedProxySettings = true;
       extraConfig = ''
+        proxy_pass http://localhost:3000;
         proxy_pass_header Authorization;
         proxy_http_version 1.1;
         proxy_ssl_server_name on;
