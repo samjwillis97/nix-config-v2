@@ -112,6 +112,8 @@
       })
 
       (mkHomeManager { hostname = "amp-7150"; })
+      (mkHomeManager { hostname = "coder-container"; })
+
       (mkHomeManager {
         hostname = "amp-8060";
         extraHomeModules = [
