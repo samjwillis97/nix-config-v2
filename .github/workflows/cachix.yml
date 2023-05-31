@@ -21,6 +21,6 @@ jobs:
       - name: Delete Coder Container
         run: rm -rf ./result
       - name: Build Personal Desktop
-        run: nix build -L '.#nixosConfigurations.personal-desktop.activationPackage'
+        run: nix build -L '.#nixosConfigurations.personal-desktop.config.system.build.toplevel'
       - name: Push Personal Desktop
         run: cachix push samjwillis97 ./result
