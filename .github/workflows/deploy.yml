@@ -13,7 +13,7 @@ jobs:
     steps:
       - run: sudo rm -rf /opt&
       - uses: actions/checkout@v3
-      - uses: cachix/install-nix-action@v19
+      - uses: cachix/install-nix-action@v21
       - uses: cachix/cachix-action@v12
         with:
           name: samjwillis97-nix-configs
