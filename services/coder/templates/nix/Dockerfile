@@ -7,7 +7,7 @@ RUN nix-channel --update
 RUN nix-env -iA \
     nixpkgs.curl \
     nixpkgs.git \
-    nixpkgs.wget \
+    nixpkgs.wget
 
 RUN nix-shell '<home-manager>' -A install
 
