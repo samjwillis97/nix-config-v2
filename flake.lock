@@ -282,11 +282,11 @@
         "statuscol": "statuscol"
       },
       "locked": {
-        "lastModified": 1684377424,
-        "narHash": "sha256-QXltoO+wCa7RsazsFAATCNZkJvjQS050LMetV2es+V4=",
+        "lastModified": 1685523485,
+        "narHash": "sha256-iqE12LbsNHJpx1iCi4aa/1InHZjqcQqv5rK6l9NjjZQ=",
         "owner": "samjwillis97",
         "repo": "neovim-flake",
-        "rev": "28f66d2f7338cb58eff2754e1db2a3717b024f1d",
+        "rev": "489549b1e59a53145b3e11abb0aa4177bd9f5de1",
         "type": "github"
       },
       "original": {
