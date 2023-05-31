@@ -3,7 +3,7 @@ name: "//services/coder: push"
 on:
   push:
     branches:
-      - trunk
+      - main
     paths:
       - "services/coder/templates/**"
       - ".github/workflows/coder-templates-push.yml"
