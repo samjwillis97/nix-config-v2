@@ -33,7 +33,7 @@ jobs:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
 
       - name: Check connection
-        run: tailscale status | grep -q work-coder-vm
+        run: tailscale status
 #      - name: Get short commit SHA # to use as template version name
 #        id: vars
 #        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
