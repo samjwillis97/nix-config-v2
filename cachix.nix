@@ -9,5 +9,6 @@ let
     (lib.filterAttrs filterCaches (builtins.readDir folder));
 in {
   inherit imports;
-  nix.settings.substituters = [ "https://cache.nixos.org/" ];
+  nix.settings.substituters =
+    [ "https://cache.nixos.org/" "https://nix-community.cachix.org" ];
 }
