@@ -33,44 +33,25 @@ jobs:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
 
       - name: Check connection
-        run: tailscale status
-#      - name: Get short commit SHA # to use as template version name
-#        id: vars
-#        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+        run: tailscale status | grep -q work-coder-vm
 
-#      - name: "Install latest version of Coder"
-#        run: |
-#          curl -L https://coder.com/install.sh | sh
+      - name: Get short commit SHA # to use as template version name
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
 
-#      - name: "Push template"
-#        run: |
-#          cd services/dev-ghuntley/templates
+      - name: "Install latest version of Coder"
+        run: |
+          curl -L https://coder.com/install.sh | sh
 
-#          coder templates push --directory ./ubuntu \
-#            --name ${{ steps.vars.outputs.sha_short }} \
-#            --yes
+      - name: "Push template"
+        run: |
+          cd services/coder/templates
 
-#          coder templates push --directory ./ubuntu-vnc \
-#            --name ${{ steps.vars.outputs.sha_short }} \
-#            --yes
+          coder templates push --directory ./nix \
+            --name ${{ steps.vars.outputs.sha_short }} \
+            --yes
 
-#          coder templates push --directory ./nix \
-#            --name ${{ steps.vars.outputs.sha_short }} \
-#            --yes
-
-#          coder templates push --directory ./macos \
-#            --name ${{ steps.vars.outputs.sha_short }} \
-#            --yes
-
-#          #coder templates push --directory ./gcp-windows-server-2022 \
-#          #  --name ${{ steps.vars.outputs.sha_short }} \
-#          #  --yes
-
-#          coder templates push --directory ./alpine \
-#            --name ${{ steps.vars.outputs.sha_short }} \
-#            --yes
-
-#        env:
-#          # Consumed by Coder CLI
-#          CODER_URL: http://work-coder-vm
-#          CODER_SESSION_TOKEN: ${{ secrets.DEV_GHUNTLEY_CODER_SESSION_TOKEN }}
+        env:
+          # Consumed by Coder CLI
+          CODER_URL: http://work-coder-vm
+          CODER_SESSION_TOKEN: ${{ secrets.WORK_CODER_VM_SESSION_TOKEN }}
