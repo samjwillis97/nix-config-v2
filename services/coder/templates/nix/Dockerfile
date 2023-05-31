@@ -9,7 +9,5 @@ RUN nix-env -iA \
     nixpkgs.git \
     nixpkgs.wget
 
-RUN nix-shell '<home-manager>' -A install
-
 # Run as
 USER root
