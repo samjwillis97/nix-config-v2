@@ -28,34 +28,7 @@ RUN apt-get install --yes \
 	apt-get clean
 
 RUN apt-get install --yes \
-	apt-transport-https \
-	apt-utils \
-	bash \
-	bind9-dnsutils \
-	build-essential \
-	ca-certificates \
-	cmake \
-	curl \
-	fd-find \
-	file \
-	git \
-	gnupg \
-	language-pack-en \
-	less \
-	lsb-release \
-	man \
-	meld \
-	openssh-server \
-	openssl \
-	pkg-config \
-	python3 \
-	python3-pip \
-	rsync \
-	strace \
-	sudo \
-	wget \
-	zip \
-	unzip
+    curl
 
 # Install Nix
 RUN addgroup --system nixbld \
@@ -69,16 +42,29 @@ USER sam
 ENV USER sam
 WORKDIR /home/sam
 
-RUN touch .bash_profile \
+RUN touch .bash_profile && touch .bashrc \
  && curl https://nixos.org/releases/nix/nix-2.9.2/install | sh
 
 RUN . /home/sam/.nix-profile/etc/profile.d/nix.sh \
-    nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
-RUN . /home/sam/.nix-profile/etc/profile.d/nix.sh \
-    nix-channel --update
+    && nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager \
+    && nix-channel --update
 
 RUN . /home/sam/.nix-profile/etc/profile.d/nix.sh \
-    nix-shell '<home-manager>' -A install
+  && nix-env -iA cachix -f https://cachix.org/api/v1/install \
+  && cachix use cachix
+
+  # Install direnv
+RUN . /home/sam/.nix-profile/etc/profile.d/nix.sh \
+  && nix-env -iA nixpkgs.direnv \
+  && direnv hook bash >> /home/sam/.bashrc
+
+# Install devenv
+RUN . /home/sam/.nix-profile/etc/profile.d/nix.sh \
+  && nix-env -iA cachix -f https://cachix.org/api/v1/install \
+  && cachix use devenv
+
+RUN . /home/sam/.nix-profile/etc/profile.d/nix.sh \
+  && nix-shell '<home-manager>' -A install
 
 RUN echo '. /home/sam/.nix-profile/etc/profile.d/hm-session-vars.sh' >> /home/sam/.bashrc
 
