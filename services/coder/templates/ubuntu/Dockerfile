@@ -64,7 +64,10 @@ RUN . /home/sam/.nix-profile/etc/profile.d/nix.sh \
   && cachix use devenv
 
 RUN . /home/sam/.nix-profile/etc/profile.d/nix.sh \
-  && nix-shell '<home-manager>' -A install
+  && nix-shell '<home-manager>' -A install \
+  && cachix use samjwillis97 \
+  && cachix use numtide \
+  && cachix use nix-community
 
 RUN echo '. /home/sam/.nix-profile/etc/profile.d/hm-session-vars.sh' >> /home/sam/.bashrc
 

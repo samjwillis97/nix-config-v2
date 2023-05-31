@@ -62,7 +62,7 @@ in {
         modules = [
           ({ ... }: {
             home = { inherit username homeDirectory; };
-            imports = [ ../users/${username} ../shared ] ++ extraHomeModules;
+            imports = [ ../users/${username} ] ++ extraHomeModules;
           })
         ];
         extraSpecialArgs = {
