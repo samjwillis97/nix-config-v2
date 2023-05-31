@@ -1,6 +1,5 @@
-{ pkgs, ... }: {
-  imports = [ ../overlays ../cachix.nix ];
+{ pkgs, flake, ... }: {
   environment.systemPackages = with pkgs; [ cachix ];
   services.nix-daemon.enable = true;
-  nixpkgs.config.allowUnfree = true;
+  nix = import ../shared/nix.nix { inherit pkgs flake; };
 }
