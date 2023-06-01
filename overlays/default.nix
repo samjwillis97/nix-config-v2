@@ -11,5 +11,6 @@ in {
       agenix = flake.inputs.agenix.packages.${system}.default;
     })
     inputs.nixneovimplugins.overlays.default
+    inputs.nur.overlay
   ];
 }
