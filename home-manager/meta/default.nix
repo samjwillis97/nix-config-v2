@@ -1,8 +1,5 @@
-{ lib, pkgs, ... }:
-{
-  imports = [
-    ../../overlays
-  ];
+{ lib, pkgs, ... }: {
+  imports = [ ../../overlays ];
 
   nixpkgs.config = import ./nixpkgs-config.nix // {
     allowUnfreePredicate = _: true;
@@ -13,5 +10,5 @@
     git.enable = true;
   };
 
-  home.stateVersion = "22.11";
+  home.stateVersion = "23.05";
 }

@@ -1,10 +1,9 @@
-{ config, lib, pkgs, ... }:
-{
-    programs.ssh = {
-        enable = true;
-        compression = true;
-        forwardAgent = true;
-    };
+{ config, lib, pkgs, ... }: {
+  programs.ssh = {
+    enable = true;
+    compression = true;
+    forwardAgent = true;
+  };
 
-    home.packages = with pkgs; [ mosh ];
+  home.packages = with pkgs; [ mosh ];
 }

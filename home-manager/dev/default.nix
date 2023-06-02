@@ -3,7 +3,7 @@
     ./go.nix
     ./node.nix
     ./mongo.nix
-    ./coder.nix
+    # ./coder.nix
     # ./csharp.nix
     ./rust.nix
     ./devenv.nix
