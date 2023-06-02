@@ -107,7 +107,6 @@
           ./home-manager/dev/rust.nix
           ./home-manager/dev/devenv.nix
           ./home-manager/dev/node.nix
-          ./home-manager/dev/coder.nix
         ];
       })
 
