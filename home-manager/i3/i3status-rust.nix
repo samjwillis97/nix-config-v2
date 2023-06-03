@@ -66,7 +66,7 @@
       loadBlock = {
         block = "load";
         interval = 1;
-        format = "{1m}";
+        # format = "{1m}";
       };
 
       soundBlock = { block = "sound"; };
