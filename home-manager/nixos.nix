@@ -1,10 +1,11 @@
 { super, config, pkgs, lib, ... }: {
-  # TODO: See if this applied to home-manager non nixos as well
+  # TODO: See if this applied to home-manager non nixos as well - This does apply maybe move this to theme or something IDK
+  # I have also noticed Steam is fuckin huge on personal desktop so DPI might need to be changed
   home = {
     pointerCursor = {
       package = pkgs.gnome.adwaita-icon-theme;
       name = "Adwaita";
-      size = 32;
+      size = 16;
       x11.enable = true;
       gtk.enable = true;
     };
