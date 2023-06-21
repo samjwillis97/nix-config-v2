@@ -4,7 +4,7 @@
     ./node.nix
     ./mongo.nix
     # ./coder.nix
-    # ./csharp.nix
+    ./csharp.nix
     ./rust.nix
     ./devenv.nix
     ./github.nix
