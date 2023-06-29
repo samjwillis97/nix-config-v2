@@ -1,6 +1,7 @@
 { super, config, pkgs, lib, ... }: {
   # TODO: See if this applied to home-manager non nixos as well - This does apply maybe move this to theme or something IDK
   # I have also noticed Steam is fuckin huge on personal desktop so DPI might need to be changed
+  # Okay now I have the most plain cursor in the world on personal-desktop so I am confused
   home = {
     pointerCursor = {
       package = pkgs.gnome.adwaita-icon-theme;

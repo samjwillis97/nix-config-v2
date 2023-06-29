@@ -1,10 +1,7 @@
-{ super, config, pkgs, lib, ... }:
-{
-  imports = [
-    ../../modules/theme.nix
-  ];
+{ super, config, pkgs, lib, ... }: {
+  imports = [ ../../modules/theme.nix ];
 
-# TODO: Get from somewhere else?
+  # TODO: Get from somewhere else?
   theme = {
     fonts = {
       gui = {
@@ -13,19 +10,21 @@
       };
     };
     colors = with builtins; fromJSON (readFile ./colors/macchiato.json);
-    wallpaper.path = lib.mkDefault pkgs.wallpapers.nixos-catppuccin-magenta-blue;
+    wallpaper.path =
+      lib.mkDefault pkgs.wallpapers.nixos-catppuccin-magenta-blue;
   };
 
   fonts.fontconfig.enable = true;
 
   home = {
     packages = with pkgs; [
-        config.theme.fonts.gui.package
-        font-awesome_5
-        hack-font
-        noto-fonts
-        noto-fonts-emoji
-        gnome.gnome-themes-extra
+      config.theme.fonts.gui.package
+      font-awesome_5
+      hack-font
+      noto-fonts
+      noto-fonts-emoji
+      gnome.gnome-themes-extra
+      gnome.adwaita-icon-theme
     ];
   };
 }
