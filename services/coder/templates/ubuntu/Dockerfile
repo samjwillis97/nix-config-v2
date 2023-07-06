@@ -27,7 +27,7 @@ RUN apt-get install --yes \
 	apt-get clean
 
 RUN apt-get install --yes \
-    curl vim
+    sudo curl vim
 
 # Install Nix
 RUN addgroup --system nixbld \
