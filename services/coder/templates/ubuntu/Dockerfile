@@ -1,15 +1,14 @@
-
 FROM ubuntu:jammy
 
-RUN useradd sam \
+RUN useradd ampcontrol \
     --create-home \
     --shell=/bin/bash \
     --uid=1000 \
     --user-group && \
 	mkdir -p /etc/sudoers.d && \
-    echo "sam ALL=(ALL) NOPASSWD:ALL" >>/etc/sudoers.d/nopasswd && \
+    echo "ampcontrol ALL=(ALL) NOPASSWD:ALL" >>/etc/sudoers.d/nopasswd && \
 	groupadd docker && \
-	usermod -aG docker sam
+	usermod -aG docker ampcontrol 
 
 # Install packages from apt repositories
 ARG DEBIAN_FRONTEND="noninteractive"
@@ -32,48 +31,36 @@ RUN apt-get install --yes \
 
 # Install Nix
 RUN addgroup --system nixbld \
-  && adduser sam nixbld \
+  && adduser ampcontrol nixbld \
   && for i in $(seq 1 30); do useradd -ms /bin/bash nixbld$i &&  adduser nixbld$i nixbld; done \
-  && mkdir -m 0755 /nix && chown sam /nix \
+  && mkdir -m 0755 /nix && chown ampcontrol /nix \
   && mkdir -p /etc/nix && echo 'sandbox = false' > /etc/nix/nix.conf
 
 CMD /bin/bash -l
-USER sam 
-ENV USER sam
-WORKDIR /home/sam
+USER ampcontrol 
+ENV USER ampcontrol
+WORKDIR /home/ampcontrol
 
 RUN touch .bash_profile && touch .bashrc \
  && curl https://nixos.org/releases/nix/nix-2.9.2/install | sh
 
-RUN . /home/sam/.nix-profile/etc/profile.d/nix.sh \
-    && nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager \
-    && nix-channel --update
-
-RUN . /home/sam/.nix-profile/etc/profile.d/nix.sh \
+RUN . /home/ampcontrol/.nix-profile/etc/profile.d/nix.sh \
   && nix-env -iA cachix -f https://cachix.org/api/v1/install \
   && cachix use cachix
 
   # Install direnv
-RUN . /home/sam/.nix-profile/etc/profile.d/nix.sh \
+RUN . /home/ampcontrol/.nix-profile/etc/profile.d/nix.sh \
   && nix-env -iA nixpkgs.direnv \
-  && direnv hook bash >> /home/sam/.bashrc
+  && direnv hook bash >> /home/ampcontrol/.bashrc
 
 # Install devenv
-RUN . /home/sam/.nix-profile/etc/profile.d/nix.sh \
+RUN . /home/ampcontrol/.nix-profile/etc/profile.d/nix.sh \
   && nix-env -iA cachix -f https://cachix.org/api/v1/install \
   && cachix use devenv
-
-RUN . /home/sam/.nix-profile/etc/profile.d/nix.sh \
-  && nix-shell '<home-manager>' -A install \
-  && cachix use samjwillis97 \
-  && cachix use numtide \
-  && cachix use nix-community
-
-RUN echo '. /home/sam/.nix-profile/etc/profile.d/hm-session-vars.sh' >> /home/sam/.bashrc
 
 # Start SSH service
 EXPOSE 22
 CMD ["/usr/sbin/sshd","-D"]
 
 # Run as
-USER sam
+USER ampcontrol
