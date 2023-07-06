@@ -20,6 +20,7 @@ in {
       direnv
       neofetch
       _1password
+      duf
       my-neovim
       agenix
 
