@@ -55,6 +55,10 @@ jobs:
             --name ${{ steps.vars.outputs.sha_short }} \
             --yes
 
+          coder templates push --directory ./base \
+            --name ${{ steps.vars.outputs.sha_short }} \
+            --yes
+
         env:
           # Consumed by Coder CLI
           CODER_URL: http://work-coder-vm
