@@ -58,6 +58,8 @@ RUN . /home/ampcontrol/.nix-profile/etc/profile.d/nix.sh \
   && nix-env -iA cachix -f https://cachix.org/api/v1/install \
   && cachix use devenv
 
+RUN nix-env -iA nixpkgs.vim
+
 # Start SSH service
 EXPOSE 22
 CMD ["/usr/sbin/sshd","-D"]
