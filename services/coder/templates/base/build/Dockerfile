@@ -48,6 +48,8 @@ RUN . /home/${USER}/.nix-profile/etc/profile.d/nix.sh \
   && nix-env -iA cachix -f https://cachix.org/api/v1/install \
   && cachix use devenv
 
+RUN curl -fsSL https://code-server.dev/install.sh | sh -s -- --method=standalone --prefix=/tmp/code-server --version 4.11.0
+
 # Run as
 USER ${USER}
 
