@@ -53,7 +53,7 @@ in {
   };
 
   virtualisation.docker.enable = true;
-  virtualisation.docker.extraOptions = "--iptables=false --ip6tables=false";
+  # virtualisation.docker.extraOptions = "--iptables=false --ip6tables=false";
   networking.firewall = {
     # always allow traffic from your docker0 network
     trustedInterfaces = [ "docker0" ];
