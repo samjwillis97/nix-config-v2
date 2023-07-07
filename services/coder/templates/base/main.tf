@@ -164,7 +164,6 @@ resource "docker_image" "main" {
     build_args = {
       USER = local.username
     }
-    network_mode = "host" # breaks without this which seems problematic to me
   }
   triggers = {
     dir_sha1 = sha1(join("", [for f in fileset(path.module, "build/*") : filesha1(f)]))
