@@ -62,7 +62,6 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
 RUN mkdir -p /home/${USER}/.ssh && touch /home/${USER}/.ssh/known_hosts && ssh-keygen -R bitbucket.org && curl https://bitbucket.org/site/ssh >> /home/${USER}/.ssh/known_hosts
 RUN echo "if [ -f ~/.bash_profile ]; then . ~/.bash_profile; fi" >> /home/${USER}/.zshrc
 RUN echo "eval \"\$(direnv hook zsh)\"" >> /home/${USER}/.zshrc
-RUN sudo usermod -–shell /usr/bin/zsh ${local.username}
 
 # Run as
 USER ${USER}
