@@ -18,6 +18,43 @@ locals {
 data "coder_provisioner" "me" {
 }
 
+data "coder_parameter" "repository" {
+  name        = "Repository"
+  description = "Which repository would you like to clone?"
+  type        = "string"
+  default     = ""
+
+  option {
+    name = "AWARE Frontend"
+    value = "git@bitbucket.org:ampcontrol/aware-web.git"
+    icon = ""
+  }
+
+  option {
+    name = "AWARE Backend"
+    value = "git@bitbucket.org:ampcontrol/aware-api.git"
+    icon = ""
+  }
+
+  option {
+    name = "GGL Frontend"
+    value = "git@bitbucket.org:ampcontrol/ggl-web.git"
+    icon = ""
+  }
+
+  option {
+    name = "GGL Backend"
+    value = "git@bitbucket.org:ampcontrol/ggl-server.git"
+    icon = ""
+  }
+
+  option {
+    name = "pyAWARE"
+    value = "git@bitbucket.org:ampcontrol/pyaware.git"
+    icon = ""
+  }
+}
+
 provider "docker" {
 }
 
@@ -31,6 +68,7 @@ resource "coder_agent" "main" {
   startup_script         = <<-EOT
     set -e
     /tmp/code-server/bin/code-server --auth none --port 13337 >/tmp/code-server.log 2>&1 &
+    git clone ${data.coder_parameter.repository} 2>&1
   EOT
 
   # These environment variables allow you to make Git commits right away after creating a
