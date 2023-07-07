@@ -65,7 +65,7 @@ in
     backend = "docker";
     containers = {
       coder = {
-        image = "ghcr.io/coder/coder:latest";
+        image = "ghcr.io/coder/coder:v0.25.0";
         user = "root";
         extraOptions = [ "--network=host" ];
         ports = [ "3000:3000" ];
