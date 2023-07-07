@@ -60,7 +60,9 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
   -p https://github.com/zsh-users/zsh-completions
 
 RUN mkdir -p /home/${USER}/.ssh && touch /home/${USER}/.ssh/known_hosts && ssh-keygen -R bitbucket.org && curl https://bitbucket.org/site/ssh >> /home/${USER}/.ssh/known_hosts
+RUN echo "eval "$(direnv hook zsh)"" >> /home/${USER}/.zshrc
 
 # Run as
 USER ${USER}
+ENTRYPOINT [ "/usr/bin/zsh" ]
 
