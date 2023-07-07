@@ -68,7 +68,7 @@ resource "coder_agent" "main" {
   startup_script         = <<-EOT
     set -e
     /tmp/code-server/bin/code-server --auth none --port 13337 >/tmp/code-server.log 2>&1 &
-    git clone ${data.coder_parameter.repository} 2>&1
+    git clone ${data.coder_parameter.repository.value} 2>&1
   EOT
 
   # These environment variables allow you to make Git commits right away after creating a
