@@ -2,13 +2,18 @@ FROM ubuntu:jammy
 
 ARG DEBIAN_FRONTEND="noninteractive"
 
-RUN apt-get update
-RUN apt-get install -y \
-	curl \
+RUN apt-get update 
+RUN apt-get update --yes
+
+RUN apt-get install --yes \
+	  debconf ca-certificates curl gnupg lsb-release software-properties-common 
+
+RUN apt-get install --yes \
 	git \
 	sudo \
 	vim \
 	wget 
+
 RUN rm -rf /var/lib/apt/lists/*
 
 ARG USER=coder
