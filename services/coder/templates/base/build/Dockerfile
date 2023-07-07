@@ -3,7 +3,7 @@ FROM ubuntu:jammy
 ARG DEBIAN_FRONTEND="noninteractive"
 
 RUN apt-get update 
-RUN apt-get update --yes
+RUN apt-get upgrade --yes
 
 RUN apt-get install --yes \
 	  debconf ca-certificates curl gnupg lsb-release software-properties-common 
