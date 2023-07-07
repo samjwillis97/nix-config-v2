@@ -69,7 +69,6 @@ resource "coder_agent" "main" {
     set -e
     /tmp/code-server/bin/code-server --auth none --port 13337 >/tmp/code-server.log 2>&1 &
     git clone ${data.coder_parameter.repository.value} 2>&1
-    sudo usermod –shell /usr/bin/zsh ${local.username}
   EOT
 
   # These environment variables allow you to make Git commits right away after creating a
