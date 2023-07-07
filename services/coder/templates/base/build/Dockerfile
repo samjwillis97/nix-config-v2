@@ -52,6 +52,8 @@ RUN echo "experimental-features = nix-command flakes" >> /home/${USER}/.config/n
 
 RUN curl -fsSL https://code-server.dev/install.sh | sh -s -- --method=standalone --prefix=/tmp/code-server --version 4.11.0
 
+RUN mkdir -p /home/${USER}/.ssh && touch /home/${USER}/.ssh/known_hosts && ssh-keygen -R bitbucket.org && curl https://bitbucket.org/site/ssh >> /home/${USER}/.ssh/known_hosts
+
 # Run as
 USER ${USER}
 
