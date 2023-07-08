@@ -23,7 +23,9 @@
 
     devenv = { url = "github:cachix/devenv/latest"; };
 
-    my-neovim = { url = "github:samjwillis97/neovim-flake"; };
+    old-neovim = { url = "github:samjwillis97/neovim-flake"; };
+
+    modular-neovim = { url = "github:samjwillis97/modular-neovim-flake"; };
 
     agenix = { url = "github:ryantm/agenix"; };
 
@@ -31,8 +33,8 @@
     nixneovimplugins = { url = "github:jooooscha/nixpkgs-vim-extra-plugins"; };
   };
 
-  outputs = { self, nixpkgs, nur, flake-utils, devenv, my-neovim
-    , nixneovimplugins, agenix, ... }@inputs:
+  outputs = { self, nixpkgs, nur, flake-utils, devenv, modular-neovim
+    , old-neovim, nixneovimplugins, agenix, ... }@inputs:
     let
       lib = nixpkgs.lib;
       inherit (import ./lib/attrsets.nix { inherit (nixpkgs) lib; })

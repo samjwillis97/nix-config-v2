@@ -6,9 +6,10 @@ in {
     (final: prev: {
       # gaming = flake.inputs.nix-gaming.packages.${system};
       wallpapers = prev.callPackage ../packages/wallpapers { };
-      my-neovim = flake.inputs.my-neovim.packages.${system}.default;
       devenv = flake.inputs.devenv.packages.${system}.devenv;
       agenix = flake.inputs.agenix.packages.${system}.default;
+      neovim-base = flake.inputs.modular-neovim.packages.${system}.neovim-base;
+      neovim-full = flake.inputs.modular-neovim.packages.${system}.neovim-full;
     })
     inputs.nixneovimplugins.overlays.default
     inputs.nur.overlay

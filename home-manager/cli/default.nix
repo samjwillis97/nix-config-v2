@@ -21,7 +21,7 @@ in {
       neofetch
       _1password
       duf
-      my-neovim
+      neovim-full
       agenix
 
       nodePackages.wrangler
