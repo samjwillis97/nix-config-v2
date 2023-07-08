@@ -10,6 +10,7 @@ in {
       agenix = flake.inputs.agenix.packages.${system}.default;
       neovim-base = flake.inputs.modular-neovim.packages.${system}.neovim-base;
       neovim-full = flake.inputs.modular-neovim.packages.${system}.neovim-full;
+      nix-serve = flake.inputs.nix-serve.packages.${system}.nix-serve;
     })
     inputs.nixneovimplugins.overlays.default
     inputs.nur.overlay

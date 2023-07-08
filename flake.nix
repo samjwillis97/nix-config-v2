@@ -27,14 +27,27 @@
 
     modular-neovim = { url = "github:samjwillis97/modular-neovim-flake"; };
 
+    nix-serve = { url = "github:samjwillis97/nix-serve?ref=priority_change"; };
+
     agenix = { url = "github:ryantm/agenix"; };
 
     # Additional Neovim Plugins
     nixneovimplugins = { url = "github:jooooscha/nixpkgs-vim-extra-plugins"; };
   };
 
-  outputs = { self, nixpkgs, nur, flake-utils, devenv, modular-neovim
-    , old-neovim, nixneovimplugins, agenix, ... }@inputs:
+  outputs =
+    { self
+    , nixpkgs
+    , nur
+    , flake-utils
+    , devenv
+    , modular-neovim
+    , old-neovim
+    , nixneovimplugins
+    , agenix
+    , nix-serve
+    , ...
+    }@inputs:
     let
       lib = nixpkgs.lib;
       inherit (import ./lib/attrsets.nix { inherit (nixpkgs) lib; })
@@ -50,7 +63,8 @@
       # Then think of a way to replace docker.. i.e. pihole.nix
       # Still need to work out how to know what output to use...
 
-    in (recursiveMergeAttrs [
+    in
+    (recursiveMergeAttrs [
       # TODO: Convert these to a whole lot of enables
       # - i3
       # - Audio
