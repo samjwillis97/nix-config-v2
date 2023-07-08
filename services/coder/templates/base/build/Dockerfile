@@ -47,6 +47,7 @@ RUN . /home/${USER}/.nix-profile/etc/profile.d/nix.sh \
 RUN . /home/${USER}/.nix-profile/etc/profile.d/nix.sh \
   && nix-env -iA cachix -f https://cachix.org/api/v1/install \
   && cachix use cachix \
+  && cachix use nix-community \
   && cachix use devenv
 
 # Install devenv
@@ -60,10 +61,7 @@ RUN curl -fsSL https://code-server.dev/install.sh | sh -s -- --method=standalone
 
 RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.1.5/zsh-in-docker.sh)" -- \
   -t ys \
-  -p git \
-  -p ssh-agent \
-  -p https://github.com/zsh-users/zsh-autosuggestions \
-  -p https://github.com/zsh-users/zsh-completions
+  -p git
 
 RUN mkdir -p /home/${USER}/.ssh && touch /home/${USER}/.ssh/known_hosts && ssh-keygen -R bitbucket.org && curl https://bitbucket.org/site/ssh >> /home/${USER}/.ssh/known_hosts
 RUN echo "if [ -f ~/.bash_profile ]; then . ~/.bash_profile; fi" >> /home/${USER}/.zshrc
