@@ -35,11 +35,16 @@ RUN touch .bash_profile && touch .bashrc \
  && curl https://nixos.org/releases/nix/nix-2.9.2/install | sh
 
 RUN mkdir -p /home/${USER}/.config/nix
-COPY ./nix.conf /home/${USER}/.config/nix/
+ADD --chown=${USER} ./nix.conf /home/${USER}/.config/nix/
 
 # Install cachix
 RUN . /home/${USER}/.nix-profile/etc/profile.d/nix.sh \
   && nix-env -iA cachix -f https://cachix.org/api/v1/install
+
+RUN . /home/${USER}/.nix-profile/etc/profile.d/nix.sh \
+  && cachix use cachix \
+  && cachix use nix-community \
+  && cachix use devenv
 
 # Install direnv
 RUN . /home/${USER}/.nix-profile/etc/profile.d/nix.sh \
