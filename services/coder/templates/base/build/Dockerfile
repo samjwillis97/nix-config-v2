@@ -34,28 +34,21 @@ WORKDIR /home/${USER}
 RUN touch .bash_profile && touch .bashrc \
  && curl https://nixos.org/releases/nix/nix-2.9.2/install | sh
 
+RUN mkdir -p /home/${USER}/.config/nix
+COPY ./nix.conf /home/${USER}/.config/nix/
+
+# Install cachix
 RUN . /home/${USER}/.nix-profile/etc/profile.d/nix.sh \
-  && nix-env -iA cachix -f https://cachix.org/api/v1/install \
-  && cachix use cachix
+  && nix-env -iA cachix -f https://cachix.org/api/v1/install
 
 # Install direnv
 RUN . /home/${USER}/.nix-profile/etc/profile.d/nix.sh \
   && nix-env -iA nixpkgs.direnv \
   && direnv hook bash >> /home/${USER}/.bashrc
 
-# Install cachix
-RUN . /home/${USER}/.nix-profile/etc/profile.d/nix.sh \
-  && nix-env -iA cachix -f https://cachix.org/api/v1/install \
-  && cachix use cachix \
-  && cachix use nix-community \
-  && cachix use devenv
-
 # Install devenv
 RUN . /home/${USER}/.nix-profile/etc/profile.d/nix.sh \
-  && nix-env -if https://github.com/cachix/devenv/tarball/latest \
-  && cachix use devenv
-
-RUN echo "experimental-features = nix-command flakes" >> /home/${USER}/.config/nix/nix.conf
+  && nix-env -if https://github.com/cachix/devenv/tarball/latest
 
 RUN curl -fsSL https://code-server.dev/install.sh | sh -s -- --method=standalone --prefix=/tmp/code-server --version 4.11.0
 
