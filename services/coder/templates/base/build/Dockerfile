@@ -38,14 +38,20 @@ RUN . /home/${USER}/.nix-profile/etc/profile.d/nix.sh \
   && nix-env -iA cachix -f https://cachix.org/api/v1/install \
   && cachix use cachix
 
-  # Install direnv
+# Install direnv
 RUN . /home/${USER}/.nix-profile/etc/profile.d/nix.sh \
   && nix-env -iA nixpkgs.direnv \
   && direnv hook bash >> /home/${USER}/.bashrc
 
-# Install devenv
+# Install cachix
 RUN . /home/${USER}/.nix-profile/etc/profile.d/nix.sh \
   && nix-env -iA cachix -f https://cachix.org/api/v1/install \
+  && cachix use cachix \
+  && cachix use devenv
+
+# Install devenv
+RUN . /home/${USER}/.nix-profile/etc/profile.d/nix.sh \
+  && nix-env -if https://github.com/cachix/devenv/tarball/latest \
   && cachix use devenv
 
 RUN echo "experimental-features = nix-command flakes" >> /home/${USER}/.config/nix/nix.conf
