@@ -75,7 +75,8 @@ resource "coder_agent" "main" {
 
     repository_name=$(echo "${data.coder_parameter.repository.value}" | sed 's/.*\/\([^\/]*\)\.git/\1/')
 
-    git clone ${data.coder_parameter.repository.value} $repository_name 2>&1
+    if [ ! -d /home/${local.username}/$repository_name ] then; git clone ${data.coder_parameter.repository.value} $repository_name 2>&1; fi
+
     cd $repository_name
     direnv allow
     . /home/${local.username}/.nix-profile/etc/profile.d/nix.sh && direnv allow
