@@ -83,7 +83,7 @@ resource "coder_agent" "main" {
     git clone ${data.coder_parameter.repository.value} $repository_name 2>&1
 
     echo "Adding to .zshrc..."
-    cat "if [ -d /home/${local.username}/$repository_name ]; then cd /home/${local.username}/$repository_name; fi" >> /home/${local.username}/.zshrc
+    echo "if [ -d /home/${local.username}/$repository_name ]; then cd /home/${local.username}/$repository_name; fi" >> /home/${local.username}/.zshrc
 
     echo "Enabling direnv in repo..."
     zsh
