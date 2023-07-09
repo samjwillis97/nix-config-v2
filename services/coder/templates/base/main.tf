@@ -86,11 +86,11 @@ resource "coder_agent" "main" {
     echo "if [ -d /home/${local.username}/$repository_name ]; then cd /home/${local.username}/$repository_name; fi" >> /home/${local.username}/.zshrc
 
     if [ -f /home/${local.username}/$repository_name/.envrc ]; then
-      echo "Enabling direnv in repo... (this could take a few minutes)"
+      echo "Enabling direnv in repo..."
       /home/${local.username}/.nix-profile/bin/direnv allow /home/${local.username}/$repository_name/.envrc
     fi
 
-    echo "Setting init script as complete... exiting."
+    echo "Setting init script as complete... exiting, note - first open will be slow as it requires fetching dependencies"
     touch /home/${local.username}/.coder_init_done
   EOT
 
