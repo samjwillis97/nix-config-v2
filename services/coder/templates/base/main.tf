@@ -27,7 +27,6 @@ data "coder_parameter" "repository" {
   option {
     name = "AWARE Frontend"
     value = "git@bitbucket.org:ampcontrol/aware-web.git"
-    repo_name = "aware-web"
     icon = ""
   }
 
@@ -41,21 +40,18 @@ data "coder_parameter" "repository" {
   option {
     name = "GGL Frontend"
     value = "git@bitbucket.org:ampcontrol/ggl-web.git"
-    repo_name = "ggl-web"
     icon = ""
   }
 
   option {
     name = "GGL Backend"
     value = "git@bitbucket.org:ampcontrol/ggl-server.git"
-    repo_name = "ggl-server"
     icon = ""
   }
 
   option {
     name = "pyAWARE"
     value = "git@bitbucket.org:ampcontrol/pyaware.git"
-    repo_name = "pyaware"
     icon = ""
   }
 }
@@ -78,12 +74,14 @@ resource "coder_agent" "main" {
       exit 0
     fi
 
-    git clone ${data.coder_parameter.repository.value} ${data.coder_parameter.repository.repo_name} 2>&1
-    cd ${data.coder_parameter.repository.repo_name}
+    repository_name=$(echo "${data.coder_parameter.repository.value}" | sed 's/.*\/\([^\/]*\)\.git/\1/')
+
+    git clone ${data.coder_parameter.repository.value} $repository_name 2>&1
+    cd $repository_name
     direnv allow
 
     sudo usermod --shell /usr/bin/zsh ${local.username}
-    cat "if [ -d /home/${local.username}/${data.coder_parameter.repository.repo_name} ]; then cd /home/${local.username}/${data.coder_parameter.repository.repo_name}; fi" >> /home/${local.username}/.zshrc
+    cat "if [ -d /home/${local.username}/$repository_name ]; then cd /home/${local.username}/$repository_name; fi" >> /home/${local.username}/.zshrc
 
     touch /home/${local.username}/.coder_init_done
   EOT
