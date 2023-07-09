@@ -93,7 +93,7 @@ resource "coder_agent" "main" {
     if [ -f /home/${local.username}/$repository_name/devenv.nix ]; then
       echo "Fetching dependencies (could take a few minutes)..."
       cd /home/${local.username}/$repository_name
-      /home/${local.username}/.nix-profile/bin/devenv ci > /dev/null
+      /home/${local.username}/.nix-profile/bin/devenv ci >/dev/null 2>&1
     fi
 
     echo "Setting init script as complete... exiting."
