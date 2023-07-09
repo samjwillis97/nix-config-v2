@@ -93,10 +93,10 @@ resource "coder_agent" "main" {
     if [ -f /home/${local.username}/$repository_name/devenv.nix ]; then
       echo "Fetching dependencies (could take a few minutes)..."
       cd /home/${local.username}/$repository_name
-      /home/${local.username}/.nix-profile/bin/devenv ci
+      /home/${local.username}/.nix-profile/bin/devenv ci > /dev/null
     fi
 
-    echo "Setting init script as complete... exiting, note - first open will be slow as it requires fetching dependencies"
+    echo "Setting init script as complete... exiting."
     touch /home/${local.username}/.coder_init_done
   EOT
 
