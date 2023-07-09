@@ -27,30 +27,35 @@ data "coder_parameter" "repository" {
   option {
     name = "AWARE Frontend"
     value = "git@bitbucket.org:ampcontrol/aware-web.git"
+    repo_name = "aware-web"
     icon = ""
   }
 
   option {
     name = "AWARE Backend"
     value = "git@bitbucket.org:ampcontrol/aware-api.git"
+    repo_name = "aware-api"
     icon = ""
   }
 
   option {
     name = "GGL Frontend"
     value = "git@bitbucket.org:ampcontrol/ggl-web.git"
+    repo_name = "ggl-web"
     icon = ""
   }
 
   option {
     name = "GGL Backend"
     value = "git@bitbucket.org:ampcontrol/ggl-server.git"
+    repo_name = "ggl-server"
     icon = ""
   }
 
   option {
     name = "pyAWARE"
     value = "git@bitbucket.org:ampcontrol/pyaware.git"
+    repo_name = "pyaware"
     icon = ""
   }
 }
@@ -68,8 +73,19 @@ resource "coder_agent" "main" {
   startup_script         = <<-EOT
     set -e
     /tmp/code-server/bin/code-server --auth none --port 13337 >/tmp/code-server.log 2>&1 &
-    git clone ${data.coder_parameter.repository.value} 2>&1
+
+    if [ -f /home/${local.username}/.coder_init_done ]; then
+      exit 0
+    fi
+
+    git clone ${data.coder_parameter.repository.value} ${data.coder_parameter.repository.repo_name} 2>&1
+    cd ${data.coder_parameter.repository.repo_name}
+    direnv allow
+
     sudo usermod --shell /usr/bin/zsh ${local.username}
+    cat "if [ -d /home/${local.username}/${data.coder_parameter.repository.repo_name} ]; then cd /home/${local.username}/${data.coder_parameter.repository.repo_name}; fi" >> /home/${local.username}/.zshrc
+
+    touch /home/${local.username}/.coder_init_done
   EOT
 
   # These environment variables allow you to make Git commits right away after creating a
