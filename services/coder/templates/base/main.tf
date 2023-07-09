@@ -33,7 +33,6 @@ data "coder_parameter" "repository" {
   option {
     name = "AWARE Backend"
     value = "git@bitbucket.org:ampcontrol/aware-api.git"
-    repo_name = "aware-api"
     icon = ""
   }
 
