@@ -90,6 +90,12 @@ resource "coder_agent" "main" {
       /home/${local.username}/.nix-profile/bin/direnv allow /home/${local.username}/$repository_name/.envrc
     fi
 
+    if [ -f /home/${local.username}/$repository_name/devenv.nix ]; then
+      echo "Fetching dependencies (could take a few minutes)..."
+      cd /home/${local.username}/$repository_name
+      /home/${local.username}/.nix-profile/bin/devenv ci
+    fi
+
     echo "Setting init script as complete... exiting, note - first open will be slow as it requires fetching dependencies"
     touch /home/${local.username}/.coder_init_done
   EOT
