@@ -76,13 +76,12 @@ resource "coder_agent" "main" {
     repository_name=$(echo "${data.coder_parameter.repository.value}" | sed 's/.*\/\([^\/]*\)\.git/\1/')
 
     git clone ${data.coder_parameter.repository.value} $repository_name 2>&1
+    cat "if [ -d /home/${local.username}/$repository_name ]; then cd /home/${local.username}/$repository_name; fi" >> /home/${local.username}/.zshrc
 
-    cd $repository_name
+    zsh
     direnv allow
-    . /home/${local.username}/.nix-profile/etc/profile.d/nix.sh && direnv allow
 
     sudo usermod --shell /usr/bin/zsh ${local.username}
-    cat "if [ -d /home/${local.username}/$repository_name ]; then cd /home/${local.username}/$repository_name; fi" >> /home/${local.username}/.zshrc
 
     touch /home/${local.username}/.coder_init_done
   EOT
