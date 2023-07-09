@@ -85,9 +85,8 @@ resource "coder_agent" "main" {
     echo "Adding to .zshrc..."
     echo "if [ -d /home/${local.username}/$repository_name ]; then cd /home/${local.username}/$repository_name; fi" >> /home/${local.username}/.zshrc
 
-    echo "Enabling direnv in repo..."
-    zsh
-    direnv allow
+    echo "Enabling direnv in repo... (this could take a few minutes)"
+    /usr/bin/zsh -c "direnv allow"
 
     echo "Setting init script as complete... exiting."
     touch /home/${local.username}/.coder_init_done
