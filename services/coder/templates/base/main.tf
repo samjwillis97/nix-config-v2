@@ -67,22 +67,29 @@ resource "coder_agent" "main" {
   startup_script_timeout = 180
   startup_script         = <<-EOT
     set -e
+    echo "Starting Code Server Agent in background..."
     /tmp/code-server/bin/code-server --auth none --port 13337 >/tmp/code-server.log 2>&1 &
 
     if [ -f /home/${local.username}/.coder_init_done ]; then
+      echo "Init script has been run before, exiting."
       exit 0
     fi
 
-    repository_name=$(echo "${data.coder_parameter.repository.value}" | sed 's/.*\/\([^\/]*\)\.git/\1/')
+    echo "Changing default shell to zsh..."
+    sudo usermod --shell /usr/bin/zsh ${local.username}
 
+    echo "Cloning Repository..."
+    repository_name=$(echo "${data.coder_parameter.repository.value}" | sed 's/.*\/\([^\/]*\)\.git/\1/')
     git clone ${data.coder_parameter.repository.value} $repository_name 2>&1
+
+    echo "Adding to .zshrc..."
     cat "if [ -d /home/${local.username}/$repository_name ]; then cd /home/${local.username}/$repository_name; fi" >> /home/${local.username}/.zshrc
 
+    echo "Enabling direnv in repo..."
     zsh
     direnv allow
 
-    sudo usermod --shell /usr/bin/zsh ${local.username}
-
+    echo "Setting init script as complete... exiting."
     touch /home/${local.username}/.coder_init_done
   EOT
 
