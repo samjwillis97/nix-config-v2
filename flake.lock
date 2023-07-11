@@ -674,11 +674,11 @@
         "vim-vsnip": "vim-vsnip"
       },
       "locked": {
-        "lastModified": 1688899096,
-        "narHash": "sha256-h7eIwZezU/mLKHsvXwoLfuyANHi0dYxzi1np6y7/iAM=",
+        "lastModified": 1689072204,
+        "narHash": "sha256-R2MqGZuRPe1CXhaoZnqQ7qEZ9dcNMvbBtHnii2OJICE=",
         "owner": "samjwillis97",
         "repo": "modular-neovim-flake",
-        "rev": "1ac27a3bf3e3e78e92f7462660c1d9c865de8471",
+        "rev": "81d9dc2fedfeac71f7ce1cbf3b5db25a884200f4",
         "type": "github"
       },
       "original": {
