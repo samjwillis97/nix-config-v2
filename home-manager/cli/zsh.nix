@@ -1,9 +1,10 @@
 { super, config, pkgs, lib, flake, ... }:
 let
-  homeDirectory = if super.meta.isDarwin then
-    "/Users/${super.meta.username}"
-  else
-    "/home/${super.meta.username}";
+  homeDirectory =
+    if super.meta.isDarwin then
+      "/Users/${super.meta.username}"
+    else
+      "/home/${super.meta.username}";
 
   initExtra = with config.theme.colors; ''
     export PATH="$PATH:${homeDirectory}/.dotnet/tools"
@@ -14,12 +15,15 @@ let
 
     bindkey -s ^f "tmux-sessionizer\n"
 
+    export CDPATH="$CDPATH:../:../../"
+
     export FZF_DEFAULT_OPTS=" \
         --color=bg+:${base02},bg:${base00},spinner:${base06},hl:${base08} \
         --color=fg:${base05},header:${base08},info:${base0E},pointer:${base06} \
         --color=marker:${base06},fg+:${base05},prompt:${base0E},hl+:${base08}"
   '';
-in {
+in
+{
   home.packages = with pkgs; [ bat rsync gnutar ];
 
   programs.zsh = {
