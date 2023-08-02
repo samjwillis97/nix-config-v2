@@ -8,5 +8,6 @@
     ./rust.nix
     ./devenv.nix
     ./github.nix
+    ./ops.nix
   ];
 }

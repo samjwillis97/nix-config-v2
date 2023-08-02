@@ -1,5 +1,5 @@
 { pkgs, ... }: {
-  home.packages = with pkgs; [ slack discord ];
+  home.packages = with pkgs; [ zoom-us slack discord ];
 
   xdg.configFile.discord = {
     target = "discord/settings.json";
