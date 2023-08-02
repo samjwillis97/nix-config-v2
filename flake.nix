@@ -137,6 +137,7 @@
           ./home-manager/kitty
           # ./home-manager/alacritty
           ./home-manager/dev
+          ./home-manager/vscode
           ./home-manager/work
         ];
       })
