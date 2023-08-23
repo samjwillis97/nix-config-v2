@@ -11,8 +11,8 @@ in {
       neovim-base = flake.inputs.modular-neovim.packages.${system}.neovim-base;
       neovim-full = flake.inputs.modular-neovim.packages.${system}.neovim-full;
       nix-serve = flake.inputs.nix-serve.packages.${system}.nix-serve;
+      hyprland = flake.inputs.hyprland.packages.${system}.hyprland;
     })
-    inputs.nixneovimplugins.overlays.default
     inputs.nur.overlay
   ];
 }

@@ -6,6 +6,13 @@
 {
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
+  virtualisation.vmVariant = {
+    virtualisation = {
+      memorySize = 16384;
+      cores = 8;
+    };
+  };
+
   boot.initrd.availableKernelModules =
     [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];

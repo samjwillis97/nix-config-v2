@@ -17,6 +17,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Hyprland Window Manager
+    hyprland = {
+      url = "github:hyprwm/Hyprland";
+    };
+
     flake-utils = { url = "github:numtide/flake-utils"; };
 
     nur = { url = "github:nix-community/NUR"; };
@@ -30,9 +35,6 @@
     nix-serve = { url = "github:samjwillis97/nix-serve?ref=priority_change"; };
 
     agenix = { url = "github:ryantm/agenix"; };
-
-    # Additional Neovim Plugins
-    nixneovimplugins = { url = "github:jooooscha/nixpkgs-vim-extra-plugins"; };
   };
 
   outputs =
@@ -43,9 +45,9 @@
     , devenv
     , modular-neovim
     , old-neovim
-    , nixneovimplugins
     , agenix
     , nix-serve
+    , hyprland
     , ...
     }@inputs:
     let
@@ -76,6 +78,7 @@
         networkAdapterName = "enp9s0";
         extraModules = [
           ./nixos/xserver.nix
+          ./nixos/wayland.nix
           ./nixos/fonts.nix
           ./nixos/audio.nix
           ./nixos/gaming.nix
@@ -83,6 +86,7 @@
           ./nixos/docker.nix
         ];
         extraHomeModules = [
+          hyprland.homeManagerModules.default
           ./home-manager/nixos.nix
           ./home-manager/desktop
           ./home-manager/i3
@@ -91,6 +95,7 @@
           ./home-manager/work
           ./home-manager/ides
           ./home-manager/qutebrowser
+          ./home-manager/hyprland
         ];
       })
 
