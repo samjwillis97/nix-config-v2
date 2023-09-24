@@ -156,6 +156,24 @@
         "systems": "systems_4"
       },
       "locked": {
+        "lastModified": 1692799911,
+        "narHash": "sha256-3eihraek4qL744EvQXsK1Ha6C3CR7nnT8X2qWap4RNk=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "f9e7cf818399d17d347f847525c5a5a8032e4e44",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flake-utils_5": {
+      "inputs": {
+        "systems": "systems_5"
+      },
+      "locked": {
         "lastModified": 1681202837,
         "narHash": "sha256-H+Rh19JDwRtpVPAWp64F+rlEtxUWBAQW28eAi3SRSzg=",
         "owner": "numtide",
@@ -169,7 +187,7 @@
         "type": "github"
       }
     },
-    "flake-utils_5": {
+    "flake-utils_6": {
       "locked": {
         "lastModified": 1667395993,
         "narHash": "sha256-nuEHfE/LcWyuSWnS8t12N1wc105Qtau+/OdUAjtQ0rA=",
@@ -339,6 +357,7 @@
         "plugin-lualine": "plugin-lualine",
         "plugin-nvim-cmp": "plugin-nvim-cmp",
         "plugin-nvim-code-action-menu": "plugin-nvim-code-action-menu",
+        "plugin-nvim-dap-vscode-js": "plugin-nvim-dap-vscode-js",
         "plugin-nvim-lastplace": "plugin-nvim-lastplace",
         "plugin-nvim-tree-lua": "plugin-nvim-tree-lua",
         "plugin-nvim-ts-autotag": "plugin-nvim-ts-autotag",
@@ -351,14 +370,15 @@
         "plugin-tokyonight": "plugin-tokyonight",
         "plugin-treesitter-context": "plugin-treesitter-context",
         "plugin-undotree": "plugin-undotree",
-        "plugin-vim-vsnip": "plugin-vim-vsnip"
+        "plugin-vim-vsnip": "plugin-vim-vsnip",
+        "vscode-js-debug": "vscode-js-debug"
       },
       "locked": {
-        "lastModified": 1693041916,
-        "narHash": "sha256-My35Q9lIZKlErc0Y/6SPr8iRoqlGJQ4kpNZy3WI9blk=",
+        "lastModified": 1694066419,
+        "narHash": "sha256-2byrNeeaQ8DSGaopZxTZyUhx5f9CdWDkqIPtVCNEkQs=",
         "owner": "samjwillis97",
         "repo": "modular-neovim-flake",
-        "rev": "ae91c3f846cf120e5209f0911dfc88b6a03c07d1",
+        "rev": "bc1d61478fb0ac8516097950d41bb8d384f886a6",
         "type": "github"
       },
       "original": {
@@ -369,7 +389,7 @@
     },
     "neovim": {
       "inputs": {
-        "flake-utils": "flake-utils_5",
+        "flake-utils": "flake-utils_6",
         "nixpkgs": [
           "old-neovim",
           "nixpkgs"
@@ -418,7 +438,7 @@
     },
     "nix-serve": {
       "inputs": {
-        "nixpkgs": "nixpkgs_5"
+        "nixpkgs": "nixpkgs_6"
       },
       "locked": {
         "lastModified": 1688855758,
@@ -533,6 +553,22 @@
     },
     "nixpkgs_5": {
       "locked": {
+        "lastModified": 1692684269,
+        "narHash": "sha256-zJk2pyF4Cuhtor0khtPlf+hfJIh22rzAUC+KU3Ob31Q=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "9d757ec498666cc1dcc6f2be26db4fd3e1e9ab37",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_6": {
+      "locked": {
         "lastModified": 1606086654,
         "narHash": "sha256-VFl+3eGIMqNp7cyOMJ6TjM/+UcsLKtodKoYexrlTJMI=",
         "owner": "NixOS",
@@ -546,7 +582,7 @@
         "type": "indirect"
       }
     },
-    "nixpkgs_6": {
+    "nixpkgs_7": {
       "locked": {
         "lastModified": 1685564631,
         "narHash": "sha256-8ywr3AkblY4++3lIVxmrWZFzac7+f32ZEhH/A8pNscI=",
@@ -562,7 +598,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_7": {
+    "nixpkgs_8": {
       "locked": {
         "lastModified": 1681293074,
         "narHash": "sha256-6v0riyYrZ+rpIQl0K/5XIYDPT8GIjukZIALZbuQMQ1w=",
@@ -594,9 +630,9 @@
     },
     "old-neovim": {
       "inputs": {
-        "flake-utils": "flake-utils_4",
+        "flake-utils": "flake-utils_5",
         "neovim": "neovim",
-        "nixpkgs": "nixpkgs_7",
+        "nixpkgs": "nixpkgs_8",
         "statuscol": "statuscol"
       },
       "locked": {
@@ -1014,6 +1050,22 @@
         "type": "github"
       }
     },
+    "plugin-nvim-dap-vscode-js": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1678071992,
+        "narHash": "sha256-8dlzaI94I8ppzLRNIfjVd92kYgqr07D1akDj4VdKQto=",
+        "owner": "mxsdev",
+        "repo": "nvim-dap-vscode-js",
+        "rev": "03bd29672d7fab5e515fc8469b7d07cc5994bbf6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mxsdev",
+        "repo": "nvim-dap-vscode-js",
+        "type": "github"
+      }
+    },
     "plugin-nvim-lastplace": {
       "flake": false,
       "locked": {
@@ -1260,7 +1312,7 @@
         "hyprland": "hyprland",
         "modular-neovim": "modular-neovim",
         "nix-serve": "nix-serve",
-        "nixpkgs": "nixpkgs_6",
+        "nixpkgs": "nixpkgs_7",
         "nur": "nur",
         "old-neovim": "old-neovim"
       }
@@ -1338,6 +1390,58 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "systems_5": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
+    "vscode-js-debug": {
+      "inputs": {
+        "flake-utils": "flake-utils_4",
+        "nixpkgs": "nixpkgs_5",
+        "vscode-js-debug": "vscode-js-debug_2"
+      },
+      "locked": {
+        "lastModified": 1692804146,
+        "narHash": "sha256-32FBPFAd3RDJVZ3X2m7J6vIlN75BZk0gwqj9mBS4EYQ=",
+        "owner": "willruggiano",
+        "repo": "vscode-js-debug.nix",
+        "rev": "8d299b27ce6412989719282d1104d34f5c2149eb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "willruggiano",
+        "repo": "vscode-js-debug.nix",
+        "type": "github"
+      }
+    },
+    "vscode-js-debug_2": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1690242329,
+        "narHash": "sha256-L7MFECy0KKJUsnObqLepPnrkDHwm28iQhjm5D9a0BV0=",
+        "owner": "microsoft",
+        "repo": "vscode-js-debug",
+        "rev": "df0247e2df0dc816e0b2b8a38a37867673a75815",
+        "type": "github"
+      },
+      "original": {
+        "owner": "microsoft",
+        "ref": "v1.81.0",
+        "repo": "vscode-js-debug",
         "type": "github"
       }
     },
