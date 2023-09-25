@@ -11,7 +11,7 @@
         ./brew.nix
         ./keyboard.nix
         ./ns-global-domain.nix
-        # ./dock.nix
+        ./dock.nix
         ../overlays
     ];
 

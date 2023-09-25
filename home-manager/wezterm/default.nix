@@ -3,26 +3,6 @@
     enable = true;
     colorSchemes = {
       base16 = with config.theme.colors; {
-        # ansi = [    
-        #     "black"
-        #     "maroon"
-        #     "green"
-        #     "olive"
-        #     "navy"
-        #     "purple"
-        #     "teal"
-        #     "silver"
-        # ];
-        # brights = [    
-        #     "grey"
-        #     "red"
-        #     "lime"
-        #     "yellow"
-        #     "blue"
-        #     "fuchsia"
-        #     "aqua"
-        #     "white"
-        # ];
         ansi = [ base00 base08 base0B base0A base0D base0E base0C base05 ];
         brights = [ base03 base08 base0B base0A base0D base0E base0C base05 ];
         background = base00;
@@ -33,9 +13,12 @@
         selection_bg = base06;
         selection_fg = base00;
       };
+      enableZshIntegration = true;
     };
     extraConfig = ''
       return {
+        font = wezterm.font("FiraCode Nerd Font Mono"),
+        hide_tab_bar_if_only_one_tab = true,
         color_scheme = "base16",
       }
     '';

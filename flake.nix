@@ -132,6 +132,16 @@
         ];
       })
 
+      (mkDarwinSystem {
+        hostname = "work-mbp";
+        system = "aarch64-darwin";
+        username = "samuel.willis";
+        homePath = "/Users";
+        extraHomeModules = [
+          ./home-manager/wezterm
+        ];
+      })
+
       (mkHomeManager { hostname = "amp-7150"; })
       (mkHomeManager { hostname = "coder-container"; })
 

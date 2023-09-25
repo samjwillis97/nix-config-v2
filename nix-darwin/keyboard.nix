@@ -3,7 +3,7 @@
     enableKeyMapping = true;
     remapCapsLockToEscape = true;
     userKeyMapping = [
-      # TODO: Caps Lock -> Escape
+      # TODO
       # Globe -> Ctrl
       # Ctrl -> Globe
     ];
