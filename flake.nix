@@ -142,20 +142,6 @@
         ];
       })
 
-      (mkHomeManager { hostname = "amp-7150"; })
       (mkHomeManager { hostname = "coder-container"; })
-
-      (mkHomeManager {
-        hostname = "amp-8060";
-        extraHomeModules = [
-          # TODO: firefox
-          ./home-manager/nixos.nix
-          ./home-manager/kitty
-          # ./home-manager/alacritty
-          ./home-manager/dev
-          ./home-manager/vscode
-          ./home-manager/work
-        ];
-      })
     ]);
 }
