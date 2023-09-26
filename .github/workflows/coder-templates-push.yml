@@ -9,10 +9,10 @@ on:
       - ".github/workflows/coder-templates-push.yml"
 
   # workflow_dispatch:
-  schedule:
+  # schedule:
     # * is a special character in YAML so you have to quote this string
     # run this every day at 4:00am
-    - cron: "0 4 * * *"
+    # - cron: "0 4 * * *"
 
 # Cancel in-progress runs for pull requests when developers push
 # additional changes
