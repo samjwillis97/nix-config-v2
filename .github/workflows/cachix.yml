@@ -3,6 +3,9 @@ on:
   # TODO: Put a cancel thingo in here
   push:
   pull_request:
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   cachix:
     runs-on: ubuntu-latest
