@@ -20,10 +20,7 @@ in
     useUserPackages = true;
     users.${username} = import ../users/${username};
     extraSpecialArgs = {
-      inherit flake system;
-      super = super // {
-          super.meta.extraHomeModules = super.meta.extraHomeModules ++ [ ../home-manager/macos.nix ];
-      };
+      inherit flake system super;
     };
   };
 }

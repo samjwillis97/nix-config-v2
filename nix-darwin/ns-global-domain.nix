@@ -1,6 +1,13 @@
 {
   # TODO: Investigate what these actually do
   system.defaults.NSGlobalDomain = {
+    # Disable all automatic substitution
+    NSAutomaticCapitalizationEnabled = false;
+    NSAutomaticDashSubstitutionEnabled = false;
+    NSAutomaticPeriodSubstitutionEnabled = false;
+    NSAutomaticQuoteSubstitutionEnabled = false;
+    NSAutomaticSpellingCorrectionEnabled = false;
+
     AppleEnableMouseSwipeNavigateWithScrolls = false;
     AppleEnableSwipeNavigateWithScrolls = false;
     AppleFontSmoothing = 2;

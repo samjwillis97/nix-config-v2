@@ -4,5 +4,6 @@
     terraform
     terraform-providers.azurerm
     azure-cli
+    aws-cli
   ];
 }
