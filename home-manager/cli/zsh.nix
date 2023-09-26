@@ -9,6 +9,8 @@ let
   initExtra = with config.theme.colors; ''
     export PATH="$PATH:${homeDirectory}/.dotnet/tools"
     export PATH="$PATH:${homeDirectory}/go/bin"
+    export PATH="$PATH:${homeDirectory}/.local/bin"
+
     # alias nvim="nix run github:samjwillis97/neovim-flake --"
 
     bindkey -s ^f "tmux-sessionizer\n"
