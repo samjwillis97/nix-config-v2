@@ -1,5 +1,6 @@
 name: Cachix
 on:
+  # TODO: Put a cancel thingo in here
   push:
   pull_request:
 jobs:
@@ -15,9 +16,3 @@ jobs:
           extraPullNames: cachix, nix-community, numtide
           name: samjwillis97
           authToken: "${{secrets.CACHIX_AUTH_TOKEN}}"
-      - name: Build Coder Container
-        run: nix build -L '.#homeConfigurations.coder-container.activationPackage'
-      - name: Push Coder Container
-        run: cachix push samjwillis97 ./result
-      - name: Delete Coder Container
-        run: rm -rf ./result
