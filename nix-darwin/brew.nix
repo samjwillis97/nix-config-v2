@@ -13,7 +13,7 @@
       "raycast"
       "slack"
       "discord"
-      "tidal"
+      "spotify"
       "insomnia"
       # "zoom"
       "rectangle"
