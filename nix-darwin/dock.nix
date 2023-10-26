@@ -1,5 +1,4 @@
 {
-  # TODO: Work out what my settings are
   system.defaults.dock = {
     enable-spring-load-actions-on-all-items = true;
     appswitcher-all-displays = true;

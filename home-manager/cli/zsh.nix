@@ -46,7 +46,7 @@ in
       ll = "ls -alFh";
       lt = "ls --human-readable --size -1 -S --classify";
       cat = "bat";
-      cp = "rsync -ah --info=progress2";
+      cp = "rsync -ah --progress";
       count-file-watchers = ''
         find /proc/*/fd -user "$USER" -lname anon_inode:inotify -printf "%hinfo/%f\n" 2>/dev/null | xargs cat | grep -c "^inotify"
       '';
