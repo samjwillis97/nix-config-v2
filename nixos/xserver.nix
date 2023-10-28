@@ -53,6 +53,7 @@
         };
         mouse = {
           accelProfile = "flat";
+          accelSpeed = null;
         };
       };
     };
