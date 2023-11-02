@@ -15,10 +15,13 @@
       "discord"
       "spotify"
       "insomnia"
-      # "zoom"
       "rectangle"
       "1password"
       "displaylink"
+      # "figma" # work only
+      "amethyst"
+      "betterdisplay"
+      "aldente"
     ];
 
     # These need to be purchased/owned by the logged in account before mas can install them
