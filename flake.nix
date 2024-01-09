@@ -140,7 +140,6 @@
         extraHomeModules = [
           ./home-manager/wezterm
           ./home-manager/vscode
-          ./home-manager/dev/node.nix
           ./home-manager/work
         ];
       })

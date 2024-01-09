@@ -22,6 +22,8 @@
       "amethyst"
       "betterdisplay"
       "aldente"
+      "logi-options-plus"
+      "appcleaner"
     ];
 
     # These need to be purchased/owned by the logged in account before mas can install them
