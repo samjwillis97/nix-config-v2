@@ -123,9 +123,8 @@
         username = "samwillis";
         homePath = "/Users";
         extraHomeModules = [
-          ./home-manager/alacritty
           ./home-manager/wezterm
-          ./home-manager/dev/rust.nix
+          # ./home-manager/dev/rust.nix
           ./home-manager/dev/devenv.nix
           ./home-manager/dev/node.nix
           ./home-manager/dev/ops.nix

@@ -19,11 +19,14 @@
       "1password"
       "displaylink"
       # "figma" # work only
-      "amethyst"
+      # "amethyst"
       "betterdisplay"
       "aldente"
       "logi-options-plus"
       "appcleaner"
+      "proxyman"
+      # "zoom"
+      # "logitech-g-hub"
     ];
 
     # These need to be purchased/owned by the logged in account before mas can install them

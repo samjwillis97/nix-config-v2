@@ -13,8 +13,8 @@
         selection_bg = base06;
         selection_fg = base00;
       };
-      enableZshIntegration = true;
     };
+    enableZshIntegration = true;
     extraConfig = ''
       return {
         font = wezterm.font("FiraCode Nerd Font Mono"),

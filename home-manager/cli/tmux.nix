@@ -1,20 +1,20 @@
 { config, pkgs, lib, flake, ... }:
-    # TODO: Auto Reconnect
+# TODO: Auto Reconnect
 {
-    programs.tmux = {
-        enable = true;
-        sensibleOnTop = false;
-        package = pkgs.tmux;
+  programs.tmux = {
+    enable = true;
+    sensibleOnTop = false;
+    package = pkgs.tmux;
 
-        aggressiveResize = true;
-        baseIndex = 1;
-        historyLimit = 10000;
-        newSession = false;
+    aggressiveResize = true;
+    baseIndex = 1;
+    historyLimit = 10000;
+    newSession = false;
 
-        prefix = "C-b";
-        terminal = "screen-256color";
+    prefix = "C-b";
+    terminal = "screen-256color";
 
-        extraConfig = with config.theme.colors; ''
+    extraConfig = with config.theme.colors; ''
 
         # Better splitting
         bind | split-window -h -c "#{pane_current_path}"
@@ -49,9 +49,8 @@
         bind-key -r i run-shell "tmux neww tmux-cht.sh"
 
         # Enabled 256 Color
-        set -g default-terminal "screen-256color"
-        set-option -ga terminal-overrides ",xterm-256color:Tc"
-        set-option -ga terminal-overrides ",alacritty:Tc"
+        set -g default-terminal "tmux-256color"
+        set-option -ga terminal-overrides ',xterm-256color:Tc'
 
         # Enable scrolling
         set -g mouse on
@@ -116,5 +115,5 @@
         set-option -g display-panes-colour colour166
 
        '';
-    };
+  };
 }
