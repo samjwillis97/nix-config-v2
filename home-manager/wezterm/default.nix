@@ -20,6 +20,7 @@
         font = wezterm.font("FiraCode Nerd Font Mono"),
         hide_tab_bar_if_only_one_tab = true,
         color_scheme = "base16",
+        harfbuzz_features = { 'calt=0', 'clig=0', 'liga=0' }
       }
     '';
   };
