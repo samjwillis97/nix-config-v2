@@ -23,6 +23,7 @@
         color_scheme = "base16",
         text_background_opacity = 1,
         window_background_opacity = 0.875,
+        macos_window_background_blur = 15,
         harfbuzz_features = { 'calt=0', 'clig=0', 'liga=0' }
       }
     '';
