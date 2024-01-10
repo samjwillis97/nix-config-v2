@@ -15,11 +15,14 @@
       };
     };
     enableZshIntegration = true;
+    # `text_background_opacity` effects the background colors of neovim
     extraConfig = ''
       return {
         font = wezterm.font("FiraCode Nerd Font Mono"),
         hide_tab_bar_if_only_one_tab = true,
         color_scheme = "base16",
+        text_background_opacity = 1,
+        window_background_opacity = 0.875,
         harfbuzz_features = { 'calt=0', 'clig=0', 'liga=0' }
       }
     '';

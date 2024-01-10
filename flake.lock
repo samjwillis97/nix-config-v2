@@ -390,16 +390,17 @@
         "plugin-telescope": "plugin-telescope",
         "plugin-tmux-navigator": "plugin-tmux-navigator",
         "plugin-tokyonight": "plugin-tokyonight",
+        "plugin-transparent": "plugin-transparent",
         "plugin-treesitter-context": "plugin-treesitter-context",
         "plugin-undotree": "plugin-undotree",
         "vscode-js-debug": "vscode-js-debug"
       },
       "locked": {
-        "lastModified": 1704772096,
-        "narHash": "sha256-1ltk9zFhEwxJ11mvzqYaBs4pYhbKhlCpnPs+UctG/fA=",
+        "lastModified": 1704846890,
+        "narHash": "sha256-rdEkhTo80jTSHmmgxlRyxWXGOcXFV6IEAuDAXHDtOyM=",
         "owner": "samjwillis97",
         "repo": "modular-neovim-flake",
-        "rev": "df0a7c0b28a1f0535f1ee592894dc9e9cd15a57a",
+        "rev": "0959ca3b546c7e734ec2b2d6433a66943b2aa9f4",
         "type": "github"
       },
       "original": {
@@ -1276,6 +1277,22 @@
       "original": {
         "owner": "folke",
         "repo": "tokyonight.nvim",
+        "type": "github"
+      }
+    },
+    "plugin-transparent": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1699805216,
+        "narHash": "sha256-wT+7rmp08r0XYGp+MhjJX8dsFTar8+nf10CV9OdkOSk=",
+        "owner": "xiyaowong",
+        "repo": "transparent.nvim",
+        "rev": "fd35a46f4b7c1b244249266bdcb2da3814f01724",
+        "type": "github"
+      },
+      "original": {
+        "owner": "xiyaowong",
+        "repo": "transparent.nvim",
         "type": "github"
       }
     },

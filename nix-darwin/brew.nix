@@ -24,13 +24,13 @@
       "aldente"
       "logi-options-plus"
       "appcleaner"
-      "proxyman"
+      # "proxyman"
       # "zoom"
       # "logitech-g-hub"
     ];
 
     # These need to be purchased/owned by the logged in account before mas can install them
-    masApps = { 
+    masApps = {
       # "Microsoft Remote Desktop" = 1295203466;
       # "Tailscale" = 1475387142;
       # "Xcode" = 497799835;
