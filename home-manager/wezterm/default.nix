@@ -22,8 +22,9 @@
         hide_tab_bar_if_only_one_tab = true,
         color_scheme = "base16",
         text_background_opacity = 1,
-        window_background_opacity = 0.875,
+        window_background_opacity = 0.8,
         macos_window_background_blur = 15,
+        window_decorations = "RESIZE",
         harfbuzz_features = { 'calt=0', 'clig=0', 'liga=0' }
       }
     '';

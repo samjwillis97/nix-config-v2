@@ -23,6 +23,7 @@ in {
       duf
       neovim-full
       agenix
+      ncdu
 
       nodePackages.wrangler
     ] ++ osSpecificPackages;
