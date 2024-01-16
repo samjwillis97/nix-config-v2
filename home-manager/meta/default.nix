@@ -10,5 +10,6 @@
     git.enable = true;
   };
 
+  # IDK if this does anything?
   home.stateVersion = "23.05";
 }
