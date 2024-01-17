@@ -1,5 +1,13 @@
 { pkgs, ... }:
 let 
+  fetch-available-node = pkgs.writeShellScriptBin "fetch-available-node" ''
+    nix search nixpkgs nodejs --json | jq 'keys | map(select(contains(".nodejs_")) | sub(".*nodejs_"; "")) | join (" ")' | sed 's/.\(.*\)./\1/'
+  '';
+
+  ask-for-node-version = pkgs.writeShellScriptBin "ask-for-node-version" ''
+    ${pkgs.gum}/bin/gum choose --header "Which version of node?" $(${fetch-available-node}/bin/fetch-available-node)
+  '';
+
   node-nix-shell-template = pkgs.writeShellScriptBin "node-nix-shell-template" ''
     # Check if shell.nix OR .envrc exists
     if [[ -f "shell.nix" ]]; then
@@ -13,7 +21,7 @@ let
     fi
 
     # Ask for version
-    version=$(${pkgs.gum}/bin/gum choose --header "Which version of node?" "18" "20" "21")
+    ${ask-for-node-version}/bin/ask-for-node-version
 
     # Gen files
     touch .envrc && echo 'use nix' > .envrc
@@ -51,7 +59,7 @@ EOF
     fi
 
     # Ask for version
-    version=$(${pkgs.gum}/bin/gum choose --header "Which version of node?" "18" "20" "21")
+    ${ask-for-node-version}/bin/ask-for-node-version
 
     # Gen files
     touch .envrc && echo 'use flake .' > .envrc
