@@ -25,14 +25,23 @@ outputs = { self, nixpkgs, flake-utils }:
     (system:
       let
         overlays = [ ];
+
         pkgs = import nixpkgs {
           inherit system overlays;
         };
+
+        # for dev shells nativeBuildInputs and buildInputs make no difference
+        # though buildInputs are needed at run-time while nativeBuildInputs
+        # are things only needed at compile time
+
+        nativeBuildInputs = with pkgs; [];
+
+        buildInputs = with pkgs; [];
       in
       with pkgs;
       {
         devShells.default = mkShell {
-          buildInputs = [ ];
+          inherit buildInputs nativeBuildInputs;
         };
       }
     );

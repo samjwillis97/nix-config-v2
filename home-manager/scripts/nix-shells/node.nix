@@ -78,13 +78,14 @@ outputs = { self, nixpkgs, flake-utils }:
         pkgs = import nixpkgs {
           inherit system overlays;
         };
+
+        nativeBuildInputs = with pkgs; [];
+        buildInputs = with pkgs; [ nodejs_$version ];
       in
       with pkgs;
       {
         devShells.default = mkShell {
-          buildInputs = [
-            nodejs_$version
-          ];
+          inherit buildInputs nativeBuildInputs;
         };
       }
     );
