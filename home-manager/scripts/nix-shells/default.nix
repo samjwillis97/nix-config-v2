@@ -42,6 +42,8 @@ EOF
     direnv allow
   '';
 
+  create-node-envs = import ./node.nix { inherit pkgs; };
+
   create-nix-shell = pkgs.writeShellScriptBin "create-nix-shell" ''
     environment=$(${pkgs.gum}/bin/gum choose --header "What type of environment?" \
     "blank flake" \
@@ -55,23 +57,17 @@ EOF
         exit 0
       ;;
       "nodejs")
-        # NOTE: would be nice to reference this a bit better
-        create-node-nix-shell-env
+        ${create-node-envs.nix-shell-template}/bin/node-nix-shell-template
         exit 0
       ;;
       "nodejs flake")
-        # NOTE: would be nice to reference this a bit better
-        create-node-nix-flake-env
+        ${create-node-envs.nix-flake-template}/bin/node-nix-flake-template
         exit 0
       ;;
     esac
   '';
 in
 {
-  imports = [
-    ./node.nix
-  ];
-
   home.packages = [
     pkgs.gum
     create-nix-shell

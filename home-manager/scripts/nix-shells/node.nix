@@ -1,21 +1,19 @@
 { pkgs, ... }:
 let 
-  gum = pkgs.gum;
-
-  create-node-nix-shell-env = pkgs.writeShellScriptBin "create-node-nix-shell-env" ''
+  node-nix-shell-template = pkgs.writeShellScriptBin "node-nix-shell-template" ''
     # Check if shell.nix OR .envrc exists
     if [[ -f "shell.nix" ]]; then
-      ${gum}/bin/gum log --level error "shell.nix already exists - exiting"
+      ${pkgs.gum}/bin/gum log --level error "shell.nix already exists - exiting"
       exit 1
     fi
 
     if [[ -f ".envrc" ]]; then
-      ${gum}/bin/gum log --level error ".envrc already exists - exiting"
+      ${pkgs.gum}/bin/gum log --level error ".envrc already exists - exiting"
       exit 1
     fi
 
     # Ask for version
-    version=$(${gum}/bin/gum choose --header "Which version of node?" "18" "20" "21")
+    version=$(${pkgs.gum}/bin/gum choose --header "Which version of node?" "18" "20" "21")
 
     # Gen files
     touch .envrc && echo 'use nix' > .envrc
@@ -40,20 +38,20 @@ EOF
     direnv allow
   '';
 
-  create-node-nix-flake-env = pkgs.writeShellScriptBin "create-node-nix-flake-env" ''
+  node-nix-flake-template = pkgs.writeShellScriptBin "node-nix-flake-template" ''
     # Check if shell.nix OR .envrc exists
     if [[ -f "flake.nix" ]]; then
-      ${gum}/bin/gum log --level error "flake.nix already exists - exiting"
+      ${pkgs.gum}/bin/gum log --level error "flake.nix already exists - exiting"
       exit 1
     fi
 
     if [[ -f ".envrc" ]]; then
-      ${gum}/bin/gum log --level error ".envrc already exists - exiting"
+      ${pkgs.gum}/bin/gum log --level error ".envrc already exists - exiting"
       exit 1
     fi
 
     # Ask for version
-    version=$(${gum}/bin/gum choose --header "Which version of node?" "18" "20" "21")
+    version=$(${pkgs.gum}/bin/gum choose --header "Which version of node?" "18" "20" "21")
 
     # Gen files
     touch .envrc && echo 'use flake .' > .envrc
@@ -88,9 +86,6 @@ EOF
     direnv allow
   '';
 in {
-  home.packages = [
-    gum
-    create-node-nix-shell-env
-    create-node-nix-flake-env
-  ];
+  nix-shell-template = node-nix-shell-template;
+  nix-flake-template = node-nix-flake-template;
 }
