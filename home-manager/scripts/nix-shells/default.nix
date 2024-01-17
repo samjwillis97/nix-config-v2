@@ -3,6 +3,7 @@ let
   create-node-envs = import ./node.nix { inherit pkgs; };
   create-templates = import ./blank.nix { inherit pkgs; };
 
+  # NOTE: worth reading - https://fasterthanli.me/series/building-a-rust-service-with-nix/part-10#a-flake-with-a-dev-shell
   create-nix-shell = pkgs.writeShellScriptBin "create-nix-shell" ''
     environment=$(${pkgs.gum}/bin/gum choose --header "What type of environment?" \
     "blank flake" \
