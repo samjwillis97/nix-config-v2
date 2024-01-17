@@ -46,6 +46,7 @@ EOF
     environment=$(${pkgs.gum}/bin/gum choose --header "What type of environment?" \
     "blank flake" \
     "nodejs" \
+    "nodejs flake" \
     )
 
     case $environment in
@@ -56,6 +57,11 @@ EOF
       "nodejs")
         # NOTE: would be nice to reference this a bit better
         create-node-nix-shell-env
+        exit 0
+      ;;
+      "nodejs flake")
+        # NOTE: would be nice to reference this a bit better
+        create-node-nix-flake-env
         exit 0
       ;;
     esac
