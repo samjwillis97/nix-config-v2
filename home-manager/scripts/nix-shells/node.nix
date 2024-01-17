@@ -2,7 +2,7 @@
 let 
   gum = pkgs.gum;
 
-  create-node-env = pkgs.writeShellScriptBin "create-node-env" ''
+  create-node-nix-shell-env = pkgs.writeShellScriptBin "create-node-nix-shell-env" ''
     # Check if shell.nix OR .envrc exists
     if [[ -f "shell.nix" ]]; then
       ${gum}/bin/gum log --level error "shell.nix already exists - exiting"
@@ -42,6 +42,6 @@ EOF
 in {
   home.packages = [
     gum
-    create-node-env
+    create-node-nix-shell-env
   ];
 }
