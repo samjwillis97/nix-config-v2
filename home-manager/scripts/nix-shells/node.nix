@@ -37,7 +37,7 @@ pkgs.mkShell {
 }
 EOF
 
-  direnv allow
+    direnv allow
   '';
 in {
   home.packages = [
