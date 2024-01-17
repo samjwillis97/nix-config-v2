@@ -21,7 +21,7 @@ let
     fi
 
     # Ask for version
-    ${ask-for-node-version}/bin/ask-for-node-version
+    version=$(${ask-for-node-version}/bin/ask-for-node-version)
 
     # Gen files
     touch .envrc && echo 'use nix' > .envrc
@@ -59,7 +59,7 @@ EOF
     fi
 
     # Ask for version
-    ${ask-for-node-version}/bin/ask-for-node-version
+    version=$(${ask-for-node-version}/bin/ask-for-node-version)
 
     # Gen files
     touch .envrc && echo 'use flake .' > .envrc
