@@ -15,6 +15,7 @@ in {
       zip
       unzip
       difftastic
+      nodePackages.json-diff
       htop
       fzf
       direnv
