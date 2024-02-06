@@ -95,7 +95,8 @@
           ./home-manager/work
           ./home-manager/ides
           ./home-manager/qutebrowser
-          ./home-manager/hyprland
+          ./home-manager/wezterm
+          # ./home-manager/hyprland
         ];
       })
 
