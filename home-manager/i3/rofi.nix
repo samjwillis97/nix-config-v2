@@ -10,7 +10,7 @@
 
         extraConfig = {
             modi = "window,drun,run,ssh,emoji,calc,filebrowser";
-            terminal = "alacritty";
+            terminal = "wezterm";
             show-icons = true;
             drun-display-format = "{icon} {name}";
             hide-scrollbar = true;

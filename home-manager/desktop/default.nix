@@ -3,7 +3,7 @@
 #   - OBS
 #   - Solaar
 { config, lib, pkgs, ... }: {
-  imports = [ ../media ../social ../firefox ../alacritty ../theme ];
+  imports = [ ../media ../social ../firefox ../wezterm ../theme ];
 
   home.packages = with pkgs; [
     arandr

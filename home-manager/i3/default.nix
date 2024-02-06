@@ -22,7 +22,7 @@ let
             light = "light";
             pamixer = "${pkgs.pamixer}/bin/pamixer";
             playerctl = "${pkgs.playerctl}/bin/playerctl";
-            terminal = "${pkgs.alacritty}/bin/alacritty";
+            terminal = "${pkgs.wezterm}/bin/wezterm";
 
               # Screenshots
             fullScreenShot = ''
