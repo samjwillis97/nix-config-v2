@@ -2,9 +2,7 @@
 
 {
   # Select internationalisation properties.
-  i18n = {
-    defaultLocale = lib.mkDefault "en_US.UTF-8";
-  };
+  i18n = { defaultLocale = lib.mkDefault "en_US.UTF-8"; };
 
   # Set X11 keyboard layout.
   services.xserver = {

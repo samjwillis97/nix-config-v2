@@ -1,15 +1,9 @@
-{ pkgs, ... }:
-{
-  imports = [
-    ./wofi.nix
-    ./waybar.nix
-  ];
+{ pkgs, ... }: {
+  imports = [ ./wofi.nix ./waybar.nix ];
 
   wayland.windowManager.hyprland = {
     enable = true;
-    xwayland = {
-      enable = true;
-    };
+    xwayland = { enable = true; };
     # nvidiaPatches = false;
     recommendedEnvironment = true;
 

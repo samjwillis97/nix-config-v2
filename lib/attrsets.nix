@@ -1,6 +1,6 @@
 { lib, ... }:
 
 {
-    recursiveMergeAttrs = builtins.foldl' lib.recursiveUpdate { };
-    mergeMap = lib.foldr lib.recursiveUpdate { };
+  recursiveMergeAttrs = builtins.foldl' lib.recursiveUpdate { };
+  mergeMap = lib.foldr lib.recursiveUpdate { };
 }

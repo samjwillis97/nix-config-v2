@@ -1,11 +1,7 @@
 { super, flake, config, lib, pkgs, system, ... }:
-let
-  inherit (super.meta) username;
-in
-{
-  imports = [
-    flake.inputs.home-manager.darwinModules.home-manager
-  ];
+let inherit (super.meta) username;
+in {
+  imports = [ flake.inputs.home-manager.darwinModules.home-manager ];
 
   programs.zsh.enable = true;
   environment.shells = [ pkgs.zsh ];
@@ -19,8 +15,6 @@ in
   home-manager = {
     useUserPackages = true;
     users.${username} = import ../users/${username};
-    extraSpecialArgs = {
-      inherit flake system super;
-    };
+    extraSpecialArgs = { inherit flake system super; };
   };
 }

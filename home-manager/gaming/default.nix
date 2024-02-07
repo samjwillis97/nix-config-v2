@@ -1,6 +1,1 @@
-{ pkgs, ... }:
-{
-    home.packages = with pkgs; [
-        runelite
-    ];
-}
+{ pkgs, ... }: { home.packages = with pkgs; [ runelite ]; }

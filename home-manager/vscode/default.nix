@@ -9,8 +9,6 @@
       catppuccin.catppuccin-vsc
     ];
 
-    userSettings = {
-      "workbench.colorTheme" = "Catppuccin Mocha";
-    };
+    userSettings = { "workbench.colorTheme" = "Catppuccin Mocha"; };
   };
 }

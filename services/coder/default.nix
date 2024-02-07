@@ -8,8 +8,7 @@ let
       CREATE DATABASE coder;
     '';
   };
-in
-{
+in {
   # TODO: Think about how this could interract if another service wanted postgres...
   # what would be the best way forward there?
 

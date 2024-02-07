@@ -26,10 +26,4 @@ let
       ;;
     esac
   '';
-in
-{
-  home.packages = [
-    pkgs.gum
-    create-nix-shell
-  ];
-}
+in { home.packages = [ pkgs.gum create-nix-shell ]; }

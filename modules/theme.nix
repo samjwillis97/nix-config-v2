@@ -14,8 +14,7 @@ let
       };
     };
   };
-in
-{
+in {
   options.theme = {
     fonts = {
       gui = mkOption {

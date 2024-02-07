@@ -5,7 +5,8 @@ in {
   users.users.${username} = {
     isNormalUser = true;
     uid = 1000;
-    extraGroups = [ "wheel" "networkmanager" "video" "docker" "libvirtd" "qemu-libvirtd" ];
+    extraGroups =
+      [ "wheel" "networkmanager" "video" "docker" "libvirtd" "qemu-libvirtd" ];
     shell = pkgs.zsh;
     password = "nixos";
     openssh.authorizedKeys.keys = [

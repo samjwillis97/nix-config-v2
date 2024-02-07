@@ -1,5 +1,4 @@
-{ config, lib, pkgs, ... }:
-{
+{ config, lib, pkgs, ... }: {
   services.mako = with config.theme.colors; {
     enable = true;
     font = with config.theme.fonts; "${gui.name} 12";

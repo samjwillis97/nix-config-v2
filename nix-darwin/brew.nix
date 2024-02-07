@@ -1,13 +1,9 @@
 {
   homebrew = {
     enable = true;
-    onActivation = {
-      cleanup = "zap";
-    };
+    onActivation = { cleanup = "zap"; };
 
-    brews = [
-      "mas"
-    ];
+    brews = [ "mas" ];
 
     casks = [
       "raycast"

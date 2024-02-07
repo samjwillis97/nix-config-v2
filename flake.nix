@@ -18,9 +18,7 @@
     };
 
     # Hyprland Window Manager
-    hyprland = {
-      url = "github:hyprwm/Hyprland";
-    };
+    hyprland = { url = "github:hyprwm/Hyprland"; };
 
     flake-utils = { url = "github:numtide/flake-utils"; };
 
@@ -38,24 +36,12 @@
 
     microvm = {
       url = "github:astro/microvm.nix";
-      follows = "nixpkgs";
+      # follows = "nixpkgs";
     };
   };
 
-  outputs =
-    { self
-    , nixpkgs
-    , nur
-    , flake-utils
-    , devenv
-    , modular-neovim
-    , old-neovim
-    , agenix
-    , nix-serve
-    , hyprland
-    , microvm
-    , ...
-    }@inputs:
+  outputs = { self, nixpkgs, nur, flake-utils, devenv, modular-neovim
+    , old-neovim, agenix, nix-serve, hyprland, microvm, ... }@inputs:
     let
       lib = nixpkgs.lib;
       inherit (import ./lib/attrsets.nix { inherit (nixpkgs) lib; })
@@ -71,8 +57,7 @@
       # Then think of a way to replace docker.. i.e. pihole.nix
       # Still need to work out how to know what output to use...
 
-    in
-    (recursiveMergeAttrs [
+    in (recursiveMergeAttrs [
       # TODO: Convert these to a whole lot of enables
       # - i3
       # - Audio
@@ -143,15 +128,20 @@
         system = "aarch64-darwin";
         username = "samuel.willis";
         homePath = "/Users";
-        extraHomeModules = [
-          ./home-manager/wezterm
-          ./home-manager/vscode
-          ./home-manager/work
-        ];
+        extraHomeModules =
+          [ ./home-manager/wezterm ./home-manager/vscode ./home-manager/work ];
       })
 
       (mkHomeManager { hostname = "coder-container"; })
 
-      (mkMicroVm { hostname = "my-first-microvm"; system = "x86_64-linux"; })
+      (mkMicroVm {
+        hostname = "my-first-microvm";
+        system = "x86_64-linux";
+      })
+
+      # This currently is just to let me format with `nix fmt` on any system
+      (flake-utils.lib.eachDefaultSystem (system:
+        let pkgs = import self.inputs.nixpkgs { inherit system; };
+        in { formatter = pkgs.nixfmt; }))
     ]);
 }

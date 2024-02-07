@@ -1,5 +1,4 @@
-{ config, pkgs, lib, ... }: 
-{
+{ config, pkgs, lib, ... }: {
   boot.consoleLogLevel = 3;
   # Force kernel log in tty1, otherwise it will override greetd
   boot.kernelParams = [ "console=tty1" ];
@@ -25,24 +24,25 @@
     };
 
     # Configure monitor hotplug
-    /* udev.extraRules = */
-    /*   let */
-    /*     inherit (config.meta) username; */
-    /*     inherit (config.users.users.${username}) home; */
-    /*     inherit (config.services.greetd) vt; */
-    /*   in */
-    /*   '' */
-    /*     KERNEL=="card[0-9]*", SUBSYSTEM=="drm", ACTION=="change", ENV{DISPLAY}=":${toString vt}", \ */
-    /*       ENV{HOME}="${home}", ENV{XAUTHORITY}="${home}/.local/share/sx/xauthority", \ */
-    /*       RUN+="${pkgs.change-res}/bin/change-res" */
-    /*   ''; */
+    # udev.extraRules =
+    # let
+    # inherit (config.meta) username;
+    # inherit (config.users.users.${username}) home;
+    # inherit (config.services.greetd) vt;
+    # in
+    # ''
+    # KERNEL=="card[0-9]*", SUBSYSTEM=="drm", ACTION=="change", ENV{DISPLAY}=":${toString vt}", \
+    # ENV{HOME}="${home}", ENV{XAUTHORITY}="${home}/.local/share/sx/xauthority", \
+    # RUN+="${pkgs.change-res}/bin/change-res"
+    # '';
 
     xserver = {
       enable = true;
 
       # Enable sx, a lightweight startx alternative
       displayManager.sx.enable = true;
-      /* displayManager.lightdm.enable = true; */
+      # desktopManager.plasma5.enable = true;
+      # displayManager.lightdm.enable = true;
 
       # Enable libinput
       libinput = {

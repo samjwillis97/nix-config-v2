@@ -1,27 +1,25 @@
-{ config, pkgs, lib, ... }:
-{
+{ config, pkgs, lib, ... }: {
   programs.waybar = {
     enable = true;
     systemd.enable = true;
 
-    settings =
-      {
-        mainBar = {
-          layer = "top";
-          position = "top";
-          height = 34;
-          spacing = 4;
+    settings = {
+      mainBar = {
+        layer = "top";
+        position = "top";
+        height = 34;
+        spacing = 4;
 
-          modules-left = [ "sway/workspaces" "sway/mode" "wlr/taskbar" ];
-          modules-center = [ "sway/window" ];
-          modules-right = [ "mpd" "temperature" ];
+        modules-left = [ "sway/workspaces" "sway/mode" "wlr/taskbar" ];
+        modules-center = [ "sway/window" ];
+        modules-right = [ "mpd" "temperature" ];
 
-          "sway/workspaces" = {
-            disable-scroll = true;
-            all-outputs = true;
-          };
+        "sway/workspaces" = {
+          disable-scroll = true;
+          all-outputs = true;
         };
       };
+    };
 
     style = with config.theme.colors; ''
       @define-color base00 ${base00};
