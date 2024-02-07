@@ -1427,6 +1427,9 @@
         "flake-utils": "flake-utils_2",
         "home-manager": "home-manager_2",
         "hyprland": "hyprland",
+        "microvm": [
+          "nixpkgs"
+        ],
         "modular-neovim": "modular-neovim",
         "nix-serve": "nix-serve",
         "nixpkgs": "nixpkgs_7",

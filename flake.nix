@@ -35,6 +35,11 @@
     nix-serve = { url = "github:samjwillis97/nix-serve?ref=priority_change"; };
 
     agenix = { url = "github:ryantm/agenix"; };
+
+    microvm = {
+      url = "github:astro/microvm.nix";
+      follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -48,6 +53,7 @@
     , agenix
     , nix-serve
     , hyprland
+    , microvm
     , ...
     }@inputs:
     let
@@ -55,7 +61,7 @@
       inherit (import ./lib/attrsets.nix { inherit (nixpkgs) lib; })
         recursiveMergeAttrs mergeMap;
       inherit (import ./lib/flake.nix inputs)
-        mkNixosSystem mkDarwinSystem mkHomeManager;
+        mkNixosSystem mkDarwinSystem mkHomeManager mkMicroVm;
       # Thoughts on how to compose this - Jays config is making more sense now...
       # Need a way to define systems, i.e. I have a macbook that runs aarch64-darwin and has these users
       # Need a way to define users properly, and what imports they will require no matter what (think of this like normal dotfiles)
@@ -145,5 +151,7 @@
       })
 
       (mkHomeManager { hostname = "coder-container"; })
+
+      (mkMicroVm { hostname = "my-first-microvm"; system = "x86_64-linux"; })
     ]);
 }

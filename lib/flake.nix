@@ -8,6 +8,22 @@ in {
      - What is self?
   */
 
+  mkMicroVm = { hostname, system, extraModules ? [], nixosSystem ? nixpkgs.lib.nixosSystem }: {
+    nixosConfigurations.${hostname} = nixosSystem {
+      inherit system;
+      modules = [ 
+        inputs.microvm.nixosModules.microvm
+        ../hosts/${hostname}
+      ] ++ extraModules;
+    };
+
+    defaultPackage.${system} = self.packages.${system}.${hostname};
+    
+    packages.${system} = {
+      ${hostname} = self.nixosConfigurations.${hostname}.config.microvm.declaredRunner;
+    };
+  };
+
   mkNixosSystem = { hostname, system, username, networkAdapterName ? "en01"
     , extraModules ? [ ], extraHomeModules ? [ ]
     , nixosSystem ? nixpkgs.lib.nixosSystem, useHomeManager ? true, ... }: {
