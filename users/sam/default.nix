@@ -6,7 +6,5 @@
     ../../home-manager/cli
   ] ++ super.meta.extraHomeModules;
 
-  user.shell = pkgs.zsh;
-
   # TODO: Put in initial hashed password etc.
 }

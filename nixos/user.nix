@@ -5,6 +5,7 @@ in {
   users.users.${username} = {
     isNormalUser = true;
     uid = 1000;
+    shell = pkgs.zsh;
     extraGroups =
       [ "wheel" "networkmanager" "video" "docker" "libvirtd" "qemu-libvirtd" ];
     password = "nixos";
@@ -14,4 +15,6 @@ in {
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIENzw8pIt2UVGWcXUx4E4AxxWj8zA+DLZSp0y7RGK5VW samuel.willis@nib.com.au"
     ];
   };
+  programs.zsh.enable = true;
+
 }
