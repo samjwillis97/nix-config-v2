@@ -1,33 +1,12 @@
-{ super, config, lib, pkgs, ... }:
+{ super, pkgs, ... }:
 let
   osSpecificPackages = if super.meta.isDarwin then [ ] else with pkgs; [ ncdu ];
 in {
   imports = [ ./zsh.nix ./tmux.nix ./git.nix ./ssh.nix ../scripts ];
 
   home.packages = with pkgs;
-    [
-      bat
-      curl
-      jq
-      p7zip
-      ripgrep
-      wget
-      zip
-      unzip
-      difftastic
-      nodePackages.json-diff
-      htop
-      fzf
-      direnv
-      neofetch
-      _1password
-      duf
-      neovim-full
-      agenix
-      ncdu
-
-      nodePackages.wrangler
-    ] ++ osSpecificPackages;
+    [ bat curl p7zip ripgrep wget zip unzip htop fzf neofetch duf agenix ]
+    ++ osSpecificPackages;
 
   programs.bat = {
     enable = true;

@@ -56,6 +56,10 @@
           accelSpeed = null;
         };
       };
+
+      layout = lib.mkDefault "us";
+      # Remap Caps Lock to Esc, and use Super+Space to change layouts
+      xkbOptions = lib.mkDefault "caps:escape";
     };
   };
 }

@@ -116,7 +116,7 @@
         homePath = "/Users";
         extraHomeModules = [
           ./home-manager/wezterm
-          # ./home-manager/dev/rust.nix
+          ./home-manager/dev
           ./home-manager/dev/devenv.nix
           ./home-manager/dev/node.nix
           ./home-manager/dev/ops.nix
@@ -128,8 +128,12 @@
         system = "aarch64-darwin";
         username = "samuel.willis";
         homePath = "/Users";
-        extraHomeModules =
-          [ ./home-manager/wezterm ./home-manager/vscode ./home-manager/work ];
+        extraHomeModules = [
+          ./home-manager/dev
+          ./home-manager/wezterm
+          ./home-manager/vscode
+          ./home-manager/work
+        ];
       })
 
       (mkHomeManager { hostname = "coder-container"; })

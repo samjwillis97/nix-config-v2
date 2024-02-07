@@ -12,11 +12,22 @@ in {
     , nixosSystem ? nixpkgs.lib.nixosSystem }: {
       nixosConfigurations.${hostname} = nixosSystem {
         inherit system;
-        modules = [ inputs.microvm.nixosModules.microvm ../hosts/${hostname} ]
-          ++ extraModules;
+        modules = [
+          inputs.microvm.nixosModules.microvm
+          inputs.agenix.nixosModules.default
+          ../nixos
+          ../hosts/${hostname}
+          ../shared
+        ] ++ extraModules;
         specialArgs = {
           inherit system;
           flake = self;
+          super.meta = {
+            inherit hostname;
+            username = "sam-vm";
+            isDarwin = false;
+            useHomeManager = false;
+          };
         };
       };
 

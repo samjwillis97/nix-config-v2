@@ -1,5 +1,5 @@
 { super, config, pkgs, lib, ... }: {
-  imports = [ ../../modules/theme.nix ];
+  imports = [ ./colors ../../modules/theme.nix ];
 
   # TODO: Get from somewhere else?
   theme = {
@@ -9,7 +9,6 @@
         name = "Roboto";
       };
     };
-    colors = with builtins; fromJSON (readFile ./colors/macchiato.json);
     wallpaper.path =
       lib.mkDefault pkgs.wallpapers.nixos-catppuccin-magenta-blue;
   };

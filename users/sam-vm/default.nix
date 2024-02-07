@@ -1,12 +1,9 @@
-{ super, config, home, pkgs, ... }: {
+{ super, config, home, ... }: {
   imports = [
-    ../../modules/user.nix
-    ../../home-manager/theme
+    ../../home-manager/theme/colors
     ../../home-manager/meta
     ../../home-manager/cli
   ] ++ super.meta.extraHomeModules;
-
-  user.shell = pkgs.zsh;
 
   # TODO: Put in initial hashed password etc.
 }

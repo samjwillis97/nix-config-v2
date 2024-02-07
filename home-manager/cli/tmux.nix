@@ -1,3 +1,5 @@
+# TODO: Well this doesn't actually care about home-manager
+# Should move elsewhere
 { config, pkgs, lib, flake, ... }:
 # TODO: Auto Reconnect
 {

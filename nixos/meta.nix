@@ -1,10 +1,6 @@
 { config, pkgs, flake, system, ... }:
 
 {
-  # TODO: Look at Cachix
-  # TODO: Look at Overlays
-  imports = [ ../overlays ../cachix.nix ];
-
   # Add some Nix related packages
   environment.systemPackages = with pkgs; [
     cachix

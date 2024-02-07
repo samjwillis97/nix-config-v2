@@ -1,13 +1,11 @@
-{ ... }: {
-  imports = [
-    ./go.nix
-    ./node.nix
-    ./mongo.nix
-    # ./coder.nix BROKEN
-    ./csharp.nix
-    ./rust.nix
-    ./devenv.nix
-    ./github.nix
-    ./ops.nix
+{ pkgs, ... }: {
+  home.packages = with pkgs; [
+    jq
+    direnv
+    difftastic
+    nodePackages.json-diff
+    _1password
+    neovim-full
+    nodePackages.wrangler
   ];
 }
