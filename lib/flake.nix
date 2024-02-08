@@ -27,6 +27,7 @@ in {
             username = "sam-vm";
             isDarwin = false;
             useHomeManager = false;
+            shell = "bash";
           };
         };
       };
@@ -54,6 +55,7 @@ in {
             inherit username extraHomeModules networkAdapterName hostname
               useHomeManager;
             isDarwin = false;
+            shell = "zsh";
           };
         };
       };
@@ -75,6 +77,7 @@ in {
             isDarwin = true;
             username = username;
             extraHomeModules = extraHomeModules;
+            shell = "zsh";
           };
         };
       };
@@ -104,6 +107,7 @@ in {
             username = username;
             extraHomeModules = extraHomeModules;
             isDarwin = isDarwin;
+            shell = "zsh";
           };
         };
       };

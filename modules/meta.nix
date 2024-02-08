@@ -32,10 +32,10 @@ with lib; {
       type = types.bool;
       default = true;
     };
-    # configPath = mkOption {
-    # description = "Location of this config";
-    # type = types.path;
-    # default = "/etc/nixos";
-    # };
+    shell = mkOption {
+      description = "Default shell";
+      type = types.enum [ "bash" "zsh" ];
+      default = "bash";
+    };
   };
 }
