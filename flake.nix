@@ -120,6 +120,7 @@
         extraHomeModules = [
           # ./home-manager/darwin/keyboard.nix
           ./home-manager/wezterm
+          ./home-manager/vscode
           ./home-manager/dev
           ./home-manager/dev/devenv.nix
           # ./home-manager/dev/node.nix
