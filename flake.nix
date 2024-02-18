@@ -114,12 +114,16 @@
         system = "aarch64-darwin";
         username = "samwillis";
         homePath = "/Users";
+        extraModules = [
+          ./nix-darwin/yabai.nix
+        ];
         extraHomeModules = [
+          # ./home-manager/darwin/keyboard.nix
           ./home-manager/wezterm
           ./home-manager/dev
           ./home-manager/dev/devenv.nix
-          ./home-manager/dev/node.nix
-          ./home-manager/dev/ops.nix
+          # ./home-manager/dev/node.nix
+          # ./home-manager/dev/ops.nix
         ];
       })
 
