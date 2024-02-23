@@ -525,11 +525,11 @@
         "vscode-js-debug": "vscode-js-debug"
       },
       "locked": {
-        "lastModified": 1708088004,
-        "narHash": "sha256-F2mIlxluurYZ0QR+4AWk9bW7gnMaSvqebVRCg+0A0JA=",
+        "lastModified": 1708644006,
+        "narHash": "sha256-TJDSjhOyr3yTggkKphR3uxtFfkZGkmXs0FUEOt0ea8o=",
         "owner": "samjwillis97",
         "repo": "modular-neovim-flake",
-        "rev": "872a32e0a486b1dd10bd1802b044e412e7ed2890",
+        "rev": "22233bad3f1dd81620b5d2083b3727268d944db7",
         "type": "github"
       },
       "original": {

@@ -1,4 +1,4 @@
-{ ... }: {
+{ pkgs, ... }: {
   imports = [
     ./home.nix
     ./meta.nix
@@ -18,10 +18,7 @@
   # TODO:
   #   - See About MacOS Apps:
   #       - Raycast
-  #       - Rectangle
   #       - Displaylink Manager
-  #       - ProtonVPN
-  #       - Proton Mail Bridge
 
   # TODO: Tailscale
 }
