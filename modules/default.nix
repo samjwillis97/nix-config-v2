@@ -1,1 +1,8 @@
-{ config, lib, pkgs, ... }: { imports = [ ./meta.nix ./theme.nix ]; }
+{ 
+  imports = [ 
+    ./xteve 
+    ./user.nix
+    ./meta.nix
+    ./theme.nix
+  ];
+}

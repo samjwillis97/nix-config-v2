@@ -76,6 +76,12 @@
           ./nixos/gaming.nix
           ./nixos/logitech.nix
           ./nixos/docker.nix
+          {
+            services.xteve = {
+              enable = true;
+              port = 35431;
+            };
+          }
         ];
         extraHomeModules = [
           # hyprland.homeManagerModules.default
