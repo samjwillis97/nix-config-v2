@@ -75,6 +75,20 @@
           ./nixos/gaming.nix
           ./nixos/logitech.nix
           ./nixos/docker.nix
+          microvm.nixosModules.host
+          {
+            microvm = {
+              vms = {
+                first-microvm = {
+                  flake = self;
+                  updateFlake = "git+file://${self}";
+                };
+              };
+              autostart = [
+                "first-microvm"
+              ];
+            };
+          }
         ];
         extraHomeModules = [
           hyprland.homeManagerModules.default
@@ -139,8 +153,9 @@
       (mkHomeManager { hostname = "coder-container"; })
 
       (mkMicroVm {
-        hostname = "my-first-microvm";
+        hostname = "first-microvm";
         system = "x86_64-linux";
+        extraModules = [ ./services/homeassistant ];
       })
 
       # This currently is just to let me format with `nix fmt` on any system

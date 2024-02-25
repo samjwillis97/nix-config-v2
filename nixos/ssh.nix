@@ -4,6 +4,7 @@ in {
   services.openssh = {
     enable = true;
     settings.PasswordAuthentication = false;
+    openFirewall = true;
     # TODO: Look at ghuntley configuration - looks like it only allows tailscale which is ideal
   };
 

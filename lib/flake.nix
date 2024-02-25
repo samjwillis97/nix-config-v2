@@ -24,7 +24,7 @@ in {
           flake = self;
           super.meta = {
             inherit hostname;
-            username = "sam-vm";
+            username = "sam";
             isDarwin = false;
             useHomeManager = false;
             shell = "bash";
