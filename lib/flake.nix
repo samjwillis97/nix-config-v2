@@ -51,9 +51,9 @@ in {
           inherit system;
           flake = self;
           super.meta = {
-            inherit username networkAdapterName hostname
-              useHomeManager;
-            extraHomeModules = [ inputs.agenix.homeManagerModules.age ] ++ extraHomeModules;
+            inherit username networkAdapterName hostname useHomeManager;
+            extraHomeModules = [ inputs.agenix.homeManagerModules.age ]
+              ++ extraHomeModules;
             isDarwin = false;
           };
         };
@@ -75,7 +75,8 @@ in {
             hostname = hostname;
             isDarwin = true;
             username = username;
-            extraHomeModules = [ inputs.agenix.homeManagerModules.age ] ++ extraHomeModules;
+            extraHomeModules = [ inputs.agenix.homeManagerModules.age ]
+              ++ extraHomeModules;
           };
         };
       };
@@ -103,7 +104,8 @@ in {
           super.meta = {
             hostname = hostname;
             username = username;
-            extraHomeModules = [ inputs.agenix.homeManagerModules.age ] ++ extraHomeModules;
+            extraHomeModules = [ inputs.agenix.homeManagerModules.age ]
+              ++ extraHomeModules;
             isDarwin = isDarwin;
           };
         };

@@ -3,7 +3,7 @@ let
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKOxqC9TmYNgf2GHDd8guuj0C1MRXWMU3kaWDzHUl4AM";
   secondary-key =
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHkXaJnC6aITP4MxHIhxTo2iFXmpDiogXnfxJsb368yb";
-  github-primary-key = 
+  github-primary-key =
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDqBgLxog6NG/d2LQ/XQr1NfCxbvTxsAgDLGKV0pNjcf sam@williscloud.org";
   github-secondary-key =
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDfkEyrxhe8xzftrPSHH+1Zkkz7i+0MOoHvPNHzd/J6C sam@williscloud.org";

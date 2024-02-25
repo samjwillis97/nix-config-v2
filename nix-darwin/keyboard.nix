@@ -1,5 +1,4 @@
-{lib, ...}:
-{
+{ lib, ... }: {
   system.defaults.NSGlobalDomain = {
     # disable press-and-hold for keys in favor of key repeat
     ApplePressAndHoldEnabled = false;
@@ -73,21 +72,23 @@
       98
     ];
 
-    disableHotKeyCommands = map (key:
-      "defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add ${toString key} '
-<dict>
-  <key>enabled</key><false/>
-  <key>value</key>
-  <dict>
-    <key>type</key><string>standard</string>
-    <key>parameters</key>
-    <array>
-      <integer>65535</integer>
-      <integer>65535</integer>
-      <integer>0</integer>
-    </array>
-  </dict>
-</dict>'") hotkeys;
+    disableHotKeyCommands = map (key: ''
+      defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add ${
+        toString key
+      } '
+      <dict>
+        <key>enabled</key><false/>
+        <key>value</key>
+        <dict>
+          <key>type</key><string>standard</string>
+          <key>parameters</key>
+          <array>
+            <integer>65535</integer>
+            <integer>65535</integer>
+            <integer>0</integer>
+          </array>
+        </dict>
+      </dict>''') hotkeys;
   in ''
     echo >&2 "configuring hotkeys..."
 
