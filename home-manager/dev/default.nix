@@ -1,4 +1,4 @@
-{ pkgs, config, flake, system, ... }: 
+{ super, pkgs, config, flake, system, ... }: 
 let
   neovim = flake.inputs.modular-neovim.buildNeovimPackage.${system} pkgs [
     {
@@ -50,8 +50,9 @@ let
 
         review = {
           enable = true;
+          # Home manage secrets work around see: https://github.com/ryantm/agenix/issues/50
           # This should be using config.age, but was returning the wrong path
-          tokenPath = "$(getconf DARWIN_USER_TEMP_DIR)/agenix.d/1/gh_pat";
+          tokenPath = if super.meta.isDarwin then "$(getconf DARWIN_USER_TEMP_DIR)/agenix.d/1/gh_pat" else "/run/user/1000/agenix.d/1/gh_pat";
         };
 
         nmap = { "<C-f>" = "<cmd>silent !tmux neww tmux-sessionizer<CR>"; };

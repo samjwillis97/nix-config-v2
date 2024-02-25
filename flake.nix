@@ -66,10 +66,11 @@
         hostname = "personal-desktop";
         system = "x86_64-linux";
         username = "sam";
-        networkAdapterName = "enp9s0";
+        # networkAdapterName = "enp9s0";
+        networkAdapterName = "wlp7s0";
         extraModules = [
           ./nixos/xserver.nix
-          ./nixos/wayland.nix
+          # ./nixos/wayland.nix
           ./nixos/fonts.nix
           ./nixos/audio.nix
           ./nixos/gaming.nix
@@ -77,16 +78,13 @@
           ./nixos/docker.nix
         ];
         extraHomeModules = [
-          hyprland.homeManagerModules.default
+          # hyprland.homeManagerModules.default
           ./home-manager/nixos.nix
           ./home-manager/desktop
           ./home-manager/i3
           ./home-manager/gaming
           ./home-manager/dev
-          ./home-manager/work
-          ./home-manager/ides
-          ./home-manager/qutebrowser
-          ./home-manager/wezterm
+          # ./home-manager/qutebrowser
           # ./home-manager/hyprland
         ];
       })
