@@ -7,8 +7,13 @@ let
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDqBgLxog6NG/d2LQ/XQr1NfCxbvTxsAgDLGKV0pNjcf sam@williscloud.org";
   github-secondary-key =
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDfkEyrxhe8xzftrPSHH+1Zkkz7i+0MOoHvPNHzd/J6C sam@williscloud.org";
+  iptv-primary-key =
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOALWUCVS0LGysQaZKrMHq22QNQAAVeb3+1cRKtg9jcE sam@williscloud.org";
+  iptv-secondary-key =
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGF2/UWwHwsUVS5n1sTEL0Wo9Jp8i+cdB1Ixz7AsPkrB sam@williscloud.org";
   keys = [ primary-key secondary-key ];
   github-keys = [ github-primary-key github-secondary-key ];
+  iptv-keys = [ iptv-primary-key iptv-secondary-key ];
 in {
   # See: https://github.com/ryantm/agenix/issues/17#issuecomment-797174338
   # Workflow for a new machine according to Ryan:
@@ -23,4 +28,5 @@ in {
 
   "tailscale_pre-auth.age".publicKeys = keys;
   "gh_pat.age".publicKeys = github-keys;
+  "xtream_password.age".publicKeys = iptv-keys;
 }
