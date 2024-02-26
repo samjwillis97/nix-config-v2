@@ -1,10 +1,10 @@
 { config, lib, pkgs, ... }:
 with lib;
-let cfg = config.services.vpn;
+let cfg = config.modules.networking.vpn;
 in {
   imports = [ ../../secrets ];
 
-  options.services.vpn = { enable = mkEnableOption "Enables VPN service"; };
+  options.modules.networking.vpn = { enable = mkEnableOption "Enables VPN service"; };
 
   config = mkIf cfg.enable {
     warnings = [ ''Module "services.vpn" is still under construction'' ];

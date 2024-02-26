@@ -3,8 +3,7 @@
     ./iptv-proxy
     ./xteve
     ./media
-    ./tailscale
-    ./vpn
+    ./networking
     ./user.nix
     ./meta.nix
     ./theme.nix

@@ -1,8 +1,8 @@
 { config, lib, ... }:
 with lib;
-let cfg = config.services.media.jellyfin;
+let cfg = config.modules.media.jellyfin;
 in {
-  options.services.media.jellyfin = {
+  options.modules.media.jellyfin = {
     enable = mkEnableOption "Enables Jellyfin service";
   };
 

@@ -1,8 +1,8 @@
 { config, lib, pkgs, ... }:
 with lib;
-let cfg = config.services.xteve;
+let cfg = config.modules.xteve;
 in {
-  options.services.xteve = {
+  options.modules.xteve = {
     enable = mkEnableOption "Enables xTeve service";
 
     port = mkOption rec {
