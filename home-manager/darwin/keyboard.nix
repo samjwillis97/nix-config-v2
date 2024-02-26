@@ -1,4 +1,4 @@
-{lib, ...}: {
+{ lib, ... }: {
   #Disables most hotkeys
   home.activation.disableHotkeys = let
     hotkeys = [

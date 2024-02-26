@@ -41,19 +41,30 @@ in {
 
   mkNixosSystem = { hostname, system, username, networkAdapterName ? "en01"
     , extraModules ? [ ], extraHomeModules ? [ ]
-    , nixosSystem ? nixpkgs.lib.nixosSystem, useHomeManager ? true, ... }: {
+    , nixosSystem ? nixpkgs.lib.nixosSystem, useHomeManager ? true, ... }:
+    let
+      baseModule = {
+        meta = {
+          inherit hostname username networkAdapterName useHomeManager;
+          isDarwin = false;
+        };
+      };
+    in {
       nixosConfigurations.${hostname} = nixosSystem {
         inherit system;
-        modules =
-          [ ../hosts/${hostname} inputs.agenix.nixosModules.default ../shared ]
-          ++ extraModules;
+        modules = [
+          (baseModule // { meta.extraHomeModules = extraHomeModules; })
+          ../hosts/${hostname}
+          inputs.agenix.nixosModules.default
+          ../shared
+        ] ++ extraModules;
         specialArgs = {
           inherit system;
           flake = self;
           super.meta = {
-            inherit username networkAdapterName hostname
-              useHomeManager;
-            extraHomeModules = [ inputs.agenix.homeManagerModules.age ] ++ extraHomeModules;
+            inherit username networkAdapterName hostname useHomeManager;
+            extraHomeModules = [ inputs.agenix.homeManagerModules.age ]
+              ++ extraHomeModules;
             isDarwin = false;
           };
         };
@@ -75,7 +86,8 @@ in {
             hostname = hostname;
             isDarwin = true;
             username = username;
-            extraHomeModules = [ inputs.agenix.homeManagerModules.age ] ++ extraHomeModules;
+            extraHomeModules = [ inputs.agenix.homeManagerModules.age ]
+              ++ extraHomeModules;
           };
         };
       };
@@ -103,7 +115,8 @@ in {
           super.meta = {
             hostname = hostname;
             username = username;
-            extraHomeModules = [ inputs.agenix.homeManagerModules.age ] ++ extraHomeModules;
+            extraHomeModules = [ inputs.agenix.homeManagerModules.age ]
+              ++ extraHomeModules;
             isDarwin = isDarwin;
           };
         };
