@@ -1,5 +1,7 @@
 { lib, ... }:
 
+# FIXME: Curious how many of these are actually needed if using config/options properly
+# May just be problematic within home-manager
 with lib; {
   options.meta = {
     hostname = mkOption {

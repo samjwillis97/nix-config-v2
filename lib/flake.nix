@@ -41,12 +41,23 @@ in {
 
   mkNixosSystem = { hostname, system, username, networkAdapterName ? "en01"
     , extraModules ? [ ], extraHomeModules ? [ ]
-    , nixosSystem ? nixpkgs.lib.nixosSystem, useHomeManager ? true, ... }: {
+    , nixosSystem ? nixpkgs.lib.nixosSystem, useHomeManager ? true, ... }:
+    let
+      baseModule = {
+        meta = {
+          inherit hostname username networkAdapterName useHomeManager;
+          isDarwin = false;
+        };
+      };
+    in {
       nixosConfigurations.${hostname} = nixosSystem {
         inherit system;
-        modules =
-          [ ../hosts/${hostname} inputs.agenix.nixosModules.default ../shared ]
-          ++ extraModules;
+        modules = [
+          (baseModule // { meta.extraHomeModules = extraHomeModules; })
+          ../hosts/${hostname}
+          inputs.agenix.nixosModules.default
+          ../shared
+        ] ++ extraModules;
         specialArgs = {
           inherit system;
           flake = self;
