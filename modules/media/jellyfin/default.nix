@@ -7,6 +7,10 @@ in {
   };
 
   config = mkIf cfg.enable {
+    warnings = [
+      "Module \"services.media.jellyfin\" is still under construction"
+    ];
+
     services.jellyfin.enable = true;
   };
 }

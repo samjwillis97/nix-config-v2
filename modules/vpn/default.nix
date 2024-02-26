@@ -9,6 +9,10 @@ in {
   };
 
   config = mkIf cfg.enable {
+    warnings = [
+      "Module \"services.vpn\" is still under construction"
+    ];
+
     networking.firewall = {
       allowedUDPPorts = [ 51820 ];
     };
