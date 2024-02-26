@@ -76,12 +76,28 @@
           ./nixos/gaming.nix
           ./nixos/logitech.nix
           ./nixos/docker.nix
-          {
-            services.xteve = {
-              enable = true;
-              port = 35431;
+          ({ config, pkgs, ... }: {
+            imports = [ ./secrets ];
+            environment.systemPackages = [ pkgs.hypnotix ];
+            services = {
+              iptv-proxy = {
+                enable = false;
+                port = 8083;
+                xtream = {
+                  enable = true;
+                  hostname = "https://vision.vvhosting.nl/";
+                  username = "bmUADu5Q2F";
+                  passwordFile = config.age.secrets."xtream_password".path;
+                };
+              };
+              media = { jellyfin = { enable = true; }; };
+              xteve = {
+                enable = false;
+                port = 35431;
+              };
+              vpn = { enable = false; };
             };
-          }
+          })
         ];
         extraHomeModules = [
           # hyprland.homeManagerModules.default

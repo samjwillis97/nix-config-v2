@@ -106,7 +106,7 @@ in {
         ${optionalString cfg.xtream.enable ''
           XTREAM_API_GET=1
           export XTREAM_API_GET
-          
+
           XTREAM_BASE_URL=${cfg.xtream.hostname}
           export XTREAM_BASE_URL
 
