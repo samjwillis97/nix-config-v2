@@ -1,6 +1,6 @@
 # thank you: https://tailscale.com/blog/nixos-minecraft/
 # and: https://github.com/ghuntley/ghuntley/blob/cb78de98fbaf1ea97d5c8465e155516f3e72132d/ops/nixos-modules/tailscale.nix
-{ config, lib, ... }:
+{ pkgs, config, lib, ... }:
 with lib;
 let cfg = config.modules.networking.tailscale;
 in {

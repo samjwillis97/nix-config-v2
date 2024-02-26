@@ -2,7 +2,7 @@
 with lib;
 let cfg = config.modules.networking.vpn;
 in {
-  imports = [ ../../secrets ];
+  imports = [ ../../../secrets ];
 
   options.modules.networking.vpn = { enable = mkEnableOption "Enables VPN service"; };
 
