@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 with lib;
 let
-  cfg = config.modules.iptv-proxy;
+  cfg = config.modules.media.iptv-proxy;
 
   iptv-proxy = pkgs.buildGoModule rec {
     name = "iptv-proxy";
@@ -17,7 +17,7 @@ let
     vendorHash = null;
   };
 in {
-  options.modules.iptv-proxy = {
+  options.modules.media.iptv-proxy = {
     enable = mkEnableOption "Enables IPTV proxy";
 
     port = mkOption rec {

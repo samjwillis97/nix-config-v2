@@ -1,7 +1,5 @@
 {
   imports = [
-    ./iptv-proxy
-    ./xteve
     ./media
     ./networking
     ./user.nix
