@@ -53,6 +53,8 @@ in {
       nixosConfigurations.${hostname} = nixosSystem {
         inherit system;
         modules = [
+          ../nixos
+          ../modules
           (baseModule // { meta.extraHomeModules = extraHomeModules; })
           ../hosts/${hostname}
           inputs.agenix.nixosModules.default

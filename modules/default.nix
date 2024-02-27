@@ -1,9 +1,1 @@
-{
-  imports = [
-    ./media
-    ./networking
-    ./user.nix
-    ./meta.nix
-    ./theme.nix
-  ];
-}
+{ imports = [ ./media ./networking ./user.nix ./meta.nix ./theme.nix ]; }

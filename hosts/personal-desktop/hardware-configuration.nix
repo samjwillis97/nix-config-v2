@@ -21,6 +21,10 @@
   boot.kernelModules = [ "kvm-intel" "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
+  # Use the systemd-boot EFI boot loader.
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/f407f015-f752-41df-8ace-b5c1c5aa1074";
     fsType = "ext4";
