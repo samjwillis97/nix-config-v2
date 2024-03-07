@@ -1,5 +1,5 @@
 { super, config, pkgs, lib, ... }: {
-  imports = [ ./colors ../../modules/theme.nix ];
+  imports = [ ./colors ];
 
   # TODO: Get from somewhere else?
   theme = {

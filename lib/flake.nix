@@ -18,6 +18,7 @@ in {
           ../nixos
           ../hosts/${hostname}
           ../shared
+          ../modules
         ] ++ extraModules;
         specialArgs = {
           inherit system;
@@ -57,6 +58,7 @@ in {
           ../hosts/${hostname}
           inputs.agenix.nixosModules.default
           ../shared
+          ../modules
         ] ++ extraModules;
         specialArgs = {
           inherit system;
