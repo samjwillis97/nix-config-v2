@@ -43,8 +43,8 @@ in {
       l = "ls -l";
       ll = "ls -alFh";
       lt = "ls --human-readable --size -1 -S --classify";
-      cat = "bat";
-      cp = "rsync -ah --progress";
+      cat = "${pkgs.bat}/bin/bat";
+      cp = "${pkgs.rsync}/bin/rsync -ah --progress";
       count-file-watchers = ''
         find /proc/*/fd -user "$USER" -lname anon_inode:inotify -printf "%hinfo/%f\n" 2>/dev/null | xargs cat | grep -c "^inotify"
       '';
@@ -53,7 +53,7 @@ in {
 
     oh-my-zsh = {
       enable = true;
-      plugins = [ "sudo" "git" "docker" "docker-compose" "cp" ];
+      plugins = [ "sudo" "git" "docker-compose" "cp" ];
       theme = "ys";
     };
   };
@@ -61,7 +61,10 @@ in {
   programs = {
     dircolors.enable = true;
     direnv = {
+      # TODO: Change cache location
+      # TODO: Set the variable for this https://github.com/direnv/direnv/pull/1234
       enable = true;
+      # silent = true;
       nix-direnv.enable = true;
     };
     fzf = { enable = true; };

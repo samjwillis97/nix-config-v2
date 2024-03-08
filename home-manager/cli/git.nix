@@ -46,7 +46,7 @@
       s = "status";
       sp = "switch $1 && !git pull";
       tug = "!git fetch && git pull";
-      silent-add = "!f(){ git add --intent-to-add $1 && git update-index --skip-worktree --assume-unchanged $1}";
+      silent-add = "!f() { git add --intent-to-add $1 && git update-index --skip-worktree --assume-unchanged $1 }; f";
     };
   };
 

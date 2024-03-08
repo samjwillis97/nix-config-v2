@@ -6,6 +6,7 @@
     brews = [ "mas" ];
 
     casks = [
+      "orbstack"
       "raycast"
       "slack"
       "discord"

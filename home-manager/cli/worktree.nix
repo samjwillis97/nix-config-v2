@@ -1,8 +1,8 @@
 # from: https://notes.billmill.org/blog/2024/03/How_I_use_git_worktrees.html?utm_source=pocket_saves
 { pkgs, ... }:
 let
-  git-worktree = pkgs.writeShellApplication {
-    name = "git-worktree";
+  worktree = pkgs.writeShellApplication {
+    name = "worktree";
     runtimeInputs = with pkgs; [ gum ];
 
     text = ''
@@ -169,5 +169,5 @@ EOF
   };
 in 
 {
-  home.packages = [ git-worktree ];
+  home.packages = [ worktree ];
 }
