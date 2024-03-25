@@ -489,6 +489,7 @@
         "plugin-cmp_luasnip": "plugin-cmp_luasnip",
         "plugin-colorizer": "plugin-colorizer",
         "plugin-commentary": "plugin-commentary",
+        "plugin-copilot": "plugin-copilot",
         "plugin-dap": "plugin-dap",
         "plugin-dap-ui": "plugin-dap-ui",
         "plugin-dracula": "plugin-dracula",
@@ -525,11 +526,11 @@
         "vscode-js-debug": "vscode-js-debug"
       },
       "locked": {
-        "lastModified": 1710318878,
-        "narHash": "sha256-Lbit0o5lYOh2FGxwIbZca3A46rtj10DjCBW4jIdOVL4=",
+        "lastModified": 1711328782,
+        "narHash": "sha256-7888sFgXGwiA+k82ksCJIB0oMJOPk7oT7c47cbpmzTo=",
         "owner": "samjwillis97",
         "repo": "modular-neovim-flake",
-        "rev": "dd4c641a7c1afc835d22608f5a0dd8bb040afc15",
+        "rev": "f40e4b45bcc19327b02bce2f6f7b6cbc390d2f07",
         "type": "github"
       },
       "original": {
@@ -973,6 +974,22 @@
       "original": {
         "owner": "tpope",
         "repo": "vim-commentary",
+        "type": "github"
+      }
+    },
+    "plugin-copilot": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1710452859,
+        "narHash": "sha256-tcLrto1Y66MtPnfIcU2PBOxqE0xilVl4JyKU6ddS7bA=",
+        "owner": "github",
+        "repo": "copilot.vim",
+        "rev": "9484e35cf222e9360e05450622a884f95c662c4c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "github",
+        "repo": "copilot.vim",
         "type": "github"
       }
     },

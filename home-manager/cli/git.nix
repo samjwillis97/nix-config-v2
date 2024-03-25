@@ -31,6 +31,7 @@
       "node_modules/"
       ".DS_Store"
       "venv/"
+      ".direnv/"
     ];
 
     aliases = {

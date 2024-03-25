@@ -35,7 +35,19 @@ let
 
       formatter.enable = true;
 
-      autocomplete.enable = true;
+      autocomplete = {
+        enable = true;
+        copilot = {
+          enable = true;
+          workspaceFolders = if super.meta.isDarwin then [
+            "/Users/${super.meta.username}/projects"
+            "/Users/${super.meta.username}/Projects"
+          ] else [
+            "/home/${super.meta.username}/projects"
+            "/home/${super.meta.username}/Projects"
+          ];
+        };
+      };
 
       languages = {
         enableTreesitter = true;
