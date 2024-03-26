@@ -35,10 +35,9 @@ let
 
       formatter.enable = true;
 
-      autocomplete = {
-        enable = true;
-        copilot = {
-          enable = true;
+      ai.copilot = {
+        enableAll = true; 
+        completion = {
           workspaceFolders = if super.meta.isDarwin then [
             "/Users/${super.meta.username}/projects"
             "/Users/${super.meta.username}/Projects"
@@ -47,6 +46,10 @@ let
             "/home/${super.meta.username}/Projects"
           ];
         };
+      };
+
+      autocomplete = {
+        enable = true;
       };
 
       languages = {

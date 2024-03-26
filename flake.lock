@@ -490,6 +490,7 @@
         "plugin-colorizer": "plugin-colorizer",
         "plugin-commentary": "plugin-commentary",
         "plugin-copilot": "plugin-copilot",
+        "plugin-copilot-chat": "plugin-copilot-chat",
         "plugin-dap": "plugin-dap",
         "plugin-dap-ui": "plugin-dap-ui",
         "plugin-dracula": "plugin-dracula",
@@ -526,11 +527,11 @@
         "vscode-js-debug": "vscode-js-debug"
       },
       "locked": {
-        "lastModified": 1711328782,
-        "narHash": "sha256-7888sFgXGwiA+k82ksCJIB0oMJOPk7oT7c47cbpmzTo=",
+        "lastModified": 1711424330,
+        "narHash": "sha256-gDI1PqJzOyvjiMZHLaujwMAWTQATtvw7fjqJUVhuKVo=",
         "owner": "samjwillis97",
         "repo": "modular-neovim-flake",
-        "rev": "f40e4b45bcc19327b02bce2f6f7b6cbc390d2f07",
+        "rev": "8390f07b8649d43509ce3db67c6a39c76fac9c6c",
         "type": "github"
       },
       "original": {
@@ -990,6 +991,23 @@
       "original": {
         "owner": "github",
         "repo": "copilot.vim",
+        "type": "github"
+      }
+    },
+    "plugin-copilot-chat": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1711324116,
+        "narHash": "sha256-0eJ/8MZli4KKo0RXirBaqWvK+zMM3LAfTDeVe7qHZ1c=",
+        "owner": "CopilotC-Nvim",
+        "repo": "CopilotChat.nvim",
+        "rev": "2b53687d0ccc025f07972dd8ac11cc74b9f17722",
+        "type": "github"
+      },
+      "original": {
+        "owner": "CopilotC-Nvim",
+        "ref": "canary",
+        "repo": "CopilotChat.nvim",
         "type": "github"
       }
     },
