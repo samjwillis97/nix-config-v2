@@ -1,4 +1,4 @@
-{ super, pkgs, config, flake, system, ... }:
+{ super, pkgs, flake, system, ... }:
 let
   neovim = flake.inputs.modular-neovim.buildNeovimPackage.${system} pkgs [{
     config.vim = {
@@ -44,6 +44,19 @@ let
           ] else [
             "/home/${super.meta.username}/projects"
             "/home/${super.meta.username}/Projects"
+          ];
+        };
+        chat = {
+          prompts = [
+            {
+              name = "NibCommit";
+              prompt = "Write commit message for the change. Make sure the title has maximum 50 characters and is a concise summary of the included work, do not under any circumstances go over 50 characters. Underneath the title include a set of bullet points with a `-` summarising important changes. Wrap the whole message in code block with language gitcommit.";
+              selection = ''
+function(source)
+  return select.gitdiff(source, true)
+end
+              ''; 
+            }
           ];
         };
       };
