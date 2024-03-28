@@ -50,7 +50,7 @@ let
           prompts = [
             {
               name = "NibCommit";
-              prompt = "Write commit message for the change. Make sure the title has maximum 50 characters and is a concise summary of the included work, do not under any circumstances go over 50 characters. Underneath the title include a set of bullet points with a `-` summarising important changes. Wrap the whole message in code block with language gitcommit.";
+              prompt = "Write commit message for the change. Make sure the title has maximum 50 characters and is a concise summary of the included work, do not under any circumstances go over 50 characters. Underneath the title include a set of bullet points with a `-` summarising important changes. Wrap the whole message in code block with language gitcommit. If there are any variable, class, function or other names from the code wrap them in backticks.";
               selection = ''
 function(source)
   return select.gitdiff(source, true)
