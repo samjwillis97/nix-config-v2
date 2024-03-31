@@ -3,6 +3,7 @@
 { config, pkgs, lib, flake, ... }:
 # TODO: Auto Reconnect
 {
+  home.packages = with pkgs; [ f-tmux ];
   programs.tmux = {
     enable = true;
     sensibleOnTop = false;
@@ -47,7 +48,7 @@
       bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'xclip -in -selection clipboard'
 
       # Better sessions
-      bind-key -r f run-shell "tmux neww ~/.local/bin/tmux-sessionizer"
+      bind-key -r f run-shell "tmux neww ${pkgs.f-tmux}/bin/f-fzf-wrapper"
       bind-key -r i run-shell "tmux neww tmux-cht.sh"
 
       # Enabled 256 Color

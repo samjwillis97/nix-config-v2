@@ -38,10 +38,15 @@
       url = "github:astro/microvm.nix";
       # follows = "nixpkgs";
     };
+
+    f = {
+      url = "github:samjwillis97/f";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, nur, flake-utils, devenv, modular-neovim
-    , old-neovim, agenix, nix-serve, hyprland, microvm, ... }@inputs:
+    , old-neovim, agenix, nix-serve, hyprland, microvm, f, ... }@inputs:
     let
       lib = nixpkgs.lib;
       inherit (import ./lib/attrsets.nix { inherit (nixpkgs) lib; })
