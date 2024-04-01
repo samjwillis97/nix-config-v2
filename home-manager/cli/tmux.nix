@@ -64,6 +64,8 @@
       # easy reload
       bind-key r source-file ~/.tmux.conf \; display-message "~/.tmux.conf reloaded"
 
+      # order sesions by name
+      bind s choose-tree -sZ -O name
 
       thm_bg="${base00}"
       thm_fg="${base05}"
