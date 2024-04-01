@@ -5,6 +5,8 @@ let
   else
     "/home/${super.meta.username}";
 
+  p10kTheme = ./zsh/.p10k.zsh;
+
   initExtra = with config.theme.colors; ''
     export PATH="$PATH:${homeDirectory}/.dotnet/tools"
     export PATH="$PATH:${homeDirectory}/go/bin"
@@ -20,6 +22,8 @@ let
         --color=bg+:${base02},bg:${base00},spinner:${base06},hl:${base08} \
         --color=fg:${base05},header:${base08},info:${base0E},pointer:${base06} \
         --color=marker:${base06},fg+:${base05},prompt:${base0E},hl+:${base08}"
+
+    source ${p10kTheme}
   '';
 in {
   home.packages = with pkgs; [ bat rsync gnutar f-tmux ];
@@ -51,10 +55,21 @@ in {
       untar = "tar -zxvf";
     };
 
+    # See: https://github.com/NixOS/nixpkgs/issues/154696#issuecomment-1238433989
+    plugins = [
+      {
+        # A prompt will appear the first time to configure it properly
+        # make sure to select MesloLGS NF as the font in Konsole
+        name = "powerlevel10k";
+        src = pkgs.zsh-powerlevel10k;
+        file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
+      }
+    ];
+
     oh-my-zsh = {
       enable = true;
       plugins = [ "sudo" "git" "docker-compose" "cp" ];
-      theme = "ys";
+      theme = "robbyrussell";
     };
   };
 
