@@ -85,7 +85,7 @@ end
           "/run/user/1000/agenix.d/1/gh_pat";
       };
 
-      nmap = { "<C-f>" = "<cmd>silent !tmux neww tmux-sessionizer<CR>"; };
+      nmap = { "<C-f>" = "<cmd>silent !tmux neww ${pkgs.f-tmux}/bin/f-fzf-tmux-wrapper<CR>"; };
     };
   }];
 in {

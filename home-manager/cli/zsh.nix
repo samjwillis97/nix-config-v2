@@ -12,7 +12,7 @@ let
 
     # alias nvim="nix run github:samjwillis97/neovim-flake --"
 
-    bindkey -s ^f "tmux-sessionizer\n"
+    bindkey -s ^f "${pkgs.f-tmux}/bin/f-fzf-tmux-wrapper\n\n"
 
     export CDPATH="$CDPATH:../:../../"
 
@@ -22,7 +22,7 @@ let
         --color=marker:${base06},fg+:${base05},prompt:${base0E},hl+:${base08}"
   '';
 in {
-  home.packages = with pkgs; [ bat rsync gnutar ];
+  home.packages = with pkgs; [ bat rsync gnutar f-tmux ];
 
   programs.zsh = {
     inherit initExtra;
