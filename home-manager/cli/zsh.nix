@@ -44,6 +44,7 @@ in {
     };
 
     shellAliases = {
+      git-silent-add = "git-silent-add() {git add --intent-to-add $1 && git update-index --skip-worktree --assume-unchanged $1 };git-silent-add";
       l = "ls -l";
       ll = "ls -alFh";
       lt = "ls --human-readable --size -1 -S --classify";

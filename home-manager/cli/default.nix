@@ -5,7 +5,7 @@ in {
   imports = [ ./zsh.nix ./tmux.nix ./git.nix ./rmtree.nix ./worktree.nix ./ssh.nix ../scripts ];
 
   home.packages = with pkgs;
-    [ bat curl p7zip ripgrep wget zip unzip htop fzf neofetch duf agenix ]
+    [ bat curl p7zip ripgrep wget zip unzip htop fzf neofetch duf agenix f ]
     ++ osSpecificPackages;
 
   programs.bat = {

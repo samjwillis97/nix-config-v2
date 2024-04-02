@@ -12,6 +12,7 @@ in {
       neovim-full = flake.inputs.modular-neovim.packages.${system}.neovim-full;
       nix-serve = flake.inputs.nix-serve.packages.${system}.nix-serve;
       hyprland = flake.inputs.hyprland.packages.${system}.hyprland;
+      f = flake.inputs.f.packages.${system}.default;
       f-tmux = flake.inputs.f.packages.${system}.f-tmux;
     })
     inputs.nur.overlay
