@@ -2,6 +2,18 @@
 # Should move elsewhere
 { config, pkgs, lib, flake, ... }:
 # TODO: Auto Reconnect
+let 
+  tmux-now-playing = pkgs.tmuxPlugins.mkTmuxPlugin {
+    pluginName = "tmux-now-playing";
+    version = "unstable-2019-07-14";
+    src = pkgs.fetchFromGitHub {
+      owner = "spywhere";
+      repo = "tmux-now-playing";
+      rev = "0a94d1776be7f5f41c626774239576b4ba8761cf";
+      sha256 = "WF01C3ZoIMpOU4lcUwSXjFhuTGj5u3j8JYGwfvF0FOY=";
+    };
+  };
+in
 {
   home.packages = with pkgs; [ f-tmux ];
   programs.tmux = {
@@ -16,6 +28,10 @@
 
     prefix = "C-b";
     terminal = "screen-256color";
+
+    plugins = [ 
+      tmux-now-playing
+    ];
 
     extraConfig = with config.theme.colors; ''
 
@@ -105,7 +121,7 @@
       # --------=== Statusline
 
       set-option -gq status-left ""
-      set-option -gq status-right "#[fg=$thm_pink,bg=$thm_bg,nobold,nounderscore,noitalics]#[fg=$thm_bg,bg=$thm_pink,nobold,nounderscore,noitalics] #[fg=$thm_fg,bg=$thm_gray] #W #{?client_prefix,#[fg=$thm_red],#[fg=$thm_green]}#[bg=$thm_gray]#{?client_prefix,#[bg=$thm_red],#[bg=$thm_green]}#[fg=$thm_bg] #[fg=$thm_fg,bg=$thm_gray] #S "
+      set-option -gq status-right "#{now_playing}#[fg=$thm_pink,bg=$thm_bg,nobold,nounderscore,noitalics]#[fg=$thm_bg,bg=$thm_pink,nobold,nounderscore,noitalics] #[fg=$thm_fg,bg=$thm_gray] #W #{?client_prefix,#[fg=$thm_red],#[fg=$thm_green]}#[bg=$thm_gray]#{?client_prefix,#[bg=$thm_red],#[bg=$thm_green]}#[fg=$thm_bg] #[fg=$thm_fg,bg=$thm_gray] #S "
 
       # current_dir
       set-window-option -gq window-status-format "#[fg=$thm_bg,bg=$thm_blue] #I #[fg=$thm_fg,bg=$thm_gray] #{b:pane_current_path} "
