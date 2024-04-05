@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   programs.vscode = {
     enable = true;
     enableUpdateCheck = false;
@@ -9,6 +10,8 @@
       catppuccin.catppuccin-vsc
     ];
 
-    userSettings = { "workbench.colorTheme" = "Catppuccin Mocha"; };
+    userSettings = {
+      "workbench.colorTheme" = "Catppuccin Mocha";
+    };
   };
 }

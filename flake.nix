@@ -3,7 +3,9 @@
 
   inputs = {
     # Nixpkgs Source
-    nixpkgs = { url = "github:nixos/nixpkgs/nixos-unstable"; };
+    nixpkgs = {
+      url = "github:nixos/nixpkgs/nixos-unstable";
+    };
 
     # nix-darwin module
     darwin = {
@@ -23,11 +25,17 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    flake-utils = { url = "github:numtide/flake-utils"; };
+    flake-utils = {
+      url = "github:numtide/flake-utils";
+    };
 
-    nur = { url = "github:nix-community/NUR"; };
+    nur = {
+      url = "github:nix-community/NUR";
+    };
 
-    devenv = { url = "github:cachix/devenv/latest"; };
+    devenv = {
+      url = "github:cachix/devenv/latest";
+    };
 
     modular-neovim = {
       url = "github:samjwillis97/modular-neovim-flake";
@@ -39,7 +47,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    agenix = { url = "github:ryantm/agenix"; };
+    agenix = {
+      url = "github:ryantm/agenix";
+    };
 
     microvm = {
       url = "github:astro/microvm.nix";
@@ -52,24 +62,40 @@
     };
   };
 
-  outputs = { self, nixpkgs, nur, flake-utils, devenv, modular-neovim, agenix
-    , nix-serve, hyprland, microvm, f, ... }@inputs:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      nur,
+      flake-utils,
+      devenv,
+      modular-neovim,
+      agenix,
+      nix-serve,
+      hyprland,
+      microvm,
+      f,
+      ...
+    }@inputs:
     let
       lib = nixpkgs.lib;
-      inherit (import ./lib/attrsets.nix { inherit (nixpkgs) lib; })
-        recursiveMergeAttrs mergeMap;
+      inherit (import ./lib/attrsets.nix { inherit (nixpkgs) lib; }) recursiveMergeAttrs mergeMap;
       inherit (import ./lib/flake.nix inputs)
-        mkNixosSystem mkDarwinSystem mkHomeManager mkMicroVm;
-      # Thoughts on how to compose this - Jays config is making more sense now...
-      # Need a way to define systems, i.e. I have a macbook that runs aarch64-darwin and has these users
-      # Need a way to define users properly, and what imports they will require no matter what (think of this like normal dotfiles)
-      # On the system level define what pacakges to install, probably using the modules 
-      # Think about how to use this just to replace dotfile management as well
-      # A simple way to define sets of packages could be good as well
-      # Then think of a way to replace docker.. i.e. pihole.nix
-      # Still need to work out how to know what output to use...
-
-    in (recursiveMergeAttrs [
+        mkNixosSystem
+        mkDarwinSystem
+        mkHomeManager
+        mkMicroVm
+        ;
+    in
+    # Thoughts on how to compose this - Jays config is making more sense now...
+    # Need a way to define systems, i.e. I have a macbook that runs aarch64-darwin and has these users
+    # Need a way to define users properly, and what imports they will require no matter what (think of this like normal dotfiles)
+    # On the system level define what pacakges to install, probably using the modules 
+    # Think about how to use this just to replace dotfile management as well
+    # A simple way to define sets of packages could be good as well
+    # Then think of a way to replace docker.. i.e. pihole.nix
+    # Still need to work out how to know what output to use...
+    (recursiveMergeAttrs [
       # TODO: Convert these to a whole lot of enables
       # - i3
       # - Audio
@@ -157,8 +183,14 @@
       })
 
       # This currently is just to let me format with `nix fmt` on any system
-      (flake-utils.lib.eachDefaultSystem (system:
-        let pkgs = import self.inputs.nixpkgs { inherit system; };
-        in { formatter = pkgs.nixfmt; }))
+      (flake-utils.lib.eachDefaultSystem (
+        system:
+        let
+          pkgs = import self.inputs.nixpkgs { inherit system; };
+        in
+        {
+          formatter = pkgs.nixfmt-rfc-style;
+        }
+      ))
     ]);
 }

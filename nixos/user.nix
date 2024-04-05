@@ -1,13 +1,26 @@
-{ super, lib, pkgs, ... }:
-let inherit (super.meta) username;
-in {
+{
+  super,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  inherit (super.meta) username;
+in
+{
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.${username} = {
     isNormalUser = true;
     uid = 1000;
     shell = pkgs.zsh;
-    extraGroups =
-      [ "wheel" "networkmanager" "video" "docker" "libvirtd" "qemu-libvirtd" ];
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+      "video"
+      "docker"
+      "libvirtd"
+      "qemu-libvirtd"
+    ];
     password = "nixos";
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA2FeFN6YQEUr22lJCeuQHcDawLuAPnoizlZLJOwhch4 sam@williscloud.org"
@@ -16,5 +29,4 @@ in {
     ];
   };
   programs.zsh.enable = true;
-
 }

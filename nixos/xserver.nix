@@ -1,4 +1,10 @@
-{ config, pkgs, lib, ... }: {
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
   boot.consoleLogLevel = 3;
   # Force kernel log in tty1, otherwise it will override greetd
   boot.kernelParams = [ "console=tty1" ];

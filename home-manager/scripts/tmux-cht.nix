@@ -73,4 +73,7 @@ let
         tmux neww bash -c "curl -s cht.sh/$selected~$query | less"
     fi
   '';
-in { home.packages = [ tmux-cht ]; }
+in
+{
+  home.packages = [ tmux-cht ];
+}

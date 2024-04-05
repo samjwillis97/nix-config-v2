@@ -1,4 +1,11 @@
-{ config, pkgs, lib, flake, ... }: {
+{
+  config,
+  pkgs,
+  lib,
+  flake,
+  ...
+}:
+{
   programs.kitty = {
     enable = true;
     font = {

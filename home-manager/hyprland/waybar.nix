@@ -1,4 +1,10 @@
-{ config, pkgs, lib, ... }: {
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
   programs.waybar = {
     enable = true;
     systemd.enable = true;
@@ -10,9 +16,16 @@
         height = 34;
         spacing = 4;
 
-        modules-left = [ "sway/workspaces" "sway/mode" "wlr/taskbar" ];
+        modules-left = [
+          "sway/workspaces"
+          "sway/mode"
+          "wlr/taskbar"
+        ];
         modules-center = [ "sway/window" ];
-        modules-right = [ "mpd" "temperature" ];
+        modules-right = [
+          "mpd"
+          "temperature"
+        ];
 
         "sway/workspaces" = {
           disable-scroll = true;

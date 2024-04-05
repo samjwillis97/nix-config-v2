@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   launchd.user.agents.yabai.environment.SHELL = "${pkgs.bash}/bin/bash";
 
   # Look at spacebar for MacOS

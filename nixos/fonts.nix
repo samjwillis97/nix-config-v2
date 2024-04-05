@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
 
   fonts = {
     enableDefaultFonts = true;
@@ -18,9 +19,11 @@
         monospace = [ "FiraCode Nerd Font Mono" ];
         serif = [ "Noto Serif" ];
         sansSerif = [ "Noto Sans" ];
-        emoji = [ "Noto Color Emoji" "Noto Emoji" ];
+        emoji = [
+          "Noto Color Emoji"
+          "Noto Emoji"
+        ];
       };
     };
   };
-
 }

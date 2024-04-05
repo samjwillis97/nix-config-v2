@@ -1,9 +1,16 @@
 # thank you: https://tailscale.com/blog/nixos-minecraft/
 # and: https://github.com/ghuntley/ghuntley/blob/cb78de98fbaf1ea97d5c8465e155516f3e72132d/ops/nixos-modules/tailscale.nix
-{ pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 with lib;
-let cfg = config.modules.networking.tailscale;
-in {
+let
+  cfg = config.modules.networking.tailscale;
+in
+{
   options.modules.networking.tailscale = {
     enable = mkEnableOption "Enables tailscale";
 
@@ -17,7 +24,12 @@ in {
     };
 
     authKeyFile = mkOption {
-      type = with types; oneOf [ path str ];
+      type =
+        with types;
+        oneOf [
+          path
+          str
+        ];
       description = "File containing authKey";
       example = "/var/lib/myKey";
     };
@@ -47,8 +59,14 @@ in {
       description = "Automatic connection to Tailscale";
 
       # make sure tailscale is running before trying to connect to tailscale
-      after = [ "network-pre.target" "tailscale.service" ];
-      wants = [ "network-pre.target" "tailscale.service" ];
+      after = [
+        "network-pre.target"
+        "tailscale.service"
+      ];
+      wants = [
+        "network-pre.target"
+        "tailscale.service"
+      ];
       wantedBy = [ "multi-user.target" ];
 
       # set this service as a oneshot job

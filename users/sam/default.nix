@@ -1,4 +1,11 @@
-{ super, config, home, pkgs, ... }: {
+{
+  super,
+  config,
+  home,
+  pkgs,
+  ...
+}:
+{
   imports = [
     ../../modules/user.nix
     ../../home-manager/theme

@@ -1,3 +1,8 @@
-{ pkgs, ... }: {
-  home.packages = with pkgs; [ plex-media-player vlc tidal-hifi ];
+{ pkgs, ... }:
+{
+  home.packages = with pkgs; [
+    plex-media-player
+    vlc
+    tidal-hifi
+  ];
 }

@@ -1,4 +1,5 @@
-{ super, ... }: {
+{ super, ... }:
+{
   # TODO: Fix me - why does my reverse proxy just not work :(
   services.nginx = {
     enable = true;

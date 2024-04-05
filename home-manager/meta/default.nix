@@ -1,4 +1,5 @@
-{ lib, pkgs, ... }: {
+{ lib, pkgs, ... }:
+{
   imports = [ ../../overlays ];
 
   nixpkgs.config = import ./nixpkgs-config.nix // {

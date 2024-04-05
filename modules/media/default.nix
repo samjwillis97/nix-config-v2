@@ -1,1 +1,7 @@
-{ imports = [ ./xteve ./iptv-proxy ./jellyfin ]; }
+{
+  imports = [
+    ./xteve
+    ./iptv-proxy
+    ./jellyfin
+  ];
+}

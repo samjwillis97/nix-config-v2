@@ -1,7 +1,18 @@
-{ super, pkgs, lib, flake, ... }:
-let inherit (flake) inputs;
-in {
-  imports = [ ./hardware-configuration.nix ../../nixos ];
+{
+  super,
+  pkgs,
+  lib,
+  flake,
+  ...
+}:
+let
+  inherit (flake) inputs;
+in
+{
+  imports = [
+    ./hardware-configuration.nix
+    ../../nixos
+  ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;

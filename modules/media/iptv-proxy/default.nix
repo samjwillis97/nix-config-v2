@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 with lib;
 let
   cfg = config.modules.media.iptv-proxy;
@@ -16,7 +21,8 @@ let
 
     vendorHash = null;
   };
-in {
+in
+{
   options.modules.media.iptv-proxy = {
     enable = mkEnableOption "Enables IPTV proxy";
 
@@ -47,7 +53,12 @@ in {
       usernameFile = mkOption {
         default = null;
         description = mdDoc "XTream username file";
-        type = with types; nullOr (oneOf [ path str ]);
+        type =
+          with types;
+          nullOr (oneOf [
+            path
+            str
+          ]);
         example = "/var/mySecret/usernameFile";
       };
 
@@ -61,7 +72,12 @@ in {
       passwordFile = mkOption {
         default = null;
         description = mdDoc "XTream password file";
-        type = with types; nullOr (oneOf [ path str ]);
+        type =
+          with types;
+          nullOr (oneOf [
+            path
+            str
+          ]);
         example = "/var/mySecret/passwordFile";
       };
     };
@@ -110,21 +126,31 @@ in {
           XTREAM_BASE_URL=${cfg.xtream.hostname}
           export XTREAM_BASE_URL
 
-          ${if isNull cfg.xtream.usernameFile then ''
-            XTREAM_USER=${cfg.xtream.username}
-            export XTREAM_USER
-          '' else ''
-            XTREAM_USER=$(cat ${toString cfg.xtream.usernameFile})
-            export XTREAM_USER
-          ''}
+          ${
+            if isNull cfg.xtream.usernameFile then
+              ''
+                XTREAM_USER=${cfg.xtream.username}
+                export XTREAM_USER
+              ''
+            else
+              ''
+                XTREAM_USER=$(cat ${toString cfg.xtream.usernameFile})
+                export XTREAM_USER
+              ''
+          }
 
-          ${if isNull cfg.xtream.passwordFile then ''
-            XTREAM_PASSWORD=${cfg.xtream.password}
-            export XTREAM_PASSWORD
-          '' else ''
-            XTREAM_PASSWORD=$(cat ${toString cfg.xtream.passwordFile})
-            export XTREAM_PASSWORD
-          ''}
+          ${
+            if isNull cfg.xtream.passwordFile then
+              ''
+                XTREAM_PASSWORD=${cfg.xtream.password}
+                export XTREAM_PASSWORD
+              ''
+            else
+              ''
+                XTREAM_PASSWORD=$(cat ${toString cfg.xtream.passwordFile})
+                export XTREAM_PASSWORD
+              ''
+          }
 
           # M3U_URL=${cfg.xtream.hostname}/get.php?username\=$XTREAM_USERNAME\&password\=$XTREAM_PASSWORD\&type\=m3u_plus\&output\=m3u8
           # export M3U_URL

@@ -111,4 +111,7 @@ let
             rmtree "$@"
     '';
   };
-in { home.packages = [ rm-tree ]; }
+in
+{
+  home.packages = [ rm-tree ];
+}

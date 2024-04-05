@@ -1,4 +1,5 @@
-{ ... }: {
+{ ... }:
+{
   imports = [
     ./git-bare-clone.nix
     ./tmux-sessionizer.nix

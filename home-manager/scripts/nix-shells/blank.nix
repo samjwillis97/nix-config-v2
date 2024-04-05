@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   nix-flake-template = pkgs.writeShellScriptBin "blank-nix-flake-template" ''
         if [[ -f "flake.nix" ]]; then
           ${pkgs.gum}/bin/gum log --level error "flake.nix already exists - exiting"

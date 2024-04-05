@@ -30,4 +30,7 @@ let
 
     tmux switch-client -t $selected_name
   '';
-in { home.packages = [ tmux-sessionizer ]; }
+in
+{
+  home.packages = [ tmux-sessionizer ];
+}

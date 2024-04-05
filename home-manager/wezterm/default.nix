@@ -1,10 +1,29 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+{
   programs.wezterm = {
     enable = true;
     colorSchemes = {
       base16 = with config.theme.colors; {
-        ansi = [ base00 base08 base0B base0A base0D base0E base0C base05 ];
-        brights = [ base03 base08 base0B base0A base0D base0E base0C base05 ];
+        ansi = [
+          base00
+          base08
+          base0B
+          base0A
+          base0D
+          base0E
+          base0C
+          base05
+        ];
+        brights = [
+          base03
+          base08
+          base0B
+          base0A
+          base0D
+          base0E
+          base0C
+          base05
+        ];
         background = base00;
         cursor_bg = base06;
         cursor_border = base06;

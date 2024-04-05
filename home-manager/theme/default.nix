@@ -1,4 +1,11 @@
-{ super, config, pkgs, lib, ... }: {
+{
+  super,
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
   imports = [ ./colors ];
 
   # TODO: Get from somewhere else?
@@ -9,8 +16,7 @@
         name = "Roboto";
       };
     };
-    wallpaper.path =
-      lib.mkDefault pkgs.wallpapers.nixos-catppuccin-magenta-blue;
+    wallpaper.path = lib.mkDefault pkgs.wallpapers.nixos-catppuccin-magenta-blue;
   };
 
   fonts.fontconfig.enable = true;

@@ -1,4 +1,5 @@
-{ config, ... }: {
+{ config, ... }:
+{
   imports = [ ../secrets ];
 
   modules.networking.tailscale = {

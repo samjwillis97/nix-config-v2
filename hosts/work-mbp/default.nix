@@ -1,1 +1,9 @@
-{ config, pkgs, flake, ... }: { imports = [ ../../nix-darwin ]; }
+{
+  config,
+  pkgs,
+  flake,
+  ...
+}:
+{
+  imports = [ ../../nix-darwin ];
+}

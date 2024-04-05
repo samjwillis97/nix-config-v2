@@ -1,29 +1,34 @@
 let
-  primary-key =
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKOxqC9TmYNgf2GHDd8guuj0C1MRXWMU3kaWDzHUl4AM";
-  secondary-key =
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHkXaJnC6aITP4MxHIhxTo2iFXmpDiogXnfxJsb368yb";
+  primary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKOxqC9TmYNgf2GHDd8guuj0C1MRXWMU3kaWDzHUl4AM";
+  secondary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHkXaJnC6aITP4MxHIhxTo2iFXmpDiogXnfxJsb368yb";
 
-  github-primary-key =
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDqBgLxog6NG/d2LQ/XQr1NfCxbvTxsAgDLGKV0pNjcf sam@williscloud.org";
-  github-secondary-key =
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDfkEyrxhe8xzftrPSHH+1Zkkz7i+0MOoHvPNHzd/J6C sam@williscloud.org";
+  github-primary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDqBgLxog6NG/d2LQ/XQr1NfCxbvTxsAgDLGKV0pNjcf sam@williscloud.org";
+  github-secondary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDfkEyrxhe8xzftrPSHH+1Zkkz7i+0MOoHvPNHzd/J6C sam@williscloud.org";
 
-  iptv-primary-key =
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOALWUCVS0LGysQaZKrMHq22QNQAAVeb3+1cRKtg9jcE sam@williscloud.org";
-  iptv-secondary-key =
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGF2/UWwHwsUVS5n1sTEL0Wo9Jp8i+cdB1Ixz7AsPkrB sam@williscloud.org";
+  iptv-primary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOALWUCVS0LGysQaZKrMHq22QNQAAVeb3+1cRKtg9jcE sam@williscloud.org";
+  iptv-secondary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGF2/UWwHwsUVS5n1sTEL0Wo9Jp8i+cdB1Ixz7AsPkrB sam@williscloud.org";
 
-  wireguard-primary-key =
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILWEpbQNNB5K2FE0QMxU0PPrSTuUr4EnhmJf/+R5qAnh sam@personal-desktop";
-  wireguard-secondary-key =
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHsi1d39cIzleqaxpG7lC+v4wj2qtu0tWSf7DVofJ+yy sam@personal-desktop";
+  wireguard-primary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILWEpbQNNB5K2FE0QMxU0PPrSTuUr4EnhmJf/+R5qAnh sam@personal-desktop";
+  wireguard-secondary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHsi1d39cIzleqaxpG7lC+v4wj2qtu0tWSf7DVofJ+yy sam@personal-desktop";
 
-  keys = [ primary-key secondary-key ];
-  github-keys = [ github-primary-key github-secondary-key ];
-  iptv-keys = [ iptv-primary-key iptv-secondary-key ];
-  wireguard-keys = [ wireguard-primary-key wireguard-secondary-key ];
-in {
+  keys = [
+    primary-key
+    secondary-key
+  ];
+  github-keys = [
+    github-primary-key
+    github-secondary-key
+  ];
+  iptv-keys = [
+    iptv-primary-key
+    iptv-secondary-key
+  ];
+  wireguard-keys = [
+    wireguard-primary-key
+    wireguard-secondary-key
+  ];
+in
+{
   # See: https://github.com/ryantm/agenix/issues/17#issuecomment-797174338
   # Workflow for a new machine according to Ryan:
   # 

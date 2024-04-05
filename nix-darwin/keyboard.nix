@@ -1,4 +1,5 @@
-{ lib, ... }: {
+{ lib, ... }:
+{
   system.defaults.NSGlobalDomain = {
     # disable press-and-hold for keys in favor of key repeat
     ApplePressAndHoldEnabled = false;

@@ -1,4 +1,10 @@
-{ config, lib, pkgs, ... }: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
   # NEED TO PLAY AROUND WITH THE COLORS FIRST 
   services.gammastep = {
     enable = true;

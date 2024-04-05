@@ -1,1 +1,4 @@
-{ pkgs, ... }: { home.packages = with pkgs; [ awscli2 ]; }
+{ pkgs, ... }:
+{
+  home.packages = with pkgs; [ awscli2 ];
+}

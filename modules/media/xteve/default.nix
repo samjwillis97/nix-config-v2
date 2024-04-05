@@ -1,7 +1,14 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 with lib;
-let cfg = config.modules.media.xteve;
-in {
+let
+  cfg = config.modules.media.xteve;
+in
+{
   options.modules.media.xteve = {
     enable = mkEnableOption "Enables xTeve service";
 

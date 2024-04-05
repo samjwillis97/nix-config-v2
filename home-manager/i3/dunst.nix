@@ -1,16 +1,26 @@
-{ config, lib, pkgs, ... }: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
   home.packages = with pkgs; [ dunst ];
 
   services.dunst = {
     enable = true;
-    iconTheme = with config.gtk.iconTheme; { inherit name package; };
-    settings = with config.theme.colors;
+    iconTheme = with config.gtk.iconTheme; {
+      inherit name package;
+    };
+    settings =
+      with config.theme.colors;
       let
         theme = {
           background = base00;
           foreground = base05;
         };
-      in {
+      in
+      {
         global = with config.theme.fonts; {
           font = "${gui.name} 8";
           markup = true;
@@ -40,9 +50,15 @@
           min_icon_size = 48;
           max_icon_size = 48;
         };
-        urgency_low = { timeout = 5; } // theme;
-        urgency_normal = { timeout = 10; } // theme;
-        urgency_high = { timeout = 20; } // theme;
+        urgency_low = {
+          timeout = 5;
+        } // theme;
+        urgency_normal = {
+          timeout = 10;
+        } // theme;
+        urgency_high = {
+          timeout = 20;
+        } // theme;
       };
   };
 }

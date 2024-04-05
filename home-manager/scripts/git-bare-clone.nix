@@ -87,4 +87,7 @@ let
     msg "''${GREEN}Success.''${NOFORMAT}"
 
   '';
-in { home.packages = [ git-bare-clone ]; }
+in
+{
+  home.packages = [ git-bare-clone ];
+}

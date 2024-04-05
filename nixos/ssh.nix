@@ -1,6 +1,13 @@
-{ super, lib, pkgs, ... }:
-let inherit (super.meta) username;
-in {
+{
+  super,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  inherit (super.meta) username;
+in
+{
   services.openssh = {
     enable = true;
     settings.PasswordAuthentication = false;

@@ -1,4 +1,10 @@
-{ super, config, home, ... }: {
+{
+  super,
+  config,
+  home,
+  ...
+}:
+{
   imports = [
     ../../home-manager/theme/colors
     ../../home-manager/meta

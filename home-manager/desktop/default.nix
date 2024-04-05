@@ -2,8 +2,20 @@
 #   - Flameshot
 #   - OBS
 #   - Solaar
-{ config, lib, pkgs, ... }: {
-  imports = [ ../media ../social ../firefox ../wezterm ../theme ];
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
+  imports = [
+    ../media
+    ../social
+    ../firefox
+    ../wezterm
+    ../theme
+  ];
 
   home.packages = with pkgs; [
     arandr

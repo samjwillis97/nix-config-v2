@@ -1,7 +1,18 @@
-{ config, pkgs, lib, flake, ... }:
-let inherit (flake) inputs;
-in {
-  imports = [ ./hardware-configuration.nix ../../nixos ];
+{
+  config,
+  pkgs,
+  lib,
+  flake,
+  ...
+}:
+let
+  inherit (flake) inputs;
+in
+{
+  imports = [
+    ./hardware-configuration.nix
+    ../../nixos
+  ];
 
   boot.loader.grub.enable = true;
   boot.loader.grub.version = 2;

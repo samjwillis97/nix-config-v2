@@ -1,9 +1,14 @@
-{ super, config, pkgs, lib, flake, ... }:
+{
+  super,
+  config,
+  pkgs,
+  lib,
+  flake,
+  ...
+}:
 let
-  homeDirectory = if super.meta.isDarwin then
-    "/Users/${super.meta.username}"
-  else
-    "/home/${super.meta.username}";
+  homeDirectory =
+    if super.meta.isDarwin then "/Users/${super.meta.username}" else "/home/${super.meta.username}";
 
   p10kTheme = ./zsh/.p10k.zsh;
 
@@ -25,8 +30,14 @@ let
 
     source ${p10kTheme}
   '';
-in {
-  home.packages = with pkgs; [ bat rsync gnutar f-tmux ];
+in
+{
+  home.packages = with pkgs; [
+    bat
+    rsync
+    gnutar
+    f-tmux
+  ];
 
   programs.zsh = {
     inherit initExtra;
@@ -44,8 +55,7 @@ in {
     };
 
     shellAliases = {
-      git-silent-add =
-        "git-silent-add() {git add --intent-to-add $1 && git update-index --skip-worktree --assume-unchanged $1 };git-silent-add";
+      git-silent-add = "git-silent-add() {git add --intent-to-add $1 && git update-index --skip-worktree --assume-unchanged $1 };git-silent-add";
       l = "ls -l";
       ll = "ls -alFh";
       lt = "ls --human-readable --size -1 -S --classify";
@@ -58,17 +68,24 @@ in {
     };
 
     # See: https://github.com/NixOS/nixpkgs/issues/154696#issuecomment-1238433989
-    plugins = [{
-      # A prompt will appear the first time to configure it properly
-      # make sure to select MesloLGS NF as the font in Konsole
-      name = "powerlevel10k";
-      src = pkgs.zsh-powerlevel10k;
-      file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
-    }];
+    plugins = [
+      {
+        # A prompt will appear the first time to configure it properly
+        # make sure to select MesloLGS NF as the font in Konsole
+        name = "powerlevel10k";
+        src = pkgs.zsh-powerlevel10k;
+        file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
+      }
+    ];
 
     oh-my-zsh = {
       enable = true;
-      plugins = [ "sudo" "git" "docker-compose" "cp" ];
+      plugins = [
+        "sudo"
+        "git"
+        "docker-compose"
+        "cp"
+      ];
       theme = "robbyrussell";
     };
   };
@@ -80,11 +97,15 @@ in {
       # TODO: Set the variable for this https://github.com/direnv/direnv/pull/1234
       enable = true;
       nix-direnv.enable = true;
-      config = { hide_env_diff = true; };
+      config = {
+        hide_env_diff = true;
+      };
       stdlib = ''
         DIRENV_LOG_FORMAT=""
       '';
     };
-    fzf = { enable = true; };
+    fzf = {
+      enable = true;
+    };
   };
 }

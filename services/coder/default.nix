@@ -8,7 +8,8 @@ let
       CREATE DATABASE coder;
     '';
   };
-in {
+in
+{
   # TODO: Think about how this could interract if another service wanted postgres...
   # what would be the best way forward there?
 
@@ -75,8 +76,7 @@ in {
         environment = {
           CODER_ACCESS_URL = "http://${super.meta.hostname}.tailfba7c.ts.net";
           CODER_DISABLE_PASSWORD_AUTH = "false";
-          CODER_PG_CONNECTION_URL =
-            "postgres://coder:coder@localhost/coder?sslmode=disable";
+          CODER_PG_CONNECTION_URL = "postgres://coder:coder@localhost/coder?sslmode=disable";
         };
       };
     };

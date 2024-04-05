@@ -1,6 +1,14 @@
-{ config, lib, pkgs, ... }: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
   config = {
-    security = { rtkit.enable = true; };
+    security = {
+      rtkit.enable = true;
+    };
 
     services = {
       pipewire = {

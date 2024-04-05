@@ -1,7 +1,9 @@
 { pkgs, flake, ... }:
 # TODO: Add to HM and Darwin Configs
-let inherit (flake) inputs;
-in {
+let
+  inherit (flake) inputs;
+in
+{
   # Enable Flakes
   settings = import ./nix-conf.nix;
 
@@ -12,5 +14,7 @@ in {
 
   # Same as above, but for `nix shell nixpkgs#htop`
   # FIXME: for non-free packages you need to use `nix shell --impure`
-  registry = { nixpkgs.flake = inputs.nixpkgs; };
+  registry = {
+    nixpkgs.flake = inputs.nixpkgs;
+  };
 }

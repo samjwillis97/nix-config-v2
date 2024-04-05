@@ -1,6 +1,12 @@
 # TODO: Well this doesn't actually care about home-manager
 # Should move elsewhere
-{ config, pkgs, lib, flake, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  flake,
+  ...
+}:
 # TODO: Auto Reconnect
 let
   tmux-now-playing = pkgs.tmuxPlugins.mkTmuxPlugin {
@@ -13,7 +19,8 @@ let
       sha256 = "WF01C3ZoIMpOU4lcUwSXjFhuTGj5u3j8JYGwfvF0FOY=";
     };
   };
-in {
+in
+{
   home.packages = with pkgs; [ f-tmux ];
   programs.tmux = {
     enable = true;

@@ -35,4 +35,7 @@ let
     echo "4"
     tmux switch-client -t $selected_name
   '';
-in { home.packages = [ tmux-live-sessionizer ]; }
+in
+{
+  home.packages = [ tmux-live-sessionizer ];
+}

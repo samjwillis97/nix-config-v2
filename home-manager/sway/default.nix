@@ -1,53 +1,69 @@
-{ config, lib, pkgs, super, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  super,
+  ...
+}:
 let
   # Aliases
   alt = "Mod4";
   modifier = "Mod1";
 
-  commonOptions = let
-    # Notification Daemon
-    makoctl = "";
-    screenShotName = with config.xdg.userDirs;
-      "${pictures}/$(${pkgs.coreutils}/bin/date +%Y-%m-%d_%H-%M-%S)-screenshot.png";
-  in import ../i3/common.nix rec {
-    inherit config lib modifier alt;
+  commonOptions =
+    let
+      # Notification Daemon
+      makoctl = "";
+      screenShotName =
+        with config.xdg.userDirs;
+        "${pictures}/$(${pkgs.coreutils}/bin/date +%Y-%m-%d_%H-%M-%S)-screenshot.png";
+    in
+    import ../i3/common.nix rec {
+      inherit
+        config
+        lib
+        modifier
+        alt
+        ;
 
-    browser = "firefox";
-    fileManager = "${terminal} ${pkgs.nnn}/bin/nnn -a -P p";
-    statusCommand = with config;
-      "${programs.i3status-rust.package}/bin/i3status-rs ${xdg.configHome}/i3status-rust/config-i3.toml";
-    menu = "rofi -show drun";
-    # light needs to be installed in system, so not defining a path here
-    light = "light";
-    pamixer = "${pkgs.pamixer}/bin/pamixer";
-    playerctl = "${pkgs.playerctl}/bin/playerctl";
-    terminal = "${pkgs.alacritty}/bin/alacritty";
+      browser = "firefox";
+      fileManager = "${terminal} ${pkgs.nnn}/bin/nnn -a -P p";
+      statusCommand =
+        with config;
+        "${programs.i3status-rust.package}/bin/i3status-rs ${xdg.configHome}/i3status-rust/config-i3.toml";
+      menu = "rofi -show drun";
+      # light needs to be installed in system, so not defining a path here
+      light = "light";
+      pamixer = "${pkgs.pamixer}/bin/pamixer";
+      playerctl = "${pkgs.playerctl}/bin/playerctl";
+      terminal = "${pkgs.alacritty}/bin/alacritty";
 
-    # Screenshots
-    fullScreenShot = ''
-      ${pkgs.maim}/bin/maim -u "${screenShotName}" && \
-      ${pkgs.libnotify}/bin/notify-send -u normal -t 5000 'Full screenshot taken'
-    '';
-    areaScreenShot = ''
-      ${pkgs.maim}/bin/maim -u -s "${screenShotName}" && \
-      ${pkgs.libnotify}/bin/notify-send -u normal -t 5000 'Area screenshot taken'
-    '';
+      # Screenshots
+      fullScreenShot = ''
+        ${pkgs.maim}/bin/maim -u "${screenShotName}" && \
+        ${pkgs.libnotify}/bin/notify-send -u normal -t 5000 'Full screenshot taken'
+      '';
+      areaScreenShot = ''
+        ${pkgs.maim}/bin/maim -u -s "${screenShotName}" && \
+        ${pkgs.libnotify}/bin/notify-send -u normal -t 5000 'Area screenshot taken'
+      '';
 
-    extraBindings = {
-      # "${modifier}+Tab" = "exec rofi -show window -modi window";
-      "Ctrl+space" = "exec ${makoctl} close";
-      "Ctrl+Shift+space" = "exec ${makoctl} close-all";
+      extraBindings = {
+        # "${modifier}+Tab" = "exec rofi -show window -modi window";
+        "Ctrl+space" = "exec ${makoctl} close";
+        "Ctrl+Shift+space" = "exec ${makoctl} close-all";
+      };
+
+      extraConfig = ''
+        hide_edge_borders --i3 smart
+
+        # XCURSOR_SIZE - I Do feel like this is not going to work, what the fuck is name?
+        # TODO: Get this name somehow 
+        seat seat0 xcursor_theme Adwaita 24
+      '';
     };
-
-    extraConfig = ''
-      hide_edge_borders --i3 smart
-
-      # XCURSOR_SIZE - I Do feel like this is not going to work, what the fuck is name?
-      # TODO: Get this name somehow 
-      seat seat0 xcursor_theme Adwaita 24
-    '';
-  };
-in {
+in
+{
   imports = [
     ../i3/gammastep.nix
     ../i3/i3status-rust.nix
@@ -75,18 +91,20 @@ in {
       startup = [
         { command = "${pkgs.dex}/bin/dex --autostart"; }
         {
-          command = let
-            swayidle = "${pkgs.swayidle}/bin/swayidle";
-            swaylock = "${pkgs.swaylock}/bin/swaylock";
-            swaymsg = "${pkgs.sway}/bin/swaymsg";
-          in ''
-            ${swayidle} -w \
-            timeout 600 '${swaylock} -f -c 000000' \
-            timeout 605 '${swaymsg} "output * dpms off"' \
-            resume '${swaymsg} "output * dpms on"' \
-            before-sleep '${swaylock} -f -c 000000' \
-            lock '${swaylock} -f -c 000000'
-          '';
+          command =
+            let
+              swayidle = "${pkgs.swayidle}/bin/swayidle";
+              swaylock = "${pkgs.swaylock}/bin/swaylock";
+              swaymsg = "${pkgs.sway}/bin/swaymsg";
+            in
+            ''
+              ${swayidle} -w \
+              timeout 600 '${swaylock} -f -c 000000' \
+              timeout 605 '${swaymsg} "output * dpms off"' \
+              resume '${swaymsg} "output * dpms on"' \
+              before-sleep '${swaylock} -f -c 000000' \
+              lock '${swaylock} -f -c 000000'
+            '';
         }
       ];
 
@@ -95,7 +113,9 @@ in {
           xkb_layout = "us";
           xkb_options = "caps:escape";
         };
-        "type:pointer" = { accel_profile = "flat"; };
+        "type:pointer" = {
+          accel_profile = "flat";
+        };
         "type:touchpad" = {
           drag = "enabled";
           drag_lock = "enabled";
@@ -141,10 +161,11 @@ in {
       gtk = true;
     };
 
-    extraOptions = let
-      videoDrivers = super.services.xserver.videoDrivers or [ ];
+    extraOptions =
+      let
+        videoDrivers = super.services.xserver.videoDrivers or [ ];
+      in
       # If nvidia is in the videoDrivers array add this flag
-    in lib.optionals (builtins.elem "nvidia" videoDrivers)
-    [ "--unsupported-gpu" ];
+      lib.optionals (builtins.elem "nvidia" videoDrivers) [ "--unsupported-gpu" ];
   };
 }

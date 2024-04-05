@@ -1,4 +1,5 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+{
   programs.firefox = {
     enable = true;
 
@@ -39,23 +40,19 @@
         };
         "Nix Pkg Search" = {
           keyword = "np";
-          url =
-            "https://search.nixos.org/packages?channel=unstable&from=0&size=50&sort=relevance&query=%s";
+          url = "https://search.nixos.org/packages?channel=unstable&from=0&size=50&sort=relevance&query=%s";
         };
         "Nix Options Search" = {
           keyword = "no";
-          url =
-            "https://search.nixos.org/options?channel=unstable&from=0&size=50&sort=relevance&query=%s";
+          url = "https://search.nixos.org/options?channel=unstable&from=0&size=50&sort=relevance&query=%s";
         };
         "Nix Uber Search" = {
           keyword = "ns";
-          url =
-            "https://search.nix.gsc.io/?q=%s&i=nope&files=&excludeFiles=&repos=";
+          url = "https://search.nix.gsc.io/?q=%s&i=nope&files=&excludeFiles=&repos=";
         };
         "Ampcontrol Jira Search" = {
           keyword = "j";
-          url =
-            "https://ampcontrol.atlassian.net/issues/?jql=project%20%3D%20%s";
+          url = "https://ampcontrol.atlassian.net/issues/?jql=project%20%3D%20%s";
         };
         "Ampcontrol Confluence Search" = {
           keyword = "c";
@@ -63,17 +60,17 @@
         };
         "Ampcontrol Bitbucket Search" = {
           keyword = "b";
-          url =
-            "https://bitbucket.org/search?account=%7Be6dcdc2b-7ec9-42aa-85c0-062c35547eb0%7D&q=%s";
+          url = "https://bitbucket.org/search?account=%7Be6dcdc2b-7ec9-42aa-85c0-062c35547eb0%7D&q=%s";
         };
         OSRSWiki = {
           keyword = "osrs";
-          url =
-            "https://oldschool.runescape.wiki/?search=%s&title=Special%3ASearch&fulltext=Search";
+          url = "https://oldschool.runescape.wiki/?search=%s&title=Special%3ASearch&fulltext=Search";
         };
         # TODO: Jira/Confluence/Bitbucket, HN, OZb, Twitter, Github, AWARE
       };
-      settings = { "browser.quitShortcut.disabled" = true; };
+      settings = {
+        "browser.quitShortcut.disabled" = true;
+      };
     };
     # TODO: Bookmarks
     # TODO: Extensions

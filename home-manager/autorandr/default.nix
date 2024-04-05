@@ -1,11 +1,17 @@
-{ super, config, lib, pkgs, ... }:
+{
+  super,
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 # This quite useful to know
 let
   hostName = super.meta.hostname or "no-existing-hostname";
   hostConfigFile = ./${hostName}.nix;
-in {
-  imports =
-    lib.optionals (builtins.pathExists hostConfigFile) [ hostConfigFile ];
+in
+{
+  imports = lib.optionals (builtins.pathExists hostConfigFile) [ hostConfigFile ];
 
   programs.autorandr = {
     enable = true;

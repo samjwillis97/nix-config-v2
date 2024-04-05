@@ -167,4 +167,7 @@ let
             _worktree "$@"
     '';
   };
-in { home.packages = [ worktree ]; }
+in
+{
+  home.packages = [ worktree ];
+}

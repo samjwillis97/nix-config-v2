@@ -1,4 +1,10 @@
-{ config, pkgs, flake, system, ... }:
+{
+  config,
+  pkgs,
+  flake,
+  system,
+  ...
+}:
 
 {
   # Add some Nix related packages
