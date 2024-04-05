@@ -18,19 +18,30 @@
     };
 
     # Hyprland Window Manager
-    hyprland = { url = "github:hyprwm/Hyprland"; };
+    hyprland = { 
+      url = "github:hyprwm/Hyprland";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     flake-utils = { url = "github:numtide/flake-utils"; };
 
-    nur = { url = "github:nix-community/NUR"; };
+    nur = { 
+      url = "github:nix-community/NUR";
+    };
 
-    devenv = { url = "github:cachix/devenv/latest"; };
+    devenv = { 
+      url = "github:cachix/devenv/latest";
+    };
 
-    old-neovim = { url = "github:samjwillis97/neovim-flake"; };
+    modular-neovim = { 
+      url = "github:samjwillis97/modular-neovim-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-    modular-neovim = { url = "github:samjwillis97/modular-neovim-flake"; };
-
-    nix-serve = { url = "github:samjwillis97/nix-serve?ref=priority_change"; };
+    nix-serve = { 
+      url = "github:samjwillis97/nix-serve?ref=priority_change";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     agenix = { url = "github:ryantm/agenix"; };
 
@@ -46,7 +57,7 @@
   };
 
   outputs = { self, nixpkgs, nur, flake-utils, devenv, modular-neovim
-    , old-neovim, agenix, nix-serve, hyprland, microvm, f, ... }@inputs:
+    , agenix, nix-serve, hyprland, microvm, f, ... }@inputs:
     let
       lib = nixpkgs.lib;
       inherit (import ./lib/attrsets.nix { inherit (nixpkgs) lib; })

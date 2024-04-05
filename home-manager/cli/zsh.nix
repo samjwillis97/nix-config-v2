@@ -80,8 +80,13 @@ in {
       # TODO: Change cache location
       # TODO: Set the variable for this https://github.com/direnv/direnv/pull/1234
       enable = true;
-      # silent = true;
       nix-direnv.enable = true;
+      config = {
+        hide_env_diff = true;
+      };
+      stdlib = ''
+DIRENV_LOG_FORMAT=""
+      '';
     };
     fzf = { enable = true; };
   };
