@@ -2,7 +2,7 @@
 # Should move elsewhere
 { config, pkgs, lib, flake, ... }:
 # TODO: Auto Reconnect
-let 
+let
   tmux-now-playing = pkgs.tmuxPlugins.mkTmuxPlugin {
     pluginName = "tmux-now-playing";
     version = "unstable-2019-07-14";
@@ -13,8 +13,7 @@ let
       sha256 = "WF01C3ZoIMpOU4lcUwSXjFhuTGj5u3j8JYGwfvF0FOY=";
     };
   };
-in
-{
+in {
   home.packages = with pkgs; [ f-tmux ];
   programs.tmux = {
     enable = true;
@@ -29,9 +28,7 @@ in
     prefix = "C-b";
     terminal = "screen-256color";
 
-    plugins = [ 
-      tmux-now-playing
-    ];
+    plugins = [ tmux-now-playing ];
 
     extraConfig = with config.theme.colors; ''
 

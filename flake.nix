@@ -18,27 +18,23 @@
     };
 
     # Hyprland Window Manager
-    hyprland = { 
+    hyprland = {
       url = "github:hyprwm/Hyprland";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     flake-utils = { url = "github:numtide/flake-utils"; };
 
-    nur = { 
-      url = "github:nix-community/NUR";
-    };
+    nur = { url = "github:nix-community/NUR"; };
 
-    devenv = { 
-      url = "github:cachix/devenv/latest";
-    };
+    devenv = { url = "github:cachix/devenv/latest"; };
 
-    modular-neovim = { 
+    modular-neovim = {
       url = "github:samjwillis97/modular-neovim-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-serve = { 
+    nix-serve = {
       url = "github:samjwillis97/nix-serve?ref=priority_change";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -56,8 +52,8 @@
     };
   };
 
-  outputs = { self, nixpkgs, nur, flake-utils, devenv, modular-neovim
-    , agenix, nix-serve, hyprland, microvm, f, ... }@inputs:
+  outputs = { self, nixpkgs, nur, flake-utils, devenv, modular-neovim, agenix
+    , nix-serve, hyprland, microvm, f, ... }@inputs:
     let
       lib = nixpkgs.lib;
       inherit (import ./lib/attrsets.nix { inherit (nixpkgs) lib; })

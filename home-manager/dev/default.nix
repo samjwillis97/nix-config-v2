@@ -36,7 +36,7 @@ let
       formatter.enable = true;
 
       ai.copilot = {
-        enableAll = true; 
+        enableAll = true;
         completion = {
           workspaceFolders = if super.meta.isDarwin then [
             "/Users/${super.meta.username}/projects"
@@ -47,23 +47,20 @@ let
           ];
         };
         chat = {
-          prompts = [
-            {
-              name = "NibCommit";
-              prompt = "Write commit message for the change. Make sure the title has maximum 50 characters and is a concise summary of the included work, do not under any circumstances go over 50 characters. Underneath the title include a set of bullet points with a `-` summarising important changes. Wrap the whole message in code block with language gitcommit. If there are any variable, class, function or other names from the code wrap them in backticks.";
-              selection = ''
-function(source)
-  return select.gitdiff(source, true)
-end
-              ''; 
-            }
-          ];
+          prompts = [{
+            name = "NibCommit";
+            prompt =
+              "Write commit message for the change. Make sure the title has maximum 50 characters and is a concise summary of the included work, do not under any circumstances go over 50 characters. Underneath the title include a set of bullet points with a `-` summarising important changes. Wrap the whole message in code block with language gitcommit. If there are any variable, class, function or other names from the code wrap them in backticks.";
+            selection = ''
+              function(source)
+                return select.gitdiff(source, true)
+              end
+            '';
+          }];
         };
       };
 
-      autocomplete = {
-        enable = true;
-      };
+      autocomplete = { enable = true; };
 
       languages = {
         enableTreesitter = true;
@@ -85,7 +82,10 @@ end
           "/run/user/1000/agenix.d/1/gh_pat";
       };
 
-      nmap = { "<C-f>" = "<cmd>silent !tmux neww ${pkgs.f-tmux}/bin/f-fzf-tmux-wrapper<CR>"; };
+      nmap = {
+        "<C-f>" =
+          "<cmd>silent !tmux neww ${pkgs.f-tmux}/bin/f-fzf-tmux-wrapper<CR>";
+      };
     };
   }];
 in {

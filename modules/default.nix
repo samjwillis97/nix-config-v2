@@ -1,6 +1,1 @@
-{
-  imports = [
-    ./media
-    ./networking
-  ];
-}
+{ imports = [ ./media ./networking ]; }

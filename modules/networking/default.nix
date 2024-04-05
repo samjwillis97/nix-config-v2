@@ -1,3 +1,1 @@
-{
-  imports = [ ./tailscale ./vpn ];
-}
+{ imports = [ ./tailscale ./vpn ]; }
