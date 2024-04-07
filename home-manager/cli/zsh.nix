@@ -10,7 +10,7 @@ let
   homeDirectory =
     if super.meta.isDarwin then "/Users/${super.meta.username}" else "/home/${super.meta.username}";
 
-  p10kTheme = ./zsh/.p10k.zsh;
+  p10kTheme = ./zsh/p10k.zsh;
 
   initExtra = with config.theme.colors; ''
     export PATH="$PATH:${homeDirectory}/.dotnet/tools"
@@ -100,9 +100,9 @@ in
       config = {
         hide_env_diff = true;
       };
-      stdlib = ''
-        DIRENV_LOG_FORMAT=""
-      '';
+      # stdlib = ''
+      #   DIRENV_LOG_FORMAT=""
+      # '';
     };
     fzf = {
       enable = true;
