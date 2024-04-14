@@ -13,6 +13,12 @@ let
   p10kTheme = ./zsh/p10k.zsh;
 
   initExtra = with config.theme.colors; ''
+    setopt INC_APPEND_HISTORY   # Write to history file immediate, not on exit
+    setopt HIST_SAVE_NO_DUPS    # DO no write a duplicate event
+    setopt HIST_VERIFY          # Do not execute immediately
+    setopt HIST_NO_STORE        # Do not store the history command
+    setopt HIST_REDUCE_BLANKS   # Remove leading and trailing blanks
+
     export PATH="$PATH:${homeDirectory}/.dotnet/tools"
     export PATH="$PATH:${homeDirectory}/go/bin"
     export PATH="$PATH:${homeDirectory}/.local/bin"
@@ -49,8 +55,11 @@ in
 
     history = {
       extended = true;
-      save = 20000;
-      size = 20000;
+      save = 1000000;
+      size = 1000000;
+      ignoreDups = true;
+      ignoreAllDups = true;
+      ignoreSpace = true;
       share = true;
     };
 
