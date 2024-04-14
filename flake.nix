@@ -145,6 +145,15 @@
         useHomeManager = false;
       })
 
+      (mkNixosSystem {
+        hostname = "mac-vm";
+        system = "aarch64-linux";
+        username = "sam";
+        extraModules = [ ];
+        extraHomeModules = [ ];
+        useHomeManager = false;
+      })
+
       (mkDarwinSystem {
         hostname = "Sams-MacBook-Air";
         system = "aarch64-darwin";

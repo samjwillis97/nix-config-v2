@@ -2,7 +2,9 @@
 {
   environment.systemPackages = with pkgs; [ cachix ];
   services.nix-daemon.enable = true;
-  nix = import ../shared/nix.nix { inherit pkgs flake; };
+  nix = import ../shared/nix.nix { inherit pkgs flake; } // {
+    linux-builder.enable = true;
+  };
 
   system.activationScripts.postUserActivation.text = ''
     # Following line should allow us to avoid a logout/login cycle
