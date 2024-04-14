@@ -151,7 +151,7 @@
         username = "sam";
         extraModules = [ ];
         extraHomeModules = [ ];
-        useHomeManager = false;
+        useHomeManager = true;
       })
 
       (mkDarwinSystem {
