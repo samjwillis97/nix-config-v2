@@ -114,5 +114,6 @@ in
     _1password
     neovim
     nodePackages.wrangler
+    f
   ];
 }
