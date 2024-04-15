@@ -39,6 +39,7 @@
       ".DS_Store"
       "venv/"
       ".direnv/"
+      ".envrc"
     ];
 
     aliases = {
