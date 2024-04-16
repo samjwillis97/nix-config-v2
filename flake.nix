@@ -149,7 +149,13 @@
         hostname = "mac-vm";
         system = "aarch64-linux";
         username = "sam";
-        extraModules = [ ];
+        extraModules = [
+          {
+            modules.home-automation.hass = {
+              enable = true;
+            };
+          }
+        ];
         extraHomeModules = [ ];
         useHomeManager = true;
       })

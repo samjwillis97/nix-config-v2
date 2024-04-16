@@ -78,12 +78,14 @@ in
         sleep 2
 
         if [ ! -f ${cfg.authKeyFile} ]; then
+            echo "Unable to get authkey ${cfg.authKeyFile}"
             exit 0
         fi
 
         # check if we are already authenticated to tailscale
         status="$(${tailscale}/bin/tailscale status -json | ${jq}/bin/jq -r .BackendState)"
         if [ $status = "Running" ]; then # if so, then do nothing
+          echo "Tailscale already running"
           exit 0
         fi
 
