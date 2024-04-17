@@ -35,7 +35,4 @@
   virtualisation.forwardPorts = [
     { from = "host"; host.port = 8123; guest.port = 8123; }
   ];
-
-  # Accessing webpages through the forwarding doesn't work without this
-  networking.firewall.enable = lib.mkForce false;
 }
