@@ -169,6 +169,7 @@
         homePath = "/Users";
         extraHomeModules = [
           ./home-manager/dev
+          ./home-manager/dev/devenv.nix
           ./home-manager/wezterm
           ./home-manager/vscode
           ./home-manager/work

@@ -7,6 +7,8 @@
 
     brews = [ "mas" ];
 
+    # If struggling to install one of these
+    # try updating brew manually on machine.
     casks = [
       "orbstack"
       "raycast"
@@ -27,6 +29,7 @@
       # "zoom"
       # "logitech-g-hub"
       # "background-music"
+      "little-snitch"
     ];
 
     # These need to be purchased/owned by the logged in account before mas can install them
