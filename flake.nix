@@ -150,13 +150,17 @@
         system = "aarch64-darwin";
         username = "samwillis";
         homePath = "/Users";
-        extraModules = [ ./nix-darwin/yabai.nix ];
+        extraModules = [ 
+          ./nix-darwin/aerospace.nix # would be good if this was a module
+          # ./nix-darwin/yabai.nix
+        ];
         extraHomeModules = [
           # ./home-manager/darwin/keyboard.nix
           ./home-manager/wezterm
           ./home-manager/vscode
           ./home-manager/dev
           ./home-manager/dev/devenv.nix
+          ./home-manager/aerospace # would be good if this was a module
           # ./home-manager/dev/node.nix
           # ./home-manager/dev/ops.nix
         ];
