@@ -2,6 +2,7 @@
 with lib;
 let 
   cfg = config.modules.aerospace;
+  tomlFormat = pkgs.formats.toml { };
 in
 {
 
@@ -12,9 +13,20 @@ in
       type = types.package;
       default = pkgs.aerospace;
     };
+
+    settings = mkOption {
+      type = tomlFormat.type;
+      default = { };
+    };
   };
 
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
+
+    xdg.configFile = {
+      "aerospace/aerospace.toml" = mkIf (cfg.settings != { }) {
+        source = tomlFormat.generate "config" cfg.settings;
+      };
+    };
   };
 }
