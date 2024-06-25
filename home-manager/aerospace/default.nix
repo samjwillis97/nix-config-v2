@@ -50,6 +50,7 @@ outer.top =         15
 outer.right =       15
 
 [mode.main.binding]
+cmd-h = [] # Disable cmd-h hiding windows
 alt-enter = 'exec-and-forget open -n ${pkgs.wezterm}/Applications/Wezterm.app/wezterm-gui'
 
 alt-h = 'focus left --boundaries all-monitors-outer-frame --boundaries-action wrap-around-all-monitors'
