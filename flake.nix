@@ -155,6 +155,11 @@
           # ./nix-darwin/yabai.nix
         ];
         extraHomeModules = [
+          {
+            modules.aerospace = {
+              enable = true;
+            };
+          }
           # ./home-manager/darwin/keyboard.nix
           ./home-manager/wezterm
           ./home-manager/vscode

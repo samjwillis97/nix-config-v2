@@ -13,6 +13,7 @@ in
   nixpkgs.overlays = [
     (final: prev: {
       # gaming = flake.inputs.nix-gaming.packages.${system};
+      aerospace = prev.callPackage ../packages/aerospace.nix { };
       wallpapers = prev.callPackage ../packages/wallpapers { };
       devenv = flake.inputs.devenv.packages.${system}.devenv;
       agenix = flake.inputs.agenix.packages.${system}.default;
