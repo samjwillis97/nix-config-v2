@@ -34,6 +34,9 @@ let
         --color=fg:${base05},header:${base08},info:${base0E},pointer:${base06} \
         --color=marker:${base06},fg+:${base05},prompt:${base0E},hl+:${base08}"
 
+    # See: https://discourse.nixos.org/t/brew-not-on-path-on-m1-mac/26770/4
+    ${if (super.meta.isDarwin) then  "eval \"$(/opt/homebrew/bin/brew shellenv)\"" else ""}
+
     source ${p10kTheme}
   '';
 in

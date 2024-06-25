@@ -14,7 +14,6 @@
       "raycast"
       "slack"
       "discord"
-      "spotify"
       "1password"
       "displaylink"
       "betterdisplay"

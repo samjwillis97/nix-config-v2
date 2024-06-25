@@ -1,25 +1,56 @@
-{ pkgs, ...}:
+{ pkgs, config, ...}:
 {
   xdg.configFile."aerospace/aerospace.toml".text = ''
+# Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = false
 enable-normalization-opposite-orientation-for-nested-containers = false
+
+after-startup-command = [
+    # JankyBorders has a built-in detection of already running process,
+    # so it won't be run twice on AeroSpace restart
+    # base0D for active base01 for inactive
+    'exec-and-forget borders active_color=${config.theme.colors.base0D} inactive_color=${config.theme.colors.base01} width=5.0'
+]
+
+[workspace-to-monitor-force-assignment]
+1 = ['VX2728-QHD (2)']
+2 = ['VX2728-QHD (2)']
+3 = ['VX2728-QHD (2)']
+4 = ['VX2728-QHD (2)']
+5 = ['^built-in retina display$']
+6 = ['^built-in retina display$']
+7 = ['VX2728-QHD (1)']
+8 = ['VX2728-QHD (1)']
+9 = ['VX2728-QHD (1)']
+10 = ['VX2728-QHD (1)']
+
+[gaps]
+inner.horizontal =  15
+inner.vertical =    15
+outer.left =        15
+outer.bottom =      15
+outer.top =         15
+outer.right =       15
 
 [mode.main.binding]
 alt-enter = 'exec-and-forget open -n ${pkgs.wezterm}/Applications/Wezterm.app/wezterm-gui'
 
-alt-h = 'focus left'
+alt-h = 'focus left --boundaries all-monitors-outer-frame --boundaries-action wrap-around-all-monitors'
 alt-j = 'focus down'
 alt-k = 'focus up'
-alt-l = 'focus right'
+alt-l = 'focus right --boundaries all-monitors-outer-frame --boundaries-action wrap-around-all-monitors'
 
 alt-shift-h = 'move left'
 alt-shift-j = 'move down'
 alt-shift-k = 'move up'
 alt-shift-l = 'move right'
 
+alt-period = 'move-workspace-to-monitor next'
+alt-comma = 'move-workspace-to-monitor prev'
+
 # Consider using 'join-with' command as a 'split' replacement if you want to enable normalizations
-alt-s = 'split horizontal'
-alt-v = 'split vertical'
+alt-s = 'split vertical'
+alt-v = 'split horizontal'
 
 alt-f = 'fullscreen'
 

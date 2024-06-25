@@ -171,12 +171,16 @@
         system = "aarch64-darwin";
         username = "samuel.willis";
         homePath = "/Users";
+        extraModules = [ 
+          ./nix-darwin/aerospace.nix # would be good if this was a module
+        ];
         extraHomeModules = [
           ./home-manager/dev
           ./home-manager/dev/devenv.nix
           ./home-manager/wezterm
           ./home-manager/vscode
           ./home-manager/work
+          ./home-manager/aerospace # would be good if this was a module
         ];
       })
 
