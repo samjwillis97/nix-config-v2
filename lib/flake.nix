@@ -132,7 +132,10 @@ in
             hostname = hostname;
             isDarwin = true;
             username = username;
-            extraHomeModules = [ inputs.agenix.homeManagerModules.age ../hm-modules ] ++ extraHomeModules;
+            extraHomeModules = [
+              inputs.agenix.homeManagerModules.age
+              ../hm-modules
+            ] ++ extraHomeModules;
           };
         };
       };

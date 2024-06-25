@@ -1,6 +1,11 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 with lib;
-let 
+let
   cfg = config.modules.aerospace;
   tomlFormat = pkgs.formats.toml { };
 in

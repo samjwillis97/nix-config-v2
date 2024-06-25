@@ -1,123 +1,158 @@
-{ pkgs, config, ...}:
+{ pkgs, config, ... }:
 {
   xdg.configFile."borders/bordersrc" = {
     executable = true;
     text = ''
-#!/bin/bash
+      #!/bin/bash
 
-options=(
-	style=round
-	width=5.0
-	hidpi=off
-	active_color=${builtins.replaceStrings ["#"] ["0xff"] config.theme.colors.base0D}
-	inactive_color=${builtins.replaceStrings ["#"] ["0xff"] config.theme.colors.base01}
-)
+      options=(
+      	style=round
+      	width=5.0
+      	hidpi=off
+      	active_color=${builtins.replaceStrings [ "#" ] [ "0xff" ] config.theme.colors.base0D}
+      	inactive_color=${builtins.replaceStrings [ "#" ] [ "0xff" ] config.theme.colors.base01}
+      )
 
-borders "''${options[@]}"
-  '';
+      borders "''${options[@]}"
+    '';
   };
 
-  xdg.configFile."aerospace/aerospace.toml".text = ''
-# Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
-enable-normalization-flatten-containers = false
-enable-normalization-opposite-orientation-for-nested-containers = false
+  modules.aerospace = {
+    enable = true;
 
-after-startup-command = [
-    # JankyBorders has a built-in detection of already running process,
-    # so it won't be run twice on AeroSpace restart
-    # base0D for active base01 for inactive
-    'exec-and-forget borders'
-]
+    settings = {
+      start-at-login = true;
 
-[workspace-to-monitor-force-assignment]
-1 = ['VX2728-QHD (2)']
-2 = ['VX2728-QHD (2)']
-3 = ['VX2728-QHD (2)']
-4 = ['VX2728-QHD (2)']
-5 = ['^built-in retina display$']
-6 = ['^built-in retina display$']
-7 = ['VX2728-QHD (1)']
-8 = ['VX2728-QHD (1)']
-9 = ['VX2728-QHD (1)']
-10 = ['VX2728-QHD (1)']
+      # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
+      enable-normalization-flatten-containers = false;
+      enable-normalization-opposite-orientation-for-nested-containers = false;
+      after-startup-command = [ "exec-and-forget borders" ];
 
-[gaps]
-inner.horizontal =  15
-inner.vertical =    15
-outer.left =        15
-outer.bottom =      15
-outer.top =         15
-outer.right =       15
+      workspace-to-monitor-force-assignment = {
+        "1" = [
+          2
+          3
+        ];
+        "2" = [
+          2
+          3
+        ];
+        "3" = [
+          2
+          3
+        ];
+        "4" = [
+          2
+          3
+        ];
+        "5" = [ "^built-in retina display$" ];
+        "6" = [ "^built-in retina display$" ];
+        "7" = [
+          3
+          2
+        ];
+        "8" = [
+          3
+          2
+        ];
+        "9" = [
+          3
+          2
+        ];
+        "10" = [
+          3
+          2
+        ];
+      };
 
-[mode.main.binding]
-cmd-h = [] # Disable cmd-h hiding windows
-alt-enter = 'exec-and-forget open -n ${pkgs.wezterm}/Applications/Wezterm.app/wezterm-gui'
+      gaps = {
+        inner = {
+          horizontal = 15;
+          vertical = 15;
+        };
+        outer = {
+          left = 15;
+          bottom = 15;
+          top = 15;
+          right = 15;
+        };
+      };
 
-alt-h = 'focus left --boundaries all-monitors-outer-frame --boundaries-action wrap-around-all-monitors'
-alt-j = 'focus down'
-alt-k = 'focus up'
-alt-l = 'focus right --boundaries all-monitors-outer-frame --boundaries-action wrap-around-all-monitors'
+      mode = {
+        main.binding = {
+          "cmd-h" = [ ]; # Disable cmd-h hiding windows
+          "alt-enter" = "exec-and-forget open -n ${pkgs.wezterm}/Applications/Wezterm.app/wezterm-gui";
 
-alt-shift-h = 'move left'
-alt-shift-j = 'move down'
-alt-shift-k = 'move up'
-alt-shift-l = 'move right'
+          "alt-h" = "focus left --boundaries all-monitors-outer-frame --boundaries-action wrap-around-all-monitors";
+          "alt-j" = "focus down";
+          "alt-k" = "focus up";
+          "alt-l" = "focus right --boundaries all-monitors-outer-frame --boundaries-action wrap-around-all-monitors";
 
-alt-period = 'move-workspace-to-monitor next'
-alt-comma = 'move-workspace-to-monitor prev'
+          "alt-shift-h" = "move left";
+          "alt-shift-j" = "move down";
+          "alt-shift-k" = "move up";
+          "alt-shift-l" = "move right";
 
-# Consider using 'join-with' command as a 'split' replacement if you want to enable normalizations
-alt-s = 'split vertical'
-alt-v = 'split horizontal'
+          "alt-period" = "move-workspace-to-monitor next";
+          "alt-comma" = "move-workspace-to-monitor prev";
 
-alt-f = 'fullscreen'
+          # Consider using "join-with" command as a "split" replacement if you want to enable normalizations
+          "alt-s" = "split vertical";
+          "alt-v" = "split horizontal";
 
-# alt-s = 'layout v_accordion' # 'layout stacking' in i3
-alt-w = 'layout h_accordion' # 'layout tabbed' in i3
-alt-e = 'layout tiles horizontal vertical' # 'layout toggle split' in i3
+          "alt-f" = "fullscreen";
 
-alt-shift-space = 'layout floating tiling' # 'floating toggle' in i3
+          # "alt-s" = "layout v_accordion" # "layout stacking" in i3
+          "alt-w" = "layout h_accordion"; # "layout tabbed" in i3
+          "alt-e" = "layout tiles horizontal vertical"; # "layout toggle split" in i3
 
-# Not supported, because this command is redundant in AeroSpace mental model.
-# See: https://nikitabobko.github.io/AeroSpace/guide#floating-windows
-#alt-space = 'focus toggle_tiling_floating'
+          "alt-shift-space" = "layout floating tiling"; # "floating toggle" in i3
 
-# `focus parent`/`focus child` are not yet supported, and it's not clear whether they
-# should be supported at all https://github.com/nikitabobko/AeroSpace/issues/5
-# alt-a = 'focus parent'
+          # Not supported, because this command is redundant in AeroSpace mental model.
+          # See: https://nikitabobko.github.io/AeroSpace/guide#floating-windows
+          # alt-space" = "focus toggle_tiling_floating"
 
-alt-1 = 'workspace 1'
-alt-2 = 'workspace 2'
-alt-3 = 'workspace 3'
-alt-4 = 'workspace 4'
-alt-5 = 'workspace 5'
-alt-6 = 'workspace 6'
-alt-7 = 'workspace 7'
-alt-8 = 'workspace 8'
-alt-9 = 'workspace 9'
-alt-0 = 'workspace 10'
+          # `focus parent`/`focus child` are not yet supported, and it"s not clear whether they
+          # should be supported at all https://github.com/nikitabobko/AeroSpace/issues/5
+          # alt-a" = "focus parent"
 
-alt-shift-1 = 'move-node-to-workspace 1'
-alt-shift-2 = 'move-node-to-workspace 2'
-alt-shift-3 = 'move-node-to-workspace 3'
-alt-shift-4 = 'move-node-to-workspace 4'
-alt-shift-5 = 'move-node-to-workspace 5'
-alt-shift-6 = 'move-node-to-workspace 6'
-alt-shift-7 = 'move-node-to-workspace 7'
-alt-shift-8 = 'move-node-to-workspace 8'
-alt-shift-9 = 'move-node-to-workspace 9'
-alt-shift-0 = 'move-node-to-workspace 10'
+          "alt-1" = "workspace 1";
+          "alt-2" = "workspace 2";
+          "alt-3" = "workspace 3";
+          "alt-4" = "workspace 4";
+          "alt-5" = "workspace 5";
+          "alt-6" = "workspace 6";
+          "alt-7" = "workspace 7";
+          "alt-8" = "workspace 8";
+          "alt-9" = "workspace 9";
+          "alt-0" = "workspace 10";
 
-alt-shift-c = 'reload-config'
+          "alt-shift-1" = "move-node-to-workspace 1";
+          "alt-shift-2" = "move-node-to-workspace 2";
+          "alt-shift-3" = "move-node-to-workspace 3";
+          "alt-shift-4" = "move-node-to-workspace 4";
+          "alt-shift-5" = "move-node-to-workspace 5";
+          "alt-shift-6" = "move-node-to-workspace 6";
+          "alt-shift-7" = "move-node-to-workspace 7";
+          "alt-shift-8" = "move-node-to-workspace 8";
+          "alt-shift-9" = "move-node-to-workspace 9";
+          "alt-shift-0" = "move-node-to-workspace 10";
 
-alt-r = 'mode resize'
+          "alt-shift-c" = "reload-config";
 
-[mode.resize.binding]
-h = 'resize width -50'
-j = 'resize height +50'
-k = 'resize height -50'
-l = 'resize width +50'
-enter = 'mode main'
-esc = 'mode main'
-  '';
+          "alt-r" = "mode resize";
+        };
+
+        resize.binding = {
+          "h" = "resize width -50";
+          "j" = "resize height +50";
+          "k" = "resize height -50";
+          "l" = "resize width +50";
+          "enter" = "mode main";
+          "esc" = "mode main";
+        };
+      };
+
+    };
+  };
 }

@@ -1,10 +1,10 @@
 {
-  stdenv,
+  stdenvNoCC,
   fetchzip,
-  installShellFiles
+  installShellFiles,
 }:
 
-stdenv.mkDerivation rec {
+stdenvNoCC.mkDerivation rec {
   pname = "aerospace";
   version = "0.12.0-Beta";
   nativeBuildInputs = [ installShellFiles ];
@@ -12,6 +12,10 @@ stdenv.mkDerivation rec {
   installPhase = ''
     mkdir -p $out/bin
     cp bin/aerospace $out/bin
+
+    mkdir -p $out/Applications
+    cp -r AeroSpace.app $out/Applications/AeroSpace.app
+
     installManPage manpage/*
   '';
 
