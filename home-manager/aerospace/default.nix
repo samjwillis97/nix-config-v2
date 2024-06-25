@@ -1,5 +1,22 @@
 { pkgs, config, ...}:
 {
+  xdg.configFile."borders/bordersrc" = {
+    executable = true;
+    text = ''
+#!/bin/bash
+
+options=(
+	style=round
+	width=5.0
+	hidpi=off
+	active_color=${builtins.replaceStrings ["#"] ["0xff"] config.theme.colors.base0D}
+	inactive_color=${builtins.replaceStrings ["#"] ["0xff"] config.theme.colors.base01}
+)
+
+borders "''${options[@]}"
+  '';
+  };
+
   xdg.configFile."aerospace/aerospace.toml".text = ''
 # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = false
@@ -9,7 +26,7 @@ after-startup-command = [
     # JankyBorders has a built-in detection of already running process,
     # so it won't be run twice on AeroSpace restart
     # base0D for active base01 for inactive
-    'exec-and-forget borders active_color=${config.theme.colors.base0D} inactive_color=${config.theme.colors.base01} width=5.0'
+    'exec-and-forget borders'
 ]
 
 [workspace-to-monitor-force-assignment]
