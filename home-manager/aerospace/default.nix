@@ -1,5 +1,7 @@
 { pkgs, config, ... }:
 {
+  home.packages = [ pkgs.jankyborders ];
+
   xdg.configFile."borders/bordersrc" = {
     executable = true;
     text = ''
@@ -26,7 +28,7 @@
       # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
       enable-normalization-flatten-containers = false;
       enable-normalization-opposite-orientation-for-nested-containers = false;
-      after-startup-command = [ "exec-and-forget borders" ];
+      after-startup-command = [ "exec-and-forget ${pkgs.jankyborders}/bin/borders" ];
 
       workspace-to-monitor-force-assignment = {
         "1" = [

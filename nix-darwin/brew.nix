@@ -5,13 +5,8 @@
       cleanup = "zap";
     };
 
-    taps = [
-      "FelixKratz/formulae"
-    ];
-
     brews = [ 
       "mas"
-      "FelixKratz/formulae/borders"
     ];
 
     # If struggling to install one of these
