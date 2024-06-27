@@ -2,23 +2,6 @@
 {
   home.packages = [ pkgs.jankyborders ];
 
-  xdg.configFile."borders/bordersrc" = {
-    executable = true;
-    text = ''
-      #!/bin/bash
-
-      options=(
-      	style=round
-      	width=5.0
-      	hidpi=off
-      	active_color=${builtins.replaceStrings [ "#" ] [ "0xff" ] config.theme.colors.base0D}
-      	inactive_color=${builtins.replaceStrings [ "#" ] [ "0xff" ] config.theme.colors.base01}
-      )
-
-      borders "''${options[@]}"
-    '';
-  };
-
   modules.aerospace = {
     enable = true;
 
@@ -28,40 +11,52 @@
       # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
       enable-normalization-flatten-containers = false;
       enable-normalization-opposite-orientation-for-nested-containers = false;
-      after-startup-command = [ "exec-and-forget ${pkgs.jankyborders}/bin/borders" ];
+      after-startup-command = [
+        "exec-and-forget ${pkgs.jankyborders}/bin/borders style=round width=5.0 active_color=${
+          builtins.replaceStrings [ "#" ] [ "0xff" ] config.theme.colors.base0D
+        } inactive_color=${builtins.replaceStrings [ "#" ] [ "0xff" ] config.theme.colors.base01}"
+      ];
 
       workspace-to-monitor-force-assignment = {
         "1" = [
+          "C34H89x"
           2
           3
         ];
         "2" = [
+          "C34H89x"
           2
           3
         ];
         "3" = [
+          "C34H89x"
           2
           3
         ];
         "4" = [
+          "C34H89x"
           2
           3
         ];
         "5" = [ "^built-in retina display$" ];
         "6" = [ "^built-in retina display$" ];
         "7" = [
+          "C34H89x"
           3
           2
         ];
         "8" = [
+          "C34H89x"
           3
           2
         ];
         "9" = [
+          "C34H89x"
           3
           2
         ];
         "10" = [
+          "C34H89x"
           3
           2
         ];

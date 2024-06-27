@@ -5,9 +5,7 @@
       cleanup = "zap";
     };
 
-    brews = [ 
-      "mas"
-    ];
+    brews = [ "mas" ];
 
     # If struggling to install one of these
     # try updating brew manually on machine.

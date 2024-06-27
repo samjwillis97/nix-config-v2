@@ -170,8 +170,7 @@
         system = "aarch64-darwin";
         username = "samuel.willis";
         homePath = "/Users";
-        extraModules = [
-        ];
+        extraModules = [ ];
         extraHomeModules = [
           ./home-manager/dev
           ./home-manager/dev/devenv.nix
