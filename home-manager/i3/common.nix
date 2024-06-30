@@ -114,6 +114,7 @@ let
   gapMode = "[o]n, of[f], [i]nner, ou[t]er";
   innerGapMode = "Inner: [+] add, [-] minus, 0 [off] - [Shift] modifier, all";
   outerGapMode = "Outer: [+] add, [-] minus, 0 [off] - [Shift] modifier, all";
+  gameMode = "Gaming";
 
   # Helpers
   mapDirection =
@@ -234,8 +235,8 @@ in
         "${modifier}+s" = "split v";
         "${modifier}+v" = "split h";
 
-        "${modifier}+Shift+u" = "layout stacking";
-        "${modifier}+Shift+i" = "layout tabbed";
+        "${modifier}+Shift+w" = "layout stacking";
+        "${modifier}+Shift+e" = "layout tabbed";
         "${modifier}+Shift+o" = "layout toggle split";
 
         "${modifier}+space" = "floating toggle";
@@ -254,6 +255,7 @@ in
         "${modifier}+Control+l" = "resize grow width 10px or 10ppt";
 
         "${modifier}+g" = ''mode "${gapMode}"'';
+        "${modifier}+Shift+g" = ''mode "${gameMode}"'';
 
         "${modifier}+Escape" = ''mode "${powerManagementMode}"'';
 
@@ -337,6 +339,26 @@ in
           "Shift+minus" = "gaps outer all minus 5";
           "Shift+0" = "gaps outer all set 0";
         } // exitMode;
+        ${gameMode} = {
+          "Mod1+q" = "nop";
+          "Mod1+w" = "nop";
+          "Mod1+e" = "nop";
+          "Mod1+r" = "nop";
+          "Mod1+a" = "nop";
+          "Mod1+s" = "nop";
+          "Mod1+d" = "nop";
+          "Mod1+f" = "nop";
+          "Mod1+Shift+q" = "nop";
+          "Mod1+Shift+w" = "nop";
+          "Mod1+Shift+e" = "nop";
+          "Mod1+Shift+r" = "nop";
+          "Mod1+Shift+a" = "nop";
+          "Mod1+Shift+s" = "nop";
+          "Mod1+Shift+d" = "nop";
+          "Mod1+Shift+f" = "nop";
+
+          "${modifier}+Shift+g" = "mode default";
+        };
       }
       // extraModes;
 
