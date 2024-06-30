@@ -234,9 +234,9 @@ in
         "${modifier}+s" = "split v";
         "${modifier}+v" = "split h";
 
-        "${modifier}+Shift+s" = "layout stacking";
-        "${modifier}+Shift+w" = "layout tabbed";
-        "${modifier}+Shift+e" = "layout toggle split";
+        "${modifier}+Shift+u" = "layout stacking";
+        "${modifier}+Shift+i" = "layout tabbed";
+        "${modifier}+Shift+o" = "layout toggle split";
 
         "${modifier}+space" = "floating toggle";
         "${modifier}+Shift+space" = "focus mode_toggle";

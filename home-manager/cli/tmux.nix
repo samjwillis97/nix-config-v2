@@ -1,10 +1,9 @@
 # TODO: Well this doesn't actually care about home-manager
 # Should move elsewhere
 {
+  super,
   config,
   pkgs,
-  lib,
-  flake,
   ...
 }:
 # TODO: Auto Reconnect
@@ -21,7 +20,7 @@ let
   };
 in
 {
-  home.packages = with pkgs; [ f-tmux ];
+  home.packages = with pkgs; if super.meta.isDarwin then [ f-tmux ] else [ ];
   programs.tmux = {
     enable = true;
     sensibleOnTop = false;
@@ -68,7 +67,7 @@ in
       bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'xclip -in -selection clipboard'
 
       # Better sessions
-      bind-key -r f run-shell "tmux neww ${pkgs.f-tmux}/bin/f-fzf-tmux-wrapper"
+      ${ if super.meta.isDarwin then "bind-key -r f run-shell \"tmux neww ${pkgs.f-tmux}/bin/f-fzf-tmux-wrapper\"" else ""}
       bind-key -r i run-shell "tmux neww tmux-cht.sh"
 
       # Enabled 256 Color

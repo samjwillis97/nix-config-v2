@@ -1,6 +1,7 @@
 { super, pkgs, ... }:
 let
-  osSpecificPackages = if super.meta.isDarwin then [ ] else with pkgs; [ ncdu ];
+  # Need to fix f for nixos
+  osSpecificPackages = if super.meta.isDarwin then with pkgs; [ f ] else with pkgs; [ ncdu ];
 in
 {
   imports = [
@@ -28,7 +29,6 @@ in
       neofetch
       duf
       agenix
-      f
     ]
     ++ osSpecificPackages;
 

@@ -1,8 +1,5 @@
 {
   super,
-  config,
-  lib,
-  pkgs,
   flake,
   system,
   ...
@@ -11,7 +8,6 @@
 {
   imports = [
     flake.inputs.home-manager.nixosModules.home-manager
-    ../modules/meta.nix
   ];
 
   config = {

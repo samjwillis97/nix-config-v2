@@ -7,7 +7,6 @@
 }:
 {
   imports = [
-    ../../modules/user.nix
     ../../home-manager/theme
     ../../home-manager/meta
     ../../home-manager/cli

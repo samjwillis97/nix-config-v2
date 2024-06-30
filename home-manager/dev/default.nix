@@ -97,9 +97,9 @@ let
               "/run/user/1000/agenix.d/1/gh_pat";
         };
 
-        nmap = {
+        nmap = {} // (if super.meta.isDarwin then {
           "<C-f>" = "<cmd>silent !tmux neww ${pkgs.f-tmux}/bin/f-fzf-tmux-wrapper<CR>";
-        };
+        } else {});
       };
     }
   ];
