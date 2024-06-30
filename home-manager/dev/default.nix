@@ -113,7 +113,7 @@ in
     nodePackages.json-diff
     _1password
     neovim
-    nodePackages.wrangler
-    f
-  ];
+  ] ++ (
+    with pkgs; if super.meta.isDarwin then [ f ] else [ ]
+  );
 }
