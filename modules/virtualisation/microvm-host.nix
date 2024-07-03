@@ -37,6 +37,7 @@ let
     });
 in
 {
+  # Rethink this..
   imports = [ flake.inputs.microvm.nixosModules.host ];
 
   options.modules.virtualisation.microvm-host = {
@@ -79,13 +80,11 @@ in
           matchConfig.Name = "microvm"; # Applies to devices named microvm
           networkConfig = {
             DHCPServer = false;
-            IPv6SendRA = true;
           };
           addresses = [
             { addressConfig.Address = "10.0.0.1/24"; }
             { addressConfig.Address = "fd12:3456:789a::1/64"; }
           ];
-          ipv6Prefixes = [ { ipv6PrefixConfig.Prefix = "fd12:3456:789a::/64"; } ];
         };
         "11-microvm" = {
           matchConfig.Name = "vm-*";
@@ -107,8 +106,13 @@ in
         acc
         // {
           ${v.hostname} = {
-
             config = {
+              imports = [
+                flake.inputs.agenix.nixosModules.default
+                ../../secrets
+                ../../modules/networking/tailscale
+              ];
+
               networking.hostName = "my-first-microvm-2";
               networking.firewall.allowedTCPPorts = [ 22 ];
 
@@ -118,6 +122,12 @@ in
                   PermitRootLogin = "yes";
                   # PasswordAuthentication = false;
                 };
+              };
+
+              # TODO: Need agenix duh
+              modules.networking.tailscale = {
+                enable = true;
+                authKeyFile = config.age.secrets."tailscale_pre-auth".path;
               };
 
               systemd.network.networks = {
@@ -135,7 +145,7 @@ in
               };
 
               users.users.root = {
-                password = "";
+                password = "nixos";
               };
 
               users.users.sam = {
@@ -174,7 +184,7 @@ in
                     source = "/var/agenix";
                     mountPoint = "/var/agenix";
                     tag = "secrets";
-                    proto = "9p";
+                    proto = "virtiofs";
                   }
                   {
 
