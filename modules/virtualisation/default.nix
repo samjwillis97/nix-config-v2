@@ -1,1 +1,5 @@
-{ imports = [ ./microvm-host.nix ]; }
+{
+  imports = [
+    ./microvm-host.nix
+  ];
+}

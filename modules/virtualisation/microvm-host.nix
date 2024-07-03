@@ -8,19 +8,6 @@ with lib;
 let
   cfg = config.modules.virtualisation.microvm-host;
 
-  # inherit
-  # (import ../../lib/flake.nix {
-  #   self = flake;
-  #   nixpkgs = flake.inputs.nixpkgs;
-  #   darwin = flake.inputs.darwin;
-  #   home-manager = flake.inputs.home-manager;
-  #   flake-utils = flake.inputs.flake-utils;
-  #   agenix = flake.inputs.agenix;
-  #   microvm = flake.inputs.microvm;
-  # })
-  # mkMicroVm2
-  # ;
-
   # vmConfig =
   #   with types;
   #   (submodule {
@@ -106,27 +93,14 @@ in
             config = {
               imports = [
                 flake.inputs.agenix.nixosModules.default
-                ../../secrets
-                ../../modules/networking/tailscale
+                ../../nixos/tailscale.nix
+                ../../hosts/${v}
+                ./microvm-guest.nix
               ];
 
-              networking.hostName = "my-first-microvm-2";
-              networking.firewall.allowedTCPPorts = [ 22 ];
+              modules.virtualisation.microvm-guest.enable = true;
 
-              services.openssh = {
-                enable = true;
-                settings = {
-                  PermitRootLogin = "yes";
-                  # PasswordAuthentication = false;
-                };
-              };
-
-              # TODO: Need agenix duh
-              modules.networking.tailscale = {
-                enable = true;
-                authKeyFile = config.age.secrets."tailscale_pre-auth".path;
-              };
-
+              # Handle better here
               systemd.network.networks = {
                 "10-lan" = {
                   matchConfig.Name = "en*";
@@ -141,62 +115,6 @@ in
                 };
               };
 
-              users.users.root = {
-                password = "nixos";
-              };
-
-              users.users.sam = {
-                isNormalUser = true;
-                password = "nixos";
-                openssh.authorizedKeys.keys = [
-                  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA2FeFN6YQEUr22lJCeuQHcDawLuAPnoizlZLJOwhch4 sam@williscloud.org"
-                  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJYyMM/qTTLsXdPvvfkhdufg9gLYOI2y8d1oDpAgI0ft samjwillis97@gmail.com"
-                  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIENzw8pIt2UVGWcXUx4E4AxxWj8zA+DLZSp0y7RGK5VW samuel.willis@nib.com.au"
-                ];
-              };
-
-              fileSystems = {
-                "/var/agenix".neededForBoot = true;
-              };
-
-              microvm = {
-                interfaces = [
-                  {
-                    type = "tap";
-                    id = "vm-test1";
-                    mac = "02:00:00:00:00:01";
-                  }
-                ];
-
-                # volumes = [
-                #   {
-
-                #     mountPoint = "/var";
-                #     image = "var.img";
-                #     size = 256;
-                #   }
-                # ];
-                shares = [
-                  {
-                    source = "/var/agenix";
-                    mountPoint = "/var/agenix";
-                    tag = "secrets";
-                    proto = "virtiofs";
-                  }
-                  {
-
-                    # use "virtiofs" for MicroVMs that are started by systemd
-                    proto = "9p";
-                    tag = "ro-store";
-                    # a host's /nix/store will be picked up so that no
-                    # squashfs/erofs will be built for it.
-                    source = "/nix/store";
-                    mountPoint = "/nix/.ro-store";
-                  }
-                ];
-                hypervisor = "qemu";
-                socket = "control.socket";
-              };
             };
 
           };
