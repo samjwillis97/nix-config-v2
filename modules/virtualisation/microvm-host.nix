@@ -57,6 +57,9 @@ in
         externalInterface = "wlp7s0";
         internalInterfaces = [ "microvm" ];
       };
+      hosts = { 
+        "10.0.0.2" = [ "my-first-microvm.local" "my-first-microvm.microvm"  ];
+      };
     };
 
     # Number for the bridge must be lower than devices attached to the bridge
