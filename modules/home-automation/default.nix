@@ -1,5 +1,1 @@
-{
-  imports = [
-    ./hass.nix
-  ];
-}
+{ imports = [ ./hass.nix ]; }

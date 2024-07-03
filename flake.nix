@@ -107,6 +107,7 @@
         # networkAdapterName = "enp9s0";
         networkAdapterName = "wlp7s0";
         extraModules = [
+          # microvm.nixosModules.host
           ./nixos/xserver.nix
           # ./nixos/wayland.nix
           ./nixos/fonts.nix
@@ -114,6 +115,12 @@
           ./nixos/gaming.nix
           ./nixos/logitech.nix
           ./nixos/docker.nix
+          {
+            modules.virtualisation.microvm-host = {
+              enable = true;
+              vms = [ { hostname = "my-first-microvm"; } ];
+            };
+          }
         ];
         extraHomeModules = [
           # hyprland.homeManagerModules.default

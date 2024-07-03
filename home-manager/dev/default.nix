@@ -97,23 +97,29 @@ let
               "/run/user/1000/agenix.d/1/gh_pat";
         };
 
-        nmap = {} // (if super.meta.isDarwin then {
-          "<C-f>" = "<cmd>silent !tmux neww ${pkgs.f-tmux}/bin/f-fzf-tmux-wrapper<CR>";
-        } else {});
+        nmap =
+          { }
+          // (
+            if super.meta.isDarwin then
+              { "<C-f>" = "<cmd>silent !tmux neww ${pkgs.f-tmux}/bin/f-fzf-tmux-wrapper<CR>"; }
+            else
+              { }
+          );
       };
     }
   ];
 in
 {
   imports = [ ../../secrets ];
-  home.packages = with pkgs; [
-    jq
-    direnv
-    difftastic
-    nodePackages.json-diff
-    _1password
-    neovim
-  ] ++ (
-    with pkgs; if super.meta.isDarwin then [ f ] else [ ]
-  );
+  home.packages =
+    with pkgs;
+    [
+      jq
+      direnv
+      difftastic
+      nodePackages.json-diff
+      _1password
+      neovim
+    ]
+    ++ (with pkgs; if super.meta.isDarwin then [ f ] else [ ]);
 }

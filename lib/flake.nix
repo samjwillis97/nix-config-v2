@@ -4,6 +4,8 @@
   darwin,
   home-manager,
   flake-utils,
+  microvm,
+  agenix,
   ...
 }@inputs:
 let
@@ -52,6 +54,35 @@ in
 
       packages.${system} = {
         ${hostname} = self.nixosConfigurations.${hostname}.config.microvm.declaredRunner;
+      };
+    };
+
+  mkMicroVm2 =
+    {
+      hostname,
+      system,
+      extraModules ? [ ],
+      nixosSystem ? nixpkgs.lib.nixosSystem,
+    }:
+    nixosSystem {
+      inherit system;
+      modules = [
+        microvm.nixosModules.microvm
+        agenix.nixosModules.default
+        ../nixos
+        ../hosts/${hostname}
+        ../shared
+        ../modules
+      ] ++ extraModules;
+      specialArgs = {
+        inherit system;
+        flake = self;
+        super.meta = {
+          inherit hostname;
+          username = "sam-vm";
+          isDarwin = false;
+          useHomeManager = false;
+        };
       };
     };
 

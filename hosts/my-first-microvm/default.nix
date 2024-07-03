@@ -1,18 +1,32 @@
 { ... }:
 {
-  networking.hostName = "my-first-microvm";
+  networking = {
+    hostName = "my-first-microvm";
+    firewall.allowedTCPPorts = [ 22 ];
+    useNetworkd = true;
+  };
   users.users.root.password = "";
 
-  microvm = {
-    volumes = [
-      {
+  fileSystems = {
+    "/var/agenix".neededForBoot = true;
+  };
 
-        mountPoint = "/var";
-        image = "var.img";
-        size = 256;
-      }
-    ];
+  microvm = {
+    # volumes = [
+    #   {
+
+    #     mountPoint = "/var";
+    #     image = "var.img";
+    #     size = 256;
+    #   }
+    # ];
     shares = [
+      {
+        source = "/var/agenix";
+        mountPoint = "/var/agenix";
+        tag = "secrets";
+        proto = "9p";
+      }
       {
 
         # use "virtiofs" for MicroVMs that are started by systemd

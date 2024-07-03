@@ -6,8 +6,8 @@
   ...
 }:
 {
-  imports = [ 
-    ( flake.inputs.nixpkgs + "/nixos/modules/virtualisation/qemu-vm.nix" )
+  imports = [
+    (flake.inputs.nixpkgs + "/nixos/modules/virtualisation/qemu-vm.nix")
     ../../nixos
   ];
 
@@ -33,6 +33,10 @@
 
   # Forwarding the ports of interest from the guest to the host
   virtualisation.forwardPorts = [
-    { from = "host"; host.port = 8123; guest.port = 8123; }
+    {
+      from = "host";
+      host.port = 8123;
+      guest.port = 8123;
+    }
   ];
 }

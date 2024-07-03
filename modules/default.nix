@@ -3,5 +3,6 @@
     ./media
     ./networking
     ./home-automation
+    ./virtualisation
   ];
 }
