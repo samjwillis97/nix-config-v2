@@ -1,7 +1,7 @@
 { config, ... }:
 {
-  imports = [ 
-    ../secrets 
+  imports = [
+    ../secrets
     ../modules/networking/tailscale
   ];
 

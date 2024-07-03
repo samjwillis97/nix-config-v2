@@ -8,24 +8,23 @@ with lib;
 let
   cfg = config.modules.virtualisation.microvm-host;
 
-  # vmConfig =
-  #   with types;
-  #   (submodule {
-  #     options = {
-  #       hostname = mkOption {
-  #         type = str;
-  #         description = "The hostname of the VM";
-  #       };
-  #       modules = mkOption {
-  #         type = listOf submodule;
-  #         default = [ ];
-  #       };
-  #     };
-  #   });
+  hostNameToIpList = lib.imap1 (
+    i: v: {
+      name = v;
+      value = "10.0.0.${toString (i + 1)}";
+    }
+  ) cfg.vms;
+
+  hostNameToIp = builtins.listToAttrs hostNameToIpList;
 in
 {
   options.modules.virtualisation.microvm-host = {
     enable = mkEnableOption "Enables being a microvm host";
+
+    externalInterface = mkOption {
+      type = types.string;
+      default = "wlp7s0";
+    };
 
     vms = mkOption {
       type = with types; listOf string;
@@ -34,18 +33,30 @@ in
   };
 
   config = mkIf cfg.enable {
-    networking = {
-      useNetworkd = true;
-      nat = {
-        enable = true;
-        enableIPv6 = true;
-        externalInterface = "wlp7s0";
-        internalInterfaces = [ "microvm" ];
+    networking =
+      let
+        hosts = lib.foldl (
+          acc: v:
+          acc
+          // {
+            ${v.value} = [
+              "${v.name}.local"
+              "${v.name}.microvm"
+            ];
+          }
+        ) { } hostNameToIpList;
+      in
+      {
+        hosts = hosts;
+
+        useNetworkd = true;
+        nat = {
+          enable = true;
+          enableIPv6 = true;
+          externalInterface = cfg.externalInterface;
+          internalInterfaces = [ "microvm" ];
+        };
       };
-      hosts = { 
-        "10.0.0.2" = [ "my-first-microvm.local" "my-first-microvm.microvm"  ];
-      };
-    };
 
     # Number for the bridge must be lower than devices attached to the bridge
     # This is to ensure bridge is loaded before others
@@ -79,9 +90,6 @@ in
       };
     };
 
-    # Allow inbound traffic for the DHCP server
-    networking.firewall.allowedUDPPorts = [ 67 ];
-
     microvm = {
       autostart = cfg.vms;
 
@@ -105,7 +113,7 @@ in
                 "10-lan" = {
                   matchConfig.Name = "en*";
                   networkConfig = {
-                    Address = [ "10.0.0.2/24" ];
+                    Address = [ "${hostNameToIp.${v}}/24" ];
                     Gateway = "10.0.0.1";
                     DNS = [
                       "10.0.0.1"
