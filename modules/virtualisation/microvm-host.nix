@@ -108,7 +108,6 @@ in
 
               modules.virtualisation.microvm-guest.enable = true;
 
-              # Handle better here
               systemd.network.networks = {
                 "10-lan" = {
                   matchConfig.Name = "en*";
