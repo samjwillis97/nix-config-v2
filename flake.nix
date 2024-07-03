@@ -115,11 +115,9 @@
           ./nixos/gaming.nix
           ./nixos/logitech.nix
           ./nixos/docker.nix
+          ./nixos/microvm-host.nix
           {
-            modules.virtualisation.microvm-host = {
-              enable = true;
-              vms = [ { hostname = "my-first-microvm"; } ];
-            };
+            modules.virtualisation.microvm-host.vms = [ "my-first-microvm" ];
           }
         ];
         extraHomeModules = [

@@ -21,30 +21,27 @@ let
   # mkMicroVm2
   # ;
 
-  vmConfig =
-    with types;
-    (submodule {
-      options = {
-        hostname = mkOption {
-          type = str;
-          description = "The hostname of the VM";
-        };
-        modules = mkOption {
-          type = listOf submodule;
-          default = [ ];
-        };
-      };
-    });
+  # vmConfig =
+  #   with types;
+  #   (submodule {
+  #     options = {
+  #       hostname = mkOption {
+  #         type = str;
+  #         description = "The hostname of the VM";
+  #       };
+  #       modules = mkOption {
+  #         type = listOf submodule;
+  #         default = [ ];
+  #       };
+  #     };
+  #   });
 in
 {
-  # Rethink this..
-  imports = [ flake.inputs.microvm.nixosModules.host ];
-
   options.modules.virtualisation.microvm-host = {
     enable = mkEnableOption "Enables being a microvm host";
 
     vms = mkOption {
-      type = with types; listOf vmConfig;
+      type = with types; listOf string;
       default = [ ];
     };
   };
@@ -99,13 +96,13 @@ in
     networking.firewall.allowedUDPPorts = [ 67 ];
 
     microvm = {
-      autostart = builtins.map (v: v.hostname) cfg.vms;
+      autostart = cfg.vms;
 
       vms = builtins.foldl' (
         acc: v:
         acc
         // {
-          ${v.hostname} = {
+          ${v} = {
             config = {
               imports = [
                 flake.inputs.agenix.nixosModules.default
