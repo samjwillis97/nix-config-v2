@@ -8,12 +8,10 @@ with lib;
 let
   cfg = config.modules.virtualisation.microvm-host;
 
-  hostNameToIpList = lib.imap1 (
-    i: v: {
-      name = v;
-      value = "10.0.0.${toString (i + 1)}";
-    }
-  ) cfg.vms;
+  hostNameToIpList = lib.imap1 (i: v: {
+    name = v;
+    value = "10.0.0.${toString (i + 1)}";
+  }) cfg.vms;
 
   hostNameToIp = builtins.listToAttrs hostNameToIpList;
 in
