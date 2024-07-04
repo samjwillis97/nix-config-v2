@@ -78,13 +78,11 @@
       ...
     }@inputs:
     let
-      lib = nixpkgs.lib;
-      inherit (import ./lib/attrsets.nix { inherit (nixpkgs) lib; }) recursiveMergeAttrs mergeMap;
+      inherit (import ./lib/attrsets.nix { inherit (nixpkgs) lib; }) recursiveMergeAttrs;
       inherit (import ./lib/flake.nix inputs)
         mkNixosSystem
         mkDarwinSystem
         mkHomeManager
-        mkMicroVm
         ;
     in
     # Thoughts on how to compose this - Jays config is making more sense now...
@@ -169,7 +167,6 @@
         username = "samwillis";
         homePath = "/Users";
         extraModules = [
-          # ./nix-darwin/yabai.nix
         ];
         extraHomeModules = [
           # ./home-manager/darwin/keyboard.nix
@@ -178,8 +175,6 @@
           ./home-manager/dev
           ./home-manager/dev/devenv.nix
           ./home-manager/aerospace
-          # ./home-manager/dev/node.nix
-          # ./home-manager/dev/ops.nix
         ];
       })
 
@@ -200,11 +195,6 @@
       })
 
       (mkHomeManager { hostname = "coder-container"; })
-
-      (mkMicroVm {
-        hostname = "my-first-microvm";
-        system = "x86_64-linux";
-      })
 
       # This currently is just to let me format with `nix fmt` on any system
       (flake-utils.lib.eachDefaultSystem (

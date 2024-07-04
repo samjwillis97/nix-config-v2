@@ -67,9 +67,8 @@ in
           proto = "virtiofs";
         }
         {
-
           # use "virtiofs" for MicroVMs that are started by systemd
-          proto = "9p";
+          proto = "virtiofs";
           tag = "ro-store";
           # a host's /nix/store will be picked up so that no
           # squashfs/erofs will be built for it.
@@ -80,5 +79,7 @@ in
       hypervisor = "qemu";
       socket = "control.socket";
     };
+
+    system.stateVersion = "24.05";
   };
 }
