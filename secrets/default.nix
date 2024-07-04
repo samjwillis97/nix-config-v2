@@ -13,12 +13,16 @@
       "wireguard_private-key" = {
         file = ./wireguard_private-key.age;
       };
+      "tailscale-microvm" = {
+        file = ./tailscale-microvm.age;
+      };
     };
     identityPaths = [
       "/var/agenix/id-ed25519-agenix-primary"
       "/var/agenix/github-primary"
       "/var/agenix/iptv-primary"
       "/var/agenix/wireguard-primary"
+      "/var/agenix/microvm-primary"
     ];
   };
 }

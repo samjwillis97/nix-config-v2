@@ -25,7 +25,7 @@ let
 
     # alias nvim="nix run github:samjwillis97/neovim-flake --"
 
-    ${ if super.meta.isDarwin then "bindkey -s ^f \"${pkgs.f-tmux}/bin/f-fzf-tmux-wrapper\n\n\"" else ""}
+    ${if super.meta.isDarwin then "bindkey -s ^f \"${pkgs.f-tmux}/bin/f-fzf-tmux-wrapper\n\n\"" else ""}
 
     export CDPATH="$CDPATH:../:../../"
 
@@ -41,11 +41,14 @@ let
   '';
 in
 {
-  home.packages = with pkgs; [
-    bat
-    rsync
-    gnutar
-  ] ++ (if super.meta.isDarwin then [f-tmux] else []);
+  home.packages =
+    with pkgs;
+    [
+      bat
+      rsync
+      gnutar
+    ]
+    ++ (if super.meta.isDarwin then [ f-tmux ] else [ ]);
 
   programs.zsh = {
     inherit initExtra;

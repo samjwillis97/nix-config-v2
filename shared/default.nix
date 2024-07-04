@@ -1,3 +1,4 @@
+{ pkgs, ... }:
 {
   imports = [
     ../cachix.nix
@@ -7,4 +8,5 @@
     ./theme.nix
   ];
   nixpkgs.config.allowUnfree = true;
+  nix.package = pkgs.nixVersions.latest;
 }

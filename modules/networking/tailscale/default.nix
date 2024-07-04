@@ -75,22 +75,27 @@ in
       # have the job run this shell script
       script = with pkgs; ''
         # wait for tailscaled to settle
+        echo "Waiting for tailscaled to settle"
         sleep 2
 
         if [ ! -f ${cfg.authKeyFile} ]; then
+            echo "Unable to get authkey ${cfg.authKeyFile}"
             exit 0
         fi
 
+        echo "Checking tailscale status"
         # check if we are already authenticated to tailscale
         status="$(${tailscale}/bin/tailscale status -json | ${jq}/bin/jq -r .BackendState)"
         if [ $status = "Running" ]; then # if so, then do nothing
+          echo "Tailscale already running"
           exit 0
         fi
 
         key=`cat ${cfg.authKeyFile}`
 
         # otherwise authenticate with tailscale
-        ${tailscale}/bin/tailscale up -authkey $key
+        echo "Connect to tailscale"
+        ${tailscale}/bin/tailscale up --auth-key $key
       '';
     };
   };

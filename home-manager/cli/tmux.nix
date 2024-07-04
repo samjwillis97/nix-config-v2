@@ -67,7 +67,12 @@ in
       bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'xclip -in -selection clipboard'
 
       # Better sessions
-      ${ if super.meta.isDarwin then "bind-key -r f run-shell \"tmux neww ${pkgs.f-tmux}/bin/f-fzf-tmux-wrapper\"" else ""}
+      ${
+        if super.meta.isDarwin then
+          "bind-key -r f run-shell \"tmux neww ${pkgs.f-tmux}/bin/f-fzf-tmux-wrapper\""
+        else
+          ""
+      }
       bind-key -r i run-shell "tmux neww tmux-cht.sh"
 
       # Enabled 256 Color

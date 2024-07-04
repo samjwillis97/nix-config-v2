@@ -4,6 +4,8 @@
   darwin,
   home-manager,
   flake-utils,
+  microvm,
+  agenix,
   ...
 }@inputs:
 let
@@ -17,43 +19,6 @@ in
     - how does flake get passed through
     - What is self?
   */
-
-  mkMicroVm =
-    {
-      hostname,
-      system,
-      extraModules ? [ ],
-      nixosSystem ? nixpkgs.lib.nixosSystem,
-    }:
-    {
-      nixosConfigurations.${hostname} = nixosSystem {
-        inherit system;
-        modules = [
-          inputs.microvm.nixosModules.microvm
-          inputs.agenix.nixosModules.default
-          ../nixos
-          ../hosts/${hostname}
-          ../shared
-          ../modules
-        ] ++ extraModules;
-        specialArgs = {
-          inherit system;
-          flake = self;
-          super.meta = {
-            inherit hostname;
-            username = "sam-vm";
-            isDarwin = false;
-            useHomeManager = false;
-          };
-        };
-      };
-
-      defaultPackage.${system} = self.packages.${system}.${hostname};
-
-      packages.${system} = {
-        ${hostname} = self.nixosConfigurations.${hostname}.config.microvm.declaredRunner;
-      };
-    };
 
   mkNixosSystem =
     {

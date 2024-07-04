@@ -12,6 +12,12 @@ Nix allows for easy to manage, collaborative, reproducible deployments. This mea
 
 `nix flake lock --update-input my-neovim`
 
+### Running NixOS VM on darwin
+
+`nix run .#nixosConfigurations.mac-vm.config.system.build.vm`
+
+copy required keys to `/var/agenix/`, unfortunately this means restarting the VM afterwards, haven't worked out how to copy them there automatically
+
 ## Credits
 
 These Repo's are where I took major inspiration and chunks of code from :)

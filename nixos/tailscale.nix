@@ -1,6 +1,9 @@
 { config, ... }:
 {
-  imports = [ ../secrets ];
+  imports = [
+    ../secrets
+    ../modules/networking/tailscale
+  ];
 
   modules.networking.tailscale = {
     enable = true;
