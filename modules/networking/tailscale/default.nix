@@ -95,7 +95,6 @@ in
 
         # otherwise authenticate with tailscale
         echo "Connect to tailscale"
-        echo $key
         ${tailscale}/bin/tailscale up --auth-key $key
       '';
     };

@@ -11,6 +11,9 @@ let
   wireguard-primary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILWEpbQNNB5K2FE0QMxU0PPrSTuUr4EnhmJf/+R5qAnh sam@personal-desktop";
   wireguard-secondary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHsi1d39cIzleqaxpG7lC+v4wj2qtu0tWSf7DVofJ+yy sam@personal-desktop";
 
+  microvm-primary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIkfdBeKrK1A6ccSOVMsS3e/f5flYOdm7JB0MqgMsIXz sam@personal-desktop";
+  microvm-secondary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICiV93l9WxEzGa8tYjAj8TWZ2q4Cz+IuGBR/kvRRYZNl sam@personal-desktop";
+
   keys = [
     primary-key
     secondary-key
@@ -26,6 +29,10 @@ let
   wireguard-keys = [
     wireguard-primary-key
     wireguard-secondary-key
+  ];
+  microvm-keys = [
+    microvm-primary-key
+    microvm-secondary-key
   ];
 in
 {
@@ -44,4 +51,5 @@ in
   "gh_pat.age".publicKeys = github-keys;
   "xtream_password.age".publicKeys = iptv-keys;
   "wireguard_private-key.age".publicKeys = wireguard-keys;
+  "tailscale-microvm.age".publicKeys = microvm-keys;
 }

@@ -101,12 +101,18 @@ in
             config = {
               imports = [
                 flake.inputs.agenix.nixosModules.default
-                ../../nixos/tailscale.nix
+                ../../secrets
+                ../networking/tailscale
                 ../../hosts/${v}
                 ./microvm-guest.nix
               ];
 
               modules.virtualisation.microvm-guest.enable = true;
+
+              modules.networking.tailscale = {
+                enable = true;
+                authKeyFile = config.age.secrets."tailscale-microvm".path;
+              };
 
               systemd.network.networks = {
                 "10-lan" = {
