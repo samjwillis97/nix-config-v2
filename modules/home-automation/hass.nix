@@ -30,7 +30,6 @@ in
         system_health = { };
         default_config = { };
         system_log = { };
-        "map" = { };
         shopping_list = { };
         backup = { };
         sun = { };
