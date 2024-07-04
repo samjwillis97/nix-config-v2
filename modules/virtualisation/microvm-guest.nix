@@ -6,6 +6,7 @@
 with lib;
 let
   cfg = config.modules.virtualisation.microvm-guest;
+  hostname = config.networking.hostName;
 in
 {
   options.modules.virtualisation.microvm-guest = {
@@ -60,7 +61,7 @@ in
       # ];
       shares = [
         {
-          source = "/var/agenix";
+          source = "/var/agenix/${hostname}";
           mountPoint = "/var/agenix";
           tag = "secrets";
           proto = "virtiofs";
