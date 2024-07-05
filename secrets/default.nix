@@ -13,8 +13,8 @@
       "wireguard_private-key" = {
         file = ./wireguard_private-key.age;
       };
-      "tailscale-microvm" = {
-        file = ./tailscale-microvm.age;
+      "microvm-tailscale" = {
+        file = ./microvm/tailscale.age;
       };
     };
     identityPaths = [

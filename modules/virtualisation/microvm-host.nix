@@ -109,7 +109,7 @@ in
 
               modules.networking.tailscale = {
                 enable = true;
-                authKeyFile = config.age.secrets."tailscale-microvm".path;
+                authKeyFile = config.age.secrets."microvm-tailscale".path;
               };
 
               systemd.network.networks = {
