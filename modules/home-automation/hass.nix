@@ -26,6 +26,7 @@ in
 
       # configWritable = true;
       extraComponents = [
+        "xiaomi_miio"
         "shelly"
       ];
 
@@ -41,7 +42,6 @@ in
         shopping_list = { };
         backup = { };
         sun = { };
-        icloud = { };
         frontend = { };
 
         http = mkIf (cfg.reverseProxyOrigins != []) {
