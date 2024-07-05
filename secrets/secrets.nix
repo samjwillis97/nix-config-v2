@@ -51,5 +51,9 @@ in
   "gh_pat.age".publicKeys = github-keys;
   "xtream_password.age".publicKeys = iptv-keys;
   "wireguard_private-key.age".publicKeys = wireguard-keys;
-  "tailscale-microvm.age".publicKeys = microvm-keys;
+
+  "microvm/tailscale.age".publicKeys = microvm-keys;
+  "microvm/ssh-host-key-ed25519.age".publicKeys = microvm-keys;
+  "microvm/ssh-host-key-rsa.age".publicKeys = microvm-keys;
+  "microvm/ssh-host-key-ecdsa.age".publicKeys = microvm-keys;
 }

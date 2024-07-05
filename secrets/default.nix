@@ -13,8 +13,17 @@
       "wireguard_private-key" = {
         file = ./wireguard_private-key.age;
       };
-      "tailscale-microvm" = {
-        file = ./tailscale-microvm.age;
+      "microvm-tailscale" = {
+        file = ./microvm/tailscale.age;
+      };
+      "microvm-ssh-host-key-rsa" = {
+        file = ./microvm/ssh-host-key-rsa.age;
+      };
+      "microvm-ssh-host-key-ecdsa" = {
+        file = ./microvm/ssh-host-key-ecdsa.age;
+      };
+      "microvm-ssh-host-key-ed25519" = {
+        file = ./microvm/ssh-host-key-ed25519.age;
       };
     };
     identityPaths = [

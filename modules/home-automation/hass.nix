@@ -6,6 +6,11 @@ in
 {
   options.modules.home-automation.hass = {
     enable = mkEnableOption "Enable home-assistant service";
+
+    reverseProxyOrigins = mkOption {
+      type = with types; listOf string;
+      default = [];
+    };
   };
 
   # Home assistant is a PIA, you have to onboard a first time before configuration is used...
@@ -20,6 +25,10 @@ in
       openFirewall = true;
 
       # configWritable = true;
+      extraComponents = [
+        "xiaomi_miio"
+        "shelly"
+      ];
 
       config = {
         config = { };
@@ -30,12 +39,15 @@ in
         system_health = { };
         default_config = { };
         system_log = { };
-        "map" = { };
         shopping_list = { };
         backup = { };
         sun = { };
-        icloud = { };
         frontend = { };
+
+        http = mkIf (cfg.reverseProxyOrigins != []) {
+          use_x_forwarded_for = true;
+          trusted_proxies = cfg.reverseProxyOrigins;
+        };
 
         homeassistant = {
           name = "Home";

@@ -79,11 +79,7 @@
     }@inputs:
     let
       inherit (import ./lib/attrsets.nix { inherit (nixpkgs) lib; }) recursiveMergeAttrs;
-      inherit (import ./lib/flake.nix inputs)
-        mkNixosSystem
-        mkDarwinSystem
-        mkHomeManager
-        ;
+      inherit (import ./lib/flake.nix inputs) mkNixosSystem mkDarwinSystem mkHomeManager;
     in
     # Thoughts on how to compose this - Jays config is making more sense now...
     # Need a way to define systems, i.e. I have a macbook that runs aarch64-darwin and has these users
@@ -166,8 +162,7 @@
         system = "aarch64-darwin";
         username = "samwillis";
         homePath = "/Users";
-        extraModules = [
-        ];
+        extraModules = [ ];
         extraHomeModules = [
           # ./home-manager/darwin/keyboard.nix
           ./home-manager/wezterm
