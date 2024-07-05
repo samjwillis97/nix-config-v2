@@ -28,6 +28,4 @@
       };
     };
   };
-
-  networking.hostName = "my-first-microvm";
 }

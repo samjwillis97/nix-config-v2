@@ -4,6 +4,8 @@ let
   cfg = config.modules.virtualisation.microvm-guest;
   hostname = config.networking.hostName;
   machineId = builtins.hashString "md5" hostname;
+  shortMachineId = builtins.substring 0 6 machineId;
+  macpart = builtins.concatStringsSep ":" (map (idx: builtins.substring idx 2 shortMachineId) (builtins.genList (x: x * 2) 3));
 in
 {
   options.modules.virtualisation.microvm-guest = {
@@ -74,8 +76,8 @@ in
       interfaces = [
         {
           type = "tap";
-          id = "vm-test1";
-          mac = "02:00:00:00:00:01";
+          id = "vm-${shortMachineId}";
+          mac = "02:00:00:${macpart}";
         }
       ];
 
