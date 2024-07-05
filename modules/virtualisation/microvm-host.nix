@@ -56,6 +56,38 @@ in
         };
       };
 
+    # Jesus...
+    services.openssh.knownHosts = builtins.foldl' (
+      acc: hostname:
+      acc
+      // {
+        "${hostname}-ed25519" = {
+          hostNames = [
+            "${hostNameToIp.${hostname}}"
+            "${hostname}.local"
+            "${hostname}.microvm"
+          ];
+          publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPIvUEHBrNHACMPnim1iHfGwHfnFm9edX/vMFL5vcU0c";
+        };
+        "${hostname}-rsa" = {
+          hostNames = [
+            "${hostNameToIp.${hostname}}"
+            "${hostname}.local"
+            "${hostname}.microvm"
+          ];
+          publicKey = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDaeZx/Xt0idqy4dFspSg1t17OrF0nAMShldjpJAAHG0DVZxbMGWP1bhxRsxGfGFdnXcwl+pgF+griv8qZGNmZdhR5uDBGgscH4kqVhLxi6sUs5mapMikFTERb6lPNngrE8An4saGD14G+NOH8xHtQtP9VqxqDSmwjn6/A8gfYzVyLOyqn14bBXKRDqL8sPPOMWQ5AZM057QOaCUGyjJXbLLy/dQ5oB48cfOY5HOs9tbDR2qYvTCoufH0CWVHSRiLeWdRU1OaqqOcJD1uy0R4wyccrfWVDvB26ZEzFySXSLPvq2flWykBXEiN+7m2PqAdLTGY+wJH8X5LiQuTKqw989Vlq2mQnTOBUpJMQy7rk43VuydsR0Sf8tzQYTLxokPhMkgRs4PEigjwVIV+EuCUn62PU0Ypcf0tdGnMI578DEPCEuGikSIT2MUx7pKLz2hSwjCcZhnmUr1YPsxH9xaGE2FLOwdhHiuITUGML6becBC6fVKNX6TQiN4osYbpcniP0= root@personal-desktop";
+        };
+        "${hostname}-ecdsa" = {
+          hostNames = [
+            "${hostNameToIp.${hostname}}"
+            "${hostname}.local"
+            "${hostname}.microvm"
+          ];
+          publicKey = "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJL53srucY8y1ebQ75RZel3bziVk8Y34S5yjU2OkqgItEFNeJJfu2u8Y+6Xu3a126y+VAmg53FVzgC6NwYH58H0= root@personal-desktop";
+        };
+      }
+    ) { } cfg.vms;
+
     # Number for the bridge must be lower than devices attached to the bridge
     # This is to ensure bridge is loaded before others
     systemd.network = {
@@ -92,16 +124,16 @@ in
       autostart = cfg.vms;
 
       vms = builtins.foldl' (
-        acc: v:
+        acc: hostname:
         acc
         // {
-          ${v} = {
+          ${hostname} = {
             config = {
               imports = [
                 flake.inputs.agenix.nixosModules.default
                 ../../secrets
                 ../networking/tailscale
-                ../../hosts/${v}
+                ../../hosts/${hostname}
                 ./microvm-guest.nix
               ];
 
@@ -116,7 +148,7 @@ in
                 "10-lan" = {
                   matchConfig.Name = "en*";
                   networkConfig = {
-                    Address = [ "${hostNameToIp.${v}}/24" ];
+                    Address = [ "${hostNameToIp.${hostname}}/24" ];
                     Gateway = "10.0.0.1";
                     DNS = [
                       "10.0.0.1"

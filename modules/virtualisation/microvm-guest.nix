@@ -29,6 +29,20 @@ in
         PermitRootLogin = "yes";
         PasswordAuthentication = false;
       };
+      hostKeys = [
+        {
+          type = "rsa";
+          path = config.age.secrets."microvm-ssh-host-key-rsa".path;
+        }
+        {
+          type = "ed25519";
+          path = config.age.secrets."microvm-ssh-host-key-ed25519".path;
+        }
+        {
+          type = "ecdsa";
+          path = config.age.secrets."microvm-ssh-host-key-ecdsa".path;
+        }
+      ];
     };
 
     networking.firewall.allowedTCPPorts = [ 22 ];

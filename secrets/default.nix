@@ -16,6 +16,15 @@
       "microvm-tailscale" = {
         file = ./microvm/tailscale.age;
       };
+      "microvm-ssh-host-key-rsa" = {
+        file = ./microvm/ssh-host-key-rsa.age;
+      };
+      "microvm-ssh-host-key-ecdsa" = {
+        file = ./microvm/ssh-host-key-ecdsa.age;
+      };
+      "microvm-ssh-host-key-ed25519" = {
+        file = ./microvm/ssh-host-key-ed25519.age;
+      };
     };
     identityPaths = [
       "/var/agenix/id-ed25519-agenix-primary"
