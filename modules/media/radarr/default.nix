@@ -12,20 +12,21 @@ in
         default = 7878;
         type = types.port;
       };
+      apiKey = mkOption {
+        default = "00000000000000000000000000000000";
+        type = types.string;
+      };
     };
   };
 
-  # Port is 7878
   # Be careful with permissions issues for data folder
   #   This will hurt down the road a bit when actually trying to use
+
   # Configuration:
   #   Here is one way using the API: https://github.com/kira-bruneau/nixos-config/blob/5de7ec5e225075f4237722e38c5ec9fa2ed63e6a/environments/media-server.nix#L565
   config = mkIf cfg.enable {
     services.radarr.enable = true;
 
-    # Want to create a config file here
-    # See:
-    #   https://discourse.nixos.org/t/how-to-create-folder-in-var-lib-with-nix/15647
     system.activationScripts.makeRadarrConfig = let 
       configFile = pkgs.writeTextFile {
         name = "radarr-config.xml";
@@ -33,18 +34,20 @@ in
           <Config>
             <BindAddress>*</BindAddress>
             <Port>${toString cfg.config.port}</Port>
-            <SslPort>9898</SslPort>
-            <EnableSsl>False</EnableSsl>
-            <LaunchBrowser>True</LaunchBrowser>
-            <ApiKey>7125caec04934954bd360fba78747235</ApiKey>
-            <AuthenticationMethod>Basic</AuthenticationMethod>
-            <AuthenticationRequired>DisabledForLocalAddresses</AuthenticationRequired>
-            <Branch>master</Branch>
+            <ApiKey>${cfg.config.apiKey}</ApiKey>
+            <AuthenticationMethod>External</AuthenticationMethod>
             <LogLevel>info</LogLevel>
-            <SslCertPath></SslCertPath>
-            <SslCertPassword></SslCertPassword>
-            <UrlBase></UrlBase>
-            <InstanceName>CuratorRadarr</InstanceName>
+            <AnalyticsEnabled>False</AnalyticsEnabled>
+            <LogDbEnabled>False</LogDbEnabled>
+            <InstanceName>Radarr</InstanceName>
+            <!-- <SslPort>9898</SslPort> -->
+            <!-- <EnableSsl>False</EnableSsl> -->
+            <!-- <LaunchBrowser>True</LaunchBrowser> -->
+            <!-- <AuthenticationRequired>DisabledForLocalAddresses</AuthenticationRequired> -->
+            <!-- <Branch>master</Branch> -->
+            <!-- <SslCertPath></SslCertPath> -->
+            <!-- <SslCertPassword></SslCertPassword> -->
+            <!-- <UrlBase></UrlBase> -->
           </Config>'';
       };
       user = config.services.radarr.user;
