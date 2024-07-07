@@ -20,26 +20,26 @@
       workspace-to-monitor-force-assignment = {
         "1" = [
           "C34H89x"
+          1
           2
-          3
         ];
         "2" = [
           "C34H89x"
+          1
           2
-          3
         ];
         "3" = [
           "C34H89x"
+          1
           2
-          3
         ];
         "4" = [
           "C34H89x"
+          1
           2
-          3
         ];
-        "5" = [ "^built-in retina display$" ];
-        "6" = [ "^built-in retina display$" ];
+        "5" = [ "^built-in retina display$" 1 2 ];
+        "6" = [ "^built-in retina display$" 3 2 ];
         "7" = [
           "C34H89x"
           3
