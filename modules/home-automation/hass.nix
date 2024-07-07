@@ -9,7 +9,7 @@ in
 
     reverseProxyOrigins = mkOption {
       type = with types; listOf string;
-      default = [];
+      default = [ ];
     };
   };
 
@@ -44,7 +44,7 @@ in
         sun = { };
         frontend = { };
 
-        http = mkIf (cfg.reverseProxyOrigins != []) {
+        http = mkIf (cfg.reverseProxyOrigins != [ ]) {
           use_x_forwarded_for = true;
           trusted_proxies = cfg.reverseProxyOrigins;
         };

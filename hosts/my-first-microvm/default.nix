@@ -4,9 +4,7 @@
 
   modules.home-automation.hass = {
     enable = true;
-    reverseProxyOrigins = [
-      "127.0.0.1"
-    ];
+    reverseProxyOrigins = [ "127.0.0.1" ];
   };
 
   services.nginx = {

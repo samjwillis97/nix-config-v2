@@ -110,7 +110,13 @@
           ./nixos/logitech.nix
           ./nixos/docker.nix
           ./nixos/microvm-host.nix
-          { modules.virtualisation.microvm-host.vms = [ "my-first-microvm" "curator" "steve" ]; }
+          {
+            modules.virtualisation.microvm-host.vms = [
+              "my-first-microvm"
+              "curator"
+              "steve"
+            ];
+          }
         ];
         extraHomeModules = [
           # hyprland.homeManagerModules.default

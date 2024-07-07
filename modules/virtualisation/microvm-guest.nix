@@ -5,7 +5,9 @@ let
   hostname = config.networking.hostName;
   machineId = builtins.hashString "md5" hostname;
   shortMachineId = builtins.substring 0 6 machineId;
-  macpart = builtins.concatStringsSep ":" (map (idx: builtins.substring idx 2 shortMachineId) (builtins.genList (x: x * 2) 3));
+  macpart = builtins.concatStringsSep ":" (
+    map (idx: builtins.substring idx 2 shortMachineId) (builtins.genList (x: x * 2) 3)
+  );
 in
 {
   options.modules.virtualisation.microvm-guest = {
