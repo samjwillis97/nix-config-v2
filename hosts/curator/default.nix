@@ -1,13 +1,27 @@
 { config, ... }:
 {
-  imports = [ ../../modules/media/radarr ];
+  imports = [
+    ../../modules/media/radarr
+    ../../modules/media/recyclarr
+  ];
 
   networking.hostName = "curator";
 
-  modules.media.radarr = {
-    enable = true;
-    config = {
-      port = 9090;
+  modules.media = {
+    radarr = {
+      enable = true;
+      config = {
+        port = 9090;
+      };
+    };
+
+    recyclarr = {
+      enable = true;
+      radarr = {
+        enable = true;
+        url = "http://localhost:${toString config.modules.media.radarr.config.port}";
+        apiKey = config.modules.media.radarr.config.apiKey;
+      };
     };
   };
 

@@ -8,8 +8,6 @@ with lib;
 let
   cfg = config.modules.media.radarr;
   radarrCfg = config.services.radarr;
-
-  inherit (import ../../../lib/curl.nix { inherit pkgs; }) mkCurlCommand;
 in
 {
   options.modules.media.radarr = {
@@ -68,45 +66,5 @@ in
         ${pkgs.coreutils}/bin/chown ${user}:${group} ${outputFile}
         ${pkgs.coreutils}/bin/chmod 444 ${outputFile}
       '';
-
-    systemd.services.radarr-config = {
-      description = "Config script to run once radarr has started";
-      wants = [ "radarr.service" ];
-      after = [ "radarr.service" ];
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig.Type = "oneshot";
-      script =
-        let
-          getStatus = mkCurlCommand {
-            headers = {
-              "X-Api-Key" = cfg.config.apiKey;
-              "Content-Type" = "application/json";
-            };
-            url = "localhost:${toString cfg.config.port}/api/v3/system/status";
-          };
-          setNaming = mkCurlCommand {
-            headers = {
-              "X-Api-Key" = cfg.config.apiKey;
-              "Content-Type" = "application/json";
-            };
-            method = "PUT";
-            url = "localhost:${toString cfg.config.port}/api/v3/config/naming/1";
-            dataFile = pkgs.writers.writeJSON "radarr-naming.json" {
-              renameMovies = true;
-              replaceIllegalCharacters = true;
-              standardMovieFormat = "{Movie Title} ({Release Year}) {Quality Title} {MediaInfo VideoCodec}";
-              movieFolderFormat = "{Movie Title} ({Release Year})";
-            };
-          };
-        in
-        ''
-          echo "Starting config"
-          echo "Checking status"
-          ${getStatus}
-          echo "Setting naming conventions"
-          ${setNaming}
-          echo "Ending config"
-        '';
-    };
   };
 }
