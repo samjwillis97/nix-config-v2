@@ -89,7 +89,7 @@ in
   config = mkIf cfg.enable {
     environment.systemPackages = [ pkgs.recyclarr ];
 
-    systemd.services.recyclarr-radrr = mkIf (cfg.radarr.enable && radarrEnabled) {
+    systemd.services.recyclarr-radarr-sync= mkIf (cfg.radarr.enable && radarrEnabled) {
       description = "configuring radarr with recyclarr";
       wants = [ "radarr.service" ];
       after = [ "radarr.service" ];
