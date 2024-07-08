@@ -28,9 +28,7 @@ let
     mkCurlCommand (curlArgs);
 in
 {
-  imports = [
-    ../radarr
-  ];
+  imports = [ ../radarr ];
 
   options.modules.media.recyclarr = {
     enable = mkEnableOption "Enables Recyclarr";
@@ -51,41 +49,37 @@ in
       config = mkOption {
         type = types.attrs;
         default = {
-          radarr = {
-            hd-bluray-web = {
-              base_url = cfg.radarr.url;
-              api_key = cfg.radarr.apiKey;
+          hd-bluray-web = {
+            base_url = cfg.radarr.url;
+            api_key = cfg.radarr.apiKey;
 
-              media_naming = {
-                folder = "plex-tmdb";
-                movie = {
-                  rename = true;
-                  standard = "plex-tmdb";
-                };
+            media_naming = {
+              folder = "plex-tmdb";
+              movie = {
+                rename = true;
+                standard = "plex-tmdb";
               };
-
-              include = [
-                # Comment out any of the following includes to disable them
-                { template =  "radarr-quality-definition-movie"; }
-                { template =  "radarr-quality-profile-hd-bluray-web"; }
-                { template =  "radarr-custom-formats-hd-bluray-web"; }
-              ];
-
-              custom_formats = [
-                {
-                  trash_ids = [ "9f6cbff8cfe4ebbc1bde14c7b7bec0de" ]; # IMAX Enhanced
-                  quality_profiles = [
-                    {
-                      name = "HD Bluray + WEB";
-                      # score = 0; # Uncomment this line to disable prioritised IMAX Enhanced releases
-                    }
-                  ];
-                }
-                {
-                  quality_profiles = [ { name = "HD Bluray + WEB"; } ];
-                }
-              ];
             };
+
+            include = [
+              # Comment out any of the following includes to disable them
+              { template = "radarr-quality-definition-movie"; }
+              { template = "radarr-quality-profile-hd-bluray-web"; }
+              { template = "radarr-custom-formats-hd-bluray-web"; }
+            ];
+
+            custom_formats = [
+              {
+                trash_ids = [ "9f6cbff8cfe4ebbc1bde14c7b7bec0de" ]; # IMAX Enhanced
+                quality_profiles = [
+                  {
+                    name = "HD Bluray + WEB";
+                    # score = 0; # Uncomment this line to disable prioritised IMAX Enhanced releases
+                  }
+                ];
+              }
+              { quality_profiles = [ { name = "HD Bluray + WEB"; } ]; }
+            ];
           };
         };
       };
@@ -101,19 +95,20 @@ in
       after = [ "radarr.service" ];
       wantedBy = [ "multi-user.target" ];
       serviceConfig.Type = "oneshot";
-      script = let 
-        radarrStatusCheck = mkRadarrRequest {
-          uri = "/ping";
-        };
+      script =
+        let
+          radarrStatusCheck = mkRadarrRequest { uri = "/ping"; };
 
-        radarrConfig = pkgs.writers.writeYAML "radarr-recyclarr-config.yaml" cfg.radarr.config;
-      in
-      ''
-      echo "Check if radarr is up"
-      ${radarrStatusCheck}
-      echo "Radarr is now running"
-      ${pkgs.recyclarr}/bin/recyclarr sync radarr -c ${radarrConfig}
-      '';
+          radarrConfig = pkgs.writers.writeYAML "radarr-recyclarr-config.yaml" {
+            radarr = cfg.radarr.config;
+          };
+        in
+        ''
+          echo "Check if radarr is up"
+          ${radarrStatusCheck}
+          echo "Radarr is now running"
+          ${pkgs.recyclarr}/bin/recyclarr sync radarr -c ${radarrConfig}
+        '';
     };
   };
 }

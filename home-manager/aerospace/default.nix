@@ -38,8 +38,16 @@
           1
           2
         ];
-        "5" = [ "^built-in retina display$" 1 2 ];
-        "6" = [ "^built-in retina display$" 3 2 ];
+        "5" = [
+          "^built-in retina display$"
+          1
+          2
+        ];
+        "6" = [
+          "^built-in retina display$"
+          3
+          2
+        ];
         "7" = [
           "C34H89x"
           3
