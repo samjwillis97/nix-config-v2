@@ -1,6 +1,6 @@
 { config, ... }:
 {
-  imports = [ ../../modules/home-automation/hass.nix ];
+  imports = [ ../../../modules/home-automation/hass.nix ];
 
   modules.home-automation.hass = {
     enable = true;

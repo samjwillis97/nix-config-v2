@@ -114,6 +114,7 @@
             modules.virtualisation.microvm-host.vms = [
               "my-first-microvm"
               "curator"
+              "sonarr"
               "steve"
             ];
           }

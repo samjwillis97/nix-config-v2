@@ -133,7 +133,7 @@ in
                 flake.inputs.agenix.nixosModules.default
                 ../../secrets
                 ../networking/tailscale
-                ../../hosts/${hostname}
+                ../../hosts/microvms/${hostname}
                 ./microvm-guest.nix
               ];
 

@@ -1,8 +1,8 @@
 { config, ... }:
 {
   imports = [
-    ../../modules/media/radarr
-    ../../modules/media/recyclarr
+    ../../../modules/media/radarr
+    ../../../modules/media/recyclarr
   ];
 
   networking.hostName = "curator";
