@@ -115,6 +115,7 @@
               "my-first-microvm"
               "curator"
               "sonarr"
+              "iso-grabber"
               "steve"
             ];
           }

@@ -9,7 +9,7 @@ let
   cfg = config.modules.networking.vpn;
 in
 {
-  imports = [ ../../../secrets ];
+  imports = [ ../../../secrets/system.nix ];
 
   options.modules.networking.vpn = {
     enable = mkEnableOption "Enables VPN service";
@@ -18,22 +18,24 @@ in
   config = mkIf cfg.enable {
     warnings = [ ''Module "services.vpn" is still under construction'' ];
 
-    networking.firewall = {
-      allowedUDPPorts = [ 51820 ];
-    };
+    # Apparently don't need this post 21.05
+    # boot.extraModulePackages = [config.boot.kernelPackages.wireguard];
 
-    networking.wireguard.interfaces = {
+    programs.mtr.enable = true;
+
+    # See: https://alberand.com/nixos-wireguard-vpn.html
+    networking.wg-quick.interfaces = {
       wg0 = {
-        ips = [ "10.100.0.24" ];
+        address = [
+          "10.2.0.2/32"
+        ];
         listenPort = 51820;
-
         privateKeyFile = config.age.secrets."wireguard_private-key".path;
-
         peers = [
           {
-            publicKey = "KIm+13jfrrbXNPqYpd+WaWnCrgubWaSQnj8xn1Od8Fk=";
+            publicKey = "8kyi2e0ziUqhs+ooJYYI0yaVhv/bneUC1fhV5X2q/SE=";
             allowedIPs = [ "0.0.0.0/0" ];
-            endpoint = "138.199.33.225:51820";
+            endpoint = "185.159.157.192:51820";
             persistentKeepalive = 25;
           }
         ];
