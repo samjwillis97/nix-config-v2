@@ -84,6 +84,9 @@ in
               };
             };
 
+            delete_old_custom_formats = true;
+            replace_existing_custom_formats = true;
+
             include = [
               # Comment out any of the following includes to disable them
               { template = "sonarr-quality-definition-series"; }
