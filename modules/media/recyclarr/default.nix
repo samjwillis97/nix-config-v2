@@ -43,6 +43,25 @@ let
       ) [ "uri" ];
     in
     mkCurlCommand (curlArgs);
+
+    configFile = pkgs.writers.writeYAML "settings.yaml" {
+      enable_ssl_certificate_validation = true;
+      git_path = "${pkgs.git}/bin/git";
+      repositories = {
+        trash_guides = {
+          clone_url = cfg.repositoryConfig.trash_guides.cloneUrl;
+          sha1 = cfg.repositoryConfig.trash_guides.sha;
+        };
+        config_templates = {
+          clone_url = cfg.repositoryConfig.config_templates.cloneUrl;
+          sha1 = cfg.repositoryConfig.config_templates.sha;
+        };
+      };
+      log_janitor = {
+        max_files = 1;
+      };
+    };
+    outputFile = "/root/.config/recyclarr/settings.yaml";
 in
 {
   imports = [
@@ -52,6 +71,31 @@ in
 
   options.modules.media.recyclarr = {
     enable = mkEnableOption "Enables Recyclarr";
+
+    repositoryConfig= {
+      trash_guides = {
+        cloneUrl = mkOption {
+          default = "https://github.com/TRaSH-/Guides.git";
+          type = types.string;
+        };
+        sha = mkOption {
+          description = "commit from July 8 2024";
+          default = "bbd893f196cb0f35e3375753bae4ae6f974a1cbf";
+          type = types.string;
+        };
+      };
+      config_templates = {
+        cloneUrl = mkOption {
+          default = "https://github.com/recyclarr/config-templates.git";
+          type = types.string;
+        };
+        sha = mkOption {
+          description = "commit from June 10 2024";
+          default = "3808a20be197c2013484c23ae0726d5b2476194d";
+          type = types.string;
+        };
+      };
+    };
 
     sonarr = {
       enable = mkEnableOption "Enables for Sonarr";
@@ -172,6 +216,8 @@ in
           };
         in
         ''
+          ${pkgs.coreutils}/bin/mkdir -p /root/.config/recyclarr
+          ${pkgs.coreutils}/bin/ln -s ${configFile} ${outputFile}
           echo "Check if radarr is up"
           ${radarrStatusCheck}
           echo "Radarr is now running"
@@ -194,6 +240,8 @@ in
           };
         in
         ''
+          ${pkgs.coreutils}/bin/mkdir -p /root/.config/recyclarr
+          ${pkgs.coreutils}/bin/ln -s ${configFile} ${outputFile}
           echo "Check if sonarr is up"
           ${sonarrStatusCheck}
           echo "Radarr is now running"
