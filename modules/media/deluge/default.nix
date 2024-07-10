@@ -2,7 +2,7 @@
 with lib;
 let
   cfg = config.modules.media.deluge;
-in 
+in
 {
   options.modules.media.deluge = {
     enable = mkEnableOption "Enables Deluge service";

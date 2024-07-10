@@ -26,9 +26,7 @@ in
     # See: https://alberand.com/nixos-wireguard-vpn.html
     networking.wg-quick.interfaces = {
       wg0 = {
-        address = [
-          "10.2.0.2/32"
-        ];
+        address = [ "10.2.0.2/32" ];
         listenPort = 51820;
         privateKeyFile = config.age.secrets."wireguard_private-key".path;
         peers = [

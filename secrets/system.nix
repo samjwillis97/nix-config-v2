@@ -8,8 +8,6 @@
         group = "systemd-network";
       };
     };
-    identityPaths = [
-      "/var/agenix/wireguard-primary"
-    ];
+    identityPaths = [ "/var/agenix/wireguard-primary" ];
   };
 }

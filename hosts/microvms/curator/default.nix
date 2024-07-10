@@ -12,6 +12,12 @@
       enable = true;
       config = {
         port = 9090;
+        torrentClient = {
+          enable = true;
+          implementation = "Deluge";
+          host = "iso-grabber";
+          password = "deluge";
+        };
       };
     };
 

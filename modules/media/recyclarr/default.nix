@@ -44,24 +44,24 @@ let
     in
     mkCurlCommand (curlArgs);
 
-    configFile = pkgs.writers.writeYAML "settings.yaml" {
-      enable_ssl_certificate_validation = true;
-      git_path = "${pkgs.git}/bin/git";
-      repositories = {
-        trash_guides = {
-          clone_url = cfg.repositoryConfig.trash_guides.cloneUrl;
-          sha1 = cfg.repositoryConfig.trash_guides.sha;
-        };
-        config_templates = {
-          clone_url = cfg.repositoryConfig.config_templates.cloneUrl;
-          sha1 = cfg.repositoryConfig.config_templates.sha;
-        };
+  configFile = pkgs.writers.writeYAML "settings.yaml" {
+    enable_ssl_certificate_validation = true;
+    git_path = "${pkgs.git}/bin/git";
+    repositories = {
+      trash_guides = {
+        clone_url = cfg.repositoryConfig.trash_guides.cloneUrl;
+        sha1 = cfg.repositoryConfig.trash_guides.sha;
       };
-      log_janitor = {
-        max_files = 1;
+      config_templates = {
+        clone_url = cfg.repositoryConfig.config_templates.cloneUrl;
+        sha1 = cfg.repositoryConfig.config_templates.sha;
       };
     };
-    outputFile = "/root/.config/recyclarr/settings.yaml";
+    log_janitor = {
+      max_files = 1;
+    };
+  };
+  outputFile = "/root/.config/recyclarr/settings.yaml";
 in
 {
   imports = [
@@ -72,7 +72,7 @@ in
   options.modules.media.recyclarr = {
     enable = mkEnableOption "Enables Recyclarr";
 
-    repositoryConfig= {
+    repositoryConfig = {
       trash_guides = {
         cloneUrl = mkOption {
           default = "https://github.com/TRaSH-/Guides.git";
@@ -185,11 +185,7 @@ in
             custom_formats = [
               {
                 trash_ids = [ "9f6cbff8cfe4ebbc1bde14c7b7bec0de" ]; # IMAX Enhanced
-                quality_profiles = [
-                  {
-                    name = "HD Bluray + WEB";
-                  }
-                ];
+                quality_profiles = [ { name = "HD Bluray + WEB"; } ];
               }
             ];
           };
