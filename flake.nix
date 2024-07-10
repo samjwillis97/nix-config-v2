@@ -116,6 +116,7 @@
               "curator"
               "sonarr"
               "iso-grabber"
+              "indexer"
               "steve"
             ];
           }
