@@ -41,6 +41,12 @@ in
         type = types.string;
       };
 
+      logLevel = mkOption {
+        default = "info";
+        type = types.enum [ "info" "debug" "trace" ];
+      };
+
+
       torrentClient = {
         enable = mkEnableOption "Enable torrent client";
 
@@ -90,7 +96,7 @@ in
               <Port>${toString cfg.config.port}</Port>
               <ApiKey>${cfg.config.apiKey}</ApiKey>
               <AuthenticationMethod>External</AuthenticationMethod>
-              <LogLevel>info</LogLevel>
+              <LogLevel>${cfg.config.logLevel}</LogLevel>
               <AnalyticsEnabled>False</AnalyticsEnabled>
               <LogDbEnabled>False</LogDbEnabled>
               <InstanceName>Radarr</InstanceName>

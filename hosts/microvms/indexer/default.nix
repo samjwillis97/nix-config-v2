@@ -14,9 +14,7 @@
 
     media.prowlarr = {
       enable = true;
-      config = {
-        port = 7000;
-      };
+      port = 7000;
       radarrConnection = {
         enable = true;
         hostname = "curator";
@@ -36,7 +34,7 @@
       enableACME = false;
 
       locations."/" = {
-        proxyPass = "http://127.0.0.1:${toString config.modules.media.prowlarr.config.port}";
+        proxyPass = "http://127.0.0.1:${toString config.modules.media.prowlarr.port}";
         extraConfig = ''
           proxy_set_header    Upgrade     $http_upgrade;
           proxy_set_header    Connection  "upgrade";
