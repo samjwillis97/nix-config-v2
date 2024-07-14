@@ -17,28 +17,28 @@ let
         args
         // {
           headers = {
-            "X-Api-Key" = cfg.config.apiKey;
+            "X-Api-Key" = cfg.apiKey;
             "Content-Type" = "application/json";
           };
-          url = if (hasAttr "uri" args) then "localhost:${toString cfg.config.port}${args.uri}" else args.url;
+          url = if (hasAttr "uri" args) then "localhost:${toString cfg.port}${args.uri}" else args.url;
         }
       ) [ "uri" ];
     in
     mkCurlCommand (curlArgs);
+
+  prowlarrStatusCheck = mkProwlarrRequest { uri = "/ping"; };
 in
 {
   options.modules.media.prowlarr = {
     enable = mkEnableOption "Enables Prowlarr service";
 
-    config = {
-      port = mkOption {
-        default = 9696;
-        type = types.port;
-      };
-      apiKey = mkOption {
-        default = "00000000000000000000000000000000";
-        type = types.string;
-      };
+    port = mkOption {
+      default = 9696;
+      type = types.port;
+    };
+    apiKey = mkOption {
+      default = "00000000000000000000000000000000";
+      type = types.string;
     };
 
     radarrConnection = {
@@ -66,6 +66,8 @@ in
     };
   };
 
+  # TODO: Sync Profiles
+  # TODO: Indexers
   config = mkIf cfg.enable {
     services.prowlarr.enable = true;
 
@@ -76,8 +78,8 @@ in
           text = ''
             <Config>
               <BindAddress>*</BindAddress>
-              <Port>${toString cfg.config.port}</Port>
-              <ApiKey>${cfg.config.apiKey}</ApiKey>
+              <Port>${toString cfg.port}</Port>
+              <ApiKey>${cfg.apiKey}</ApiKey>
               <AuthenticationMethod>External</AuthenticationMethod>
               <LogLevel>info</LogLevel>
               <AnalyticsEnabled>False</AnalyticsEnabled>
@@ -109,7 +111,6 @@ in
       serviceConfig.Type = "oneshot";
       script =
         let
-          status = mkProwlarrRequest { uri = "/ping"; };
           getAllApps = mkProwlarrRequest { uri = "/api/v1/applications"; };
           radarrApp = pkgs.writers.writeJSON "radarr-app" {
             syncLevel = "fullSync";
@@ -169,7 +170,7 @@ in
         in
         ''
           # Wait for prowlarr to be available
-          ${status}
+          ${prowlarrStatusCheck}
 
           # Wait for radarr to be available
           ${pkgs.iputils}/bin/ping -c1 -W10 ${cfg.radarrConnection.hostname}
