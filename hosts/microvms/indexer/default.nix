@@ -17,6 +17,11 @@
       config = {
         port = 7000;
       };
+      radarrConnection = {
+        enable = true;
+        hostname = "curator";
+        port = 80;
+      };
     };
   };
 

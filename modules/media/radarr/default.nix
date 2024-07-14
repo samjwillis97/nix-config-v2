@@ -116,12 +116,16 @@ in
 
     systemd.services.create-radarr-dl-client = mkIf cfg.config.torrentClient.enable {
       description = "configuring radarr torrent client";
-      wants = [
-        "radarr.service"
-      ] ++ (if (config.modules.networking.tailscale.enable) then [ "tailscale-autoconnect.service" ] else [ ]);
-      after = [
-        "radarr.service"
-      ] ++ (if (config.modules.networking.tailscale.enable) then [ "tailscale-autoconnect.service" ] else [ ]);
+      wants =
+        [ "radarr.service" ]
+        ++ (
+          if (config.modules.networking.tailscale.enable) then [ "tailscale-autoconnect.service" ] else [ ]
+        );
+      after =
+        [ "radarr.service" ]
+        ++ (
+          if (config.modules.networking.tailscale.enable) then [ "tailscale-autoconnect.service" ] else [ ]
+        );
       wantedBy = [ "multi-user.target" ];
       serviceConfig.Type = "oneshot";
       script =
@@ -242,7 +246,12 @@ in
 
           if [ ! -z ''${TorrentClient} ]; then
             echo "Deleting old torrent client"
-            ${mkRadarrRequest { uri = "/api/v3/downloadclient/$TorrentClient"; method = "DELETE"; }}
+            ${
+              mkRadarrRequest {
+                uri = "/api/v3/downloadclient/$TorrentClient";
+                method = "DELETE";
+              }
+            }
           fi
 
           echo "Creating new torrent client"
