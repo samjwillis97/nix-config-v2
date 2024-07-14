@@ -167,7 +167,7 @@ in
               {
                 order = 5;
                 name = "movieCategory";
-                value = "";
+                value = "radarr";
               }
               {
                 order = 6;
