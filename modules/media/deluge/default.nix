@@ -25,6 +25,11 @@ in
       type = types.listOf types.port;
     };
 
+    downloadPath = mkOption {
+      type = types.string;
+      default = "/data/downloads/torrents";
+    };
+
     privateTrackers = mkEnableOption "For use with private trackers";
   };
 
@@ -49,6 +54,8 @@ in
       # https://trash-guides.info/Downloaders/Deluge/Basic-Setup/
       config = {
         pre_allocate_storage = true;
+
+        download_location = cfg.downloadPath;
 
         max_connections_global = -1;
         max_upload_slots_global = -1;
