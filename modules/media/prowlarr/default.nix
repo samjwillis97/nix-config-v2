@@ -59,6 +59,7 @@ in
           fields = {
             baseUrl = "https://eztvx.to/";
             torrentBaseSettings = {
+              appMinimumSeeders = 10;
               seedRatio = 2;
             };
           };
@@ -68,6 +69,43 @@ in
           priority = 25;
           fields = {
             torrentBaseSettings = {
+              appMinimumSeeders = 10;
+              seedRatio = 2;
+            };
+          };
+        }
+        # TODO: handle illegal chars in name
+        # {
+        #   name = "kickasstorrents-to";
+        #   priority = 25;
+        #   fields = {};
+        # }
+        {
+          name = "limetorrents";
+          priority = 25;
+          fields = {
+            torrentBaseSettings = {
+              appMinimumSeeders = 10;
+              seedRatio = 2;
+            };
+          };
+        }
+        {
+          name = "thepiratebay";
+          priority = 25;
+          fields = {
+            torrentBaseSettings = {
+              appMinimumSeeders = 10;
+              seedRatio = 2;
+            };
+          };
+        }
+        {
+          name = "therarbg";
+          priority = 25;
+          fields = {
+            torrentBaseSettings = {
+              appMinimumSeeders = 10;
               seedRatio = 2;
             };
           };
@@ -280,9 +318,16 @@ in
           ${builtins.concatStringsSep "\n" (
             builtins.map (v: ''
               ${v.name}Schema=$(echo $Schemas | ${pkgs.jq}/bin/jq '.[] | select(.definitionName == "${v.name}")')
-              if 
-                [ -z "$(echo $Indexers | ${pkgs.jq}/bin/jq '.[] | select(.definitionName == "${v.name}")')" ] && \
-                [ -n "${v.name}Schema" ]; then
+              if [ -n "${v.name}Schema" ]; then
+
+                if [ ! -z "$(echo $Indexers | ${pkgs.jq}/bin/jq '.[] | select(.definitionName == "${v.name}")')" ]; then
+                  ${
+                    mkProwlarrRequest {
+                      uri = ''/api/v1/indexer/$(echo $Indexers | ${pkgs.jq}/bin/jq '.[] | select(.definitionName == "${v.name}") | .id')'';
+                      method = "DELETE";
+                    }
+                  }
+                fi
 
                 echo "Creating ${v.name} indexer from schema"
                 ${v.name}Indexer=$(echo "''$${v.name}Schema" | ${pkgs.jq}/bin/jq '.priority |= ${toString v.priority}')
