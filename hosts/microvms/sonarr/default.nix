@@ -3,9 +3,12 @@
   imports = [
     ../../../modules/media/sonarr
     ../../../modules/media/recyclarr
+    ../../../modules/system/users
   ];
 
   networking.hostName = "sonarr";
+
+  modules.system.users.media = true;
 
   modules.media = {
     sonarr = {

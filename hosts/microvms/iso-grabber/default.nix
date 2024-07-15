@@ -3,9 +3,12 @@
   imports = [
     ../../../modules/networking/vpn
     ../../../modules/media/deluge
+    ../../../modules/system/users
   ];
 
   networking.hostName = "iso-grabber";
+
+  modules.system.users.media = true;
 
   modules = {
     networking.vpn = {

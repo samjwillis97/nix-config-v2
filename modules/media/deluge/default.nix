@@ -7,6 +7,7 @@
 with lib;
 let
   cfg = config.modules.media.deluge;
+  mediaUserEnabled = config.modules.system.users.media;
 in
 {
   options.modules.media.deluge = {
@@ -36,6 +37,9 @@ in
   config = mkIf cfg.enable {
     services.deluge = {
       enable = true;
+
+      user = if mediaUserEnabled then "media" else "deluge";
+      group = if mediaUserEnabled then "media" else "deluge";
 
       web = {
         enable = true;

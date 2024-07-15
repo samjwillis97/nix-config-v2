@@ -3,13 +3,13 @@
   imports = [
     ../../../modules/media/radarr
     ../../../modules/media/recyclarr
+    ../../../modules/system/users
   ];
 
   networking.hostName = "curator";
 
+  modules.system.users.media = true;
 
-  # TODO: I should mount the movies path to /data/media/movies
-  #     downloades should be /data/downloads, /data/usenet, /data/torrents
   modules.media = {
     radarr = {
       enable = true;
@@ -40,6 +40,7 @@
       mountPoint = "/data";
       tag = "media";
       proto = "virtiofs";
+      securityModel = "none";
     }
   ];
 

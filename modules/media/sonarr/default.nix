@@ -8,6 +8,7 @@ with lib;
 let
   cfg = config.modules.media.sonarr;
   sonarrCfg = config.services.sonarr;
+  mediaUserEnabled = config.modules.system.users.media;
 in
 {
   options.modules.media.sonarr = {
@@ -31,7 +32,12 @@ in
   # Configuration:
   #   Here is one way using the API: https://github.com/kira-bruneau/nixos-config/blob/5de7ec5e225075f4237722e38c5ec9fa2ed63e6a/environments/media-server.nix#L565
   config = mkIf cfg.enable {
-    services.sonarr.enable = true;
+    services.sonarr = {
+      enable = true;
+
+      user = if mediaUserEnabled then "media" else "deluge";
+      group = if mediaUserEnabled then "media" else "deluge";
+    };
 
     system.activationScripts.makeSonarrConfig =
       let

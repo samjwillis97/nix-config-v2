@@ -10,6 +10,7 @@ let
 
   cfg = config.modules.media.radarr;
   radarrCfg = config.services.radarr;
+  mediaUserEnabled = config.modules.system.users.media;
 
   mkRadarrRequest =
     args:
@@ -87,7 +88,12 @@ in
   # Configuration:
   #   Here is one way using the API: https://github.com/kira-bruneau/nixos-config/blob/5de7ec5e225075f4237722e38c5ec9fa2ed63e6a/environments/media-server.nix#L565
   config = mkIf cfg.enable {
-    services.radarr.enable = true;
+    services.radarr = {
+      enable = true;
+
+      user = if mediaUserEnabled then "media" else "deluge";
+      group = if mediaUserEnabled then "media" else "deluge";
+    };
 
     system.activationScripts.makeRadarrConfig =
       let
@@ -265,6 +271,21 @@ in
 
           echo "Creating new torrent client"
           ${createDlClient}
+        '';
+    };
+
+    systemd.services.radarr-root-paths = mkIf cfg.config.torrentClient.enable {
+      description = "setting radarr root paths";
+      wants = [ "radarr.service" ];
+      after = [ "radarr.service" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig.Type = "oneshot";
+      script =
+        let
+          status = mkRadarrRequest { uri = "/ping"; };
+        in
+        ''
+          ${status}
         '';
     };
   };
