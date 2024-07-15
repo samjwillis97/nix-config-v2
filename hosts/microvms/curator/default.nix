@@ -7,6 +7,9 @@
 
   networking.hostName = "curator";
 
+
+  # TODO: I should mount the movies path to /data/media/movies
+  #     downloades should be /data/downloads, /data/usenet, /data/torrents
   modules.media = {
     radarr = {
       enable = true;
