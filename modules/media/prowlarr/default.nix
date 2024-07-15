@@ -43,7 +43,36 @@ in
 
     logLevel = mkOption {
       default = "info";
-      type = types.enum [ "info" "debug" "trace" ];
+      type = types.enum [
+        "info"
+        "debug"
+        "trace"
+      ];
+    };
+
+    indexers = mkOption {
+      type = types.listOf types.attrs;
+      default = [
+        {
+          name = "eztv";
+          priority = 25;
+          fields = {
+            baseUrl = "https://eztvx.to/";
+            torrentBaseSettings = {
+              seedRatio = 2;
+            };
+          };
+        }
+        {
+          name = "isohunt2";
+          priority = 25;
+          fields = {
+            torrentBaseSettings = {
+              seedRatio = 2;
+            };
+          };
+        }
+      ];
     };
 
     radarrConnection = {
@@ -71,128 +100,7 @@ in
     };
   };
 
-  # EZTV
-  # {
-  # "indexerUrls": [
-  #   "https://eztvx.to/",
-  #   "https://eztv.wf/",
-  #   "https://eztv.tf/",
-  #   "https://eztv.yt/",
-  #   "https://eztv1.xyz/",
-  #   "https://eztv.unblockit.meme/"
-  # ],
-  # "legacyUrls": [
-  #   "https://eztv.ag/",
-  #   "https://eztv.it/",
-  #   "https://eztv.ch/",
-  #   "https://eztv.io/",
-  #   "https://eztv.unblockit.mov/",
-  #   "https://eztv.mrunblock.life/",
-  #   "https://eztv.unblockit.rsvp/",
-  #   "https://eztv.unblockit.vegas/",
-  #   "https://eztv.unblockit.esq/",
-  #   "https://eztv.unblockit.zip/",
-  #   "https://eztv.re/",
-  #   "https://eztv.li/",
-  #   "https://eztv.unblockit.foo/",
-  #   "https://eztv.unblockit.ing/",
-  #   "https://eztv.mrunblock.bond/",
-  #   "https://eztv.nocensor.cloud/",
-  #   "https://eztv.unblockit.date/",
-  #   "https://eztv.unblockit.dad/",
-  #   "https://eztv.unblockit.africa/",
-  #   "https://eztv.unblockit.casa/",
-  #   "https://eztv.unblockit.sbs/",
-  #   "https://eztv.unblockninja.com/",
-  #   "https://eztv.ninjaproxy1.com/",
-  #   "https://eztv.proxyninja.org/",
-  #   "https://eztv.abcproxy.org/",
-  #   "https://eztv.unblockit.ong/",
-  #   "https://eztv.unblockit.black/"
-  # ],
-  # "definitionName": "eztv",
-  # "description": "EZTV is a Public torrent site for TV shows",
-  # "language": "en-US",
-  # "enable": true,
-  # "redirect": false,
-  # "supportsRss": true,
-  # "supportsSearch": true,
-  # "supportsRedirect": false,
-  # "supportsPagination": false,
-  # "appProfileId": 1,
-  # "protocol": "torrent",
-  # "privacy": "public",
-  # "capabilities": {
-  #   "limitsMax": 100,
-  #   "limitsDefault": 100,
-  #   "categories": [
-  #     {
-  #       "id": 5000,
-  #       "name": "TV",
-  #       "subCategories": []
-  #     }
-  #   ],
-  #   "supportsRawSearch": false,
-  #   "searchParams": [
-  #     "q",
-  #     "q"
-  #   ],
-  #   "tvSearchParams": [
-  #     "q",
-  #     "season",
-  #     "ep"
-  #   ],
-  #   "movieSearchParams": [],
-  #   "musicSearchParams": [],
-  #   "bookSearchParams": []
-  # },
-  # "priority": 25,
-  # "downloadClientId": 0,
-  # "added": "0001-01-01T00:00:00Z",
-  # "sortName": "eztv",
-  # "name": "EZTV",
-  # "fields": [
-  #   {
-  #     "name": "definitionFile",
-  #     "value": "eztv"
-  #   },
-  #   {
-  #     "name": "baseUrl",
-  #     "value": "https://eztvx.to/"
-  #   },
-  #   {
-  #     "name": "baseSettings.queryLimit"
-  #   },
-  #   {
-  #     "name": "baseSettings.grabLimit"
-  #   },
-  #   {
-  #     "name": "baseSettings.limitsUnit",
-  #     "value": 0
-  #   },
-  #   {
-  #     "name": "torrentBaseSettings.appMinimumSeeders"
-  #   },
-  #   {
-  #     "name": "torrentBaseSettings.seedRatio",
-  #     "value": 2
-  #   },
-  #   {
-  #     "name": "torrentBaseSettings.seedTime"
-  #   },
-  #   {
-  #     "name": "torrentBaseSettings.packSeedTime"
-  #   }
-  # ],
-  # "implementationName": "Cardigann",
-  # "implementation": "Cardigann",
-  # "configContract": "CardigannSettings",
-  # "infoLink": "https://wiki.servarr.com/prowlarr/supported-indexers#eztv",
-  # "tags": []
-# }
-
   # TODO: Sync Profiles
-  # TODO: Indexers
   config = mkIf cfg.enable {
     services.prowlarr.enable = true;
 
@@ -315,6 +223,105 @@ in
 
           echo "Creating new radarr app"
           ${createRadarrApp}
+        '';
+    };
+
+    systemd.services.add-indexers = mkIf cfg.radarrConnection.enable {
+      description = "adding indexers to prowlarr";
+      wants = [
+        "prowlarr.service"
+        "tailscale-autoconnect.service"
+        "create-radarr-prowlarr-connection.service"
+      ];
+      after = [
+        "prowlarr.service"
+        "tailscale-autoconnect.service"
+        "create-radarr-prowlarr-connection.service"
+      ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig.Type = "oneshot";
+      script =
+        let
+          getIndexers = mkProwlarrRequest { uri = "/api/v1/indexer"; };
+          getIndexerSchemas = mkProwlarrRequest { uri = "/api/v1/indexer/schema"; };
+          flattenAttrs =
+            attrs: prefix:
+            let
+              processAttr =
+                attrName: attrValue:
+                if builtins.isAttrs attrValue then
+                  flattenAttrs attrValue (prefix + attrName + ".")
+                else
+                  [ (prefix + attrName) ];
+            in
+            builtins.concatLists (lib.mapAttrsToList processAttr attrs);
+
+          getValueByPath =
+            attrs: path:
+            let
+              components = lib.splitString "." path;
+              traverse =
+                attrSet: keys:
+                if builtins.length keys == 0 then
+                  attrSet
+                else
+                  traverse (attrSet.${builtins.head keys}) (builtins.tail keys);
+            in
+            traverse attrs components;
+        in
+        ''
+          # Wait for prowlarr to be available
+          ${prowlarrStatusCheck}
+
+          Indexers=$(${getIndexers})
+          Schemas=$(${getIndexerSchemas})
+
+          echo "Starting to create missing indexers"
+          ${builtins.concatStringsSep "\n" (
+            builtins.map (v: ''
+              ${v.name}Schema=$(echo $Schemas | ${pkgs.jq}/bin/jq '.[] | select(.definitionName == "${v.name}")')
+              if 
+                [ -z "$(echo $Indexers | ${pkgs.jq}/bin/jq '.[] | select(.definitionName == "${v.name}")')" ] && \
+                [ -n "${v.name}Schema" ]; then
+
+                echo "Creating ${v.name} indexer from schema"
+                ${v.name}Indexer=$(echo "''$${v.name}Schema" | ${pkgs.jq}/bin/jq '.priority |= ${toString v.priority}')
+
+                # TODO: think about letting appProfileId be configured
+                ${v.name}Indexer=$(echo "''$${v.name}Schema" | ${pkgs.jq}/bin/jq '.appProfileId |= 1')
+                ${
+                  builtins.concatStringsSep "\n" (
+                    builtins.map (fieldName: ''
+                      ${v.name}Indexer=$(echo "''$${v.name}Indexer" | ${pkgs.jq}/bin/jq '.fields |= map(
+                        if .name=="${fieldName}" then 
+                          {name, value: ${
+                            let
+                              value = getValueByPath v.fields fieldName;
+                            in
+                            if builtins.typeOf value == "string" then
+                              ''"${toString (getValueByPath v.fields fieldName)}"''
+                            else
+                              toString (getValueByPath v.fields fieldName)
+                          }} 
+                        else 
+                          {name}  + (if .value then {value} else {} end)
+                        end
+                      )')
+                    '') (flattenAttrs v.fields "")
+                  )
+                }
+
+                echo "''$${v.name}Indexer" > /tmp/${v.name}-indexer
+                ${
+                  mkProwlarrRequest {
+                    uri = "/api/v1/indexer";
+                    method = "POST";
+                    dataFile = "/tmp/${v.name}-indexer";
+                  }
+                }
+              fi
+            '') cfg.indexers
+          )}
         '';
     };
   };

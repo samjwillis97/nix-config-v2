@@ -1,4 +1,9 @@
-{ pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 with lib;
 let
   cfg = config.modules.media.deluge;
@@ -13,7 +18,10 @@ in
     };
 
     listenPorts = mkOption {
-      default = [ 6881 6891 ];
+      default = [
+        6881
+        6891
+      ];
       type = types.listOf types.port;
     };
 
@@ -44,8 +52,8 @@ in
 
         max_connections_global = -1;
         max_upload_slots_global = -1;
-        max_download_speed = -1; #KiB/s
-        max_upload_speed = -1; #KiB/s
+        max_download_speed = -1; # KiB/s
+        max_upload_speed = -1; # KiB/s
         max_half_open_connections = 125;
         max_connections_per_second = 125;
 

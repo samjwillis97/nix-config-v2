@@ -43,9 +43,12 @@ in
 
       logLevel = mkOption {
         default = "info";
-        type = types.enum [ "info" "debug" "trace" ];
+        type = types.enum [
+          "info"
+          "debug"
+          "trace"
+        ];
       };
-
 
       torrentClient = {
         enable = mkEnableOption "Enable torrent client";
