@@ -51,6 +51,11 @@ in
         ];
       };
 
+      rootPaths = mkOption {
+        default = [ "/data/media/movies" ];
+        type = types.listOf types.str;
+      };
+
       torrentClient = {
         enable = mkEnableOption "Enable torrent client";
 
@@ -283,9 +288,38 @@ in
       script =
         let
           status = mkRadarrRequest { uri = "/ping"; };
+          getRootPaths = mkRadarrRequest { uri = "/api/v3/rootfolder"; };
         in
         ''
           ${status}
+
+          RootPaths=$(${getRootPaths})
+
+          ${ builtins.concatStringsSep "\n" (
+              builtins.map(path:
+                ''
+                  if [ ! -z "$(echo $RootPaths | ${pkgs.jq}/bin/jq '.[] | select(.path == "${path}")')" ]; then
+                    ${
+                      mkRadarrRequest {
+                        uri = ''/api/v3/rootfolder/$(echo $RootPaths | ${pkgs.jq}/bin/jq '.[] | select(.path == "${path}") | .id')'';
+                        method = "DELETE";
+                      }
+                    }
+                  fi
+
+                  ${
+                    mkRadarrRequest {
+                      uri = "/api/v3/rootfolder";
+                      method = "POST";
+                      dataFile = pkgs.writers.writeJSON "${path}-root-path" {
+                        path = path;
+                      };
+                    }
+                  }
+                ''
+              ) cfg.config.rootPaths
+            )
+          }
         '';
     };
   };
