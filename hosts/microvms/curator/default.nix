@@ -34,6 +34,16 @@
     };
   };
 
+  microvm.shares = [
+    {
+      source = "/var/lib/media-server-test";
+      mountPoint = "/data";
+      tag = "media";
+      proto = "virtiofs";
+    }
+  ];
+
+
   services.nginx = {
     enable = true;
 
