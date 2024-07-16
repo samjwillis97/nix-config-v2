@@ -9,6 +9,11 @@
   modules.media = {
     homepage-dashboard = {
       enable = true;
+
+      radarr = {
+        enable = true;
+        url = "http://curator";
+      };
     };
   };
 
