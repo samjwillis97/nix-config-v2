@@ -113,6 +113,7 @@
           {
             modules.virtualisation.microvm-host.vms = [
               "my-first-microvm"
+              "dash"
               "curator"
               "sonarr"
               "iso-grabber"
