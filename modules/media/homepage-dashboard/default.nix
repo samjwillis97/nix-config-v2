@@ -151,7 +151,7 @@ in
           };
           Downloaders = {
             style = "row";
-            columns = 3;
+            columns = 2;
           };
         };
       } // cfg.settingOverrides;
