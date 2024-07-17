@@ -295,31 +295,24 @@ in
 
           RootPaths=$(${getRootPaths})
 
-          ${ builtins.concatStringsSep "\n" (
-              builtins.map(path:
-                ''
-                  if [ ! -z "$(echo $RootPaths | ${pkgs.jq}/bin/jq '.[] | select(.path == "${path}")')" ]; then
-                    ${
-                      mkRadarrRequest {
-                        uri = ''/api/v3/rootfolder/$(echo $RootPaths | ${pkgs.jq}/bin/jq '.[] | select(.path == "${path}") | .id')'';
-                        method = "DELETE";
-                      }
-                    }
-                  fi
-
-                  ${
-                    mkRadarrRequest {
-                      uri = "/api/v3/rootfolder";
-                      method = "POST";
-                      dataFile = pkgs.writers.writeJSON "${path}-root-path" {
-                        path = path;
-                      };
-                    }
+          ${builtins.concatStringsSep "\n" (
+            builtins.map (path: ''
+              if [ ! -z "$(echo $RootPaths | ${pkgs.jq}/bin/jq '.[] | select(.path == "${path}")')" ]; then
+                ${
+                  mkRadarrRequest {
+                    uri = ''/api/v3/rootfolder/$(echo $RootPaths | ${pkgs.jq}/bin/jq '.[] | select(.path == "${path}") | .id')'';
+                    method = "DELETE";
                   }
-                ''
-              ) cfg.config.rootPaths
-            )
-          }
+                }
+              fi
+
+              ${mkRadarrRequest {
+                uri = "/api/v3/rootfolder";
+                method = "POST";
+                dataFile = pkgs.writers.writeJSON "${path}-root-path" { path = path; };
+              }}
+            '') cfg.config.rootPaths
+          )}
         '';
     };
   };

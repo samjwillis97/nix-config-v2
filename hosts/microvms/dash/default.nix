@@ -1,8 +1,6 @@
 { config, ... }:
 {
-  imports = [
-    ../../../modules/media/homepage-dashboard
-  ];
+  imports = [ ../../../modules/media/homepage-dashboard ];
 
   networking.hostName = "dash";
 
@@ -13,6 +11,16 @@
       radarr = {
         enable = true;
         url = "http://curator";
+      };
+
+      deluge = {
+        enable = true;
+        url = "http://iso-grabber";
+      };
+
+      prowlarr = {
+        enable = true;
+        url = "http://indexer";
       };
     };
   };
