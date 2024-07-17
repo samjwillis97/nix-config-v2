@@ -233,8 +233,7 @@ in
                   [
                     {
                       ${cfg.${appKey}.group} =
-                        (lib.lists.findFirst (v: builtins.hasAttr cfg.${appKey}.group v) 0 acc)
-                        .${cfg.${appKey}.group}
+                        (lib.lists.findFirst (v: builtins.hasAttr cfg.${appKey}.group v) 0 acc).${cfg.${appKey}.group}
                         ++ [ serviceMaps.${appKey} ];
                     }
                   ]
