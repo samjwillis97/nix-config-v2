@@ -118,6 +118,7 @@
               "sonarr"
               "iso-grabber"
               "indexer"
+              "insights"
               "steve"
             ];
           }
