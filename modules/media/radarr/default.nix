@@ -32,6 +32,15 @@ in
   options.modules.media.radarr = {
     enable = mkEnableOption "Enables Radarr";
 
+    prometheus = {
+      enable = mkEnableOption "Enable prometheus exporter";
+
+      port = mkOption {
+        default = 9708;
+        type = types.port;
+      };
+    };
+
     config = {
       port = mkOption {
         default = 7878;
@@ -96,8 +105,26 @@ in
     services.radarr = {
       enable = true;
 
-      user = if mediaUserEnabled then "media" else "deluge";
-      group = if mediaUserEnabled then "media" else "deluge";
+      user = if mediaUserEnabled then "media" else "radarr";
+      group = if mediaUserEnabled then "media" else "radarr";
+    };
+
+    services.prometheus = {
+      exporters = {
+
+      } // (mkIf cfg.prometheus.enable {
+        exportarr-radarr = {
+          enable = true;
+          url = "http://127.0.0.1:${toString cfg.config.port}";
+          port = cfg.prometheus.port;
+          user = if mediaUserEnabled then "media" else "radarr";
+          group = if mediaUserEnabled then "media" else "radarr";
+          apiKeyFile = pkgs.writeTextFile {
+            name = "radarr-key";
+            text = cfg.config.apiKey;
+          };
+        };
+      });
     };
 
     system.activationScripts.makeRadarrConfig =

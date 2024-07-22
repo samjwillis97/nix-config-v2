@@ -19,9 +19,20 @@ in
 
       settings = {
         server = {
+          http_addr = "127.0.0.1";
+          domain = config.networking.hostName;
+          root_url = "http://${config.networking.hostName}";
           http_port = cfg.port;
         };
       };
+
+      provision.datasources.settings.datasources = [
+        {
+          name = "Prometheus";
+          type = "prometheus";
+          url = "http://insights:9090";
+        }
+      ];
     };
   };
 }

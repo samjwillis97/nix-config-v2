@@ -12,7 +12,10 @@ in
   imports = [
     ./hardware-configuration.nix
     ../../nixos
+    ../../modules/monitoring/exporters
   ];
+
+  modules.monitoring.exporters.system.enable = true;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;

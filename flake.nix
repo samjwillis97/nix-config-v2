@@ -119,6 +119,7 @@
               "iso-grabber"
               "indexer"
               "insights"
+              "graphy"
               "steve"
             ];
           }

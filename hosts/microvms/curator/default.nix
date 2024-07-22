@@ -4,15 +4,19 @@
     ../../../modules/media/radarr
     ../../../modules/media/recyclarr
     ../../../modules/system/users
+    ../../../modules/monitoring/exporters
   ];
 
   networking.hostName = "curator";
 
   modules.system.users.media = true;
 
+  modules.monitoring.exporters.system.enable = true;
+
   modules.media = {
     radarr = {
       enable = true;
+      prometheus.enable = true;
       config = {
         port = 9090;
         torrentClient = {

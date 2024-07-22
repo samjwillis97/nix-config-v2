@@ -1,6 +1,9 @@
 { config, ... }:
 {
-  imports = [ ../../../modules/monitoring ];
+  imports = [ 
+    ../../../modules/monitoring 
+    ../../../modules/monitoring/exporters
+  ];
 
   networking.hostName = "insights";
 
@@ -9,36 +12,15 @@
       enable = true;
 
       exporters = {
-        system = true;
-      };
-    };
-  };
-
-  services.nginx = {
-    enable = true;
-
-    recommendedProxySettings = true;
-    recommendedTlsSettings = false;
-
-    virtualHosts."${config.networking.hostName}" = {
-      forceSSL = false;
-      enableACME = false;
-
-      locations."/prometheus" = {
-        proxyPass = "http://127.0.0.1:${toString config.modules.monitoring.prometheusPort}/";
-        extraConfig = ''
-          proxy_set_header    Upgrade     $http_upgrade;
-          proxy_set_header    Connection  "upgrade";
-        '';
+        system.enable = true;
       };
 
-      locations."/alloy" = {
-        proxyPass = "http://127.0.0.1:${toString config.modules.monitoring.alloyPort}/";
-        extraConfig = ''
-          proxy_set_header    Upgrade     $http_upgrade;
-          proxy_set_header    Connection  "upgrade";
-        '';
-      };
+      prometheusTargets = [
+        "${config.networking.hostName}:${toString config.modules.monitoring.exporters.system.port}"
+        "personal-desktop:9091"   # node system exporter
+        "curator:9091"            # node system exporter
+        "curator:9708"            # radarr exportarr
+      ];
     };
   };
 }

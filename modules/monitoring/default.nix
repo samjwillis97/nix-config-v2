@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ pkgs, config, lib, ... }:
 with lib;
 let
   cfg = config.modules.monitoring;
@@ -17,8 +17,9 @@ in
       type = types.port;
     };
 
-    exporters = {
-      system = mkEnableOption "Enable system exporter";
+    prometheusTargets = mkOption {
+      default = [];
+      type = types.listOf types.str;
     };
   };
 
@@ -32,18 +33,6 @@ in
       ];
 
       retentionTime = "30d";
-
-      exporters =
-        {
-
-        }
-        // (mkIf cfg.exporters.system {
-          node = {
-            enable = true;
-            port = 9091;
-            enabledCollectors = [ "systemd" "processes" ];
-          };
-        });
     };
 
     services.alloy = {
@@ -54,7 +43,8 @@ in
       ];
     };
 
-    environment.etc."alloy/config.alloy" = {
+    environment.etc."alloy/config.alloy" =
+    {
       text = ''
       prometheus.remote_write "default" {
         endpoint {
@@ -63,9 +53,12 @@ in
       }
 
       prometheus.scrape "systemd" {
-        targets = [{
-          __address__ = "127.0.0.1:9091",
-        }]
+        targets = [${ builtins.concatStringsSep "\n" (
+          builtins.map (target: 
+            ''{"__address__" = "${target}"},''
+          ) cfg.prometheusTargets
+        )}
+        ]
 
         forward_to = [prometheus.remote_write.default.receiver]
       }
