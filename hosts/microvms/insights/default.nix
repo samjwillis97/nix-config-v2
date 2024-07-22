@@ -25,6 +25,7 @@
         "insights:9091"           # node system exporter
         "iso-grabber:9091"        # node system exporter
         "sonarr:9091"             # node system exporter
+        "plex:9091"             # node system exporter
         "curator:9708"            # radarr exportarr
       ];
     };

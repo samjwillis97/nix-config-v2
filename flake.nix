@@ -119,6 +119,7 @@
               "indexer"
               "insights"
               "graphy"
+              "plex"
             ];
           }
         ];
