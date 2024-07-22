@@ -112,7 +112,6 @@
           ./nixos/microvm-host.nix
           {
             modules.virtualisation.microvm-host.vms = [
-              "my-first-microvm"
               "dash"
               "curator"
               "sonarr"
@@ -120,7 +119,6 @@
               "indexer"
               "insights"
               "graphy"
-              "steve"
             ];
           }
         ];

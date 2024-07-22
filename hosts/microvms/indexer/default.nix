@@ -3,9 +3,12 @@
   imports = [
     ../../../modules/media/prowlarr
     ../../../modules/networking/vpn
+    ../../../modules/monitoring/exporters
   ];
 
   networking.hostName = "indexer";
+
+  modules.monitoring.exporters.system.enable = true;
 
   modules = {
     networking.vpn = {

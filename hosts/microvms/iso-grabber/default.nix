@@ -4,9 +4,12 @@
     ../../../modules/networking/vpn
     ../../../modules/media/deluge
     ../../../modules/system/users
+    ../../../modules/monitoring/exporters
   ];
 
   networking.hostName = "iso-grabber";
+
+  modules.monitoring.exporters.system.enable = true;
 
   modules.system.users.media = true;
 

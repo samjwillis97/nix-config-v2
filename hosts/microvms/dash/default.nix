@@ -1,8 +1,14 @@
 { config, ... }:
 {
-  imports = [ ../../../modules/media/homepage-dashboard ];
+  imports = [ 
+    ../../../modules/media/homepage-dashboard 
+    ../../../modules/monitoring/exporters
+  ];
+
 
   networking.hostName = "dash";
+
+  modules.monitoring.exporters.system.enable = true;
 
   modules.media = {
     homepage-dashboard = {

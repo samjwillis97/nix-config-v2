@@ -1,6 +1,9 @@
 { config, ... }:
 {
-  imports = [ ../../../modules/monitoring/grafana ];
+  imports = [ 
+    ../../../modules/monitoring/grafana 
+    ../../../modules/monitoring/exporters
+  ];
 
   networking.hostName = "graphy";
 
@@ -9,6 +12,8 @@
       grafana = {
         enable = true;
       };
+
+      exporters.system.enable = true;
     };
   };
 

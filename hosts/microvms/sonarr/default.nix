@@ -4,9 +4,12 @@
     ../../../modules/media/sonarr
     ../../../modules/media/recyclarr
     ../../../modules/system/users
+    ../../../modules/monitoring/exporters
   ];
 
   networking.hostName = "sonarr";
+
+  modules.monitoring.exporters.system.enable = true;
 
   modules.system.users.media = true;
 
