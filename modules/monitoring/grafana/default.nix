@@ -26,13 +26,28 @@ in
         };
       };
 
-      provision.datasources.settings.datasources = [
-        {
-          name = "Prometheus";
-          type = "prometheus";
-          url = "http://insights:9090";
-        }
-      ];
+      provision = {
+        enable = true;
+
+        dashboards.settings.providers = [
+          {
+            name = "Node Exporter";
+            options.path = ./dashboards/node-exporter.json;
+          }
+          {
+            name = "Radarr";
+            options.path = ./dashboards/radarr-exportarr.json;
+          }
+        ];
+
+        datasources.settings.datasources = [
+          {
+            name = "Prometheus";
+            type = "prometheus";
+            url = "http://insights:9090";
+          }
+        ];
+      };
     };
   };
 }
