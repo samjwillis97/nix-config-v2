@@ -4,11 +4,19 @@
     ../../../modules/media/prowlarr
     ../../../modules/networking/vpn
     ../../../modules/monitoring/exporters
+    ../../../modules/monitoring/promtail
   ];
 
   networking.hostName = "indexer";
 
-  modules.monitoring.exporters.system.enable = true;
+  modules.monitoring = {
+    promtail = {
+      enable = true;
+      lokiUrl = "http://insights:3100";
+    };
+
+    exporters.system.enable = true;
+  };
 
   modules = {
     networking.vpn = {

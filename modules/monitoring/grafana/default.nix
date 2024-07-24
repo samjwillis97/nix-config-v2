@@ -46,6 +46,11 @@ in
             type = "prometheus";
             url = "http://insights:9090";
           }
+          {
+            name = "Loki";
+            type = "loki";
+            url = "http://insights:3100";
+          }
         ];
       };
     };

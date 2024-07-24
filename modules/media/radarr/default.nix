@@ -110,21 +110,23 @@ in
     };
 
     services.prometheus = {
-      exporters = {
+      exporters =
+        {
 
-      } // (mkIf cfg.prometheus.enable {
-        exportarr-radarr = {
-          enable = true;
-          url = "http://127.0.0.1:${toString cfg.config.port}";
-          port = cfg.prometheus.port;
-          user = if mediaUserEnabled then "media" else "radarr";
-          group = if mediaUserEnabled then "media" else "radarr";
-          apiKeyFile = pkgs.writeTextFile {
-            name = "radarr-key";
-            text = cfg.config.apiKey;
+        }
+        // (mkIf cfg.prometheus.enable {
+          exportarr-radarr = {
+            enable = true;
+            url = "http://127.0.0.1:${toString cfg.config.port}";
+            port = cfg.prometheus.port;
+            user = if mediaUserEnabled then "media" else "radarr";
+            group = if mediaUserEnabled then "media" else "radarr";
+            apiKeyFile = pkgs.writeTextFile {
+              name = "radarr-key";
+              text = cfg.config.apiKey;
+            };
           };
-        };
-      });
+        });
     };
 
     system.activationScripts.makeRadarrConfig =

@@ -1,4 +1,9 @@
-{ pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 with lib;
 let
   cfg = config.modules.monitoring;
@@ -9,7 +14,7 @@ in
 
     alloyPort = mkOption {
       default = 12345;
-      type= types.port;
+      type = types.port;
     };
 
     prometheusPort = mkOption {
@@ -18,7 +23,7 @@ in
     };
 
     prometheusTargets = mkOption {
-      default = [];
+      default = [ ];
       type = types.listOf types.str;
     };
   };
@@ -28,9 +33,7 @@ in
       enable = true;
       port = cfg.prometheusPort;
 
-      extraFlags = [
-        "--web.enable-remote-write-receiver"
-      ];
+      extraFlags = [ "--web.enable-remote-write-receiver" ];
 
       retentionTime = "30d";
     };
@@ -38,30 +41,27 @@ in
     services.alloy = {
       enable = true;
 
-      extraFlags = [
-        "--server.http.listen-addr=0.0.0.0:${toString cfg.alloyPort}"
-      ];
+      extraFlags = [ "--server.http.listen-addr=0.0.0.0:${toString cfg.alloyPort}" ];
     };
 
-    environment.etc."alloy/config.alloy" =
-    {
+    environment.etc."alloy/config.alloy" = {
       text = ''
-      prometheus.remote_write "default" {
-        endpoint {
-          url = "http://127.0.0.1:${toString cfg.prometheusPort}/api/v1/write"
+        prometheus.remote_write "default" {
+          endpoint {
+            url = "http://127.0.0.1:${toString cfg.prometheusPort}/api/v1/write"
+          }
         }
-      }
 
-      prometheus.scrape "systemd" {
-        targets = [${ builtins.concatStringsSep "\n" (
-          builtins.map (target: 
-            ''{"__address__" = "${target}"},''
-          ) cfg.prometheusTargets
-        )}
-        ]
+        prometheus.scrape "systemd" {
+          targets = [${
+            builtins.concatStringsSep "\n" (
+              builtins.map (target: ''{"__address__" = "${target}"},'') cfg.prometheusTargets
+            )
+          }
+          ]
 
-        forward_to = [prometheus.remote_write.default.receiver]
-      }
+          forward_to = [prometheus.remote_write.default.receiver]
+        }
       '';
     };
   };

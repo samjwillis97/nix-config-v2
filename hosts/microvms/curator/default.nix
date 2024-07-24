@@ -5,13 +5,21 @@
     ../../../modules/media/recyclarr
     ../../../modules/system/users
     ../../../modules/monitoring/exporters
+    ../../../modules/monitoring/promtail
   ];
 
   networking.hostName = "curator";
 
   modules.system.users.media = true;
 
-  modules.monitoring.exporters.system.enable = true;
+  modules.monitoring = {
+    promtail = {
+      enable = true;
+      lokiUrl = "http://insights:3100";
+    };
+
+    exporters.system.enable = true;
+  };
 
   modules.media = {
     radarr = {

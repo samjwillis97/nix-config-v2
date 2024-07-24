@@ -1,8 +1,9 @@
 { config, ... }:
 {
-  imports = [ 
-    ../../../modules/monitoring/grafana 
+  imports = [
+    ../../../modules/monitoring/grafana
     ../../../modules/monitoring/exporters
+    ../../../modules/monitoring/promtail
   ];
 
   networking.hostName = "graphy";
@@ -11,6 +12,11 @@
     monitoring = {
       grafana = {
         enable = true;
+      };
+
+      promtail = {
+        enable = true;
+        lokiUrl = "http://insights:3100";
       };
 
       exporters.system.enable = true;

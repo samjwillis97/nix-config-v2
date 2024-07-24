@@ -1,14 +1,21 @@
 { config, ... }:
 {
-  imports = [ 
-    ../../../modules/media/homepage-dashboard 
+  imports = [
+    ../../../modules/media/homepage-dashboard
     ../../../modules/monitoring/exporters
+    ../../../modules/monitoring/promtail
   ];
-
 
   networking.hostName = "dash";
 
-  modules.monitoring.exporters.system.enable = true;
+  modules.monitoring = {
+    promtail = {
+      enable = true;
+      lokiUrl = "http://insights:3100";
+    };
+
+    exporters.system.enable = true;
+  };
 
   modules.media = {
     homepage-dashboard = {

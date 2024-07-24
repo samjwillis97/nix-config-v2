@@ -16,15 +16,20 @@ in
 
   config = {
     services.prometheus = {
-      exporters = {
+      exporters =
+        {
 
-      } // (mkIf cfg.system.enable {
-        node = {
-          enable = true;
-          port = cfg.system.port;
-          enabledCollectors = [ "systemd" "processes" ];
-        };
-      });
+        }
+        // (mkIf cfg.system.enable {
+          node = {
+            enable = true;
+            port = cfg.system.port;
+            enabledCollectors = [
+              "systemd"
+              "processes"
+            ];
+          };
+        });
     };
   };
-} 
+}
