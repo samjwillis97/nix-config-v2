@@ -12,6 +12,18 @@
     monitoring = {
       grafana = {
         enable = true;
+        dataSources = [
+          {
+            name = "Prometheus";
+            type = "prometheus";
+            url = "http://insights:9090";
+          }
+          {
+            name = "Loki";
+            type = "loki";
+            url = "http://insights:3100";
+          }
+        ];
       };
 
       promtail = {

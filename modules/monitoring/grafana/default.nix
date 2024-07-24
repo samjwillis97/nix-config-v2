@@ -11,6 +11,11 @@ in
       type = types.port;
       default = 3000;
     };
+
+    dataSources = mkOption {
+      type = types.listOf types.attrs;
+      default = [];
+    };
   };
 
   config = mkIf cfg.enable {
@@ -40,18 +45,7 @@ in
           }
         ];
 
-        datasources.settings.datasources = [
-          {
-            name = "Prometheus";
-            type = "prometheus";
-            url = "http://insights:9090";
-          }
-          {
-            name = "Loki";
-            type = "loki";
-            url = "http://insights:3100";
-          }
-        ];
+        datasources.settings.datasources = cfg.dataSources;
       };
     };
   };
