@@ -18,7 +18,6 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 7,
   "links": [],
   "panels": [
     {
@@ -68,32 +67,7 @@
             ]
           }
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "Info"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 6,
@@ -159,6 +133,18 @@
           "legendFormat": "Info",
           "queryType": "range",
           "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum(count_over_time({host=\"$host\", unit=\"$service\", level=\"debug\"} [$__auto]))",
+          "hide": false,
+          "legendFormat": "Debug",
+          "queryType": "range",
+          "refId": "D"
         }
       ],
       "type": "barchart"
@@ -208,8 +194,8 @@
       {
         "current": {
           "selected": true,
-          "text": "graphy",
-          "value": "graphy"
+          "text": "plex",
+          "value": "plex"
         },
         "datasource": {
           "type": "loki",
@@ -237,8 +223,8 @@
       {
         "current": {
           "selected": true,
-          "text": "grafana.service",
-          "value": "grafana.service"
+          "text": "plex.service",
+          "value": "plex.service"
         },
         "datasource": {
           "type": "loki",
@@ -294,6 +280,6 @@
   "timezone": "browser",
   "title": "Loki Promtail Services",
   "uid": "fdspp4nnym81234",
-  "version": 3,
+  "version": 4,
   "weekStart": ""
 }
