@@ -43,6 +43,14 @@ in
             name = "Radarr";
             options.path = ./dashboards/radarr-exportarr.json;
           }
+          {
+            name = "Loki Promtail";
+            options.path = ./dashboards/loki-promtail.json;
+          }
+          {
+            name = "Loki Promtail Services";
+            options.path = ./dashboards/loki-promtail-services.json;
+          }
         ];
 
         datasources.settings.datasources = cfg.dataSources;
