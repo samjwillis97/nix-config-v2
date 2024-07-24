@@ -13,9 +13,17 @@ in
     ./hardware-configuration.nix
     ../../nixos
     ../../modules/monitoring/exporters
+    ../../modules/monitoring/promtail
   ];
 
-  modules.monitoring.exporters.system.enable = true;
+  modules.monitoring = {
+    promtail = {
+      enable = true;
+      lokiUrl = "http://insights:3100";
+    };
+
+    exporters.system.enable = true;
+  };
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
