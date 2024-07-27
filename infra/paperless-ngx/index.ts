@@ -4,7 +4,7 @@ import * as awsx from "@pulumi/awsx";
 
 // Create an AWS resource (S3 Bucket)
 const documentBucket = new aws.s3.Bucket("document-storage");
-const postgresBackupBucket = new aws.s3.Bucket("document-storage");
+const postgresBackupBucket = new aws.s3.Bucket("paperless-pgsql-backup");
 
 // Export the name of the bucket
 export const documentBucketName = documentBucket.id;
