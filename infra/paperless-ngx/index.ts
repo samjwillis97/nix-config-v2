@@ -3,7 +3,9 @@ import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
 
 // Create an AWS resource (S3 Bucket)
-const bucket = new aws.s3.Bucket("document-storage");
+const documentBucket = new aws.s3.Bucket("document-storage");
+const postgresBackupBucket = new aws.s3.Bucket("document-storage");
 
 // Export the name of the bucket
-export const bucketName = bucket.id;
+export const documentBucketName = documentBucket.id;
+export const postgresBackupBucketName = postgresBackupBucket.id;
