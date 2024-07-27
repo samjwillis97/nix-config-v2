@@ -26,3 +26,5 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           work-dir: infra/paperless-ngx
           cloud-url: ${{ secrets.PULUMI_CLOUD_URL }}
+        env:
+            PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
