@@ -60,7 +60,7 @@ in
       wg0 = {
         address = cfg.address;
         # listenPort = 51820; # Might not be needed?
-        dns = cfg.dns;
+        # dns = cfg.dns; # This seems to fuck with DNS resolution of course.. might be necessary who knows
         privateKeyFile = cfg.privateKeyFile;
         peers = [
           {
@@ -96,6 +96,17 @@ in
         ${pkgs.libnatpmp}/bin/natpmpc -a 1 0 tcp 60 -g ${cfg.portForwarding.gateway}
 
         while true ; do date ; ${pkgs.libnatpmp}/bin/natpmpc -a 1 0 udp 60 -g ${cfg.portForwarding.gateway} && ${pkgs.libnatpmp}/bin/natpmpc -a 1 0 tcp 60 -g ${cfg.portForwarding.gateway} || { echo -e "ERROR with natpmpc command \a" ; break ; } ; sleep 45 ; done
+
+        # So i think somewhere here I need to extract the port from above
+        # And set it in deluge, and restart deluge if it is different
+        # fuck moi
+
+        # may not be possible, but the best way currently is to
+        # find the service ExecStart,
+        # in there find the core.conf being used
+        # modify in place there
+        # this kind of ruins the declarative nature of everything, but this port is random
+        # so
       '';
     };
   };
