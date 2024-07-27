@@ -24,7 +24,7 @@ jobs:
         with:
           command: up
           stack-name: paperless
-          comment-on-pr: true
+          comment-on-summary: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
           work-dir: infra/paperless-ngx
           cloud-url: ${{ secrets.PULUMI_CLOUD_URL }}
