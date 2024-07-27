@@ -50,7 +50,9 @@ in
   "tailscale_pre-auth.age".publicKeys = keys;
   "gh_pat.age".publicKeys = github-keys;
   "xtream_password.age".publicKeys = iptv-keys;
+
   "wireguard_private-key.age".publicKeys = wireguard-keys;
+  "p2p-vpn-key.age".publicKeys = wireguard-keys;
 
   "microvm/tailscale.age".publicKeys = microvm-keys;
   "microvm/ssh-host-key-ed25519.age".publicKeys = microvm-keys;
