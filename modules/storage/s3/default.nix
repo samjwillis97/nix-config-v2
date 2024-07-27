@@ -31,6 +31,11 @@ in
       storage_class =    ;
     '';
 
+    # TODO: https://nixos.wiki/wiki/Agenix#Replace_inplace_strings_with_secrets
+    # So need to write a service to replace all those values before the rclone service 
+    # actually starts, ez right
+    # A useful pattern to know
+
     # fileSystems."/mnt" = {
     #   device = "remote:/my_data";
     #   fsType = "rclone";
