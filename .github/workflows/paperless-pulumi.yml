@@ -9,7 +9,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3.5.0
         with:
-          node-version-file: package.json
+          node-version-file: infra/paperless-ngx/package.json
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
