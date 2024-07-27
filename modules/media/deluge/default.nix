@@ -32,6 +32,11 @@ in
     };
 
     privateTrackers = mkEnableOption "For use with private trackers";
+
+    networkInterface = mkOption {
+      default = null;
+      type = types.nullOr types.str;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -49,7 +54,7 @@ in
       authFile = pkgs.writeTextFile {
         name = "deluge-auth-file";
         text = ''
-          localclient:deluge:10
+          localclient::10
           deluge:deluge:10
         '';
       };
@@ -57,6 +62,8 @@ in
       declarative = true;
       # https://trash-guides.info/Downloaders/Deluge/Basic-Setup/
       config = {
+        outgoing_interface = cfg.networkInterface;
+
         pre_allocate_storage = true;
 
         download_location = cfg.downloadPath;

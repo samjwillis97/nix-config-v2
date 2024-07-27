@@ -40,7 +40,7 @@ in
 
     networking.firewall = {
       # enable the firewall
-      enable = true;
+      # enable = true;
 
       # always allow traffic from your Tailscale network
       trustedInterfaces = [ "tailscale0" ];

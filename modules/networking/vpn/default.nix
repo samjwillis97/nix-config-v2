@@ -73,6 +73,24 @@ in
       };
     };
 
+    networking.enableIPv6 = false;
+
+#     networking.firewall = {
+#       # enable = false;
+#       allowedUDPPortRanges = [
+#         {
+#           from = 45000;
+#           to = 65000;
+#         }
+#       ];
+#       allowedTCPPortRanges = [
+#         {
+#           from = 45000;
+#           to = 65000;
+#         }
+#       ];
+#     };
+
     # https://protonvpn.com/support/port-forwarding-manual-setup
     systemd.services.wg-port-forward = mkIf cfg.portForwarding.enable {
       description = "enable port forwarding for wg VPN";
@@ -89,14 +107,7 @@ in
       wantedBy = [ "multi-user.target" ];
 
       script = ''
-        # Create UDP port mapping
-        ${pkgs.libnatpmp}/bin/natpmpc -a 1 0 udp 60 -g ${cfg.portForwarding.gateway}
-
-        # Create TCP port mapping
-        ${pkgs.libnatpmp}/bin/natpmpc -a 1 0 tcp 60 -g ${cfg.portForwarding.gateway}
-
         while true ; do date ; ${pkgs.libnatpmp}/bin/natpmpc -a 1 0 udp 60 -g ${cfg.portForwarding.gateway} && ${pkgs.libnatpmp}/bin/natpmpc -a 1 0 tcp 60 -g ${cfg.portForwarding.gateway} || { echo -e "ERROR with natpmpc command \a" ; break ; } ; sleep 45 ; done
-
         # So i think somewhere here I need to extract the port from above
         # And set it in deluge, and restart deluge if it is different
         # fuck moi
@@ -107,6 +118,9 @@ in
         # modify in place there
         # this kind of ruins the declarative nature of everything, but this port is random
         # so
+        # the read only file system ruins this..
+        # Looks like there is JSON RPC API I might be able to use to set the port
+        # Not sure if this is even working though
       '';
     };
   };
