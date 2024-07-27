@@ -1,6 +1,9 @@
 {
     "name": "paperless-ngx",
     "main": "index.ts",
+    "engines" : { 
+      "node" : "18"
+    },
     "devDependencies": {
         "@types/node": "^18",
         "typescript": "^5.0.0"
