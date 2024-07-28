@@ -22,12 +22,26 @@
       "microvm-ssh-host-key-ed25519" = {
         file = ./microvm/ssh-host-key-ed25519.age;
       };
+      "infra-access-key-id" = {
+        file = ./aws/infra-access-key-id.age;
+      };
+      "infra-secret-access-key" = {
+        file = ./aws/infra-secret-access-key.age;
+      };
+      "paperless-s3-bucket-name" = {
+        file = ./paperless/s3-bucket-name.age;
+      };
+      "paperless-s3-bucket-region" = {
+        file = ./paperless/s3-bucket-region.age;
+      };
     };
     identityPaths = [
       "/var/agenix/id-ed25519-agenix-primary"
       "/var/agenix/github-primary"
       "/var/agenix/iptv-primary"
       "/var/agenix/microvm-primary"
+      "/var/agenix/aws-infra-primary-key"
+      "/var/agenix/paperless-primary-key"
     ];
   };
 }
