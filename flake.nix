@@ -120,6 +120,7 @@
               "insights"
               "graphy"
               "plex"
+              "paperless"
             ];
           }
         ];
