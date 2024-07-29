@@ -77,5 +77,6 @@ in
   "aws/infra-secret-access-key.age".publicKeys = aws-infra-keys;
 
   "paperless/s3-bucket-name.age".publicKeys = paperless-keys;
+  "paperless/s3-backup-bucket-name.age".publicKeys = paperless-keys;
   "paperless/s3-bucket-region.age".publicKeys = paperless-keys;
 }

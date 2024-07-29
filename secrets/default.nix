@@ -31,6 +31,9 @@
       "paperless-s3-bucket-name" = {
         file = ./paperless/s3-bucket-name.age;
       };
+      "paperless-s3-backup-bucket-name" = {
+        file = ./paperless/s3-backup-bucket-name.age;
+      };
       "paperless-s3-bucket-region" = {
         file = ./paperless/s3-bucket-region.age;
       };
