@@ -21,24 +21,24 @@
     storage.s3 = {
       enable = true;
 
-      buckets = [
+      buckets = with config.age.secrets; [
         {
           mountLocation = "/data";
 
-          bucketNameFile = config.age.secrets.paperless-s3-bucket-name.path;
-          bucketRegionFile = config.age.secrets.paperless-s3-bucket-region.path;
+          bucketNameFile = paperless-s3-bucket-name.path;
+          bucketRegionFile = paperless-s3-bucket-region.path;
 
-          awsAccessKeyIdFile = config.age.secrets.infra-access-key-id.path;
-          awsSecretAccessKeyFile = config.age.secrets.infra-secret-access-key.path;
+          awsAccessKeyIdFile = infra-access-key-id.path;
+          awsSecretAccessKeyFile = infra-secret-access-key.path;
         }
         {
           mountLocation = "/backups";
 
-          bucketNameFile = config.age.secrets.paperless-s3-backup-bucket-name.path;
-          bucketRegionFile = config.age.secrets.paperless-s3-bucket-region.path;
+          bucketNameFile = paperless-s3-backup-bucket-name.path;
+          bucketRegionFile = paperless-s3-bucket-region.path;
 
-          awsAccessKeyIdFile = config.age.secrets.infra-access-key-id.path;
-          awsSecretAccessKeyFile = config.age.secrets.infra-secret-access-key.path;
+          awsAccessKeyIdFile = infra-access-key-id.path;
+          awsSecretAccessKeyFile = infra-secret-access-key.path;
         }
       ];
     };
