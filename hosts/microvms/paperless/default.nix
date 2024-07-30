@@ -1,12 +1,17 @@
 { config, ... }:
+let 
+  paperlessDataDir = "/data";
+in
 {
   imports = [
     ../../../modules/monitoring/exporters
     ../../../modules/monitoring/promtail
     ../../../modules/storage/s3
+    ../../../modules/storage/paperless
   ];
 
   networking.hostName = "paperless";
+  microvm.mem = 4096;
 
   modules = {
     monitoring = {
@@ -18,29 +23,56 @@
       exporters.system.enable = true;
     };
 
-    storage.s3 = {
-      enable = true;
+    storage = {
+      paperless = {
+        enable = true;
+        documentDir = paperlessDataDir;
+      };
 
-      buckets = with config.age.secrets; [
-        {
-          mountLocation = "/data";
+      s3 = {
+        enable = true;
 
-          bucketNameFile = paperless-s3-bucket-name.path;
-          bucketRegionFile = paperless-s3-bucket-region.path;
+        buckets = with config.age.secrets; [
+          {
+            mountLocation = paperlessDataDir;
 
-          awsAccessKeyIdFile = infra-access-key-id.path;
-          awsSecretAccessKeyFile = infra-secret-access-key.path;
-        }
-        {
-          mountLocation = "/backups";
+            bucketNameFile = paperless-s3-bucket-name.path;
+            bucketRegionFile = paperless-s3-bucket-region.path;
 
-          bucketNameFile = paperless-s3-backup-bucket-name.path;
-          bucketRegionFile = paperless-s3-bucket-region.path;
+            awsAccessKeyIdFile = infra-access-key-id.path;
+            awsSecretAccessKeyFile = infra-secret-access-key.path;
+          }
+          {
+            mountLocation = "/backups";
 
-          awsAccessKeyIdFile = infra-access-key-id.path;
-          awsSecretAccessKeyFile = infra-secret-access-key.path;
-        }
-      ];
+            bucketNameFile = paperless-s3-backup-bucket-name.path;
+            bucketRegionFile = paperless-s3-bucket-region.path;
+
+            awsAccessKeyIdFile = infra-access-key-id.path;
+            awsSecretAccessKeyFile = infra-secret-access-key.path;
+          }
+        ];
+      };
+    };
+  };
+
+  services.nginx = {
+    enable = true;
+
+    recommendedProxySettings = true;
+    recommendedTlsSettings = false;
+
+    virtualHosts."${config.networking.hostName}" = {
+      forceSSL = false;
+      enableACME = false;
+
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:${toString config.modules.storage.paperless.port}";
+        extraConfig = ''
+          proxy_set_header    Upgrade     $http_upgrade;
+          proxy_set_header    Connection  "upgrade";
+        '';
+      };
     };
   };
 }
