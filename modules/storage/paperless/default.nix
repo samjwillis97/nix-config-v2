@@ -27,12 +27,8 @@ in
       mediaDir = cfg.documentDir;
 
       passwordFile = pkgs.writeTextFile {
-        name = "paperless-pass";
+        name = "paperless-superuser-password";
         text = "admin";
-      };
-
-      settings = {
-        PAPERLESS_AUTO_LOGIN_USERNAME = "admin";
       };
     };
   };
