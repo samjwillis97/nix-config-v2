@@ -1,6 +1,7 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 let 
   paperlessDataDir = "/data";
+  backupDirectory = "/backups";
 in
 {
   imports = [
@@ -43,7 +44,7 @@ in
             awsSecretAccessKeyFile = infra-secret-access-key.path;
           }
           {
-            mountLocation = "/backups";
+            mountLocation = backupDirectory;
 
             bucketNameFile = paperless-s3-backup-bucket-name.path;
             bucketRegionFile = paperless-s3-bucket-region.path;
@@ -54,6 +55,19 @@ in
         ];
       };
     };
+  };
+
+  # Make sure rclone mount is up first
+  systemd.services.paperless-scheduler.after = ["data.mount"];
+  systemd.services.paperless-consumer.after = ["data.mount"];
+  systemd.services.paperless-web.after = ["data.mount"];
+
+  # Backs up the SQLite database
+  services.cron = {
+    enable = true;
+    systemCronJobs = [
+      "0 * * * *    root    ${pkgs.rclone}/bin/rclone copy ${config.services.paperless.dataDir}/db.sqlite3 ${backupDirectory}/db"
+    ];
   };
 
   services.nginx = {
