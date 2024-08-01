@@ -37,7 +37,7 @@
       };
 
       portForwarding = {
-        enable = true;
+        enable = false;
         gateway = "10.2.0.1";
       };
     };

@@ -285,9 +285,11 @@ in
           };
         in
         ''
+          echo "Checking Radarr status"
           ${status}
 
           # Just making sure hostname is available - will error out if not
+          echo "Making sure Torrent client is available"
           ${pkgs.iputils}/bin/ping -c1 -W10 ${cfg.config.torrentClient.host}
 
           AllClients=$(${getAllClients})
@@ -301,6 +303,8 @@ in
                 method = "DELETE";
               }
             }
+          else
+            echo "No torrent client exists"
           fi
 
           echo "Creating new torrent client"

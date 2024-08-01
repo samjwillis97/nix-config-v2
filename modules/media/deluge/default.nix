@@ -54,7 +54,7 @@ in
       authFile = pkgs.writeTextFile {
         name = "deluge-auth-file";
         text = ''
-          localclient::10
+          localclient:deluge:10
           deluge:deluge:10
         '';
       };
