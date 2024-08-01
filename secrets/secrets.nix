@@ -14,6 +14,12 @@ let
   microvm-primary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIkfdBeKrK1A6ccSOVMsS3e/f5flYOdm7JB0MqgMsIXz sam@personal-desktop";
   microvm-secondary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICiV93l9WxEzGa8tYjAj8TWZ2q4Cz+IuGBR/kvRRYZNl sam@personal-desktop";
 
+  aws-infra-primary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDZS7bX4db9yIzSxfmtqnCrYtJfzrJP7POp8X/aYXxp1 sam@personal-desktop";
+  aws-infra-secondary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFDe1oDK5JLLWudsoaAxGmhRuhtOkfwfNMSNZAoF2bpO sam@personal-desktop";
+
+  paperless-primary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOOFi2Que2/gAc8QmcpAPzpkxX7hq9YoN8qHWlKXNBDl sam@personal-desktop";
+  paperless-secondary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMR5c5eojnEtEALkqVElixavek+0JhC8tBaEdSfHCGgJ sam@personal-desktop";
+
   keys = [
     primary-key
     secondary-key
@@ -33,6 +39,14 @@ let
   microvm-keys = [
     microvm-primary-key
     microvm-secondary-key
+  ];
+  aws-infra-keys = [
+    aws-infra-primary-key
+    aws-infra-secondary-key
+  ];
+  paperless-keys = [
+    paperless-primary-key
+    paperless-secondary-key
   ];
 in
 {
@@ -58,4 +72,11 @@ in
   "microvm/ssh-host-key-ed25519.age".publicKeys = microvm-keys;
   "microvm/ssh-host-key-rsa.age".publicKeys = microvm-keys;
   "microvm/ssh-host-key-ecdsa.age".publicKeys = microvm-keys;
+
+  "aws/infra-access-key-id.age".publicKeys = aws-infra-keys;
+  "aws/infra-secret-access-key.age".publicKeys = aws-infra-keys;
+
+  "paperless/s3-bucket-name.age".publicKeys = paperless-keys;
+  "paperless/s3-backup-bucket-name.age".publicKeys = paperless-keys;
+  "paperless/s3-bucket-region.age".publicKeys = paperless-keys;
 }

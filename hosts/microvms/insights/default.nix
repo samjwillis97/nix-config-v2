@@ -36,6 +36,7 @@
         "sonarr:9091" # node system exporter
         "plex:9091" # node system exporter
         "curator:9708" # radarr exportarr
+        "paperless:9091" # node system exporter
       ];
     };
   };
