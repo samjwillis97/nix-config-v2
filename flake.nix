@@ -253,6 +253,7 @@
             hostname = "teeny-pc";
             profiles.system = {
               user = "root";
+              sshUser = "sam";
               path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.teeny-pc;
             };
           };
