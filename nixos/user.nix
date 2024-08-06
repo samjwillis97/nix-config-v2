@@ -40,7 +40,7 @@ in
     extraGroups = [
       "wheel"
     ];
-    hashedPassword = "";
+    password = "very-complex-password";
     openssh = {
       authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA2FeFN6YQEUr22lJCeuQHcDawLuAPnoizlZLJOwhch4 sam@williscloud.org"
