@@ -60,6 +60,11 @@
       url = "github:samjwillis97/f";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    deploy-rs = {
+      url = "github:serokell/deploy-rs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -75,6 +80,7 @@
       hyprland,
       microvm,
       f,
+      deploy-rs,
       ...
     }@inputs:
     let
@@ -174,7 +180,12 @@
         system = "aarch64-darwin";
         username = "samwillis";
         homePath = "/Users";
-        extraModules = [ ];
+        extraModules = [
+          {
+            imports = [ ./modules/ops/deploy.nix ];
+            modules.ops.deploy.enable = true;
+          }
+        ];
         extraHomeModules = [
           # ./home-manager/darwin/keyboard.nix
           ./home-manager/wezterm
@@ -203,6 +214,28 @@
 
       (mkHomeManager { hostname = "coder-container"; })
 
+      (mkNixosSystem {
+        hostname = "teeny-pc";
+        system = "x86_64-linux";
+        username = "sam";
+        extraModules = [
+          # {
+          #   modules.virtualisation.microvm-host.vms = [
+          #     "dash"
+          #     "curator"
+          #     "sonarr"
+          #     "iso-grabber"
+          #     "indexer"
+          #     "insights"
+          #     "graphy"
+          #     "plex"
+          #     "paperless"
+          #   ];
+          # }
+        ];
+        useHomeManager = false;
+      })
+
       # This currently is just to let me format with `nix fmt` on any system
       (flake-utils.lib.eachDefaultSystem (
         system:
@@ -213,5 +246,19 @@
           formatter = pkgs.nixfmt-rfc-style;
         }
       ))
+
+      (
+        {
+          deploy.nodes.teeny-pc = {
+            hostname = "teeny-pc";
+            profiles.system = {
+              user = "root";
+              path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.teeny-pc;
+            };
+          };
+
+          checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
+        }
+      )
     ]);
 }

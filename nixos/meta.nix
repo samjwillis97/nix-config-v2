@@ -9,7 +9,7 @@
 {
   # Add some Nix related packages
   environment.systemPackages = with pkgs; [
-    cachix
+    # cachix # FIXME, do I even need this? pipeline will probably throw a fit
     nix-build-uncached
     # nixos-cleanup
   ];
