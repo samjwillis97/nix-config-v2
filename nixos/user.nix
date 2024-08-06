@@ -34,9 +34,7 @@ in
   users.groups.deployer = {};
 
   users.users.deployer = {
-    isNormalUser = false;
-    isSystemUser = true;
-    group = "deployer";
+    isNormalUser = true;
     extraGroups = [
       "wheel"
     ];
