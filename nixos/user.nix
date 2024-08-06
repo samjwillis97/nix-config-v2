@@ -31,6 +31,8 @@ in
     };
   };
 
+  users.groups.deployer = {};
+
   users.users.deployer = {
     isNormalUser = false;
     isSystemUser = true;
