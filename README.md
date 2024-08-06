@@ -8,6 +8,10 @@ Nix allows for easy to manage, collaborative, reproducible deployments. This mea
 
 ## How To
 
+### Deploy with deploy-rs
+
+`deploy --remote-build --skip-checks`
+
 ### Update Flake Input
 
 `nix flake lock --update-input my-neovim`

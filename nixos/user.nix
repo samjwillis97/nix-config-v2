@@ -1,27 +1,25 @@
 {
   super,
-  lib,
-  pkgs,
   ...
 }:
 let
-  inherit (super.meta) username;
+  inherit (super.meta) username useHomeManager;
 in
 {
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.${username} = {
+  imports = [ ../modules/system/users ];
+
+  modules.system.users.standardUser = {
+    enable = true;
+    username = username;
+    useHomeManager = useHomeManager;
+  };
+
+  users.users.deployer = {
     isNormalUser = true;
-    uid = 1000;
-    shell = pkgs.zsh;
     extraGroups = [
       "wheel"
-      "networkmanager"
-      "video"
-      "docker"
-      "libvirtd"
-      "qemu-libvirtd"
     ];
-    password = "nixos";
+    password = "very-complex-password";
     openssh = {
       authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA2FeFN6YQEUr22lJCeuQHcDawLuAPnoizlZLJOwhch4 sam@williscloud.org"
@@ -30,5 +28,18 @@ in
       ];
     };
   };
+
+  security.sudo.extraRules = [
+    {
+      users = [ "deployer" ];
+      commands = [
+        { 
+          command = "ALL" ;
+          options= [ "NOPASSWD" ]; # "SETENV" # Adding the following could be a good idea
+        }
+      ];
+    }
+  ];
+
   programs.zsh.enable = true;
 }
