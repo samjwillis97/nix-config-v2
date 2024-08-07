@@ -220,21 +220,7 @@
         system = "x86_64-linux";
         username = "sam";
         extraHomeModules = [];
-        extraModules = [
-          # {
-          #   modules.virtualisation.microvm-host.vms = [
-          #     "dash"
-          #     "curator"
-          #     "sonarr"
-          #     "iso-grabber"
-          #     "indexer"
-          #     "insights"
-          #     "graphy"
-          #     "plex"
-          #     "paperless"
-          #   ];
-          # }
-        ];
+        extraModules = [];
         useHomeManager = true;
       })
 

@@ -32,9 +32,6 @@ in
       };
 
       addDeployerSSHKey = mkEnableOption "Add deployer SSH key to standard user";
-
-      # TODO: Move this
-      hasGUI = mkEnableOption "Standard user has a GUI";
     };
 
     media = mkEnableOption "Enable standard media user";
@@ -94,13 +91,14 @@ in
 
     home-manager = mkIf (cfg.standardUser.enable && cfg.standardUser.home-manager.enable) {
       useUserPackages = true;
-      users.${cfg.standardUser.username} = {
+      users.${cfg.standardUser.username} =
+      {
         imports = [
-          flake.inputs.agenix.homeManagerModules.age { inherit pkgs; }
+          flake.inputs.agenix.homeManagerModules.age
           ../../../home-manager/meta
           ../../../home-manager/cli
+          ../../../home-manager/theme
         ]
-        ++ (if cfg.standardUser.hasGUI then [ ../../../home-manager/theme ] else [ ])
         ++ cfg.standardUser.home-manager.extraModules;
       };
       extraSpecialArgs = {
