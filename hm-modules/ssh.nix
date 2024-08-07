@@ -7,8 +7,11 @@
 with lib;
 let
   cfg = config.modules.ssh;
-  tomlFormat = pkgs.formats.toml { };
 in
 {
+  options.modules.ops.deploy = {
+    addDeployerPrivateKey = mkEnableOption "Add private SSH key for deployment":
+  };
+
   config = { };
 }
