@@ -1,4 +1,3 @@
-
 {
   age = {
     secrets = {
@@ -6,8 +5,6 @@
         file = ./tailscale_pre-auth.age;
       };
     };
-    identityPaths = [
-      "/var/agenix/id-ed25519-agenix-primary"
-    ];
+    identityPaths = [ "/var/agenix/id-ed25519-agenix-primary" ];
   };
 }

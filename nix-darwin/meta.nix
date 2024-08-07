@@ -1,6 +1,6 @@
 { pkgs, flake, ... }:
 {
-  environment.systemPackages = with pkgs; [ 
+  environment.systemPackages = with pkgs; [
     # cachix # FIXME idk if needed, pipeline might throw fit
   ];
   services.nix-daemon.enable = true;

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 with lib;
 let
   cfg = config.modules.storage.paperless;
@@ -22,7 +27,7 @@ in
     services.paperless = {
       enable = true;
 
-      address="0.0.0.0";
+      address = "0.0.0.0";
       port = cfg.port;
       mediaDir = cfg.documentDir;
 

@@ -205,6 +205,7 @@
         extraHomeModules = [
           ./home-manager/dev
           ./home-manager/dev/devenv.nix
+          ./home-manager/dev/ops.nix
           ./home-manager/wezterm
           ./home-manager/vscode
           ./home-manager/work
@@ -247,19 +248,17 @@
         }
       ))
 
-      (
-        {
-          deploy.nodes.teeny-pc = {
-            hostname = "teeny-pc";
-            profiles.system = {
-              user = "root";
-              sshUser = "deployer";
-              path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.teeny-pc;
-            };
+      ({
+        deploy.nodes.teeny-pc = {
+          hostname = "teeny-pc";
+          profiles.system = {
+            user = "root";
+            sshUser = "deployer";
+            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.teeny-pc;
           };
+        };
 
-          checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
-        }
-      )
+        checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
+      })
     ]);
 }

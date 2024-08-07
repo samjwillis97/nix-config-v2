@@ -1,5 +1,5 @@
 { config, pkgs, ... }:
-let 
+let
   paperlessDataDir = "/data";
   backupDirectory = "/backups";
 
@@ -62,9 +62,21 @@ in
   };
 
   # Make sure rclone mount is up first
-  systemd.services.paperless-scheduler.after = [ "data.mount" "backup.mount" "paperless-db-backup-check.service" ];
-  systemd.services.paperless-consumer.after = [ "data.mount" "backup.mount" "paperless-db-backup-check.service" ];
-  systemd.services.paperless-web.after = [ "data.mount" "backup.mount" "paperless-db-backup-check.service" ];
+  systemd.services.paperless-scheduler.after = [
+    "data.mount"
+    "backup.mount"
+    "paperless-db-backup-check.service"
+  ];
+  systemd.services.paperless-consumer.after = [
+    "data.mount"
+    "backup.mount"
+    "paperless-db-backup-check.service"
+  ];
+  systemd.services.paperless-web.after = [
+    "data.mount"
+    "backup.mount"
+    "paperless-db-backup-check.service"
+  ];
 
   # Backs up the SQLite database
   services.cron = {

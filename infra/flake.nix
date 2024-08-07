@@ -17,7 +17,7 @@
 
         nativeBuildInputs = with pkgs; [ ];
         buildInputs = with pkgs; [ ];
-        packages = with pkgs; [ 
+        packages = with pkgs; [
           nodejs_20
           pulumi
           pulumiPackages.pulumi-language-nodejs
@@ -26,9 +26,7 @@
       in
       with pkgs;
       {
-        devShells.default = mkShell { 
-          inherit packages buildInputs nativeBuildInputs;
-        };
+        devShells.default = mkShell { inherit packages buildInputs nativeBuildInputs; };
 
         formatter = pkgs.nixfmt-rfc-style;
       }
