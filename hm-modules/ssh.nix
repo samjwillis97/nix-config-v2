@@ -9,9 +9,14 @@ let
   cfg = config.modules.ssh;
 in
 {
-  options.modules.ops.deploy = {
-    addDeployerPrivateKey = mkEnableOption "Add private SSH key for deployment";
+  options.modules.ssh = {
+    enable = mkEnableOption "Enable SSH";
   };
 
-  config = { };
+  config = mkIf cfg.enable {
+    programs.ssh = {
+      enable = true;
+      addKeysToAgent = "yes";
+    };
+  };
 }
