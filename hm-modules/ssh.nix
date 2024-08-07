@@ -10,7 +10,7 @@ let
 in
 {
   options.modules.ops.deploy = {
-    addDeployerPrivateKey = mkEnableOption "Add private SSH key for deployment":
+    addDeployerPrivateKey = mkEnableOption "Add private SSH key for deployment";
   };
 
   config = { };
