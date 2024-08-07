@@ -1,4 +1,7 @@
 {
+  super,
+  flake,
+  system,
   config,
   lib,
   pkgs,
@@ -19,8 +22,19 @@ in
         description = "Default username for standard user";
       };
 
-      # FIXME: this should check another option instead of being manually set
-      useHomeManager = mkEnableOption "Using home-manager?";
+      home-manager = {
+        enable = mkEnableOption "Enable home-manager for standard user";
+        extraModules = mkOption {
+          type = types.listOf types.anything;
+          default = [ ];
+          description = "Extra home-manager modules to include";
+        };
+      };
+
+      addDeployerSSHKey = mkEnableOption "Add deployer SSH key to standard user";
+
+      # TODO: Move this
+      hasGUI = mkEnableOption "Standard user has a GUI";
     };
 
     media = mkEnableOption "Enable standard media user";
@@ -50,7 +64,7 @@ in
               ${cfg.standardUser.username} = {
                 isNormalUser = true;
                 uid = 1000;
-                shell = if cfg.standardUser.useHomeManager then pkgs.zsh else pkgs.bash;
+                shell = if cfg.standardUser.home-manager.enable then pkgs.zsh else pkgs.bash;
                 extraGroups = [
                   "wheel"
                   "networkmanager"
@@ -74,8 +88,24 @@ in
         );
     };
 
-    programs.zsh = mkIf (cfg.standardUser.enable && cfg.standardUser.useHomeManager) {
+    programs.zsh = mkIf (cfg.standardUser.enable && cfg.standardUser.home-manager.enable) {
       enable = true;
+    };
+
+    home-manager = mkIf (cfg.standardUser.enable && cfg.standardUser.home-manager.enable) {
+      useUserPackages = true;
+      users.${cfg.standardUser.username} = {
+        imports = [
+          flake.inputs.agenix.homeManagerModules.age { inherit pkgs; }
+          ../../../home-manager/meta
+          ../../../home-manager/cli
+        ]
+        ++ (if cfg.standardUser.hasGUI then [ ../../../home-manager/theme ] else [ ])
+        ++ cfg.standardUser.home-manager.extraModules;
+      };
+      extraSpecialArgs = {
+        inherit flake system super;
+      };
     };
   };
 }

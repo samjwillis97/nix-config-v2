@@ -219,6 +219,7 @@
         hostname = "teeny-pc";
         system = "x86_64-linux";
         username = "sam";
+        extraHomeModules = [];
         extraModules = [
           # {
           #   modules.virtualisation.microvm-host.vms = [
@@ -234,7 +235,7 @@
           #   ];
           # }
         ];
-        useHomeManager = false;
+        useHomeManager = true;
       })
 
       # This currently is just to let me format with `nix fmt` on any system

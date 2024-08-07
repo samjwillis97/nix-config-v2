@@ -1,13 +1,20 @@
-{ super, ... }:
+{ flake, super, ... }:
 let
-  inherit (super.meta) username useHomeManager;
+  inherit (super.meta) username useHomeManager extraHomeModules;
 in
 {
-  imports = [ ../modules/system/users ];
+  imports = [
+    flake.inputs.home-manager.nixosModules.home-manager
+    ../shared/meta.nix # Feel like I don't need this
+    ../modules/system/users
+  ];
 
   modules.system.users.standardUser = {
     enable = true;
     username = username;
-    useHomeManager = useHomeManager;
+    home-manager = {
+      enable = useHomeManager;
+      extraModules = extraHomeModules;
+    };
   };
 }

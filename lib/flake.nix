@@ -65,7 +65,7 @@ in
               hostname
               useHomeManager
               ;
-            extraHomeModules = [ inputs.agenix.homeManagerModules.age ] ++ extraHomeModules;
+            extraHomeModules = extraHomeModules;
             isDarwin = false;
           };
         };
