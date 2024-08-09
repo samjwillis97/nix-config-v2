@@ -42,6 +42,12 @@ let
 
         formatter.enable = true;
 
+        folding = {
+          enable = true;
+          mode = "ufo";
+          defaultFoldNumber = 99;
+        };
+
         ai.copilot = {
           enableAll = true;
           completion = {
@@ -80,7 +86,8 @@ let
           enableTreesitter = true;
           enableLSP = true;
           enableDebugger = true;
-          enableFormat = false;
+          enableFormat = true;
+          enableLinting = true;
           enableAll = true;
         };
 
