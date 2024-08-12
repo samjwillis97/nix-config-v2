@@ -717,6 +717,7 @@
         "plugin-dap-ui": "plugin-dap-ui",
         "plugin-dracula": "plugin-dracula",
         "plugin-dracula-nvim": "plugin-dracula-nvim",
+        "plugin-dressing": "plugin-dressing",
         "plugin-fidget": "plugin-fidget",
         "plugin-friendly-snippets": "plugin-friendly-snippets",
         "plugin-fugitive": "plugin-fugitive",
@@ -728,12 +729,13 @@
         "plugin-lspkind": "plugin-lspkind",
         "plugin-lualine": "plugin-lualine",
         "plugin-luasnip": "plugin-luasnip",
+        "plugin-neotree": "plugin-neotree",
         "plugin-nio": "plugin-nio",
+        "plugin-nui": "plugin-nui",
         "plugin-nvim-cmp": "plugin-nvim-cmp",
         "plugin-nvim-dap-vscode-js": "plugin-nvim-dap-vscode-js",
         "plugin-nvim-lastplace": "plugin-nvim-lastplace",
         "plugin-nvim-lint": "plugin-nvim-lint",
-        "plugin-nvim-tree-lua": "plugin-nvim-tree-lua",
         "plugin-nvim-ts-autotag": "plugin-nvim-ts-autotag",
         "plugin-nvim-ufo": "plugin-nvim-ufo",
         "plugin-nvim-web-devicons": "plugin-nvim-web-devicons",
@@ -744,21 +746,23 @@
         "plugin-rhubarb": "plugin-rhubarb",
         "plugin-surround": "plugin-surround",
         "plugin-telescope": "plugin-telescope",
+        "plugin-telescope-frecency": "plugin-telescope-frecency",
+        "plugin-telescope-undo": "plugin-telescope-undo",
         "plugin-tmux-navigator": "plugin-tmux-navigator",
         "plugin-tokyonight": "plugin-tokyonight",
         "plugin-transparent": "plugin-transparent",
         "plugin-treesitter-context": "plugin-treesitter-context",
         "plugin-typescript-tools": "plugin-typescript-tools",
-        "plugin-undotree": "plugin-undotree",
         "plugin-vim-sneak": "plugin-vim-sneak",
+        "plugin-window-picker": "plugin-window-picker",
         "vscode-js-debug": "vscode-js-debug"
       },
       "locked": {
-        "lastModified": 1723207509,
-        "narHash": "sha256-bC69MU9SJ37PyJDYe+T9G7uFrFns0aCSKytfWj0bcDw=",
+        "lastModified": 1723421122,
+        "narHash": "sha256-1WBbF7fTcipeE/onEBhn7vrKFB4ONxKc+KTWt1tLLdA=",
         "owner": "samjwillis97",
         "repo": "modular-neovim-flake",
-        "rev": "684ec757f9d0cd0f3a916f9b8b208e504f33669c",
+        "rev": "18cf00e2a41a3243b0de96cb63473c4a33c84e46",
         "type": "github"
       },
       "original": {
@@ -1329,6 +1333,22 @@
         "type": "github"
       }
     },
+    "plugin-dressing": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1718760361,
+        "narHash": "sha256-LlcE/1/IT6QW/o5gks80BFnrIdBd4GjW4M9o+84/j1c=",
+        "owner": "stevearc",
+        "repo": "dressing.nvim",
+        "rev": "6741f1062d3dc6e4755367a7e9b347b553623f04",
+        "type": "github"
+      },
+      "original": {
+        "owner": "stevearc",
+        "repo": "dressing.nvim",
+        "type": "github"
+      }
+    },
     "plugin-fidget": {
       "flake": false,
       "locked": {
@@ -1506,6 +1526,22 @@
         "type": "github"
       }
     },
+    "plugin-neotree": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1718074188,
+        "narHash": "sha256-eNGuQEjAKsPuRDGaw95kCVOmP64ZDnUuFBppqtcrhZ4=",
+        "owner": "nvim-neo-tree",
+        "repo": "neo-tree.nvim",
+        "rev": "206241e451c12f78969ff5ae53af45616ffc9b72",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nvim-neo-tree",
+        "repo": "neo-tree.nvim",
+        "type": "github"
+      }
+    },
     "plugin-nio": {
       "flake": false,
       "locked": {
@@ -1519,6 +1555,22 @@
       "original": {
         "owner": "nvim-neotest",
         "repo": "nvim-nio",
+        "type": "github"
+      }
+    },
+    "plugin-nui": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1719375254,
+        "narHash": "sha256-o2iNktcWxL0oCtCkbARMiWnTlZA8QWQHy2qeOanBlO4=",
+        "owner": "MunifTanjim",
+        "repo": "nui.nvim",
+        "rev": "61574ce6e60c815b0a0c4b5655b8486ba58089a1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "MunifTanjim",
+        "repo": "nui.nvim",
         "type": "github"
       }
     },
@@ -1583,22 +1635,6 @@
       "original": {
         "owner": "mfussenegger",
         "repo": "nvim-lint",
-        "type": "github"
-      }
-    },
-    "plugin-nvim-tree-lua": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1722137182,
-        "narHash": "sha256-cGBGvguDYyWfTkalBCMQTiQALKDCckUpXgfZZpJpqcg=",
-        "owner": "kyazdani42",
-        "repo": "nvim-tree.lua",
-        "rev": "48d0e82f9434691cc50d970898142a8c084a49d6",
-        "type": "github"
-      },
-      "original": {
-        "owner": "kyazdani42",
-        "repo": "nvim-tree.lua",
         "type": "github"
       }
     },
@@ -1762,6 +1798,38 @@
         "type": "github"
       }
     },
+    "plugin-telescope-frecency": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1722590441,
+        "narHash": "sha256-frrc6p+LldRJERXaMZfXIg220JkNuvEZyXrCiD6RiQU=",
+        "owner": "nvim-telescope",
+        "repo": "telescope-frecency.nvim",
+        "rev": "25d01edae8a2d74bcaa706c003b2712bce1e3301",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nvim-telescope",
+        "repo": "telescope-frecency.nvim",
+        "type": "github"
+      }
+    },
+    "plugin-telescope-undo": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1719759846,
+        "narHash": "sha256-VVkyD4VBpyBKzYbRxKhGWAwuPvmfzd8BPTuHKxlz4vc=",
+        "owner": "debugloop",
+        "repo": "telescope-undo.nvim",
+        "rev": "51be9ae7c42fc27c0b05505e3a0162e0f05fbb6a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "debugloop",
+        "repo": "telescope-undo.nvim",
+        "type": "github"
+      }
+    },
     "plugin-tmux-navigator": {
       "flake": false,
       "locked": {
@@ -1842,22 +1910,6 @@
         "type": "github"
       }
     },
-    "plugin-undotree": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1713305700,
-        "narHash": "sha256-UIroW89ALMRdxSkNGU2VPeuXJxR+25wJ+AakRcjwx/s=",
-        "owner": "mbbill",
-        "repo": "undotree",
-        "rev": "56c684a805fe948936cda0d1b19505b84ad7e065",
-        "type": "github"
-      },
-      "original": {
-        "owner": "mbbill",
-        "repo": "undotree",
-        "type": "github"
-      }
-    },
     "plugin-vim-sneak": {
       "flake": false,
       "locked": {
@@ -1871,6 +1923,22 @@
       "original": {
         "owner": "justinmk",
         "repo": "vim-sneak",
+        "type": "github"
+      }
+    },
+    "plugin-window-picker": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1702792768,
+        "narHash": "sha256-D5ikm5Fw0N/AjDL71cuATp1OCONuxPZNfEHuh0vXkq0=",
+        "owner": "s1n7ax",
+        "repo": "nvim-window-picker",
+        "rev": "41cfaa428577c53552200a404ae9b3a0b5719706",
+        "type": "github"
+      },
+      "original": {
+        "owner": "s1n7ax",
+        "repo": "nvim-window-picker",
         "type": "github"
       }
     },

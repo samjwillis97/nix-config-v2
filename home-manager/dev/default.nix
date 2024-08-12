@@ -15,8 +15,9 @@ let
         };
         visuals = {
           enable = true;
-          borderType = "none";
+          borderType = "rounded";
           transparentBackground = true;
+          improveVimInterfaces = true;
         };
 
         filetree = {
@@ -31,7 +32,11 @@ let
           enable = true;
           fold = true;
         };
-        telescope.enable = true;
+
+        telescope = {
+          enable = true;
+          frecency.enable = true;
+        };
 
         lsp = {
           enable = true;
