@@ -180,7 +180,7 @@
         system = "aarch64-darwin";
         username = "samwillis";
         homePath = "/Users";
-        extraModules = [];
+        extraModules = [ ];
         extraHomeModules = [
           # ./home-manager/darwin/keyboard.nix
           ./home-manager/wezterm
@@ -215,14 +215,10 @@
         hostname = "teeny-pc";
         system = "x86_64-linux";
         username = "sam";
-        extraHomeModules = [];
+        extraHomeModules = [ ];
         extraModules = [
           ./nixos/microvm-host.nix
-          {
-            modules.virtualisation.microvm-host.vms = [
-              "steve"
-            ];
-          }
+          { modules.virtualisation.microvm-host.vms = [ "steve" ]; }
         ];
         useHomeManager = true;
       })

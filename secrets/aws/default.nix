@@ -8,8 +8,6 @@
         file = ./infra-secret-access-key.age;
       };
     };
-    identityPaths = [ 
-      "/var/agenix/aws-infra-primary-key"
-    ];
+    identityPaths = [ "/var/agenix/aws-infra-primary-key" ];
   };
 }

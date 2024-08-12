@@ -15,9 +15,7 @@
     virtualisation.microvm-host = {
       enable = true;
       externalInterface = "enp2s0";
-      vms = [
-        "steve"
-      ];
+      vms = [ "steve" ];
     };
   };
 }

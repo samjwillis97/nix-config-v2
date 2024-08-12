@@ -91,15 +91,13 @@ in
 
     home-manager = mkIf (cfg.standardUser.enable && cfg.standardUser.home-manager.enable) {
       useUserPackages = true;
-      users.${cfg.standardUser.username} =
-      {
+      users.${cfg.standardUser.username} = {
         imports = [
           flake.inputs.agenix.homeManagerModules.age
           ../../../home-manager/meta
           ../../../home-manager/cli
           ../../../home-manager/theme
-        ]
-        ++ cfg.standardUser.home-manager.extraModules;
+        ] ++ cfg.standardUser.home-manager.extraModules;
       };
       extraSpecialArgs = {
         inherit flake system super;
