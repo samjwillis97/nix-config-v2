@@ -8,13 +8,13 @@
 {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
-    ../../modules/networking/wifi/default.nix
+    # ../../modules/networking/wifi/default.nix
   ];
 
-  modules.networking.wifi = {
-    enable = true;
-    adapter = "wlp1s0";
-  };
+  # modules.networking.wifi = {
+  #   enable = true;
+  #   adapter = "wlp1s0";
+  # };
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;

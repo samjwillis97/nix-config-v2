@@ -62,6 +62,8 @@ in
   # Redeploy nix configuration.
 
   "default/tailscale_pre-auth.age".publicKeys = keys;
+  "default/home-wifi-ssid.age".publicKeys = keys;
+  "default/home-wifi-psk.age".publicKeys = keys;
 
   "github/gh_pat.age".publicKeys = github-keys;
 
