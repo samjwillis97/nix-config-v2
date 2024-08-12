@@ -61,12 +61,14 @@ in
   # Add the age module to your machine's nix configuration
   # Redeploy nix configuration.
 
-  "tailscale_pre-auth.age".publicKeys = keys;
-  "gh_pat.age".publicKeys = github-keys;
-  "xtream_password.age".publicKeys = iptv-keys;
+  "default/tailscale_pre-auth.age".publicKeys = keys;
 
-  "wireguard_private-key.age".publicKeys = wireguard-keys;
-  "p2p-vpn-key.age".publicKeys = wireguard-keys;
+  "github/gh_pat.age".publicKeys = github-keys;
+
+  "iptv/xtream_password.age".publicKeys = iptv-keys;
+
+  "wireguard/wireguard_private-key.age".publicKeys = wireguard-keys;
+  "wireguard/p2p-vpn-key.age".publicKeys = wireguard-keys;
 
   "microvm/tailscale.age".publicKeys = microvm-keys;
   "microvm/ssh-host-key-ed25519.age".publicKeys = microvm-keys;

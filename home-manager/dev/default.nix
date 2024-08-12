@@ -117,7 +117,7 @@ let
   ];
 in
 {
-  imports = [ ../../secrets ];
+  imports = [ ../../secrets/github ];
   home.packages =
     with pkgs;
     [

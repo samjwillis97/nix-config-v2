@@ -9,7 +9,7 @@ let
   cfg = config.modules.networking.vpn;
 in
 {
-  imports = [ ../../../secrets/system.nix ];
+  imports = [ ../../../secrets/wireguard/system.nix ];
 
   options.modules.networking.vpn = {
     enable = mkEnableOption "Enables VPN service - specifically for ProtonVPN currently";

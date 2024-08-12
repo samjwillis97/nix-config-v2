@@ -1,7 +1,7 @@
 { config, ... }:
 {
   imports = [
-    ../../../secrets/system.nix
+    ../../../secrets/wireguard/system.nix
     ../../../modules/networking/vpn
     ../../../modules/media/deluge
     ../../../modules/system/users

@@ -180,18 +180,14 @@
         system = "aarch64-darwin";
         username = "samwillis";
         homePath = "/Users";
-        extraModules = [
-          {
-            imports = [ ./modules/ops/deploy.nix ];
-            modules.ops.deploy.enable = true;
-          }
-        ];
+        extraModules = [];
         extraHomeModules = [
           # ./home-manager/darwin/keyboard.nix
           ./home-manager/wezterm
           ./home-manager/vscode
           ./home-manager/dev
           ./home-manager/dev/devenv.nix
+          ./home-manager/dev/ops.nix
           ./home-manager/aerospace
         ];
       })
@@ -220,7 +216,14 @@
         system = "x86_64-linux";
         username = "sam";
         extraHomeModules = [];
-        extraModules = [];
+        extraModules = [
+          ./nixos/microvm-host.nix
+          {
+            modules.virtualisation.microvm-host.vms = [
+              "steve"
+            ];
+          }
+        ];
         useHomeManager = true;
       })
 

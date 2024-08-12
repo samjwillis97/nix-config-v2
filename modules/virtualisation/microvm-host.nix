@@ -128,13 +128,13 @@ in
         acc
         // {
           ${hostname} = {
-            config = {
+            config = { config, ... }: {
               imports = [
                 flake.inputs.agenix.nixosModules.default
-                ../../secrets
-                ../networking/tailscale
-                ../../hosts/microvms/${hostname}
                 ./microvm-guest.nix
+                ../networking/tailscale
+                ../../secrets/microvm
+                ../../hosts/microvms/${hostname}
               ];
 
               modules.virtualisation.microvm-guest.enable = true;
