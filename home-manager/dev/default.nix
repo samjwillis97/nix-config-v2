@@ -94,6 +94,13 @@ let
           enableFormat = true;
           enableLinting = true;
           enableAll = true;
+
+          typescript = {
+            lsp = {
+              enable = true;
+              servers = [ "tsserver" ];
+            };
+          };
         };
 
         debugger.enable = true;
