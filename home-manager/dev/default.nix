@@ -14,7 +14,6 @@ let
           name = "catppuccin";
         };
         visuals = {
-          enable = true;
           borderType = "rounded";
           transparentBackground = true;
           improveVimInterfaces = true;
