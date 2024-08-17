@@ -115,20 +115,6 @@
           ./nixos/gaming.nix
           ./nixos/logitech.nix
           ./nixos/docker.nix
-          ./nixos/microvm-host.nix
-          {
-            modules.virtualisation.microvm-host.vms = [
-              "dash"
-              "curator"
-              "sonarr"
-              "iso-grabber"
-              "indexer"
-              "insights"
-              "graphy"
-              "plex"
-              "paperless"
-            ];
-          }
         ];
         extraHomeModules = [
           # hyprland.homeManagerModules.default

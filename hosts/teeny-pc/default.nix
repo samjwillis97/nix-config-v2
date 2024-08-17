@@ -4,6 +4,8 @@
     ./hardware-configuration.nix
     ../../nixos
     ../../modules/ops/deploy.nix
+    ../../modules/monitoring/exporters
+    ../../modules/monitoring/promtail
     ../../modules/virtualisation/microvm-host.nix
   ];
 
@@ -12,10 +14,22 @@
       createDeployUser = true;
     };
 
+    monitoring = {
+      promtail = {
+        enable = true;
+        lokiUrl = "http://insights:3100";
+      };
+
+      exporters.system.enable = true;
+    };
+
     virtualisation.microvm-host = {
       enable = true;
       externalInterface = "enp2s0";
-      vms = [ "steve" ];
+      vms = [
+        "graphy"
+        "insights"
+      ];
     };
   };
 }
