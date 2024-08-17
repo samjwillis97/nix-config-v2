@@ -46,6 +46,7 @@
       enable = true;
       downloadPath = "/data/downloads/torrents";
       networkInterface = "wg0";
+      prometheus.enable = true;
     };
   };
 

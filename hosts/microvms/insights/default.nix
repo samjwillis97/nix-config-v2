@@ -33,6 +33,7 @@
         "indexer:9091" # node system exporter
         "insights:9091" # node system exporter
         "iso-grabber:9091" # node system exporter
+        "iso-grabber:9354" # deluge exporter
         "sonarr:9091" # node system exporter
         "plex:9091" # node system exporter
         "curator:9708" # radarr exportarr

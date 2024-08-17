@@ -37,6 +37,15 @@ in
       default = null;
       type = types.nullOr types.str;
     };
+
+    prometheus = {
+      enable = mkEnableOption "Enable prometheus exporter";
+
+      port = mkOption {
+        default = 9354;
+        type = types.port;
+      };
+    };
   };
 
   config = mkIf cfg.enable {
@@ -103,6 +112,23 @@ in
           "Label"
         ];
       };
+    };
+
+    services.prometheus = {
+      exporters =
+        {
+
+        }
+        // (mkIf cfg.prometheus.enable {
+          deluge = {
+            enable = true;
+            delugeHost = "localhost";
+            delugeUser = "localclient";
+            delugePassword = "deluge";
+            delugePort = cfg.port;
+            port = cfg.prometheus.port;
+          };
+        });
     };
   };
 }
