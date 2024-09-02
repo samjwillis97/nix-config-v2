@@ -61,6 +61,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    shc = {
+      url = "github:samjwillis97/shc-2";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     deploy-rs = {
       url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -80,6 +85,7 @@
       hyprland,
       microvm,
       f,
+      shc,
       deploy-rs,
       ...
     }@inputs:

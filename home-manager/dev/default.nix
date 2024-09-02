@@ -138,6 +138,7 @@ in
       nodePackages.json-diff
       _1password
       neovim
+      shc-cli
     ]
     ++ (with pkgs; if super.meta.isDarwin then [ f ] else [ ]);
 }
