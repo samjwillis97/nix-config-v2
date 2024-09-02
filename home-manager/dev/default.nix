@@ -34,7 +34,7 @@ let
 
         telescope = {
           enable = true;
-          frecency.enable = true;
+          frecency.enable = false;
         };
 
         lsp = {
