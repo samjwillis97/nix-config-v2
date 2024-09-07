@@ -129,6 +129,7 @@
           ./home-manager/i3
           ./home-manager/gaming
           ./home-manager/dev
+          ./home-manager/dev/ops.nix
           # ./home-manager/qutebrowser
           # ./home-manager/hyprland
         ];
@@ -208,10 +209,7 @@
         system = "x86_64-linux";
         username = "sam";
         extraHomeModules = [ ];
-        extraModules = [
-          ./nixos/microvm-host.nix
-          { modules.virtualisation.microvm-host.vms = [ "steve" ]; }
-        ];
+        extraModules = [ ./nixos/microvm-host.nix ];
         useHomeManager = true;
       })
 
