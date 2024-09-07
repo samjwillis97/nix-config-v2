@@ -152,6 +152,24 @@ let
       rightCmd = "${prefixCmd} right";
     });
 
+  mapWorkspacesToAttrs =
+    with builtins;
+    with lib.strings;
+    {
+      workspaces,
+      prefixKey ? null,
+      prefixCmd,
+    }:
+    listToAttrs (
+      map (
+        { ws, name }:
+        {
+          name = ''${optionalString (prefixKey != null) "${prefixKey}+"}${toString ws}'';
+          value = ''${prefixCmd} "${name}"'';
+        }
+      ) workspaces
+    );
+
   mapWorkspacesStr =
     with builtins;
     with lib.strings;
@@ -339,26 +357,19 @@ in
           "Shift+minus" = "gaps outer all minus 5";
           "Shift+0" = "gaps outer all set 0";
         } // exitMode;
-        ${gameMode} = {
-          "Mod1+q" = "nop";
-          "Mod1+w" = "nop";
-          "Mod1+e" = "nop";
-          "Mod1+r" = "nop";
-          "Mod1+a" = "nop";
-          "Mod1+s" = "nop";
-          "Mod1+d" = "nop";
-          "Mod1+f" = "nop";
-          "Mod1+Shift+q" = "nop";
-          "Mod1+Shift+w" = "nop";
-          "Mod1+Shift+e" = "nop";
-          "Mod1+Shift+r" = "nop";
-          "Mod1+Shift+a" = "nop";
-          "Mod1+Shift+s" = "nop";
-          "Mod1+Shift+d" = "nop";
-          "Mod1+Shift+f" = "nop";
-
-          "${modifier}+Shift+g" = "mode default";
-        };
+        ${gameMode} =
+          # This should unbind everything i3 related except moving workspaces
+          (mapWorkspacesToAttrs {
+            inherit workspaces;
+            prefixKey = modifier;
+            prefixCmd = "workspace number";
+          })
+          // (mapWorkspacesToAttrs {
+            inherit workspaces;
+            prefixKey = "${modifier}+Shift";
+            prefixCmd = "move container to workspace number";
+          })
+          // ({ "${modifier}+Shift+g" = "mode default"; });
       }
       // extraModes;
 
