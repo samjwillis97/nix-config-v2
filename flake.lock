@@ -727,12 +727,12 @@
         "plugin-cmp_luasnip": "plugin-cmp_luasnip",
         "plugin-codesnap": "plugin-codesnap",
         "plugin-colorizer": "plugin-colorizer",
-        "plugin-commentary": "plugin-commentary",
         "plugin-conform-nvim": "plugin-conform-nvim",
         "plugin-copilot": "plugin-copilot",
         "plugin-copilot-chat": "plugin-copilot-chat",
         "plugin-dap": "plugin-dap",
         "plugin-dap-ui": "plugin-dap-ui",
+        "plugin-diffview": "plugin-diffview",
         "plugin-dracula": "plugin-dracula",
         "plugin-dracula-nvim": "plugin-dracula-nvim",
         "plugin-dressing": "plugin-dressing",
@@ -770,17 +770,19 @@
         "plugin-tokyonight": "plugin-tokyonight",
         "plugin-transparent": "plugin-transparent",
         "plugin-treesitter-context": "plugin-treesitter-context",
+        "plugin-ts-comments": "plugin-ts-comments",
         "plugin-typescript-tools": "plugin-typescript-tools",
+        "plugin-vim-flog": "plugin-vim-flog",
         "plugin-vim-sneak": "plugin-vim-sneak",
         "plugin-window-picker": "plugin-window-picker",
         "vscode-js-debug": "vscode-js-debug"
       },
       "locked": {
-        "lastModified": 1723587468,
-        "narHash": "sha256-ZoGobVr+lnUNrCCzkDITUCx52YNQSdtQrJnVE9uhFZQ=",
+        "lastModified": 1726786258,
+        "narHash": "sha256-4oo/DFzhNnnXcmfosXaDToD55Qb6TwCFLUe6SG1ym1k=",
         "owner": "samjwillis97",
         "repo": "modular-neovim-flake",
-        "rev": "47e6fe8291b283d2ac2c9febbd273d4d6c4b0279",
+        "rev": "278597f22c303a429fda38036ab72544cb2f480d",
         "type": "github"
       },
       "original": {
@@ -1222,22 +1224,6 @@
         "type": "github"
       }
     },
-    "plugin-commentary": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1712594061,
-        "narHash": "sha256-7praqmXKB1VMaEiRE/mvUdYf7F18V204ICU/VKWtJuw=",
-        "owner": "tpope",
-        "repo": "vim-commentary",
-        "rev": "c4b8f52cbb7142ec239494e5a2c4a512f92c4d07",
-        "type": "github"
-      },
-      "original": {
-        "owner": "tpope",
-        "repo": "vim-commentary",
-        "type": "github"
-      }
-    },
     "plugin-conform-nvim": {
       "flake": false,
       "locked": {
@@ -1316,6 +1302,22 @@
       "original": {
         "owner": "rcarriga",
         "repo": "nvim-dap-ui",
+        "type": "github"
+      }
+    },
+    "plugin-diffview": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1718279802,
+        "narHash": "sha256-SX+ybIzL/w6uyCy4iZKnWnzTFwqB1oXSgyYVAdpdKi8=",
+        "owner": "sindrets",
+        "repo": "diffview.nvim",
+        "rev": "4516612fe98ff56ae0415a259ff6361a89419b0a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "sindrets",
+        "repo": "diffview.nvim",
         "type": "github"
       }
     },
@@ -1912,6 +1914,22 @@
         "type": "github"
       }
     },
+    "plugin-ts-comments": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1721799917,
+        "narHash": "sha256-4dDUtPmwlwQ4/So/28dRhsuiVdY5DNq7I5MfIzPP5ok=",
+        "owner": "folke",
+        "repo": "ts-comments.nvim",
+        "rev": "98d7d4dec0af1312d38e288f800bbf6ff562b6ab",
+        "type": "github"
+      },
+      "original": {
+        "owner": "folke",
+        "repo": "ts-comments.nvim",
+        "type": "github"
+      }
+    },
     "plugin-typescript-tools": {
       "flake": false,
       "locked": {
@@ -1925,6 +1943,22 @@
       "original": {
         "owner": "pmizio",
         "repo": "typescript-tools.nvim",
+        "type": "github"
+      }
+    },
+    "plugin-vim-flog": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1725758399,
+        "narHash": "sha256-NF3d/+OTdnfIMuU3hASavV9WHfkEz7OONViGgKtnn+s=",
+        "owner": "rbong",
+        "repo": "vim-flog",
+        "rev": "03f6e39050c2a32deca6964291005c6c5c4c73cf",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rbong",
+        "repo": "vim-flog",
         "type": "github"
       }
     },

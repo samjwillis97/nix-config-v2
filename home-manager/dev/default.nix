@@ -26,7 +26,12 @@ let
         statusline.enable = true;
         qol.enable = true;
 
-        git.enable = true;
+        git = {
+          enable = true;
+          prettyLog = true;
+          diffview = true;
+        };
+
         treesitter = {
           enable = true;
           fold = true;
@@ -132,6 +137,7 @@ in
   home.packages =
     with pkgs;
     [
+      gnupg1
       jq
       direnv
       difftastic
