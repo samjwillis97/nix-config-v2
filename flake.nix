@@ -13,6 +13,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    firefox-darwin = {
+      url = "github:bandithedoge/nixpkgs-firefox-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Home Manager Source
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -97,6 +102,7 @@
       f,
       shc,
       deploy-rs,
+      firefox-darwin,
       ...
     }@inputs:
     let
@@ -193,6 +199,7 @@
           ./home-manager/dev/ops.nix
           ./home-manager/aerospace
           ./home-manager/darwin
+          ./home-manager/firefox
         ];
       })
 

@@ -1,4 +1,12 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+let
+  packageSettings = lib.optionalAttrs pkgs.stdenv.isDarwin { package = pkgs.firefox-bin; };
+in
 {
   programs.firefox = {
     enable = true;
@@ -50,18 +58,6 @@
           keyword = "ns";
           url = "https://search.nix.gsc.io/?q=%s&i=nope&files=&excludeFiles=&repos=";
         };
-        "Ampcontrol Jira Search" = {
-          keyword = "j";
-          url = "https://ampcontrol.atlassian.net/issues/?jql=project%20%3D%20%s";
-        };
-        "Ampcontrol Confluence Search" = {
-          keyword = "c";
-          url = "https://ampcontrol.atlassian.net/wiki/search?text=$s";
-        };
-        "Ampcontrol Bitbucket Search" = {
-          keyword = "b";
-          url = "https://bitbucket.org/search?account=%7Be6dcdc2b-7ec9-42aa-85c0-062c35547eb0%7D&q=%s";
-        };
         OSRSWiki = {
           keyword = "osrs";
           url = "https://oldschool.runescape.wiki/?search=%s&title=Special%3ASearch&fulltext=Search";
@@ -75,5 +71,5 @@
     # TODO: Bookmarks
     # TODO: Extensions
     # TODO: Profile
-  };
+  } // packageSettings;
 }

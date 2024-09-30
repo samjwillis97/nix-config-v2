@@ -27,5 +27,6 @@ in
     })
     inputs.nur.overlay
     inputs.brew-nix.overlays.default
+    inputs.firefox-darwin.overlay
   ];
 }

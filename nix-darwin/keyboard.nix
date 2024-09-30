@@ -16,11 +16,7 @@
     enableKeyMapping = true;
     remapCapsLockToEscape = true;
     swapLeftCommandAndLeftAlt = false;
-    userKeyMapping = [
-      # TODO
-      # Globe -> Ctrl
-      # Ctrl -> Globe
-    ];
+    swapLeftCtrlAndFn = true;
   };
 
   system.activationScripts.extraUserActivation.enable = true;
