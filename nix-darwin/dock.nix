@@ -9,8 +9,6 @@ let
   inherit (super.meta) username;
 in
 {
-  # imports = [ ../modules/darwin/dock.nix ];
-
   system.defaults.dock = {
     enable-spring-load-actions-on-all-items = true;
     appswitcher-all-displays = true;
@@ -45,6 +43,14 @@ in
         "${pkgs.brewCasks.slack}/Applications/Slack.app"
         "${pkgs.brewCasks.discord}/Applications/Discord.app"
         "${config.home-manager.users.${username}.programs.wezterm.package}/Applications/WezTerm.app"
+      ]
+      ++ (
+        if (builtins.elem pkgs.brewCasks.proxyman config.home-manager.users.${username}.home.packages) then
+          [ "${pkgs.brewCasks.proxyman}/Applications/Proxyman.app" ]
+        else
+          [ ]
+      )
+      ++ [
         "/system/Applications/Music.app"
         "/system/Applications/iPhone Mirroring.app/"
         "/system/Applications/System Settings.app/"

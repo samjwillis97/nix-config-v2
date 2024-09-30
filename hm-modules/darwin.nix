@@ -26,6 +26,8 @@ in
           brewCasks.betterdisplay
           brewCasks.appcleaner
           # brewCasks."logi-options+" - bad hash
+          brewCasks.proxyman
+          brewCasks.disk-inventory-x
         ];
       }
     ])
