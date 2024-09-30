@@ -26,5 +26,6 @@ in
       shc-cli = flake.inputs.shc.packages.${system}.default;
     })
     inputs.nur.overlay
+    inputs.brew-nix.overlays.default
   ];
 }

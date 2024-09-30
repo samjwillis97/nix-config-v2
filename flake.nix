@@ -70,6 +70,16 @@
       url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    brew-api = {
+      url = "github:BatteredBunny/brew-api";
+      flake = false;
+    };
+
+    brew-nix = {
+      url = "github:BatteredBunny/brew-nix";
+      inputs.brew-api.follows = "brew-api";
+    };
   };
 
   outputs =
@@ -171,7 +181,7 @@
       (mkDarwinSystem {
         hostname = "Sams-MacBook-Air";
         system = "aarch64-darwin";
-        username = "samwillis";
+        username = "sam";
         homePath = "/Users";
         extraModules = [ ];
         extraHomeModules = [
@@ -182,6 +192,7 @@
           ./home-manager/dev/devenv.nix
           ./home-manager/dev/ops.nix
           ./home-manager/aerospace
+          ./home-manager/darwin
         ];
       })
 
