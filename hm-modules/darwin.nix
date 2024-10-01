@@ -21,7 +21,6 @@ in
       {
         home.packages = with pkgs; [
           brewCasks.raycast
-          brewCasks.discord
           # brewCasks."1password" - requires installing in particular location
           # brewCasks.displaylink - bad type of package
           brewCasks.betterdisplay
@@ -32,10 +31,8 @@ in
       }
       (mkIf cfg.work {
         home.packages = with pkgs; [
-          brewCasks.slack
           brewCasks.proxyman
           # brewCasks.workplace-chat - bad hash
-          # brewCasks.zoom - bad hash
         ];
       })
     ])

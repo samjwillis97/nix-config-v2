@@ -29,17 +29,17 @@ in
     magnification = false;
     largesize = 56;
     persistent-apps = builtins.filter (a: a != "") ([
-      "/Applications/Safari.app"
+      "/Applications/Safari.app/"
       (lib.optionalString firefoxEnabled "${pkgs.firefox-bin}/Applications/Firefox.app")
       "/system/Applications/Messages.app/"
       "/system/Applications/Mail.app"
       "/system/Applications/Calendar.app/"
       "/system/Applications/Notes.app/"
       "/system/Applications/Reminders.app/"
-      (lib.optionalString workEnabled "${pkgs.brewCasks.slack}/Applications/Slack.app")
+      "${pkgs.slack}/Applications/Slack.app"
       # (lib.optionalString workEnabled "${pkgs.brewCasks.workplace-chat}/Applications/Workplace Chat.app")
-      # (lib.optionalString workEnabled "${pkgs.brewCasks.zoom}/Applications/zoom.us.app")
-      "${pkgs.brewCasks.discord}/Applications/Discord.app"
+      "${pkgs.zoom-us}/Applications/zoom.us.app"
+      "${pkgs.discord}/Applications/Discord.app"
       "${config.home-manager.users.${username}.programs.wezterm.package}/Applications/WezTerm.app"
       (lib.optionalString workEnabled "${pkgs.brewCasks.proxyman}/Applications/Proxyman.app")
       "/system/Applications/Music.app"

@@ -199,6 +199,7 @@
           ./home-manager/dev/ops.nix
           ./home-manager/aerospace
           ./home-manager/darwin
+          ./home-manager/social
           ./home-manager/firefox
           { modules.darwin.work = false; }
         ];
