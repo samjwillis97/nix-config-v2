@@ -34,8 +34,8 @@ in
         home.packages = with pkgs; [
           brewCasks.slack
           brewCasks.proxyman
-          brewCasks.workplace-chat
-          brewCasks.zoom
+          # brewCasks.workplace-chat - bad hash
+          # brewCasks.zoom - bad hash
         ];
       })
     ])

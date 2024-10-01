@@ -1,5 +1,4 @@
 {
-  flake,
   pkgs,
   config,
   super,
@@ -34,13 +33,12 @@ in
       (lib.optionalString firefoxEnabled "${pkgs.firefox-bin}/Applications/Firefox.app")
       "/system/Applications/Messages.app/"
       "/system/Applications/Mail.app"
-      (lib.optionalString workEnabled "${pkgs.brewCasks.workplace-chat}/Applications/Workplace Chat.app")
-      (lib.optionalString workEnabled "${pkgs.brewCasks.zoom}/Applications/zoom.us.app")
-      (lib.optionalString workEnabled "${pkgs.brewCasks.slack}/Applications/Slack.app")
       "/system/Applications/Calendar.app/"
       "/system/Applications/Notes.app/"
       "/system/Applications/Reminders.app/"
       (lib.optionalString workEnabled "${pkgs.brewCasks.slack}/Applications/Slack.app")
+      # (lib.optionalString workEnabled "${pkgs.brewCasks.workplace-chat}/Applications/Workplace Chat.app")
+      # (lib.optionalString workEnabled "${pkgs.brewCasks.zoom}/Applications/zoom.us.app")
       "${pkgs.brewCasks.discord}/Applications/Discord.app"
       "${config.home-manager.users.${username}.programs.wezterm.package}/Applications/WezTerm.app"
       (lib.optionalString workEnabled "${pkgs.brewCasks.proxyman}/Applications/Proxyman.app")

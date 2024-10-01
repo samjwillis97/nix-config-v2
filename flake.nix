@@ -200,6 +200,7 @@
           ./home-manager/aerospace
           ./home-manager/darwin
           ./home-manager/firefox
+          { modules.darwin.work = false; }
         ];
       })
 
