@@ -20,8 +20,8 @@ in
     mkIf cfg.enable (mkMerge [
       {
         home.packages = with pkgs; [
+          _1password-gui
           brewCasks.raycast
-          # brewCasks."1password" - requires installing in particular location
           # brewCasks.displaylink - bad type of package
           brewCasks.betterdisplay
           brewCasks.appcleaner
