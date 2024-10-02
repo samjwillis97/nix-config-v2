@@ -44,7 +44,7 @@ in
       (lib.optionalString workEnabled "${pkgs.brewCasks.proxyman}/Applications/Proxyman.app")
       "/system/Applications/Music.app"
       "/system/Applications/iPhone Mirroring.app/"
-      "${pkgs._1password-gui}/Applications/1Password.app"
+      "/Applications/1Password.app"
       "/system/Applications/System Settings.app/"
     ]);
     persistent-others = [ "${config.users.users.${username}.home}/Downloads" ];

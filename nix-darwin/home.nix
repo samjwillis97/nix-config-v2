@@ -1,7 +1,6 @@
 {
   super,
   flake,
-  config,
   lib,
   pkgs,
   system,
@@ -29,4 +28,30 @@ in
       inherit flake system super;
     };
   };
+
+  # I dont like this being here, need to come up with better modules
+  system.activationScripts.postActivation.text = ''
+    appsDir="/Applications/Nix Apps"
+    if [ -d "$appsDir" ]; then
+      rm -rf "$appsDir/1Password.app"
+    fi
+
+    app="/Applications/1Password.app"
+    if [ -L "$app" ] || [ -f "$app"  ]; then
+      rm "$app"
+    fi
+    install -o root -g wheel -m0555 -d "$app"
+
+    rsyncFlags=(
+      --archive
+      --checksum
+      --chmod=-w
+      --copy-unsafe-links
+      --delete
+      --no-group
+      --no-owner
+    )
+    ${lib.getBin pkgs.rsync}/bin/rsync "''${rsyncFlags[@]}" \
+      ${pkgs._1password-gui}/Applications/1Password.app/ /Applications/1Password.app
+  '';
 }
