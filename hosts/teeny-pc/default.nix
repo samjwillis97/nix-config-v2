@@ -29,7 +29,14 @@
       vms = [
         "graphy"
         "insights"
+        "radarr"
       ];
     };
+  };
+
+  fileSystems."/mnt/nas" = {
+    device = "192.168.4.119:/volume1/nas";
+    fsType = "nfs";
+    options = [ "nfsvers=4.1" ];
   };
 }

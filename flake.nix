@@ -240,7 +240,7 @@
         username = "sam";
         extraHomeModules = [ ];
         extraModules = [ ./nixos/microvm-host.nix ];
-        useHomeManager = true;
+        useHomeManager = false;
       })
 
       # This currently is just to let me format with `nix fmt` on any system
