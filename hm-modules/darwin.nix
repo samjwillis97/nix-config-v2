@@ -22,7 +22,7 @@ in
         home.packages = with pkgs; [
           _1password-gui
           brewCasks.raycast
-          # brewCasks.displaylink - bad type of package
+          # displaylink - bad type
           brewCasks.betterdisplay
           brewCasks.appcleaner
           # brewCasks."logi-options+" - bad hash

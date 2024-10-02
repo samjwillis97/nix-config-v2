@@ -88,6 +88,7 @@ in
         modules = [
           ../hosts/${hostname}
           inputs.agenix.darwinModules.default
+          inputs.nix-homebrew.darwinModules.nix-homebrew
           ../shared
         ] ++ extraModules;
         specialArgs = {
