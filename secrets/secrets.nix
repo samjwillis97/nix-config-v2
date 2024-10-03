@@ -76,6 +76,8 @@ in
   "microvm/ssh-host-key-ed25519.age".publicKeys = microvm-keys;
   "microvm/ssh-host-key-rsa.age".publicKeys = microvm-keys;
   "microvm/ssh-host-key-ecdsa.age".publicKeys = microvm-keys;
+  "microvm/binary-cache-private-key.age".publicKeys = microvm-keys;
+  "microvm/minio-secret-key.age".publicKeys = microvm-keys;
 
   "aws/infra-access-key-id.age".publicKeys = aws-infra-keys;
   "aws/infra-secret-access-key.age".publicKeys = aws-infra-keys;

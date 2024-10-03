@@ -30,6 +30,7 @@
         "graphy"
         "insights"
         "radarr"
+        "cache"
       ];
     };
   };

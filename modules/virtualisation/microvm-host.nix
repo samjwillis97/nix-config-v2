@@ -134,6 +134,7 @@ in
                 imports = [
                   flake.inputs.agenix.nixosModules.default
                   flake.inputs.home-manager.nixosModules.home-manager
+                  flake.inputs.attic.nixosModules.atticd
                   ./microvm-guest.nix
                   ../networking/tailscale
                   ../../secrets/microvm
