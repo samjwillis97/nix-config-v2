@@ -65,7 +65,7 @@ in
               hostname
               useHomeManager
               ;
-            extraHomeModules = [ inputs.agenix.homeManagerModules.age ] ++ extraHomeModules;
+            extraHomeModules = extraHomeModules;
             isDarwin = false;
           };
         };
@@ -88,6 +88,7 @@ in
         modules = [
           ../hosts/${hostname}
           inputs.agenix.darwinModules.default
+          inputs.nix-homebrew.darwinModules.nix-homebrew
           ../shared
         ] ++ extraModules;
         specialArgs = {

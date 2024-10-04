@@ -23,7 +23,10 @@ in
       hyprland = flake.inputs.hyprland.packages.${system}.hyprland;
       f = flake.inputs.f.packages.${system}.default;
       f-tmux = flake.inputs.f.packages.${system}.f-tmux;
+      shc-cli = flake.inputs.shc.packages.${system}.default;
     })
     inputs.nur.overlay
+    inputs.brew-nix.overlays.default
+    inputs.firefox-darwin.overlay
   ];
 }

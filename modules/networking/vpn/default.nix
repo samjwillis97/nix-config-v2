@@ -9,44 +9,32 @@ let
   cfg = config.modules.networking.vpn;
 in
 {
-  imports = [ ../../../secrets/system.nix ];
+  imports = [ ../../../secrets/wireguard/system.nix ];
 
   options.modules.networking.vpn = {
     enable = mkEnableOption "Enables VPN service - specifically for ProtonVPN currently";
 
-    address = mkOption {
-      type = types.listOf types.str;
-    };
+    address = mkOption { type = types.listOf types.str; };
 
-    dns = mkOption {
-      type = types.listOf types.str;
-    };
+    dns = mkOption { type = types.listOf types.str; };
 
-    privateKeyFile = mkOption {
-      type = types.str;
-    };
+    privateKeyFile = mkOption { type = types.str; };
 
     peer = {
-      endpoint = mkOption {
-        type = types.str;
-      };
+      endpoint = mkOption { type = types.str; };
 
-      publicKey = mkOption {
-        type = types.str;
-      };
+      publicKey = mkOption { type = types.str; };
 
       allowedIPs = mkOption {
         type = types.listOf types.str;
-        default = [ "0.0.0.0/0"];
+        default = [ "0.0.0.0/0" ];
       };
     };
 
     portForwarding = {
       enable = mkEnableOption "Enable Port Forwarding";
 
-      gateway = mkOption {
-        type = types.str;
-      };
+      gateway = mkOption { type = types.str; };
     };
   };
 
@@ -75,21 +63,21 @@ in
 
     networking.enableIPv6 = false;
 
-#     networking.firewall = {
-#       # enable = false;
-#       allowedUDPPortRanges = [
-#         {
-#           from = 45000;
-#           to = 65000;
-#         }
-#       ];
-#       allowedTCPPortRanges = [
-#         {
-#           from = 45000;
-#           to = 65000;
-#         }
-#       ];
-#     };
+    #     networking.firewall = {
+    #       # enable = false;
+    #       allowedUDPPortRanges = [
+    #         {
+    #           from = 45000;
+    #           to = 65000;
+    #         }
+    #       ];
+    #       allowedTCPPortRanges = [
+    #         {
+    #           from = 45000;
+    #           to = 65000;
+    #         }
+    #       ];
+    #     };
 
     # https://protonvpn.com/support/port-forwarding-manual-setup
     systemd.services.wg-port-forward = mkIf cfg.portForwarding.enable {

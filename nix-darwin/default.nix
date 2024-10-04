@@ -12,6 +12,7 @@
     ./keyboard.nix
     ./ns-global-domain.nix
     ./dock.nix
+    ./tailscale.nix
     ./spaces.nix
     ../overlays
   ];

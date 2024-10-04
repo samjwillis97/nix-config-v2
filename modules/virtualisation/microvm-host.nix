@@ -128,36 +128,40 @@ in
         acc
         // {
           ${hostname} = {
-            config = {
-              imports = [
-                flake.inputs.agenix.nixosModules.default
-                ../../secrets
-                ../networking/tailscale
-                ../../hosts/microvms/${hostname}
-                ./microvm-guest.nix
-              ];
+            config =
+              { config, ... }:
+              {
+                imports = [
+                  flake.inputs.agenix.nixosModules.default
+                  flake.inputs.home-manager.nixosModules.home-manager
+                  flake.inputs.attic.nixosModules.atticd
+                  ./microvm-guest.nix
+                  ../networking/tailscale
+                  ../../secrets/microvm
+                  ../../hosts/microvms/${hostname}
+                ];
 
-              modules.virtualisation.microvm-guest.enable = true;
+                modules.virtualisation.microvm-guest.enable = true;
 
-              modules.networking.tailscale = {
-                enable = true;
-                authKeyFile = config.age.secrets."microvm-tailscale".path;
-              };
+                modules.networking.tailscale = {
+                  enable = true;
+                  authKeyFile = config.age.secrets."microvm-tailscale".path;
+                };
 
-              systemd.network.networks = {
-                "10-lan" = {
-                  matchConfig.Name = "en*";
-                  networkConfig = {
-                    Address = [ "${hostNameToIp.${hostname}}/24" ];
-                    Gateway = "10.0.0.1";
-                    DNS = [
-                      "10.0.0.1"
-                      "1.1.1.1"
-                    ];
+                systemd.network.networks = {
+                  "10-lan" = {
+                    matchConfig.Name = "en*";
+                    networkConfig = {
+                      Address = [ "${hostNameToIp.${hostname}}/24" ];
+                      Gateway = "10.0.0.1";
+                      DNS = [
+                        "10.0.0.1"
+                        "1.1.1.1"
+                      ];
+                    };
                   };
                 };
               };
-            };
           };
         }
       ) { } cfg.vms;

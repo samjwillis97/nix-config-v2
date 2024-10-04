@@ -1,7 +1,7 @@
 { config, ... }:
 {
   imports = [
-    ../../../secrets/system.nix
+    ../../../secrets/wireguard/system.nix
     ../../../modules/networking/vpn
     ../../../modules/media/deluge
     ../../../modules/system/users
@@ -28,8 +28,8 @@
 
       privateKeyFile = config.age.secrets.p2p-vpn-key.path;
 
-      address = ["10.2.0.2/32"];
-      dns = ["10.2.0.1"];
+      address = [ "10.2.0.2/32" ];
+      dns = [ "10.2.0.1" ];
 
       peer = {
         endpoint = "138.199.33.236:51820";

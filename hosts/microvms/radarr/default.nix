@@ -8,9 +8,13 @@
     ../../../modules/monitoring/promtail
   ];
 
-  networking.hostName = "curator";
+  networking.hostName = "radarr";
 
-  modules.system.users.media = true;
+  modules.system.users = {
+    standardUser.enable = false;
+    standardUser.home-manager.enable = false;
+    media = true;
+  };
 
   modules.monitoring = {
     promtail = {
@@ -48,9 +52,16 @@
 
   microvm.shares = [
     {
-      source = "/var/lib/media-server-test";
-      mountPoint = "/data";
+      source = "/mnt/nas/media/movies";
+      mountPoint = "/movies";
       tag = "media";
+      proto = "virtiofs";
+      securityModel = "none";
+    }
+    {
+      source = "/mnt/nas/downloads";
+      mountPoint = "/downloads";
+      tag = "downloads";
       proto = "virtiofs";
       securityModel = "none";
     }

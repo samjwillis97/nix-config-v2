@@ -34,23 +34,13 @@ let
 
   bucket = {
     options = {
-      mountLocation = mkOption {
-        type = types.str;
-      };
+      mountLocation = mkOption { type = types.str; };
 
-      bucketNameFile = mkOption {
-        type = types.str;
-      };
-      bucketRegionFile = mkOption {
-        type = types.str;
-      };
+      bucketNameFile = mkOption { type = types.str; };
+      bucketRegionFile = mkOption { type = types.str; };
 
-      awsAccessKeyIdFile = mkOption {
-        type = types.str;
-      };
-      awsSecretAccessKeyFile = mkOption {
-        type = types.str;
-      };
+      awsAccessKeyIdFile = mkOption { type = types.str; };
+      awsSecretAccessKeyFile = mkOption { type = types.str; };
     };
   };
 in
@@ -60,46 +50,50 @@ in
 
     buckets = mkOption {
       type = with types; listOf (submodule bucket);
-      default = [];
+      default = [ ];
     };
   };
 
   config = {
     environment.systemPackages = [ pkgs.rclone ];
 
-    system.activationScripts = builtins.listToAttrs (lib.imap1 (i: bucket: {
-      name = "aws-rclone-secrets-${toString i}";
-      value = ''
-        configFile=/etc/rclone-mnt-${toString i}.conf
-        ${pkgs.coreutils}/bin/cp ${baseConfigFile} $configFile
+    system.activationScripts = builtins.listToAttrs (
+      lib.imap1 (i: bucket: {
+        name = "aws-rclone-secrets-${toString i}";
+        value = ''
+          configFile=/etc/rclone-mnt-${toString i}.conf
+          ${pkgs.coreutils}/bin/cp ${baseConfigFile} $configFile
 
-        secret=$(cat "${bucket.awsAccessKeyIdFile}")
-        ${pkgs.gnused}/bin/sed -i "s#@access-key-id@#$secret#" "$configFile"
+          secret=$(cat "${bucket.awsAccessKeyIdFile}")
+          ${pkgs.gnused}/bin/sed -i "s#@access-key-id@#$secret#" "$configFile"
 
-        secret=$(cat "${bucket.awsSecretAccessKeyFile}")
-        ${pkgs.gnused}/bin/sed -i "s#@secret-access-key@#$secret#" "$configFile"
+          secret=$(cat "${bucket.awsSecretAccessKeyFile}")
+          ${pkgs.gnused}/bin/sed -i "s#@secret-access-key@#$secret#" "$configFile"
 
-        secret=$(cat "${bucket.bucketNameFile}")
-        ${pkgs.gnused}/bin/sed -i "s#@bucket-name@#$secret#" "$configFile"
+          secret=$(cat "${bucket.bucketNameFile}")
+          ${pkgs.gnused}/bin/sed -i "s#@bucket-name@#$secret#" "$configFile"
 
-        secret=$(cat "${bucket.bucketRegionFile}")
-        ${pkgs.gnused}/bin/sed -i "s#@bucket-region@#$secret#" "$configFile"
-      '';
-    }) cfg.buckets);
+          secret=$(cat "${bucket.bucketRegionFile}")
+          ${pkgs.gnused}/bin/sed -i "s#@bucket-region@#$secret#" "$configFile"
+        '';
+      }) cfg.buckets
+    );
 
-    fileSystems = builtins.listToAttrs (lib.imap1 (i: bucket: {
-      name = bucket.mountLocation;
-      value = {
-        device = "bucket:/";
-        fsType = "rclone";
-        options = [
-          "nodev"
-          "nofail"
-          "allow_other"
-          "args2env"
-          "config=/etc/rclone-mnt-${toString i}.conf"
-        ];
-      };
-    }) cfg.buckets);
+    fileSystems = builtins.listToAttrs (
+      lib.imap1 (i: bucket: {
+        name = bucket.mountLocation;
+        value = {
+          device = "bucket:/";
+          fsType = "rclone";
+          options = [
+            "nodev"
+            "nofail"
+            "allow_other"
+            "args2env"
+            "config=/etc/rclone-mnt-${toString i}.conf"
+          ];
+        };
+      }) cfg.buckets
+    );
   };
 }

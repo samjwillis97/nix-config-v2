@@ -13,6 +13,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    firefox-darwin = {
+      url = "github:bandithedoge/nixpkgs-firefox-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Home Manager Source
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -61,9 +66,39 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    shc = {
+      url = "github:samjwillis97/shc-2";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     deploy-rs = {
       url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    attic = {
+      url = "github:zhaofengli/attic";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+    homebrew-core = {
+      url = "github:homebrew/homebrew-core";
+      flake = false;
+    };
+    homebrew-cask = {
+      url = "github:homebrew/homebrew-cask";
+      flake = false;
+    };
+
+    # Newer experimental Brew replacement
+    brew-api = {
+      url = "github:BatteredBunny/brew-api";
+      flake = false;
+    };
+    brew-nix = {
+      url = "github:BatteredBunny/brew-nix";
+      inputs.brew-api.follows = "brew-api";
     };
   };
 
@@ -80,7 +115,9 @@
       hyprland,
       microvm,
       f,
+      shc,
       deploy-rs,
+      firefox-darwin,
       ...
     }@inputs:
     let
@@ -115,20 +152,6 @@
           ./nixos/gaming.nix
           ./nixos/logitech.nix
           ./nixos/docker.nix
-          ./nixos/microvm-host.nix
-          {
-            modules.virtualisation.microvm-host.vms = [
-              "dash"
-              "curator"
-              "sonarr"
-              "iso-grabber"
-              "indexer"
-              "insights"
-              "graphy"
-              "plex"
-              "paperless"
-            ];
-          }
         ];
         extraHomeModules = [
           # hyprland.homeManagerModules.default
@@ -137,6 +160,7 @@
           ./home-manager/i3
           ./home-manager/gaming
           ./home-manager/dev
+          ./home-manager/dev/ops.nix
           # ./home-manager/qutebrowser
           # ./home-manager/hyprland
         ];
@@ -178,21 +202,22 @@
       (mkDarwinSystem {
         hostname = "Sams-MacBook-Air";
         system = "aarch64-darwin";
-        username = "samwillis";
+        username = "sam";
         homePath = "/Users";
-        extraModules = [
-          {
-            imports = [ ./modules/ops/deploy.nix ];
-            modules.ops.deploy.enable = true;
-          }
-        ];
+        extraModules = [ ];
         extraHomeModules = [
           # ./home-manager/darwin/keyboard.nix
           ./home-manager/wezterm
           ./home-manager/vscode
           ./home-manager/dev
           ./home-manager/dev/devenv.nix
+          ./home-manager/dev/ops.nix
           ./home-manager/aerospace
+          ./home-manager/darwin
+          ./home-manager/social
+          ./home-manager/firefox
+          ./home-manager/cache
+          { modules.darwin.work = false; }
         ];
       })
 
@@ -205,6 +230,7 @@
         extraHomeModules = [
           ./home-manager/dev
           ./home-manager/dev/devenv.nix
+          ./home-manager/dev/ops.nix
           ./home-manager/wezterm
           ./home-manager/vscode
           ./home-manager/work
@@ -218,21 +244,8 @@
         hostname = "teeny-pc";
         system = "x86_64-linux";
         username = "sam";
-        extraModules = [
-          # {
-          #   modules.virtualisation.microvm-host.vms = [
-          #     "dash"
-          #     "curator"
-          #     "sonarr"
-          #     "iso-grabber"
-          #     "indexer"
-          #     "insights"
-          #     "graphy"
-          #     "plex"
-          #     "paperless"
-          #   ];
-          # }
-        ];
+        extraHomeModules = [ ];
+        extraModules = [ ./nixos/microvm-host.nix ];
         useHomeManager = false;
       })
 
@@ -247,19 +260,17 @@
         }
       ))
 
-      (
-        {
-          deploy.nodes.teeny-pc = {
-            hostname = "teeny-pc";
-            profiles.system = {
-              user = "root";
-              sshUser = "deployer";
-              path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.teeny-pc;
-            };
+      ({
+        deploy.nodes.teeny-pc = {
+          hostname = "teeny-pc";
+          profiles.system = {
+            user = "root";
+            sshUser = "deployer";
+            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.teeny-pc;
           };
+        };
 
-          checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
-        }
-      )
+        checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
+      })
     ]);
 }

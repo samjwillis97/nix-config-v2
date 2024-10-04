@@ -14,9 +14,9 @@ let
           name = "catppuccin";
         };
         visuals = {
-          enable = true;
-          borderType = "none";
+          borderType = "rounded";
           transparentBackground = true;
+          improveVimInterfaces = true;
         };
 
         filetree = {
@@ -26,12 +26,21 @@ let
         statusline.enable = true;
         qol.enable = true;
 
-        git.enable = true;
+        git = {
+          enable = true;
+          prettyLog = true;
+          diffview = true;
+        };
+
         treesitter = {
           enable = true;
           fold = true;
         };
-        telescope.enable = true;
+
+        telescope = {
+          enable = true;
+          frecency.enable = false;
+        };
 
         lsp = {
           enable = true;
@@ -41,6 +50,12 @@ let
         };
 
         formatter.enable = true;
+
+        folding = {
+          enable = true;
+          mode = "ufo";
+          defaultFoldNumber = 99;
+        };
 
         ai.copilot = {
           enableAll = true;
@@ -80,8 +95,16 @@ let
           enableTreesitter = true;
           enableLSP = true;
           enableDebugger = true;
-          enableFormat = false;
+          enableFormat = true;
+          enableLinting = true;
           enableAll = true;
+
+          typescript = {
+            lsp = {
+              enable = true;
+              servers = [ "tsserver" ];
+            };
+          };
         };
 
         debugger.enable = true;
@@ -110,16 +133,18 @@ let
   ];
 in
 {
-  imports = [ ../../secrets ];
+  imports = [ ../../secrets/github ];
   home.packages =
     with pkgs;
     [
+      gnupg1
       jq
       direnv
       difftastic
       nodePackages.json-diff
       _1password
       neovim
+      shc-cli
     ]
     ++ (with pkgs; if super.meta.isDarwin then [ f ] else [ ]);
 }

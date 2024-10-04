@@ -27,6 +27,7 @@
       prometheusTargets = [
         "${config.networking.hostName}:${toString config.modules.monitoring.exporters.system.port}"
         "personal-desktop:9091" # node system exporter
+        "teeny-pc:9091"
         "curator:9091" # node system exporter
         "dash:9091" # node system exporter
         "graphy:9091" # node system exporter
