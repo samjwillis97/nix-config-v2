@@ -216,6 +216,7 @@
           ./home-manager/darwin
           ./home-manager/social
           ./home-manager/firefox
+          ./home-manager/cache
           { modules.darwin.work = false; }
         ];
       })
