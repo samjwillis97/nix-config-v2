@@ -16,6 +16,7 @@ in
   ];
 
   networking.hostName = "cache";
+  networking.firewall.enable = lib.mkForce false;
 
   modules.monitoring = {
     promtail = {

@@ -4,9 +4,6 @@
       "tailscale_pre-auth" = {
         file = ./tailscale_pre-auth.age;
       };
-      "attic-token" = {
-        file = ./attic-token.age;
-      };
       "home-wifi-SSID" = {
         file = ./home-wifi-ssid.age;
       };

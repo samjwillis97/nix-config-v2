@@ -1,0 +1,65 @@
+name: Personal cache
+on:
+  workflow_call:
+    secrets:
+      TS_OAUTH_CLIENT_ID:
+        required: true
+      TS_OAUTH_SECRET:
+        required: true
+      ATTIC_TOKEN:
+        required: true
+      EXIT_URL:
+        required: true
+  workflow_dispatch: # allows manual triggering
+  push:
+  pull_request:
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build-and-cache:
+    strategy:
+      matrix:
+        param:
+          - teeny-pc
+    runs-on: ubuntu-latest
+    steps:
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          swap-storage: true
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v30
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+
+      - name: Nix `Magic` Cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Connect to Tailscale network
+        uses: tailscale/github-action@v2
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:runner
+
+      - name: Attic cache
+        uses: ryanccn/attic-action@v0
+        with:
+          endpoint: "http://cache"
+          cache: hello
+          token: ${{ secrets.ATTIC_TOKEN }}
+
+      - name: Build
+        id: build
+        run: |
+          nix build .#nixosConfigurations.${{ matrix.param }}.config.system.build.toplevel
