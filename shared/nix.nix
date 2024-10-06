@@ -17,4 +17,9 @@ in
   registry = {
     nixpkgs.flake = inputs.nixpkgs;
   };
+
+  extraOptions = ''
+    # Ensure we can still build when missing-server is not accessible
+    fallback = true
+  '';
 }
