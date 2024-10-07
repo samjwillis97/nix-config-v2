@@ -111,14 +111,13 @@ jobs:
           nix build .#darwinConfigurations.github-runner.system
           sudo mv /etc/nix/nix.conf /etc/nix/nix.conf.bak
           ./result/sw/bin/darwin-rebuild switch --flake .#github-runner
-          echo $PATH
 
       - name: Connect to Tailscale network
         id: tailscale-connect
         run: |
           TAILSCALE_AUTHKEY="${{ secrets.TS_OAUTH_SECRET }}?preauthorized=true&ephemeral=true"
           TAGS_ARG="--advertise-tags=tag:runners"
-          sudo -E tailscale up ${TAGS_ARG} --authkey=${TAILSCALE_AUTHKEY} --hostname=${HOSTNAME} --accept-routes ${ADDITIONAL_ARGS}
+          sudo -E /run/current-system/sw/bin/tailscale up ${TAGS_ARG} --authkey=${TAILSCALE_AUTHKEY} --hostname=${HOSTNAME} --accept-routes ${ADDITIONAL_ARGS}
 
       - name: Attic cache
         uses: ryanccn/attic-action@v0
