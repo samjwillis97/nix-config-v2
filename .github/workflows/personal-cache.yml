@@ -98,12 +98,17 @@ jobs:
       - name: Nix `Magic` Cache
         uses: DeterminateSystems/magic-nix-cache-action@main
 
-      - name: Setup Tailscale
-        id: tailscale-setup
+      # - name: Setup Tailscale
+      #   id: tailscale-setup
+      #   run: |
+      #     nix-env -i tailscale -f '<nixpkgs>'
+      #     sudo -E tailscaled ${STATE_ARGS} ${ADDITIONAL_DAEMON_ARGS} 2>~/tailscaled.log &
+      #     sudo networksetup -setdnsservers Ethernet 100.100.100.100 1.1.1.1
+      #
+      - name: Switch to runner system
+        id: darwin-switch
         run: |
-          nix-env -i tailscale -f '<nixpkgs>'
-          sudo -E tailscaled ${STATE_ARGS} ${ADDITIONAL_DAEMON_ARGS} 2>~/tailscaled.log &
-          sudo networksetup -setdnsservers Ethernet 100.100.100.100 1.1.1.1
+          darwin-rebuild switch --flake .#github-runner
 
       - name: Connect to Tailscale network
         id: tailscale-connect

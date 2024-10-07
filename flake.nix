@@ -200,6 +200,12 @@
       })
 
       (mkDarwinSystem {
+        hostname = "github-runner";
+        system = "aarch64-darwin";
+        useHomeManager = false;
+      })
+
+      (mkDarwinSystem {
         hostname = "Sams-MacBook-Air";
         system = "aarch64-darwin";
         username = "sam";
