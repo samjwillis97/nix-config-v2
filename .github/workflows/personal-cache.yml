@@ -15,14 +15,15 @@ on:
   pull_request:
 concurrency:
   group: ${{ github.ref }}
-  cancel-in-progress: true
+  # cancel-in-progress: true
 jobs:
   build-and-cache-linux:
-    name: "Build and Cache: (${{ join(matrix.os) }})"
+    name: "Build and Cache - ${{ matrix.config }} - ${{ matrix.os) }}"
     strategy:
       matrix:
-        os: [[linux, X64]]
-        configs:
+        os:
+          - ubuntu-latest
+        config:
           - teeny-pc
           - personal-desktop
     runs-on: ${{ matrix.os }}
@@ -69,4 +70,4 @@ jobs:
       - name: Build
         id: build
         run: |
-          nix build .#nixosConfigurations.${{ matrix.param }}.config.system.build.toplevel
+          nix build .#nixosConfigurations.${{ matrix.config }}.config.system.build.toplevel
