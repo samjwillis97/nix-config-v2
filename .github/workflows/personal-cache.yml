@@ -76,7 +76,7 @@ jobs:
     strategy:
       matrix:
         os:
-          - ubuntu-latest
+          - macos-latest
         config:
           - Sams-MacBook-Air
           - work-mbp
@@ -107,11 +107,14 @@ jobs:
         uses: DeterminateSystems/magic-nix-cache-action@main
 
       - name: Connect to Tailscale network
-        uses: tailscale/github-action@v2
         with:
           oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
-          tags: tag:runners
+        run: |
+          nix-env -iA nixpkgs.tailscale
+          TAILSCALE_AUTHKEY="${{ inputs['oauth-secret'] }}?preauthorized=true&ephemeral=true"
+          TAGS_ARG="--advertise-tags=runners"
+          timeout --verbose --kill-after=1s ${TIMEOUT} sudo -E tailscale up ${TAGS_ARG} --authkey=${TAILSCALE_AUTHKEY} --hostname=${HOSTNAME} --accept-routes ${ADDITIONAL_ARGS}
 
       - name: Attic cache
         uses: ryanccn/attic-action@v0
