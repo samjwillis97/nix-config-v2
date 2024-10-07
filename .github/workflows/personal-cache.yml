@@ -102,10 +102,9 @@ jobs:
         id: tailscale
         run: |
           nix-env -i tailscale -f '<nixpkgs>'
-          nix-env -i coreutils -f '<nixpkgs>'
           TAILSCALE_AUTHKEY="${{ secrets.TS_OAUTH_SECRET }}?preauthorized=true&ephemeral=true"
           TAGS_ARG="--advertise-tags=runners"
-          gtimeout --verbose --kill-after=1s ${TIMEOUT} sudo -E tailscale up ${TAGS_ARG} --authkey=${TAILSCALE_AUTHKEY} --hostname=${HOSTNAME} --accept-routes ${ADDITIONAL_ARGS}
+          sudo -E tailscale up ${TAGS_ARG} --authkey=${TAILSCALE_AUTHKEY} --hostname=${HOSTNAME} --accept-routes ${ADDITIONAL_ARGS}
 
       - name: Attic cache
         uses: ryanccn/attic-action@v0
