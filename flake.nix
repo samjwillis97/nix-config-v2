@@ -235,6 +235,10 @@
           ./home-manager/vscode
           ./home-manager/work
           ./home-manager/aerospace
+          ./home-manager/darwin
+          ./home-manager/social
+          ./home-manager/firefox
+          { modules.darwin.work = true; }
         ];
       })
 

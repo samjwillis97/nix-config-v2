@@ -22,6 +22,7 @@ in
         cookie-autodelete
         terms-of-service-didnt-read
         sponsorblock
+        okta-browser-plugin
       ];
 
       search = {
@@ -53,10 +54,6 @@ in
         "Nix Options Search" = {
           keyword = "no";
           url = "https://search.nixos.org/options?channel=unstable&from=0&size=50&sort=relevance&query=%s";
-        };
-        "Nix Uber Search" = {
-          keyword = "ns";
-          url = "https://search.nix.gsc.io/?q=%s&i=nope&files=&excludeFiles=&repos=";
         };
         OSRSWiki = {
           keyword = "osrs";

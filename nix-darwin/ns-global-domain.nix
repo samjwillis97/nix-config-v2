@@ -20,6 +20,7 @@
     NSNavPanelExpandedStateForSaveMode = true;
     NSNavPanelExpandedStateForSaveMode2 = true;
     NSScrollAnimationEnabled = true;
-    "com.apple.swipescrolldirection" = true;
+    # I think this is global natural scroll, I want it disabled for mouse, and enabled for keyboard
+    # "com.apple.swipescrolldirection" = true;
   };
 }

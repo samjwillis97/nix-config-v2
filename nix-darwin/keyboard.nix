@@ -16,7 +16,8 @@
     enableKeyMapping = true;
     remapCapsLockToEscape = true;
     swapLeftCommandAndLeftAlt = false;
-    swapLeftCtrlAndFn = true;
+    # This works for the macbook keyboard, but external keyboard gets fucky
+    swapLeftCtrlAndFn = false;
   };
 
   system.activationScripts.extraUserActivation.enable = true;

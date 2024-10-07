@@ -7,6 +7,7 @@ in
     enable = true;
     enableRosetta = true;
     user = username;
+    autoMigrate = true;
 
     taps = {
       "homebrew/homebrew-core" = flake.inputs.homebrew-core;
