@@ -18,9 +18,10 @@ concurrency:
   cancel-in-progress: true
 jobs:
   build-and-cache-linux:
+    name: "Build and Cache: (${{ join(matrix.os) }})"
     strategy:
       matrix:
-        os: [[linux, X64], [linux, ARM64]]
+        os: [[linux, X64]]
         configs:
           - teeny-pc
           - personal-desktop
