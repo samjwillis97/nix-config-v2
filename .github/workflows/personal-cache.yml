@@ -111,6 +111,7 @@ jobs:
           nix build .#darwinConfigurations.github-runner.system
           sudo mv /etc/nix/nix.conf /etc/nix/nix.conf.bak
           ./result/sw/bin/darwin-rebuild switch --flake .#github-runner
+          echo $PATH
 
       - name: Connect to Tailscale network
         id: tailscale-connect
