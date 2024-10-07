@@ -103,7 +103,7 @@ jobs:
         run: |
           nix-env -i tailscale -f '<nixpkgs>'
           sudo -E tailscaled ${STATE_ARGS} ${ADDITIONAL_DAEMON_ARGS} 2>~/tailscaled.log &
-          sudo networksetup -listallnetworkservices
+          sudo networksetup -setdnsservers Ethernet 100.100.100.100 1.1.1.1
 
       - name: Connect to Tailscale network
         id: tailscale-connect
@@ -111,7 +111,6 @@ jobs:
           TAILSCALE_AUTHKEY="${{ secrets.TS_OAUTH_SECRET }}?preauthorized=true&ephemeral=true"
           TAGS_ARG="--advertise-tags=tag:runners"
           sudo -E tailscale up ${TAGS_ARG} --authkey=${TAILSCALE_AUTHKEY} --hostname=${HOSTNAME} --accept-routes ${ADDITIONAL_ARGS}
-          sudo -E tailscale status --json
 
       - name: Attic cache
         uses: ryanccn/attic-action@v0
