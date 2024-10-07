@@ -17,12 +17,14 @@ concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  build-and-cache:
+  build-and-cache-linux:
     strategy:
       matrix:
-        param:
+        os: [[linux, X64], [linux, ARM64]]
+        configs:
           - teeny-pc
-    runs-on: ubuntu-latest
+          - personal-desktop
+    runs-on: ${{ matrix.os }}
     steps:
       # Slow and probably don't need this yet
       # - name: Free Disk Space
