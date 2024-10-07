@@ -109,7 +109,7 @@ jobs:
         id: tailscale-connect
         run: |
           TAILSCALE_AUTHKEY="${{ secrets.TS_OAUTH_SECRET }}?preauthorized=true&ephemeral=true"
-          TAGS_ARG="--advertise-tags=runners"
+          TAGS_ARG="--advertise-tags=tag:runners"
           sudo -E tailscale up ${TAGS_ARG} --authkey=${TAILSCALE_AUTHKEY} --hostname=${HOSTNAME} --accept-routes ${ADDITIONAL_ARGS}
 
       - name: Attic cache
