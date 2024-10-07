@@ -42,6 +42,9 @@ jobs:
         uses: cachix/install-nix-action@v30
         with:
           nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: |
+            extra-substituters = http://cache/hello
+            extra-trusted-public-keys = hello:FQLbUnzWwgsM443PxYlHY9MpAwrjvDWFplcoFPPrn+c= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
 
       - name: Nix `Magic` Cache
         uses: DeterminateSystems/magic-nix-cache-action@main
