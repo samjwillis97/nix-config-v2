@@ -20,6 +20,7 @@ jobs:
   build-and-cache-linux:
     name: "Build and Cache - ${{ matrix.config }} - ${{ matrix.os }}"
     strategy:
+      fail-fast: false
       matrix:
         os:
           - ubuntu-latest
@@ -74,6 +75,7 @@ jobs:
   build-and-cache-darwin:
     name: "Build and Cache - ${{ matrix.config }} - ${{ matrix.os }}"
     strategy:
+      fail-fast: false
       matrix:
         os:
           - macos-latest
