@@ -107,12 +107,10 @@ jobs:
         uses: DeterminateSystems/magic-nix-cache-action@main
 
       - name: Connect to Tailscale network
-        with:
-          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
-          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+        id: tailscale
         run: |
           nix-env -iA nixpkgs.tailscale
-          TAILSCALE_AUTHKEY="${{ inputs['oauth-secret'] }}?preauthorized=true&ephemeral=true"
+          TAILSCALE_AUTHKEY="${{ secrets.TS_OAUTH_SECRET }}?preauthorized=true&ephemeral=true"
           TAGS_ARG="--advertise-tags=runners"
           timeout --verbose --kill-after=1s ${TIMEOUT} sudo -E tailscale up ${TAGS_ARG} --authkey=${TAILSCALE_AUTHKEY} --hostname=${HOSTNAME} --accept-routes ${ADDITIONAL_ARGS}
 
