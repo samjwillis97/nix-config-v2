@@ -98,10 +98,16 @@ jobs:
       - name: Nix `Magic` Cache
         uses: DeterminateSystems/magic-nix-cache-action@main
 
-      - name: Connect to Tailscale network
-        id: tailscale
+      - name: Setup Tailscale
+        id: tailscale-setup
         run: |
           nix-env -i tailscale -f '<nixpkgs>'
+          sudo -E tailscaled ${STATE_ARGS} ${ADDITIONAL_DAEMON_ARGS} 2>~/tailscaled.log &
+          sudo -E tailscale status --json >/dev/null
+
+      - name: Connect to Tailscale network
+        id: tailscale-connect
+        run: |
           TAILSCALE_AUTHKEY="${{ secrets.TS_OAUTH_SECRET }}?preauthorized=true&ephemeral=true"
           TAGS_ARG="--advertise-tags=runners"
           sudo -E tailscale up ${TAGS_ARG} --authkey=${TAILSCALE_AUTHKEY} --hostname=${HOSTNAME} --accept-routes ${ADDITIONAL_ARGS}
