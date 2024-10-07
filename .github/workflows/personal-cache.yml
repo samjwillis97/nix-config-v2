@@ -103,7 +103,7 @@ jobs:
         run: |
           nix-env -i tailscale -f '<nixpkgs>'
           sudo -E tailscaled ${STATE_ARGS} ${ADDITIONAL_DAEMON_ARGS} 2>~/tailscaled.log &
-          sudo -E tailscale status --json >/dev/null
+          sudo -E tailscale status --json
 
       - name: Connect to Tailscale network
         id: tailscale-connect
