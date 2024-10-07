@@ -1,6 +1,6 @@
 { ... }:
 {
-  imports = [ ../../nix-darwin/tailscale.nix ];
+  services.tailscale.enable = true;
 
   services.nix-daemon.enable = true;
 
