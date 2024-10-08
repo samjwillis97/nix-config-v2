@@ -76,10 +76,19 @@ in
 
     microvm = {
       interfaces = [
+        # {
+        #   type = "tap";
+        #   id = "vm-${shortMachineId}";
+        #   mac = "02:00:00:${macpart}";
+        # }
         {
-          type = "tap";
-          id = "vm-${shortMachineId}";
+          type = "macvtap";
+          id = config.networking.hostName;
           mac = "02:00:00:${macpart}";
+          macvtap = {
+            link = "enp2s0";
+            mode = "bridge";
+          };
         }
       ];
 

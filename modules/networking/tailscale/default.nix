@@ -39,8 +39,7 @@ in
     services.tailscale.enable = true;
 
     networking.firewall = {
-      # enable the firewall
-      # enable = true;
+      enable = true;
 
       # always allow traffic from your Tailscale network
       trustedInterfaces = [ "tailscale0" ];

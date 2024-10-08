@@ -16,6 +16,7 @@ in
   ];
 
   networking.hostName = "cache";
+  networking.firewall.enable = lib.mkForce false;
 
   modules.monitoring = {
     promtail = {
@@ -87,6 +88,8 @@ in
 
     recommendedProxySettings = true;
     recommendedTlsSettings = false;
+
+    clientMaxBodySize = "0";
 
     virtualHosts."${config.networking.hostName}" = {
       forceSSL = false;

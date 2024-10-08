@@ -1,0 +1,132 @@
+name: Personal cache
+on:
+  workflow_call:
+    secrets:
+      TS_OAUTH_CLIENT_ID:
+        required: true
+      TS_OAUTH_SECRET:
+        required: true
+      ATTIC_TOKEN:
+        required: true
+      EXIT_URL:
+        required: true
+  workflow_dispatch: # allows manual triggering
+  push:
+  pull_request:
+# concurrency:
+# group: ${{ github.ref }}
+# cancel-in-progress: true
+jobs:
+  build-and-cache-linux:
+    name: "Build and Cache - ${{ matrix.config }} - ${{ matrix.os }}"
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+        config:
+          - teeny-pc
+          - personal-desktop
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          swap-storage: true
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v30
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: |
+            extra-substituters = http://cache/hello
+            extra-trusted-public-keys = hello:FQLbUnzWwgsM443PxYlHY9MpAwrjvDWFplcoFPPrn+c= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+
+      - name: Nix `Magic` Cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Connect to Tailscale network
+        uses: tailscale/github-action@v2
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:runners
+
+      - name: Attic cache
+        uses: ryanccn/attic-action@v0
+        with:
+          endpoint: "http://cache"
+          cache: hello
+          token: ${{ secrets.ATTIC_TOKEN }}
+
+      - name: Build
+        id: build
+        run: |
+          nix build .#nixosConfigurations.${{ matrix.config }}.config.system.build.toplevel
+
+  build-and-cache-darwin:
+    name: "Build and Cache - ${{ matrix.config }} - ${{ matrix.os }}"
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-latest
+        config:
+          - Sams-MacBook-Air
+          - work-mbp
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v30
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: |
+            extra-substituters = http://cache/hello
+            extra-trusted-public-keys = hello:FQLbUnzWwgsM443PxYlHY9MpAwrjvDWFplcoFPPrn+c= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+
+      - name: Nix `Magic` Cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      # - name: Setup Tailscale
+      #   id: tailscale-setup
+      #   run: |
+      #     nix-env -i tailscale -f '<nixpkgs>'
+      #     sudo -E tailscaled ${STATE_ARGS} ${ADDITIONAL_DAEMON_ARGS} 2>~/tailscaled.log &
+      #     sudo networksetup -setdnsservers Ethernet 100.100.100.100 1.1.1.1
+      #
+      - name: Switch to runner system
+        id: darwin-switch
+        run: |
+          nix build .#darwinConfigurations.github-runner.system
+          sudo mv /etc/nix/nix.conf /etc/nix/nix.conf.bak
+          ./result/sw/bin/darwin-rebuild switch --flake .#github-runner
+
+      - name: Connect to Tailscale network
+        id: tailscale-connect
+        run: |
+          TAILSCALE_AUTHKEY="${{ secrets.TS_OAUTH_SECRET }}?preauthorized=true&ephemeral=true"
+          TAGS_ARG="--advertise-tags=tag:runners"
+          sudo -E /run/current-system/sw/bin/tailscale up ${TAGS_ARG} --authkey=${TAILSCALE_AUTHKEY} --hostname=${HOSTNAME} --accept-routes ${ADDITIONAL_ARGS}
+
+      - name: Attic cache
+        uses: ryanccn/attic-action@v0
+        with:
+          endpoint: "http://cache"
+          cache: hello
+          token: ${{ secrets.ATTIC_TOKEN }}
+
+      - name: Build
+        id: build
+        run: |
+          nix build .#darwinConfigurations.${{ matrix.config }}.config.system.build.toplevel

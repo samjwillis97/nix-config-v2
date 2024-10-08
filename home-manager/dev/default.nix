@@ -145,6 +145,8 @@ in
       _1password
       neovim
       shc-cli
+      mtr # network tool
+      iperf # network performance tool
     ]
     ++ (with pkgs; if super.meta.isDarwin then [ f ] else [ ]);
 }

@@ -1,7 +1,9 @@
-{ pkgs, ... }:
+{ super, ... }:
+let
+  inherit (super.meta) useHomeManager;
+in
 {
   imports = [
-    ./home.nix
     ./meta.nix
     ./system.nix
     ./fonts.nix
@@ -15,7 +17,7 @@
     ./tailscale.nix
     ./spaces.nix
     ../overlays
-  ];
+  ] ++ (if useHomeManager then [ ./home.nix ] else [ ]);
 
   # TODO:
   #   - See About MacOS Apps:

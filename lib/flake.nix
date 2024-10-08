@@ -80,12 +80,18 @@ in
       extraModules ? [ ],
       extraHomeModules ? [ ],
       darwinSystem ? darwin.lib.darwinSystem,
+      useHomeManager ? true,
       ...
     }:
     {
       darwinConfigurations.${hostname} = darwinSystem {
         inherit system;
         modules = [
+          {
+            meta = {
+              inherit useHomeManager;
+            };
+          }
           ../hosts/${hostname}
           inputs.agenix.darwinModules.default
           inputs.nix-homebrew.darwinModules.nix-homebrew
@@ -95,6 +101,7 @@ in
           inherit system;
           flake = self;
           super.meta = {
+            inherit useHomeManager;
             hostname = hostname;
             isDarwin = true;
             username = username;
