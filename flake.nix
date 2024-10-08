@@ -8,6 +8,7 @@
     # Only being used for reducing flake lock duplications
     systems.url = "github:nix-systems/default";
     crane.url = "github:ipetkov/crane";
+    flake-compat.url = "github:edolstra/flake-compat";
 
     # nix-darwin module
     darwin = {
@@ -60,7 +61,10 @@
 
     microvm = {
       url = "github:astro/microvm.nix";
-      # follows = "nixpkgs";
+      inputs = {
+        flake-utils.follows = "flake-utils";
+        nixpkgs.follows = "nixpkgs";
+      };
     };
 
     f = {
@@ -76,13 +80,19 @@
 
     deploy-rs = {
       url = "github:serokell/deploy-rs";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-compat.follows = "flake-compat";
+      };
     };
 
     attic = {
       url = "github:zhaofengli/attic";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.crane.follows = "crane";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        crane.follows = "crane";
+        flake-compat.follows = "flake-compat";
+      };
     };
 
     nix-homebrew = {
@@ -105,7 +115,10 @@
     };
     brew-nix = {
       url = "github:BatteredBunny/brew-nix";
-      inputs.brew-api.follows = "brew-api";
+      inputs = {
+        nix-darwin.follows = "darwin";
+        brew-api.follows = "brew-api";
+      };
     };
   };
 
@@ -128,7 +141,7 @@
     }@inputs:
     let
       inherit (import ./lib/attrsets.nix { inherit (nixpkgs) lib; }) recursiveMergeAttrs;
-      inherit (import ./lib/flake.nix inputs) mkNixosSystem mkDarwinSystem mkHomeManager;
+      inherit (import ./lib/flake.nix inputs) mkNixosSystem mkDarwinSystem;
     in
     # Thoughts on how to compose this - Jays config is making more sense now...
     # Need a way to define systems, i.e. I have a macbook that runs aarch64-darwin and has these users
