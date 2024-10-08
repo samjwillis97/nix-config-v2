@@ -38,9 +38,10 @@ let
     ${if (super.meta.isDarwin) then "eval \"$(/opt/homebrew/bin/brew shellenv)\"" else ""}
 
     source ${p10kTheme}
-    . <(${pkgs.shc-cli}/bin/shc-cli --completion)
   '';
 in
+# Disabling shc whilst doing some development
+# . <(${pkgs.shc-cli}/bin/shc-cli --completion)
 {
   home.packages =
     with pkgs;
