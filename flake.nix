@@ -3,9 +3,12 @@
 
   inputs = {
     # Nixpkgs Source
-    nixpkgs = {
-      url = "github:nixos/nixpkgs/nixos-unstable";
-    };
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    # Only being used for reducing flake lock duplications
+    systems.url = "github:nix-systems/default";
+    crane.url = "github:ipetkov/crane";
+    flake-compat.url = "github:edolstra/flake-compat";
 
     # nix-darwin module
     darwin = {
@@ -32,15 +35,10 @@
 
     flake-utils = {
       url = "github:numtide/flake-utils";
+      inputs.systems.follows = "systems";
     };
 
-    nur = {
-      url = "github:nix-community/NUR";
-    };
-
-    devenv = {
-      url = "github:cachix/devenv/latest";
-    };
+    nur.url = "github:nix-community/NUR";
 
     modular-neovim = {
       url = "github:samjwillis97/modular-neovim-flake";
@@ -54,16 +52,25 @@
 
     agenix = {
       url = "github:ryantm/agenix";
+      inputs = {
+        home-manager.follows = "home-manager";
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems";
+      };
     };
 
     microvm = {
       url = "github:astro/microvm.nix";
-      # follows = "nixpkgs";
+      inputs = {
+        flake-utils.follows = "flake-utils";
+        nixpkgs.follows = "nixpkgs";
+      };
     };
 
     f = {
       url = "github:samjwillis97/f";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.crane.follows = "crane";
     };
 
     shc = {
@@ -73,15 +80,25 @@
 
     deploy-rs = {
       url = "github:serokell/deploy-rs";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-compat.follows = "flake-compat";
+      };
     };
 
     attic = {
       url = "github:zhaofengli/attic";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        crane.follows = "crane";
+        flake-compat.follows = "flake-compat";
+      };
     };
 
-    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+    nix-homebrew = {
+      url = "github:zhaofengli-wip/nix-homebrew";
+      inputs.nix-darwin.follows = "darwin";
+    };
     homebrew-core = {
       url = "github:homebrew/homebrew-core";
       flake = false;
@@ -98,7 +115,10 @@
     };
     brew-nix = {
       url = "github:BatteredBunny/brew-nix";
-      inputs.brew-api.follows = "brew-api";
+      inputs = {
+        nix-darwin.follows = "darwin";
+        brew-api.follows = "brew-api";
+      };
     };
   };
 
@@ -108,7 +128,6 @@
       nixpkgs,
       nur,
       flake-utils,
-      devenv,
       modular-neovim,
       agenix,
       nix-serve,
@@ -122,7 +141,7 @@
     }@inputs:
     let
       inherit (import ./lib/attrsets.nix { inherit (nixpkgs) lib; }) recursiveMergeAttrs;
-      inherit (import ./lib/flake.nix inputs) mkNixosSystem mkDarwinSystem mkHomeManager;
+      inherit (import ./lib/flake.nix inputs) mkNixosSystem mkDarwinSystem;
     in
     # Thoughts on how to compose this - Jays config is making more sense now...
     # Need a way to define systems, i.e. I have a macbook that runs aarch64-darwin and has these users
@@ -167,24 +186,6 @@
       })
 
       (mkNixosSystem {
-        hostname = "linux-vm";
-        system = "x86_64-linux";
-        username = "sam";
-        extraModules = [ ./services/coder ];
-        extraHomeModules = [ ];
-        useHomeManager = false;
-      })
-
-      (mkNixosSystem {
-        hostname = "linux-amd64-vm";
-        system = "aarch64-linux";
-        username = "sam";
-        extraModules = [ ./services/coder ];
-        extraHomeModules = [ ];
-        useHomeManager = false;
-      })
-
-      (mkNixosSystem {
         hostname = "mac-vm";
         system = "aarch64-linux";
         username = "sam";
@@ -216,7 +217,6 @@
           ./home-manager/wezterm
           ./home-manager/vscode
           ./home-manager/dev
-          ./home-manager/dev/devenv.nix
           ./home-manager/dev/ops.nix
           ./home-manager/aerospace
           ./home-manager/darwin
@@ -235,7 +235,6 @@
         extraModules = [ ];
         extraHomeModules = [
           ./home-manager/dev
-          ./home-manager/dev/devenv.nix
           ./home-manager/dev/ops.nix
           ./home-manager/wezterm
           ./home-manager/vscode
@@ -247,8 +246,6 @@
           { modules.darwin.work = true; }
         ];
       })
-
-      (mkHomeManager { hostname = "coder-container"; })
 
       (mkNixosSystem {
         hostname = "teeny-pc";

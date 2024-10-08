@@ -144,7 +144,8 @@ in
       nodePackages.json-diff
       _1password
       neovim
-      shc-cli
+      # Disabling SHC whilst still doing more dev
+      # shc-cli
       mtr # network tool
       iperf # network performance tool
     ]
