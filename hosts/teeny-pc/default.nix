@@ -6,7 +6,7 @@
     ../../modules/ops/deploy.nix
     ../../modules/monitoring/exporters
     ../../modules/monitoring/promtail
-    ../../modules/virtualisation/microvm-host.nix
+    # ../../modules/virtualisation/microvm-host.nix
   ];
 
   modules = {
@@ -16,23 +16,23 @@
 
     monitoring = {
       promtail = {
-        enable = true;
+        enable = false;
         lokiUrl = "http://insights:3100";
       };
 
-      exporters.system.enable = true;
+      exporters.system.enable = false;
     };
 
-    virtualisation.microvm-host = {
-      enable = true;
-      externalInterface = "enp2s0";
-      vms = [
-        "graphy"
-        "insights"
-        "radarr"
-        "cache"
-      ];
-    };
+    # virtualisation.microvm-host = {
+    #   enable = false;
+    #   externalInterface = "enp2s0";
+    #   vms = [
+    #     # "graphy"
+    #     # "insights"
+    #     # "radarr"
+    #     # "cache"
+    #   ];
+    # };
   };
 
   fileSystems."/mnt/nas" = {

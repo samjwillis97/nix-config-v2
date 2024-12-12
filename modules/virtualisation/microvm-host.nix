@@ -174,7 +174,7 @@ in
                 imports = [
                   flake.inputs.agenix.nixosModules.default
                   flake.inputs.home-manager.nixosModules.home-manager
-                  flake.inputs.attic.nixosModules.atticd
+                  # flake.inputs.attic.nixosModules.atticd # this is causing headaches
                   ./microvm-guest.nix
                   ../networking/tailscale
                   ../../secrets/microvm
