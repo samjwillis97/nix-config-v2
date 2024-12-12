@@ -20,18 +20,18 @@ in
     mkIf cfg.enable (mkMerge [
       {
         home.packages = with pkgs; [
-          _1password-gui
-          brewCasks.raycast
+          # _1password-gui
+          # brewCasks.raycast
           # displaylink - bad type
-          brewCasks.betterdisplay
-          brewCasks.appcleaner
+          # brewCasks.betterdisplay
+          # brewCasks.appcleaner
           # brewCasks."logi-options+" - bad hash
-          brewCasks.disk-inventory-x
+          # brewCasks.disk-inventory-x
         ];
       }
       (mkIf cfg.work {
         home.packages = with pkgs; [
-          brewCasks.proxyman
+          # brewCasks.proxyman
           # brewCasks.workplace-chat - bad hash
         ];
       })

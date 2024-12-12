@@ -7,7 +7,7 @@
 
     # Only being used for reducing flake lock duplications
     systems.url = "github:nix-systems/default";
-    crane.url = "github:ipetkov/crane";
+    # crane.url = "github:ipetkov/crane";
     flake-compat.url = "github:edolstra/flake-compat";
 
     # nix-darwin module
@@ -69,8 +69,8 @@
 
     f = {
       url = "github:samjwillis97/f";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.crane.follows = "crane";
+      # inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.crane.follows = "crane";
     };
 
     shc = {
@@ -90,7 +90,7 @@
       url = "github:zhaofengli/attic";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        crane.follows = "crane";
+        # crane.follows = "crane";
         flake-compat.follows = "flake-compat";
       };
     };

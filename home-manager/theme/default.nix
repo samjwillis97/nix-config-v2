@@ -28,8 +28,8 @@
       hack-font
       noto-fonts
       noto-fonts-emoji
-      gnome.gnome-themes-extra
-      gnome.adwaita-icon-theme
+      gnome-themes-extra
+      adwaita-icon-theme
     ];
   };
 }

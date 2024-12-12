@@ -9,7 +9,7 @@
   programs.kitty = {
     enable = true;
     font = {
-      package = with pkgs; (nerdfonts.override { fonts = [ "FiraCode" ]; });
+      package = pkgs.nerd-fonts.fira-mono;
       name = "FiraCode Nerd Font Mono";
       size = 9;
     };

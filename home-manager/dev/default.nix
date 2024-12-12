@@ -11,7 +11,8 @@ let
       config.vim = {
         theme = {
           enable = true;
-          name = "catppuccin";
+          name = "onedark";
+          style = "deep";
         };
         visuals = {
           borderType = "rounded";

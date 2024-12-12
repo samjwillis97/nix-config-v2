@@ -9,7 +9,8 @@
       corefonts
       noto-fonts
       noto-fonts-emoji
-      (nerdfonts.override { fonts = [ "FiraCode" ]; })
+      nerd-fonts.fira-mono
+      nerd-fonts.jetbrains-mono
     ];
     # TODO: See if there are more preffered fonts
 

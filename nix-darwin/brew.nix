@@ -28,7 +28,13 @@ in
     # try updating brew manually on machine.
     casks = [
       # "orbstack"
+      # "1password"
+      "appcleaner"
+      "raycast"
       "displaylink"
+      "betterdisplay"
+      "disk-inventory-x"
+      # "proxyman"
       # "logi-options-plus"
     ];
 
