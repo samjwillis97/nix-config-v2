@@ -12,7 +12,7 @@ let
         theme = {
           enable = true;
           name = "onedark";
-          style = "deep";
+          style = "darker";
         };
         visuals = {
           borderType = "rounded";
