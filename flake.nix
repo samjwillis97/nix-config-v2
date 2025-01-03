@@ -120,6 +120,10 @@
         brew-api.follows = "brew-api";
       };
     };
+
+    ghostty = {
+      url = "github:ghostty-org/ghostty";
+    };
   };
 
   outputs =
@@ -146,7 +150,7 @@
     # Thoughts on how to compose this - Jays config is making more sense now...
     # Need a way to define systems, i.e. I have a macbook that runs aarch64-darwin and has these users
     # Need a way to define users properly, and what imports they will require no matter what (think of this like normal dotfiles)
-    # On the system level define what pacakges to install, probably using the modules 
+    # On the system level define what pacakges to install, probably using the modules
     # Think about how to use this just to replace dotfile management as well
     # A simple way to define sets of packages could be good as well
     # Then think of a way to replace docker.. i.e. pihole.nix
