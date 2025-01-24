@@ -124,6 +124,11 @@
     ghostty = {
       url = "github:ghostty-org/ghostty";
     };
+
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -239,6 +244,7 @@
         extraModules = [ ];
         extraHomeModules = [
           ./home-manager/dev
+          ./home-manager/dev/nvim.nix
           ./home-manager/dev/ops.nix
           ./home-manager/wezterm
           ./home-manager/vscode
