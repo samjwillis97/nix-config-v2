@@ -16,8 +16,7 @@ in
       aerospace = prev.callPackage ../packages/aerospace.nix { };
       wallpapers = prev.callPackage ../packages/wallpapers { };
       agenix = flake.inputs.agenix.packages.${system}.default;
-      neovim-base = flake.inputs.modular-neovim.packages.${system}.neovim-base;
-      neovim-full = flake.inputs.modular-neovim.packages.${system}.neovim-full;
+      neovim = flake.inputs.modular-neovim.packages.${system}.default;
       nix-serve = flake.inputs.nix-serve.packages.${system}.nix-serve;
       hyprland = flake.inputs.hyprland.packages.${system}.hyprland;
       f = flake.inputs.f.packages.${system}.default;

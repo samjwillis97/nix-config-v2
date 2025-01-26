@@ -20,8 +20,8 @@ in
       macos-titlebar-style = hidden
       font-size = 12
       theme = dark:onehalfdark,light:onehalflight
-      background-opacity = 0.8
-      background-blur-radius = 20
+      # background-opacity = 0.8
+      # background-blur-radius = 20
     '';
   };
 }
