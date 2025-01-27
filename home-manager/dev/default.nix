@@ -17,6 +17,7 @@
       nodePackages.json-diff
       _1password
       neovim
+      dive # docker image explorer
       # Disabling SHC whilst still doing more dev
       # shc-cli
       mtr # network tool

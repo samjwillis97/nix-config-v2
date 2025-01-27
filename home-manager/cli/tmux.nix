@@ -91,6 +91,8 @@ in
       # order sesions by name
       bind s choose-tree -sZ -O name
 
+      # default statusbar colors
+
       thm_bg="${base00}"
       thm_fg="${base05}"
       thm_cyan="${base0C}"
@@ -103,7 +105,7 @@ in
       thm_yellow="${base0A}"
       thm_blue="${base0D}"
       thm_orange="${base09}"
-      thm_black4="${base04}"
+      thm_black4="${base03}"
 
       # ----------------------------=== Theme ===--------------------------
       # status

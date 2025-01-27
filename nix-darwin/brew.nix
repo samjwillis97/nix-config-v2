@@ -27,7 +27,7 @@ in
     # If struggling to install one of these
     # try updating brew manually on machine.
     casks = [
-      # "orbstack"
+      "orbstack"
       # "1password"
       "appcleaner"
       "raycast"
