@@ -1081,11 +1081,11 @@
         "nixvim": "nixvim"
       },
       "locked": {
-        "lastModified": 1737930382,
-        "narHash": "sha256-HickTVdPiZyxCP4nNsI3gU3Gwc8cEB21ueQHk8XyCRw=",
+        "lastModified": 1738011194,
+        "narHash": "sha256-hS+jiM4iwFshizYw2HatneAloIz0uvKbto7V+D+IoDI=",
         "owner": "samjwillis97",
         "repo": "modular-neovim-flake",
-        "rev": "6c60781a3949cd20225015a72141506cec1686fe",
+        "rev": "2a0fc40026a5c564a68eac3cde1f49158303b4a1",
         "type": "github"
       },
       "original": {

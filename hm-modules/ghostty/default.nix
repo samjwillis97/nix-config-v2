@@ -19,7 +19,7 @@ in
       title = " "
       macos-titlebar-style = hidden
       font-size = 12
-      theme = dark:onehalfdark,light:onehalflight
+      theme = dracula
       # background-opacity = 0.8
       # background-blur-radius = 20
     '';
