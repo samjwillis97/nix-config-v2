@@ -8,6 +8,19 @@
     settings = {
       start-at-login = true;
 
+      on-window-detected = [
+        {
+          "if".app-id = "org.mozilla.nightly";
+          check-further-callbacks = true;
+          run = ["layout floating"];
+        }
+        {
+          "if".window-title-regex-substring = "Picture-in-Picture";
+          check-further-callbacks = true;
+          run = ["layout floating"];
+        }
+      ];
+
       # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
       enable-normalization-flatten-containers = false;
       enable-normalization-opposite-orientation-for-nested-containers = false;

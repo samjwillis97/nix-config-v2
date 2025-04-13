@@ -31,7 +31,7 @@ in
       # "1password"
       "appcleaner"
       "raycast"
-      "displaylink"
+      # "displaylink"
       "betterdisplay"
       "disk-inventory-x"
       "ghostty"

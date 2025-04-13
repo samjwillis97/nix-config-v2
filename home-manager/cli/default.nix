@@ -7,6 +7,7 @@ in
   imports = [
     ./zsh.nix
     ./tmux.nix
+    ./zellij.nix
     ./git.nix
     ./rmtree.nix
     ./worktree.nix
