@@ -7,18 +7,6 @@
   ...
 }:
 # TODO: Auto Reconnect
-let
-  tmux-now-playing = pkgs.tmuxPlugins.mkTmuxPlugin {
-    pluginName = "tmux-now-playing";
-    version = "unstable-2019-07-14";
-    src = pkgs.fetchFromGitHub {
-      owner = "spywhere";
-      repo = "tmux-now-playing";
-      rev = "0a94d1776be7f5f41c626774239576b4ba8761cf";
-      sha256 = "WF01C3ZoIMpOU4lcUwSXjFhuTGj5u3j8JYGwfvF0FOY=";
-    };
-  };
-in
 {
   home.packages = with pkgs; if super.meta.isDarwin then [ f-tmux ] else [ ];
   programs.tmux = {
@@ -34,10 +22,9 @@ in
     prefix = "C-b";
     terminal = "screen-256color";
 
-    plugins = [ tmux-now-playing ];
+    plugins = [ ];
 
     extraConfig = with config.theme.colors; ''
-
       # Better splitting
       bind | split-window -h -c "#{pane_current_path}"
       bind - split-window -v -c "#{pane_current_path}"
@@ -86,7 +73,7 @@ in
       set -sg escape-time 0
 
       # easy reload
-      bind-key r source-file ~/.tmux.conf \; display-message "~/.tmux.conf reloaded"
+      bind-key r source-file ~/.config/tmux/tmux.conf \; display-message "~/.tmux.conf reloaded"
 
       # order sesions by name
       bind s choose-tree -sZ -O name
