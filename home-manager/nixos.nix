@@ -11,7 +11,7 @@
   # Okay now I have the most plain cursor in the world on personal-desktop so I am confused
   home = {
     pointerCursor = {
-      package = pkgs.gnome.adwaita-icon-theme;
+      package = pkgs.adwaita-icon-theme;
       name = "Adwaita";
       size = 16;
       x11.enable = true;
