@@ -12,7 +12,7 @@ in
     enable = true;
 
     profiles.${config.home.username} = {
-      extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+      extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
         decentraleyes
         onepassword-password-manager
         multi-account-containers
@@ -27,39 +27,50 @@ in
 
       search = {
         force = true;
-        default = "DuckDuckGo";
-        order = [ "DuckDuckGo" ];
+        default = "ddg";
+        order = [ "ddg" ];
       };
       bookmarks = {
-        "Duck Duck Go" = {
-          keyword = "d";
-          url = "https://duckduckgo.com/?q=%s";
-        };
-        "Google Search" = {
-          keyword = "g";
-          url = "https://www.google.com/search?q=%s";
-        };
-        "Google Search AU" = {
-          keyword = "ga";
-          url = "https://www.google.com.au/search?q=%s";
-        };
-        "Github Code Search" = {
-          keyword = "cs";
-          url = "https://cs.github.com/?scopeName=All+repos&scope=&q=%s";
-        };
-        "Nix Pkg Search" = {
-          keyword = "np";
-          url = "https://search.nixos.org/packages?channel=unstable&from=0&size=50&sort=relevance&query=%s";
-        };
-        "Nix Options Search" = {
-          keyword = "no";
-          url = "https://search.nixos.org/options?channel=unstable&from=0&size=50&sort=relevance&query=%s";
-        };
-        OSRSWiki = {
-          keyword = "osrs";
-          url = "https://oldschool.runescape.wiki/?search=%s&title=Special%3ASearch&fulltext=Search";
-        };
-        # TODO: Jira/Confluence/Bitbucket, HN, OZb, Twitter, Github, AWARE
+        force = true;
+
+        settings = [
+          {
+            name = "Duck Duck Go";
+            keyword = "d";
+            url = "https://duckduckgo.com/?q=%s";
+          }
+          {
+            name = "Google Search";
+            keyword = "g";
+            url = "https://www.google.com/search?q=%s";
+          }
+          {
+            name = "Google Search AU";
+            keyword = "ga";
+            url = "https://www.google.com.au/search?q=%s";
+          }
+          {
+            name = "Github Code Search";
+            keyword = "cs";
+            url = "https://cs.github.com/?scopeName=All+repos&scope=&q=%s";
+          }
+          {
+            name = "Nix Pkg Search";
+            keyword = "np";
+            url = "https://search.nixos.org/packages?channel=unstable&from=0&size=50&sort=relevance&query=%s";
+          }
+          {
+            name = "Nix Options Search";
+            keyword = "no";
+            url = "https://search.nixos.org/options?channel=unstable&from=0&size=50&sort=relevance&query=%s";
+          }
+          {
+            name = "OSRSWiki";
+            keyword = "osrs";
+            url = "https://oldschool.runescape.wiki/?search=%s&title=Special%3ASearch&fulltext=Search";
+          }
+          # TODO: Jira/Confluence/Bitbucket, HN, OZb, Twitter, Github, AWARE
+        ];
       };
       settings = {
         "browser.quitShortcut.disabled" = true;

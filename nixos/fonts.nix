@@ -2,17 +2,16 @@
 {
 
   fonts = {
-    enableDefaultFonts = true;
+    enableDefaultPackages = true;
     fontDir.enable = true;
 
-    fonts = with pkgs; [
+    packages = with pkgs; [
       corefonts
       noto-fonts
       noto-fonts-emoji
       nerd-fonts.fira-mono
       nerd-fonts.jetbrains-mono
     ];
-    # TODO: See if there are more preffered fonts
 
     fontconfig = {
       enable = true;

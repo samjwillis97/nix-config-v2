@@ -42,6 +42,19 @@
     # RUN+="${pkgs.change-res}/bin/change-res"
     # '';
 
+    # Enable libinput
+    libinput = {
+      enable = true;
+      touchpad = {
+        naturalScrolling = true;
+        tapping = true;
+      };
+      mouse = {
+        accelProfile = "flat";
+        accelSpeed = null;
+      };
+    };
+
     xserver = {
       enable = true;
 
@@ -50,22 +63,14 @@
       # desktopManager.plasma5.enable = true;
       # displayManager.lightdm.enable = true;
 
-      # Enable libinput
-      libinput = {
-        enable = true;
-        touchpad = {
-          naturalScrolling = true;
-          tapping = true;
-        };
-        mouse = {
-          accelProfile = "flat";
-          accelSpeed = null;
-        };
-      };
+      autoRepeatDelay = 250;
+      autoRepeatInterval = 50;
 
-      layout = lib.mkDefault "us";
       # Remap Caps Lock to Esc, and use Super+Space to change layouts
-      xkbOptions = lib.mkDefault "caps:escape";
+      xkb = {
+        layout = lib.mkDefault "us";
+        options = lib.mkDefault "caps:escape";
+      };
     };
   };
 }

@@ -15,7 +15,7 @@
       direnv
       difftastic
       nodePackages.json-diff
-      _1password
+      _1password-cli
       neovim
       dive # docker image explorer
       # Disabling SHC whilst still doing more dev

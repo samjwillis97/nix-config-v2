@@ -73,7 +73,7 @@
         window_decorations = "RESIZE",
         harfbuzz_features = { 'calt=0', 'clig=0', 'liga=0' },
         front_end = "WebGpu",
-        max_fps = 144,
+        max_fps = 165,
       }
     '';
   };

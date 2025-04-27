@@ -24,7 +24,7 @@ in
       shc-cli = flake.inputs.shc.packages.${system}.default;
       ghostty = flake.inputs.ghostty.packages.${system}.default;
     })
-    inputs.nur.overlay
+    inputs.nur.overlays.default
     inputs.brew-nix.overlays.default
     inputs.firefox-darwin.overlay
   ];
