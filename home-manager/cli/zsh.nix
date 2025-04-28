@@ -53,7 +53,7 @@ in
     ++ (if super.meta.isDarwin then [ f-tmux ] else [ ]);
 
   programs.zsh = {
-    inherit initExtra;
+    initContent = initExtra;
 
     enable = true;
 
