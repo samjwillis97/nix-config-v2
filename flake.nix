@@ -184,6 +184,8 @@
           ./home-manager/gaming
           ./home-manager/dev
           ./home-manager/dev/ops.nix
+          ./home-manager/dev/windsurf.nix
+          ./home-manager/vscode
           # ./home-manager/qutebrowser
           # ./home-manager/hyprland
         ];
