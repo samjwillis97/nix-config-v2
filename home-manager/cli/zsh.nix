@@ -25,7 +25,7 @@ let
 
     # alias nvim="nix run github:samjwillis97/neovim-flake --"
 
-    ${if super.meta.isDarwin then "bindkey -s ^f \"${pkgs.f-tmux}/bin/f-fzf-tmux-wrapper\n\n\"" else ""}
+    bindkey -s ^f "${pkgs.f}/bin/f -l\n\n"
 
     export CDPATH="$CDPATH:../:../../"
 

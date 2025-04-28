@@ -69,8 +69,8 @@
 
     f = {
       url = "github:samjwillis97/f";
-      # inputs.nixpkgs.follows = "nixpkgs";
-      # inputs.crane.follows = "crane";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
     };
 
     shc = {

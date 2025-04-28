@@ -20,7 +20,6 @@ in
       nix-serve = flake.inputs.nix-serve.packages.${system}.nix-serve;
       hyprland = flake.inputs.hyprland.packages.${system}.hyprland;
       f = flake.inputs.f.packages.${system}.default;
-      f-tmux = flake.inputs.f.packages.${system}.f-tmux;
       shc-cli = flake.inputs.shc.packages.${system}.default;
       ghostty = flake.inputs.ghostty.packages.${system}.default;
     })
