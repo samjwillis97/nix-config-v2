@@ -22,6 +22,7 @@
       # shc-cli
       mtr # network tool
       iperf # network performance tool
+      devenv
     ]
     ++ (with pkgs; if super.meta.isDarwin then [ f ] else [ ]);
 }
