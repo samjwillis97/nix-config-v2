@@ -30,9 +30,9 @@ let
         text = ''
           wpctl set-mute @DEFAULT_SOURCE@ toggle && \
           if wpctl get-volume @DEFAULT_SOURCE@ | grep -q "\\[MUTED\\]"; then \
-            notify-send -u normal -t 5000 'Microphone toggled: OFF'; \
+            notify-send -u normal -t 5000 'Microphone: OFF'; \
           else \
-            notify-send -u normal -t 5000 'Microphone toggled: ON'; \
+            notify-send -u normal -t 5000 'Microphone: ON'; \
           fi
         '';
       };
