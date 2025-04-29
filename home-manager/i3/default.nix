@@ -13,9 +13,29 @@ let
   commonOptions =
     let
       dunstctl = "${pkgs.dunst}/bin/dunstctl";
+
       screenShotName =
         with config.xdg.userDirs;
         "${pictures}/$(${pkgs.coreutils}/bin/date +%Y-%m-%d_%H-%M-%S)-screenshot.png";
+
+      toggleMuteScript = pkgs.writeShellApplication {
+        name = "toggleMute.sh"; # this will be the name of the binary
+        runtimeInputs = [ pkgs.wireplumber pkgs.libnotify pkgs.gnugrep ]; # Dependencies go here
+        # Note that no shebang is necessary, writeShellApplication will prepend
+        # it.
+        #
+        # Also note that there is no need to reference the package, the
+        # runtimeInputs will take care of adding `bin` directory to this script's
+        # path
+        text = ''
+          wpctl set-mute @DEFAULT_SOURCE@ toggle && \
+          if wpctl get-volume @DEFAULT_SOURCE@ | grep -q "\\[MUTED\\]"; then \
+            notify-send -u normal -t 5000 'Microphone toggled: OFF'; \
+          else \
+            notify-send -u normal -t 5000 'Microphone toggled: ON'; \
+          fi
+        '';
+      };
     in
     import ./common.nix rec {
       inherit
@@ -46,6 +66,8 @@ let
         ${pkgs.maim}/bin/maim -u -s "${screenShotName}" && \
         ${pkgs.libnotify}/bin/notify-send -u normal -t 5000 'Area screenshot taken'
       '';
+
+      toggleMute = lib.getExe toggleMuteScript;
 
       extraBindings = {
         "${modifier}+Tab" = "exec rofi -show window -modi window";

@@ -8,6 +8,7 @@
   playerctl,
   fullScreenShot,
   areaScreenShot,
+  toggleMute,
   browser,
   fileManager,
   statusCommand,
@@ -246,7 +247,7 @@ in
         "${modifier}+Shift+q" = "kill";
 
         "${modifier}+n" = "exec ${browser}";
-        "${modifier}+m" = "exec ${fileManager}";
+        # "${modifier}+m" = "exec ${fileManager}";
         "${modifier}+d" = "exec ${menu}";
 
         "${modifier}+f" = "fullscreen toggle";
@@ -295,6 +296,7 @@ in
 
         "Print" = "exec --no-startup-id ${fullScreenShot}";
         "Shift+Print" = "exec --no-startup-id ${areaScreenShot}";
+        "${modifier}+m" = "exec --no-startup-id ${toggleMute}";
       }
       // (mapDirectionDefault {
         prefixKey = modifier;
