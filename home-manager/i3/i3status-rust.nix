@@ -38,8 +38,17 @@
               caffeine_off = "  ";
               notification_on = "  ";
               notification_off = "  ";
+              microphone_on = "󰍬 ";
+              microphone_off = "󰍭 ";
             };
           };
+        };
+
+        micStatusBlock = {
+          block = "custom";
+          command = ''if wpctl get-volume @DEFAULT_SOURCE@ | grep -q "\\[MUTED\]"; then echo "{\"icon\":\"microphone_off\",\"state\":\"Warning\",\"text\":\"MUTED\"}"; else echo "{\"icon\":\"microphone_on\",\"state\":\"Critical\",\"text\":\"MIC ON\"}"; fi;'';
+          json = true;
+          interval = 1;
         };
 
         netBlock = {
@@ -92,6 +101,7 @@
           inherit settings;
 
           blocks = lib.lists.flatten [
+            micStatusBlock
             netBlock
             diskBlock
             memoryBlock

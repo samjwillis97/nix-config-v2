@@ -164,8 +164,8 @@
         hostname = "personal-desktop";
         system = "x86_64-linux";
         username = "sam";
-        # networkAdapterName = "enp9s0";
-        networkAdapterName = "wlp7s0";
+        networkAdapterName = "enp9s0";
+        # networkAdapterName = "wlp7s0";
         extraModules = [
           # microvm.nixosModules.host
           ./nixos/xserver.nix
