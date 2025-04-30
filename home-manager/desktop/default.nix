@@ -30,6 +30,7 @@
     xfce.thunar-archive-plugin
     obs-studio
     peek
+    btop
     _1password-gui
   ];
 
