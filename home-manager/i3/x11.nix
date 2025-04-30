@@ -86,6 +86,7 @@ in
       # Automatically loads the best layout from autorandr
       ''
         ${pkgs.autorandr}/bin/autorandr --change
+        xset r rate 250 50
       '';
   };
 }
