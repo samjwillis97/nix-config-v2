@@ -65,7 +65,9 @@ in
               hostname
               useHomeManager
               ;
-            extraHomeModules = extraHomeModules;
+            extraHomeModules = [
+              inputs.shc.homeManagerModules.${system}.shc
+            ] ++ extraHomeModules;
             isDarwin = false;
           };
         };

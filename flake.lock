@@ -1196,11 +1196,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1746431292,
-        "narHash": "sha256-5tkqWZKpSak+ed8JUiQD8kINBxlbdp6pSNUnhwXygvw=",
+        "lastModified": 1746447802,
+        "narHash": "sha256-K8ujFXUPRKYBEAoWqTpEt2duw5yv4R+dus9vfOr2IPw=",
         "owner": "samjwillis97",
         "repo": "ai-testing",
-        "rev": "6db6ffe05cca79cff809bd8ea4b80e7f3e30b41b",
+        "rev": "f414333c2d23ef61d76fa67d1633c192b0b68718",
         "type": "github"
       },
       "original": {
