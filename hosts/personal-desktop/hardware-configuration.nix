@@ -30,7 +30,7 @@
     "sd_mod"
   ];
   boot.initrd.kernelModules = [
-    "amdgpu"
+    # "amdgpu"
   ];
   boot.kernelModules = [
     "kvm-intel"
@@ -67,8 +67,8 @@
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
-  services.xserver.videoDrivers = [ "amdgpu" ];
-  hardware.graphics.extraPackages = [
-    pkgs.amdvlk
-  ];
+  # services.xserver.videoDrivers = [ "amdgpu" ];
+  # hardware.graphics.extraPackages = [
+  #   pkgs.amdvlk
+  # ];
 }
