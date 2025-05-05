@@ -106,6 +106,7 @@ in
             isDarwin = true;
             username = username;
             extraHomeModules = [
+              inputs.shc.homeManagerModules.${system}.shc
               inputs.agenix.homeManagerModules.age
               ../hm-modules
             ] ++ extraHomeModules;

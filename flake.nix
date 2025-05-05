@@ -74,8 +74,9 @@
     };
 
     shc = {
-      url = "github:samjwillis97/shc-2";
+      url = "github:samjwillis97/ai-testing/take-2";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
     };
 
     deploy-rs = {

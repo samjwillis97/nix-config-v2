@@ -49,8 +49,8 @@ in
       bat
       rsync
       gnutar
-    ]
-    ++ (if super.meta.isDarwin then [ f-tmux ] else [ ]);
+      f
+    ];
 
   programs.zsh = {
     initContent = initExtra;

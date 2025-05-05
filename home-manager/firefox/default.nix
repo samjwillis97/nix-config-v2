@@ -5,7 +5,7 @@
   ...
 }:
 let
-  packageSettings = lib.optionalAttrs pkgs.stdenv.isDarwin { package = pkgs.firefox-bin; };
+  # packageSettings = lib.optionalAttrs pkgs.stdenv.isDarwin { package = pkgs.firefox-bin; };
 in
 {
   programs.firefox = {
@@ -79,5 +79,5 @@ in
     # TODO: Bookmarks
     # TODO: Extensions
     # TODO: Profile
-  } // packageSettings;
+  }; # // packageSettings;
 }

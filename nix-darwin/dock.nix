@@ -38,7 +38,10 @@ in
       "/system/Applications/Reminders.app/"
       "${pkgs.slack}/Applications/Slack.app"
       # (lib.optionalString workEnabled "${pkgs.brewCasks.workplace-chat}/Applications/Workplace Chat.app")
-      "${pkgs.zoom-us}/Applications/zoom.us.app"
+
+      # commented out until https://github.com/NixOS/nixpkgs/pull/403993
+      # "${pkgs.zoom-us}/Applications/zoom.us.app"
+
       "${pkgs.discord}/Applications/Discord.app"
       "${config.home-manager.users.${username}.programs.wezterm.package}/Applications/WezTerm.app"
       (lib.optionalString workEnabled "${pkgs.brewCasks.proxyman}/Applications/Proxyman.app")

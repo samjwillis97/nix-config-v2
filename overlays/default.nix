@@ -20,7 +20,7 @@ in
       nix-serve = flake.inputs.nix-serve.packages.${system}.nix-serve;
       hyprland = flake.inputs.hyprland.packages.${system}.hyprland;
       f = flake.inputs.f.packages.${system}.default;
-      shc-cli = flake.inputs.shc.packages.${system}.default;
+      shc = flake.inputs.shc.packages.${system}.default;
       ghostty = flake.inputs.ghostty.packages.${system}.default;
     })
     inputs.nur.overlays.default

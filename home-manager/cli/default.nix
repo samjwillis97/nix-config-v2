@@ -33,6 +33,11 @@ in
     ]
     ++ osSpecificPackages;
 
+  programs.shc = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
   programs.bat = {
     enable = true;
     config.theme = "base16-256";
