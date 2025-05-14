@@ -1,11 +1,9 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 let
-  nix-options = pkgs.fetchFromGitHub {
-    owner = "JayRovacsek";
-    repo = "nix-options";
-    rev = "main";
-    hash = "sha256-ZLaNrbR8ozzgJ181CXByic89pp+zxMWKMyU5/qxbfzA=";
-  };
+  github-mcp-wrapped = pkgs.writeShellScriptBin "github-mcp-wrapped" ''
+    export GITHUB_PERSONAL_ACCESS_TOKEN=$(cat ${config.age.secrets.gh_pat.path})
+    ${pkgs.github-mcp-server}/bin/github-mcp-server "$@"
+  '';
 in
 {
   programs.vscode = {
@@ -96,6 +94,36 @@ in
 
         "chat.agent.enabled" = true;
         "chat.agent.maxRequests" = 30;
+
+        "mcp" = {
+          "servers" = {
+            "github" = {
+              "type" = "stdio";
+              "command" = "${github-mcp-wrapped}/bin/github-mcp-wrapped";
+              "args" = [ "stdio" ];
+            };
+            # "mcp-atlassian" = {
+            #   "command" = "docker";
+            #   "args" = [
+            #     "run"
+            #     "-i"
+            #     "--rm"
+            #     "-e"
+            #     "JIRA_URL"
+            #     "-e"
+            #     "JIRA_USERNAME"
+            #     "-e"
+            #     "JIRA_API_TOKEN"
+            #     "ghcr.io/sooperset/mcp-atlassian:latest"
+            #   ];
+            #   env = {
+            #     JIRA_URL = "";
+            #     JIRA_USERNAME = "";
+            #     JIR_API_TOKEN = "";
+            #   };
+            # };
+          };
+        };
 
         "[typescript]" = {
           "editor.defaultFormatter" = "esbenp.prettier-vscode";
