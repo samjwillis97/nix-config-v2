@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
-    # zoom-us # commented out until https://github.com/NixOS/nixpkgs/pull/403993
+    # zoom-us # commented out until someone else builds it..
     slack
     discord
   ];

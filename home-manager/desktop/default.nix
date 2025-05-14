@@ -14,6 +14,7 @@
     ../social
     ../firefox
     ../wezterm
+    ../ghostty
     ../theme
   ];
 

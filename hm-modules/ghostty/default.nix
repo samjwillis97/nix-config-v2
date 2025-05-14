@@ -15,6 +15,10 @@ in
   };
 
   config = mkIf cfg.enable {
+    home.packages = with pkgs; [
+      ghostty
+    ];
+
     xdg.configFile."ghostty/config".text = ''
       title = " "
       macos-titlebar-style = hidden

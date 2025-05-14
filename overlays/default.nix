@@ -1,5 +1,4 @@
 {
-  pkgs,
   lib,
   flake,
   system,
@@ -8,6 +7,7 @@
 # TODO: Understand this more and why its used
 let
   inherit (flake) inputs;
+  pkgs = import inputs.nixpkgs { inherit system; };
 in
 {
   nixpkgs.overlays = [
@@ -17,6 +17,7 @@ in
       wallpapers = prev.callPackage ../packages/wallpapers { };
       agenix = flake.inputs.agenix.packages.${system}.default;
       neovim = flake.inputs.modular-neovim.packages.${system}.default;
+      neovim-vscode = pkgs.neovim;
       nix-serve = flake.inputs.nix-serve.packages.${system}.nix-serve;
       hyprland = flake.inputs.hyprland.packages.${system}.hyprland;
       f = flake.inputs.f.packages.${system}.default;
