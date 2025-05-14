@@ -97,10 +97,19 @@ in
 
         "mcp" = {
           "servers" = {
-            "github" = {
+            # "github" = {
+            #   "type" = "stdio";
+            #   "command" = "${github-mcp-wrapped}/bin/github-mcp-wrapped";
+            #   "args" = [ "stdio" ];
+            # };
+            "sentry" = {
               "type" = "stdio";
-              "command" = "${github-mcp-wrapped}/bin/github-mcp-wrapped";
-              "args" = [ "stdio" ];
+              "command" = "${pkgs.nodejs}/bin/npx";
+              "args" = [ "@sentry/mcp-server@latest" ];
+              "env" = {
+                SENTRY_AUTH_TOKEN = "";
+                SENTRY_HOST = "sentry.io" ;
+              };
             };
             # "mcp-atlassian" = {
             #   "command" = "docker";
