@@ -90,11 +90,11 @@
     "brew-api": {
       "flake": false,
       "locked": {
-        "lastModified": 1747172306,
-        "narHash": "sha256-GxFENfm4VTPMt9pgrX2hhq4Fgmy5+glhUBn1oYUGCDg=",
+        "lastModified": 1747210580,
+        "narHash": "sha256-YGF/UdSXtRLT93G15NEZ8ha56ubcuBIdPxvGlmNTIg8=",
         "owner": "BatteredBunny",
         "repo": "brew-api",
-        "rev": "060481646ca7bddba597dbcda22f426144339179",
+        "rev": "6990c62c1b0504fc27def7ff9e1a56c84ad351b5",
         "type": "github"
       },
       "original": {
@@ -261,11 +261,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1747098341,
-        "narHash": "sha256-3WMwGC+cU/KKGO+AaKD3GEl3YHMAVmSd25OnQy9tk3s=",
+        "lastModified": 1747184687,
+        "narHash": "sha256-H/nVk4Ypm4c7Lgm6Rki90YPyG6CJBhxisRp+Q8jf+Eo=",
         "owner": "bandithedoge",
         "repo": "nixpkgs-firefox-darwin",
-        "rev": "558cfd7a3ce9581af0ff8e8f25e359d07f1020e5",
+        "rev": "64bf3d172c3a4b7ea4377d0c15f7bc278fffd56a",
         "type": "github"
       },
       "original": {
@@ -511,11 +511,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1747155932,
-        "narHash": "sha256-NnPzzXEqfYjfrimLzK0JOBItfdEJdP/i6SNTuunCGgw=",
+        "lastModified": 1747184352,
+        "narHash": "sha256-GBZulv50wztp5cgc405t1uOkxQYhSkMqeKLI+iSrlpk=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "8d832ddfda9facf538f3dda9b6985fb0234f151c",
+        "rev": "7c1cefb98369cc85440642fdccc1c1394ca6dd2c",
         "type": "github"
       },
       "original": {
@@ -527,11 +527,11 @@
     "homebrew-cask": {
       "flake": false,
       "locked": {
-        "lastModified": 1747172687,
-        "narHash": "sha256-5uaG4M2XYup/bdSpZB1VDISbK6Qpcx5UXbfRMlApsQY=",
+        "lastModified": 1747208497,
+        "narHash": "sha256-5NJhYDR6kYyrJdfuRX52wkXrWSiJwQOEpLABf2jlH9A=",
         "owner": "homebrew",
         "repo": "homebrew-cask",
-        "rev": "70ec07dcf54fafd7dbd2875074b83608580554c6",
+        "rev": "765b21fa826f23f1a062742966b9400fbb02305f",
         "type": "github"
       },
       "original": {
@@ -543,11 +543,11 @@
     "homebrew-core": {
       "flake": false,
       "locked": {
-        "lastModified": 1747171043,
-        "narHash": "sha256-D3jdXf7k+dMuuLK4PKiKflwi7EGZF6n9c+wuLLZSs60=",
+        "lastModified": 1747211449,
+        "narHash": "sha256-s4QPWHqlOsQEHTllfqby191LpvnKZff1svEgvvq+taQ=",
         "owner": "homebrew",
         "repo": "homebrew-core",
-        "rev": "b4d182599d32cb875012e05ecacd7a097033cd0f",
+        "rev": "677719aac0e9972e3b649afcff62c5b7fa8e610e",
         "type": "github"
       },
       "original": {
@@ -632,11 +632,11 @@
         "xdph": "xdph"
       },
       "locked": {
-        "lastModified": 1747052147,
-        "narHash": "sha256-c0e3V7Rqu2DZuix1lRBXedInzSskow8ssQSsmqkW38o=",
+        "lastModified": 1747176389,
+        "narHash": "sha256-/1LO70LYdlECRCX5NuBWZxi7isllo4uJd6QI9vt9PQA=",
         "owner": "hyprwm",
         "repo": "Hyprland",
-        "rev": "da3583fd5e86044d02af9fcfac84724e02545336",
+        "rev": "59b23406804d0c6aa37dc40c271852e697759663",
         "type": "github"
       },
       "original": {
@@ -1099,11 +1099,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1747169963,
-        "narHash": "sha256-BgCyOvsCPdeOG4NZsZt9PUDyHZGamo5CUm+fiT2Ooyw=",
+        "lastModified": 1747212592,
+        "narHash": "sha256-6Mpozo/bztgKFCn5hpBOgQirSFQHeVBL/jf7cJvc/wk=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "e4184f183dfa0e8fc873952038ab76ce5d9b63e3",
+        "rev": "ede936be1a002c20d6c565964f60d6505b8a53e6",
         "type": "github"
       },
       "original": {
@@ -1196,11 +1196,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1747129867,
-        "narHash": "sha256-oi/AaxmWFIiKUzHq4ggQaQLox+9iPe0fGjv03dHNdbE=",
+        "lastModified": 1747193276,
+        "narHash": "sha256-gKXwcGgVducdTl0aRv8n2jzp0D/QzE0KVKbUF0dDveM=",
         "owner": "samjwillis97",
         "repo": "ai-testing",
-        "rev": "44e9bc3573929ac438adf38e234af48aa83b93dc",
+        "rev": "d503f25e9f67ea8f3dbc755c0f446c6a28a46ee5",
         "type": "github"
       },
       "original": {

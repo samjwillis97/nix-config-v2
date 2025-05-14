@@ -43,6 +43,9 @@ in
         github.copilot
         github.copilot-chat
 
+        # Roo Code AI
+        rooveterinaryinc.roo-cline
+
         # Github
         github.vscode-pull-request-github
         github.vscode-github-actions
@@ -228,6 +231,15 @@ in
       #       ];
       #     };
       #   };
+
+        "roo-cline.allowedCommands" = [
+          "npm test"
+          "npm install"
+          "tsc"
+          "git log"
+          "git diff"
+          "git show"
+        ];
       };
     };
   };

@@ -222,7 +222,7 @@
         extraHomeModules = [
           # ./home-manager/darwin/keyboard.nix
           ./home-manager/wezterm
-          # ./home-manager/vscode
+          ./home-manager/vscode
           ./home-manager/dev
           ./home-manager/dev/ops.nix
           ./home-manager/aerospace

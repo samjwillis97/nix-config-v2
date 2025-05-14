@@ -7,6 +7,7 @@
 with lib;
 let
   cfg = config.modules.ghostty;
+  isLinux = pkgs.stdenv.isLinux ;
 in
 {
 
@@ -15,9 +16,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = with pkgs; [
-      ghostty
-    ];
+    home.packages = if isLinux then [ pkgs.ghostty ] else [];
 
     xdg.configFile."ghostty/config".text = ''
       title = " "
