@@ -20,6 +20,9 @@ let
   paperless-primary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOOFi2Que2/gAc8QmcpAPzpkxX7hq9YoN8qHWlKXNBDl sam@personal-desktop";
   paperless-secondary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMR5c5eojnEtEALkqVElixavek+0JhC8tBaEdSfHCGgJ sam@personal-desktop";
 
+  work-primary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHqI65C4vKP7hUmjhIIcGDHl2Nvts9Eq23QeHwgmfcS8 samuel.willis@HF0013203";
+  work-secondary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHgSgOfW6hKCrklVG6OXp5qsO0D8xnIMQc59Llo4A8cU samuel.willis@HF0013203";
+
   keys = [
     primary-key
     secondary-key
@@ -47,6 +50,10 @@ let
   paperless-keys = [
     paperless-primary-key
     paperless-secondary-key
+  ];
+  work-keys = [
+    work-primary-key
+    work-secondary-key
   ];
 in
 {
@@ -84,4 +91,8 @@ in
   "paperless/s3-bucket-name.age".publicKeys = paperless-keys;
   "paperless/s3-backup-bucket-name.age".publicKeys = paperless-keys;
   "paperless/s3-bucket-region.age".publicKeys = paperless-keys;
+
+  "work/jira-url.age".publicKeys = keys;
+  "work/jira-username.age".publicKeys = keys;
+  "work/jira-token.age".publicKeys = keys;
 }

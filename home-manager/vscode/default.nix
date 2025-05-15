@@ -4,8 +4,14 @@ let
     export GITHUB_PERSONAL_ACCESS_TOKEN=$(cat ${config.age.secrets.gh_pat.path})
     ${pkgs.github-mcp-server}/bin/github-mcp-server "$@"
   '';
+
+  node = pkgs.nodejs;
 in
 {
+  home.packages = [
+    node
+  ];
+
   programs.vscode = {
     enable = true;
 
@@ -99,40 +105,33 @@ in
         "chat.agent.maxRequests" = 30;
 
         "mcp" = {
+          "inputs" = [];
+
           "servers" = {
-            # "github" = {
-            #   "type" = "stdio";
-            #   "command" = "${github-mcp-wrapped}/bin/github-mcp-wrapped";
-            #   "args" = [ "stdio" ];
-            # };
-            "sentry" = {
-              "type" = "stdio";
-              "command" = "${pkgs.nodejs}/bin/npx";
-              "args" = [ "@sentry/mcp-server@latest" ];
-              "env" = {
-                SENTRY_AUTH_TOKEN = "";
-                SENTRY_HOST = "sentry.io" ;
-              };
+            github = {
+              type = "stdio";
+              command = "${github-mcp-wrapped}/bin/github-mcp-wrapped";
+              args = [ "stdio" ];
             };
-            # "mcp-atlassian" = {
-            #   "command" = "docker";
-            #   "args" = [
-            #     "run"
-            #     "-i"
-            #     "--rm"
-            #     "-e"
-            #     "JIRA_URL"
-            #     "-e"
-            #     "JIRA_USERNAME"
-            #     "-e"
-            #     "JIRA_API_TOKEN"
-            #     "ghcr.io/sooperset/mcp-atlassian:latest"
+            sentry = {
+              type = "stdio";
+              command = "${node}/bin/npx";
+              args = [ 
+                "-y"
+                "mcp-remote"
+                "https://mcp.sentry.dev/sse"
+              ];
+              env = {};
+            };
+            # atlassian = {
+            #   transport = "sse";
+            #   command = "${node}/bin/npx";
+            #   args = [
+            #     "-y"
+            #     "mcp-remote"
+            #     "https://mcp.atlassian.com/v1/sse"
             #   ];
-            #   env = {
-            #     JIRA_URL = "";
-            #     JIRA_USERNAME = "";
-            #     JIR_API_TOKEN = "";
-            #   };
+            #   env = {};
             # };
           };
         };
