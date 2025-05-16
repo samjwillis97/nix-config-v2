@@ -72,38 +72,66 @@ in
 
       globalSnippets = {};
 
-      # keybindings = [
-      #   # Fix for: https://github.com/vscode-neovim/vscode-neovim/issues/2434
-      #    {
-      #     "key" = "ctrl+u";
-      #     "command" =  "vscode-neovim.send";
-      #     "args" = "<C-u>";
-      #     "when" = "editorTextFocus && neovim.ctrlKeysNormal.u && neovim.init && neovim.mode != 'insert' && editorLangId not in 'neovim.editorLangIdExclusions'";
-      #   }
-      #   {
-      #     "key" = "ctrl+d";
-      #     "command" = "vscode-neovim.send";
-      #     "args" = "<C-d>";
-      #     "when" = "editorTextFocus && neovim.ctrlKeysNormal.d && neovim.init && neovim.mode != 'insert' && editorLangId not in 'neovim.editorLangIdExclusions'";
-      #   }
-      # ];
-      #
+      keybindings = [
+        # # Fix for: https://github.com/vscode-neovim/vscode-neovim/issues/2434
+        #  {
+        #   "key" = "ctrl+u";
+        #   "command" =  "vscode-neovim.send";
+        #   "args" = "<C-u>";
+        #   "when" = "editorTextFocus && neovim.ctrlKeysNormal.u && neovim.init && neovim.mode != 'insert' && editorLangId not in 'neovim.editorLangIdExclusions'";
+        # }
+        # {
+        #   "key" = "ctrl+d";
+        #   "command" = "vscode-neovim.send";
+        #   "args" = "<C-d>";
+        #   "when" = "editorTextFocus && neovim.ctrlKeysNormal.d && neovim.init && neovim.mode != 'insert' && editorLangId not in 'neovim.editorLangIdExclusions'";
+        # }
+        {
+          key = "ctrl+h";
+          command = "workbench.action.navigateLeft";
+          when = "explorerViewletVisible && fileExplorerFocus && !inputFocus";
+        }
+        {
+          key = "ctrl+l";
+          command = "workbench.action.navigateRight";
+          when = "explorerViewletVisible && fileExplorerFocus && !inputFocus";
+        }
+      ];
+
       userSettings = {
         "extensions.experimental.affinity" = {
           "vscodevim.vim" = 1;
         };
 
+        # Styling
         "editor.fontFamily" = "FiraMono Nerd Font Mono";
         "workbench.colorTheme" = "Catppuccin Mocha";
         "editor.bracketPairColorization.enabled" = true;
+        "workbench.editor.showTabs" = false;
+        "workbench.startupEditor" = "newUntitledFile";
+        "editor.minimap.enabled" = false;
+        "editor.lineNumbers" = "relative";
 
-        "github.copilot.selectedCompletionModel" = "gpt-4o-copilot";
+        # Copilot
+        # "github.copilot.selectedCompletionModel" = "gpt-4o-copilot";
+        "github.copilot.selectedCompletionModel" = "claude-3.7-sonnet";
         "github.copilot.nextEditSuggestions.enabled" = true;
         "github.copilot.chat.codeGeneration.useInstructionFiles" = true;
 
+        # Copilot Agent mode
         "chat.agent.enabled" = true;
         "chat.agent.maxRequests" = 30;
 
+        # Respecting .gitignore files
+        "search.useIgnoreFiles" = true; 
+        "search.useGlobalIgnoreFiles" = true;
+        "search.useParentIgnoreFiles" = true;
+        "explorer.excludeGitIgnore" = true;
+        "search.exclude" = {
+          "package-lock.json" = true;
+        };
+
+        # Copilot Agent MCP
         "mcp" = {
           "inputs" = [];
 
@@ -136,14 +164,13 @@ in
           };
         };
 
+        "editor.formatOnSave" = true;
         "[typescript]" = {
           "editor.defaultFormatter" = "esbenp.prettier-vscode";
         };
-
         "[json]" = {
           "editor.defaultFormatter" = "esbenp.prettier-vscode";
         };
-
         "[yaml]" = {
           "editor.defaultFormatter" = "esbenp.prettier-vscode";
         };
@@ -178,6 +205,8 @@ in
         };
 
         "vim.easymotion" = true;
+        "vim.surround" = true;
+
         "vim.incsearch" = true;
         "vim.useSystemClipboard" = true;
         "vim.useCtrlKeys" = true;
@@ -191,19 +220,31 @@ in
         "vim.normalModeKeyBindingsNonRecursive" = [
           {
             "before" = ["<C-j>"];
-            "commands" = ["<C-w>" "j"];
+            "commands" = ["workbench.action.navigateDown"];
           }
           {
             "before" = ["<C-k>"];
-            "commands" = ["<C-w>" "k"];
+            "commands" = ["workbench.action.navigateUp"];
           }
           {
             "before" = ["<C-h>"];
-            "commands" = ["<C-w>" "h"];
+            "commands" = ["workbench.action.navigateLeft"];
           }
           {
             "before" = ["<C-l>"];
-            "commands" = ["<C-w>" "l"];
+            "commands" = ["workbench.action.navigateRight"];
+          }
+          {
+            "before" = ["<leader>" "f" "f"];
+            "commands" = ["workbench.action.quickOpen"];
+          }
+          {
+            "before" = ["<leader>" "s" "f"];
+            "commands" = ["workbench.action.findInFiles"];
+          }
+          {
+            "before" = ["g" "r"];
+            "commands" = ["editor.action.goToReferences"];
           }
           {
             "before" = ["<leader>" "space"];
