@@ -96,6 +96,10 @@ in
           command = "workbench.action.navigateRight";
           when = "explorerViewletVisible && fileExplorerFocus && !inputFocus";
         }
+        {
+          key = "ctrl+n";
+          command = "workbench.action.toggleSidebarVisibility";
+        }
       ];
 
       userSettings = {
@@ -108,9 +112,16 @@ in
         "workbench.colorTheme" = "Catppuccin Mocha";
         "editor.bracketPairColorization.enabled" = true;
         "workbench.editor.showTabs" = false;
+        "workbench.editor.enablePreview" = false;
+        "workbench.editor.enablePreviewFromQuickOpen" = false;
         "workbench.startupEditor" = "newUntitledFile";
         "editor.minimap.enabled" = false;
         "editor.lineNumbers" = "relative";
+        "editor.scrollBeyondLastLine" = false;
+        "editor.cursorSurroundingLines" = 8;
+        "editor.smoothScrolling" = true;
+        "editor.guides.bracketPairs" = true;
+        "editor.cursorSmoothCaretAnimation" = true;
 
         # Copilot
         # "github.copilot.selectedCompletionModel" = "gpt-4o-copilot";
@@ -206,11 +217,11 @@ in
 
         "vim.easymotion" = true;
         "vim.surround" = true;
-
         "vim.incsearch" = true;
         "vim.useSystemClipboard" = true;
         "vim.useCtrlKeys" = true;
         "vim.hlsearch" = true;
+        "vim.startup.firstline" = false;
         "vim.insertModeKeyBindings" = [
           {
             "before" = ["j" "k"];
@@ -218,6 +229,14 @@ in
           }
         ];
         "vim.normalModeKeyBindingsNonRecursive" = [
+          # {
+          #   "before" = ["<C-n>"];
+          #   "commands" = ["workbench.action.toggleSidebarVisibility"];
+          # }
+          {
+            "before" = ["," "n"];
+            "commands" = ["revealInExplorer"];
+          }
           {
             "before" = ["<C-j>"];
             "commands" = ["workbench.action.navigateDown"];
@@ -254,6 +273,12 @@ in
         "vim.leader" = "\\";
         # keys to be handled by vscode instead of vim
         "vim.handleKeys" = {
+          "<C-d>" = true;
+          "<C-u>" = true;
+
+          "<C-n>" = true;
+
+          "<C-f>" = false;
         };
 
 
