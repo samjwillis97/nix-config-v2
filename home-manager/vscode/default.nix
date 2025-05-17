@@ -254,6 +254,10 @@ in
             "commands" = ["workbench.action.navigateRight"];
           }
           {
+            "before" = ["<leader>" "g" "g"];
+            "commands" = ["workbench.view.scm"];
+          }
+          {
             "before" = ["<leader>" "f" "f"];
             "commands" = ["workbench.action.quickOpen"];
           }
