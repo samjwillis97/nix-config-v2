@@ -89,15 +89,17 @@ in
         {
           key = "ctrl+h";
           command = "workbench.action.navigateLeft";
-          when = "explorerViewletVisible && fileExplorerFocus && !inputFocus";
+          when = "sideBarFocus";
         }
         {
           key = "ctrl+l";
           command = "workbench.action.navigateRight";
-          when = "explorerViewletVisible && fileExplorerFocus && !inputFocus";
+          when = "sideBarFocus";
         }
         {
           key = "ctrl+n";
+          # FIXME: This should be when fileExplorer focused OR editor focused
+          when = "editorTextFocus || sideBarFocus";
           command = "workbench.action.toggleSidebarVisibility";
         }
       ];
