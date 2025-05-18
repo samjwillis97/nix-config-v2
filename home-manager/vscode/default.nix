@@ -89,18 +89,29 @@ in
         {
           key = "ctrl+h";
           command = "workbench.action.navigateLeft";
-          when = "sideBarFocus";
+          when = "sideBarFocus || workbench.panel.chat.view.copilot.active";
         }
         {
           key = "ctrl+l";
           command = "workbench.action.navigateRight";
-          when = "sideBarFocus";
+          when = "sideBarFocus || workbench.panel.chat.view.copilot.active";
         }
+
         {
           key = "ctrl+n";
-          # FIXME: This should be when fileExplorer focused OR editor focused
-          when = "editorTextFocus || sideBarFocus";
           command = "workbench.action.toggleSidebarVisibility";
+          when = "editorTextFocu || sideBarFocus";
+        }
+        {
+          key = "escape";
+          command = "workbench.action.toggleSidebarVisibility";
+          when = "sideBarFocus";
+        }
+
+        {
+          key = "escape";
+          command = "workbench.action.toggleAuxiliaryBar";
+          when = "auxiliaryBarFocus";
         }
       ];
 
@@ -266,6 +277,14 @@ in
           {
             "before" = ["<leader>" "s" "f"];
             "commands" = ["workbench.action.findInFiles"];
+          }
+          {
+            "before" = ["<leader>" "a" "a"];
+            "commands" = ["workbench.panel.chat"];
+          }
+          {
+            "before" = ["<leader>" "a" "e"];
+            "commands" = ["inlineChat.start"];
           }
           {
             "before" = ["g" "r"];
