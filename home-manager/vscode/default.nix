@@ -100,7 +100,7 @@ in
         {
           key = "ctrl+n";
           command = "workbench.action.toggleSidebarVisibility";
-          when = "editorTextFocu || sideBarFocus";
+          when = "editorTextFocus || sideBarFocus";
         }
         {
           key = "escape";
