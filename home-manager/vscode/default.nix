@@ -24,6 +24,7 @@ in
       extensions = with pkgs.vscode-extensions; [
         # Theme
         catppuccin.catppuccin-vsc
+        catppuccin.catppuccin-vsc-icons
 
         # Javascript/Typescript
         esbenp.prettier-vscode
@@ -123,6 +124,7 @@ in
         # Styling
         "editor.fontFamily" = "FiraMono Nerd Font Mono";
         "workbench.colorTheme" = "Catppuccin Mocha";
+        "workbench.iconTheme" = "catppuccin-mocha";
         "editor.bracketPairColorization.enabled" = true;
         "workbench.editor.showTabs" = false;
         "workbench.editor.enablePreview" = false;
