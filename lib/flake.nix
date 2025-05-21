@@ -93,6 +93,7 @@ in
             meta = {
               inherit useHomeManager;
             };
+            system.primaryUser = username;
           }
           ../hosts/${hostname}
           inputs.agenix.darwinModules.default

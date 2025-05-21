@@ -20,7 +20,7 @@
     swapLeftCtrlAndFn = false;
   };
 
-  system.activationScripts.extraUserActivation.enable = true;
+  # system.activationScripts.extraUserActivation.enable = true;
   # system.activationScripts.extraUserActivation.text = let
   #   hotkeys = [
   #     10
