@@ -87,6 +87,8 @@ in
         #   "args" = "<C-d>";
         #   "when" = "editorTextFocus && neovim.ctrlKeysNormal.d && neovim.init && neovim.mode != 'insert' && editorLangId not in 'neovim.editorLangIdExclusions'";
         # }
+
+        # Make sure navigating in and out of sidebars works
         {
           key = "ctrl+h";
           command = "workbench.action.navigateLeft";
@@ -98,6 +100,7 @@ in
           when = "sideBarFocus || workbench.panel.chat.view.copilot.active";
         }
 
+        # Toggle left (file) side bar
         {
           key = "ctrl+n";
           command = "workbench.action.toggleSidebarVisibility";
@@ -109,6 +112,19 @@ in
           when = "sideBarFocus";
         }
 
+        # Make sure that ctrl+n and ctrl+p work in the quickSelect thing
+        {
+            key = "ctrl+n";
+            command = "workbench.action.quickOpenSelectNext";
+            when = "!editorFocus && !sideBarFocus";
+        }
+        {
+            key = "ctrl+p";
+            command = "workbench.action.quickOpenSelectPrevious";
+            when = "!editorFocus && !sideBarFocus";
+        }
+
+        # Close Copilot Chat
         {
           key = "escape";
           command = "workbench.action.toggleAuxiliaryBar";
@@ -159,7 +175,44 @@ in
 
         # Copilot Agent MCP
         "mcp" = {
-          "inputs" = [];
+          "inputs" = [
+            {
+              description = "Jira URL";
+              type = "promptString";
+              id = "jira-url";
+              password = false;
+            }
+            {
+              description = "Jira Username";
+              type = "promptString";
+              id = "jira-username";
+              password = false;
+            }
+            {
+              description = "Jira API Token";
+              type = "promptString";
+              id = "jira-api-token";
+              password = true;
+            }
+            {
+              description = "Confluence URL";
+              type = "promptString";
+              id = "confluence-url";
+              password = false;
+            }
+            {
+              description = "Confluence Username";
+              type = "promptString";
+              id = "confluence-username";
+              password = false;
+            }
+            {
+              description = "Confluence API Token";
+              type = "promptString";
+              id = "confluence-api-token";
+              password = true;
+            }
+          ];
 
           "servers" = {
             github = {
@@ -187,6 +240,29 @@ in
             #   ];
             #   env = {};
             # };
+            atlassian-mcp = {
+              command = "docker";
+              args = [
+                "run"
+                "-i"
+                "--rm"
+                "-e" "JIRA_URL"
+                "-e" "JIRA_USERNAME"
+                "-e" "JIRA_API_TOKEN"
+                "-e" "CONFLUENCE_URL"
+                "-e" "CONFLUENCE_USERNAME"
+                "-e" "CONFLUENCE_API_TOKEN"
+                "ghcr.io/sooperset/mcp-atlassian:latest"
+              ];
+              env =  {
+                JIRA_URL = "\${input:jira-url}";
+                JIRA_USERNAME = "\${input:jira-username}";
+                JIRA_API_TOKEN = "\${input:jira-api-token}";
+                CONFLUENCE_URL = "\${input:confluence-url}";
+                CONFLUENCE_USERNAME = "\${input:confluence-username}";
+                CONFLUENCE_API_TOKEN = "\${input:confluence-api-token}";
+              };
+            };
           };
         };
 
@@ -230,6 +306,7 @@ in
           };
         };
 
+        "vim.foldfix" = true;
         "vim.easymotion" = true;
         "vim.surround" = true;
         "vim.incsearch" = true;
