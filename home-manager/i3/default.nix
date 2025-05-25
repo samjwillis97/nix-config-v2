@@ -71,7 +71,7 @@ let
 
       extraBindings = {
         "${modifier}+Tab" = "exec rofi -show window -modi window";
-        "Ctrl+space" = "exec ${dunstctl} close";
+        # "Ctrl+space" = "exec ${dunstctl} close";
         "Ctrl+Shift+space" = "exec ${dunstctl} close-all";
       };
 
