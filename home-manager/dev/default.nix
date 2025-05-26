@@ -23,6 +23,7 @@
       mtr # network tool
       iperf # network performance tool
       devenv
+      inotify-info
     ]
     ++ (with pkgs; if super.meta.isDarwin then [ f ] else [ ]);
 }

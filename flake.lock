@@ -880,11 +880,11 @@
         "nixvim": "nixvim"
       },
       "locked": {
-        "lastModified": 1747346743,
-        "narHash": "sha256-LX196Tly+FXz4r2Y8ovxnfmxagxl3WcnukZl/TUgRMo=",
+        "lastModified": 1748221029,
+        "narHash": "sha256-c1Y725jyFbBmhKO2pLtLmIwF+keD1Bsww22WgdaEXtg=",
         "owner": "samjwillis97",
         "repo": "modular-neovim-flake",
-        "rev": "f406f42e1b483f2d3c2cce4f17a6a8376bb5e118",
+        "rev": "b3b03dd80d4ee183175a4de4bf293d948778db58",
         "type": "github"
       },
       "original": {
