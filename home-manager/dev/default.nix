@@ -5,6 +5,9 @@
   system,
   ...
 }:
+let
+  isDarwin = pkgs.stdenv.isDarwin;
+in
 {
   imports = [ ../../secrets/github ];
   home.packages =
@@ -23,7 +26,6 @@
       mtr # network tool
       iperf # network performance tool
       devenv
-      inotify-info
     ]
-    ++ (with pkgs; if super.meta.isDarwin then [ f ] else [ ]);
+    ++ (with pkgs; if isDarwin then [ f ] else [ inotify-info ]);
 }

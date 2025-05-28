@@ -69,6 +69,13 @@ in
         # asvetliakov.vscode-neovim
         # Temporarily using this instead
         vscodevim.vim
+      ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+        {
+          name = "amp";
+          publisher = "sourcegraph";
+          version = "0.0.1748419909";
+          sha256 = "NIKtEC/EFbuzdtKIzo7L8mYukD3gJLyA+EItEjIca5o=";
+        }
       ];
 
       globalSnippets = {};
