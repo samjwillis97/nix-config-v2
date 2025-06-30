@@ -73,8 +73,8 @@
       inputs.flake-utils.follows = "flake-utils";
     };
 
-    shc = {
-      url = "github:samjwillis97/ai-testing/take-2";
+    httpcraft = {
+      url = "github:samjwillis97/shc-ai";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
@@ -125,6 +125,13 @@
     ghostty = {
       url = "github:ghostty-org/ghostty";
     };
+
+    nix-vscode-extensions = {
+      url = "github:nix-community/nix-vscode-extensions";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
   };
 
   outputs =
@@ -139,9 +146,10 @@
       hyprland,
       microvm,
       f,
-      shc,
+      httpcraft,
       deploy-rs,
       firefox-darwin,
+
       ...
     }@inputs:
     let
@@ -243,6 +251,7 @@
         extraHomeModules = [
           ./home-manager/dev
           ./home-manager/dev/ops.nix
+          ./home-manager/dev/cursor.nix
           ./home-manager/wezterm
           ./home-manager/vscode
           ./home-manager/work

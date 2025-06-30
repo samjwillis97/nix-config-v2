@@ -31,6 +31,9 @@ in
         dbaeumer.vscode-eslint
         yoavbls.pretty-ts-errors
 
+        # Testing
+        pkgs.vscode-marketplace.ms-playwright.playwright
+
         # YAML
         redhat.vscode-yaml
 

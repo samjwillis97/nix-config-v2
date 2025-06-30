@@ -26,6 +26,7 @@ in
       mtr # network tool
       iperf # network performance tool
       devenv
+      jless
     ]
     ++ (with pkgs; if isDarwin then [ f ] else [ inotify-info ]);
 }

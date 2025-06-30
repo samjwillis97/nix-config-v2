@@ -66,7 +66,7 @@ in
               useHomeManager
               ;
             extraHomeModules = [
-              inputs.shc.homeManagerModules.${system}.shc
+              inputs.httpcraft.homeManagerModules.${system}.httpcraft
             ] ++ extraHomeModules;
             isDarwin = false;
           };
@@ -109,7 +109,7 @@ in
             isDarwin = true;
             username = username;
             extraHomeModules = [
-              inputs.shc.homeManagerModules.${system}.shc
+              inputs.httpcraft.homeManagerModules.${system}.httpcraft
               inputs.agenix.homeManagerModules.age
               ../hm-modules
             ] ++ extraHomeModules;

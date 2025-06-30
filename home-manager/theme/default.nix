@@ -27,7 +27,7 @@
       font-awesome_5
       hack-font
       noto-fonts
-      noto-fonts-emoji
+      # noto-fonts-emoji # FIXME: This was requiring compilation and I was lazy
       gnome-themes-extra
       adwaita-icon-theme
     ];

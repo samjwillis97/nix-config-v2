@@ -33,7 +33,7 @@ in
     ]
     ++ osSpecificPackages;
 
-  programs.shc = {
+  programs.httpcraft = {
     enable = true;
     enableZshIntegration = true;
   };
