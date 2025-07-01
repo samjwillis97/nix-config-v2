@@ -163,6 +163,7 @@ in
         "editor.smoothScrolling" = true;
         "editor.guides.bracketPairs" = true;
         "editor.cursorSmoothCaretAnimation" = true;
+        "editor.wordWrap" = "on";
 
         # Copilot
         # "github.copilot.selectedCompletionModel" = "gpt-4o-copilot";
