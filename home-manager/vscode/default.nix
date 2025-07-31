@@ -31,6 +31,12 @@ in
         dbaeumer.vscode-eslint
         yoavbls.pretty-ts-errors
 
+        # Dont even bother
+        # C#
+        # ms-dotnettools.csharp
+        # ms-dotnettools.csdevkit
+        # ms-dotnettools.vscodeintellicode-csharp
+
         # Testing
         pkgs.vscode-marketplace.ms-playwright.playwright
 

@@ -259,6 +259,7 @@
           ./home-manager/darwin
           ./home-manager/social
           ./home-manager/firefox
+          ./home-manager/moonlight
           { modules.darwin.work = true; }
         ];
       })
