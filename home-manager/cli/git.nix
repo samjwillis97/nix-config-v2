@@ -40,6 +40,7 @@
       "venv/"
       ".direnv/"
       ".envrc"
+      ".opencode/"
     ];
 
     aliases = {

@@ -260,6 +260,7 @@
           ./home-manager/social
           ./home-manager/firefox
           ./home-manager/moonlight
+          ./home-manager/opencode
           { modules.darwin.work = true; }
         ];
       })
