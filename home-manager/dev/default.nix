@@ -29,4 +29,8 @@ in
       jless
     ]
     ++ (with pkgs; if isDarwin then [ f ] else [ inotify-info ]);
+
+  home.sessionVariables = {
+    EDITOR = pkgs.lib.getExe pkgs.neovim;
+  };
 }
