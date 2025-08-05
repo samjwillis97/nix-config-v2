@@ -20,6 +20,21 @@ in
   modules.opencode = {
     enable = true;
     settings = {
+      permission = {
+        bash = {
+          "*" = "ask";
+          "git status" = "allow";
+          "git diff" = "allow";
+          "git add" = "allow";
+          "git commit" = "allow";
+          "ls" = "allow";
+          "pwd" = "allow";
+          "mkdir" = "allow";
+          "npm" = "allow";
+          "bun" = "allow";
+          "pnpm" = "allow";
+        };
+      };
       mcp = {
         atlassian = {
           type = "local";

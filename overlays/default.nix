@@ -4,7 +4,6 @@
   system,
   ...
 }:
-# TODO: Understand this more and why its used
 let
   inherit (flake) inputs;
   pkgs = import inputs.nixpkgs { inherit system; };
@@ -23,6 +22,8 @@ in
       f = flake.inputs.f.packages.${system}.default;
       httpcraft = flake.inputs.httpcraft.packages.${system}.default;
       ghostty = flake.inputs.ghostty.packages.${system}.default;
+
+      opencode = flake.inputs.opencode-flake.packages.${system}.default;
     })
     inputs.nur.overlays.default
     inputs.brew-nix.overlays.default

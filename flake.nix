@@ -128,6 +128,10 @@
     };
 
     firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
+
+    opencode-flake = {
+      url = "github:aodhanhayter/opencode-flake";
+    };
   };
 
   outputs =
@@ -145,6 +149,7 @@
       httpcraft,
       deploy-rs,
       firefox-darwin,
+      opencode-flake,
       ...
     }@inputs:
     let
