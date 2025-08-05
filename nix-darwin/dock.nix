@@ -29,15 +29,14 @@ in
     magnification = false;
     largesize = 56;
     persistent-apps = builtins.filter (a: a != "") ([
-      "/Applications/Safari.app/"
+      # "/Applications/Safari.app/"
       (lib.optionalString firefoxEnabled "${pkgs.firefox-bin}/Applications/Firefox.app")
       "/system/Applications/Messages.app/"
-      "/system/Applications/Mail.app"
+      # "/system/Applications/Mail.app"
       "/system/Applications/Calendar.app/"
       "/system/Applications/Notes.app/"
       "/system/Applications/Reminders.app/"
       "${pkgs.slack}/Applications/Slack.app"
-      # (lib.optionalString workEnabled "${pkgs.brewCasks.workplace-chat}/Applications/Workplace Chat.app")
 
       # commented out until https://github.com/NixOS/nixpkgs/pull/403993
       # "${pkgs.zoom-us}/Applications/zoom.us.app"

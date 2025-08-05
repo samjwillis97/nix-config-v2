@@ -43,14 +43,12 @@ in
 # Disabling shc whilst doing some development
 # . <(${pkgs.shc-cli}/bin/shc-cli --completion)
 {
-  home.packages =
-    with pkgs;
-    [
-      bat
-      rsync
-      gnutar
-      f
-    ];
+  home.packages = with pkgs; [
+    bat
+    rsync
+    gnutar
+    f
+  ];
 
   programs.zsh = {
     initContent = initExtra;

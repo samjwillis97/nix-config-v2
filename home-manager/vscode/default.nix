@@ -21,73 +21,76 @@ in
       enableExtensionUpdateCheck = false;
       enableUpdateCheck = false;
 
-      extensions = with pkgs.vscode-extensions; [
-        # Theme
-        catppuccin.catppuccin-vsc
-        catppuccin.catppuccin-vsc-icons
+      extensions =
+        with pkgs.vscode-extensions;
+        [
+          # Theme
+          catppuccin.catppuccin-vsc
+          catppuccin.catppuccin-vsc-icons
 
-        # Javascript/Typescript
-        esbenp.prettier-vscode
-        dbaeumer.vscode-eslint
-        yoavbls.pretty-ts-errors
+          # Javascript/Typescript
+          esbenp.prettier-vscode
+          dbaeumer.vscode-eslint
+          yoavbls.pretty-ts-errors
 
-        # Dont even bother
-        # C#
-        # ms-dotnettools.csharp
-        # ms-dotnettools.csdevkit
-        # ms-dotnettools.vscodeintellicode-csharp
+          # Dont even bother
+          # C#
+          # ms-dotnettools.csharp
+          # ms-dotnettools.csdevkit
+          # ms-dotnettools.vscodeintellicode-csharp
 
-        # Testing
-        pkgs.vscode-marketplace.ms-playwright.playwright
+          # Testing
+          pkgs.vscode-marketplace.ms-playwright.playwright
 
-        # YAML
-        redhat.vscode-yaml
+          # YAML
+          redhat.vscode-yaml
 
-        # Nix
-        mkhl.direnv
-        jnoortheen.nix-ide
+          # Nix
+          mkhl.direnv
+          jnoortheen.nix-ide
 
-        # Docker
-        ms-azuretools.vscode-docker
+          # Docker
+          ms-azuretools.vscode-docker
 
-        # Intellisense
-        visualstudioexptteam.vscodeintellicode
-        visualstudioexptteam.intellicode-api-usage-examples
-        christian-kohler.path-intellisense
+          # Intellisense
+          visualstudioexptteam.vscodeintellicode
+          visualstudioexptteam.intellicode-api-usage-examples
+          christian-kohler.path-intellisense
 
-        # Copilot
-        github.copilot
-        github.copilot-chat
+          # Copilot
+          github.copilot
+          github.copilot-chat
 
-        # Roo Code AI
-        rooveterinaryinc.roo-cline
+          # Roo Code AI
+          rooveterinaryinc.roo-cline
 
-        # Github
-        github.vscode-pull-request-github
-        github.vscode-github-actions
+          # Github
+          github.vscode-pull-request-github
+          github.vscode-github-actions
 
-        # Terraform
-        hashicorp.terraform
+          # Terraform
+          hashicorp.terraform
 
-        # Markdown
-        bierner.markdown-mermaid
-        bierner.markdown-preview-github-styles
+          # Markdown
+          bierner.markdown-mermaid
+          bierner.markdown-preview-github-styles
 
-        # Vim
-        # Not usable until this is fixed https://github.com/vscode-neovim/vscode-neovim/issues/2407
-        # asvetliakov.vscode-neovim
-        # Temporarily using this instead
-        vscodevim.vim
-      ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-        {
-          name = "amp";
-          publisher = "sourcegraph";
-          version = "0.0.1748419909";
-          sha256 = "NIKtEC/EFbuzdtKIzo7L8mYukD3gJLyA+EItEjIca5o=";
-        }
-      ];
+          # Vim
+          # Not usable until this is fixed https://github.com/vscode-neovim/vscode-neovim/issues/2407
+          # asvetliakov.vscode-neovim
+          # Temporarily using this instead
+          vscodevim.vim
+        ]
+        ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+          {
+            name = "amp";
+            publisher = "sourcegraph";
+            version = "0.0.1748419909";
+            sha256 = "NIKtEC/EFbuzdtKIzo7L8mYukD3gJLyA+EItEjIca5o=";
+          }
+        ];
 
-      globalSnippets = {};
+      globalSnippets = { };
 
       keybindings = [
         # # Fix for: https://github.com/vscode-neovim/vscode-neovim/issues/2434
@@ -130,14 +133,14 @@ in
 
         # Make sure that ctrl+n and ctrl+p work in the quickSelect thing
         {
-            key = "ctrl+n";
-            command = "workbench.action.quickOpenSelectNext";
-            when = "!editorFocus && !sideBarFocus";
+          key = "ctrl+n";
+          command = "workbench.action.quickOpenSelectNext";
+          when = "!editorFocus && !sideBarFocus";
         }
         {
-            key = "ctrl+p";
-            command = "workbench.action.quickOpenSelectPrevious";
-            when = "!editorFocus && !sideBarFocus";
+          key = "ctrl+p";
+          command = "workbench.action.quickOpenSelectPrevious";
+          when = "!editorFocus && !sideBarFocus";
         }
 
         # Close Copilot Chat
@@ -182,7 +185,7 @@ in
         "chat.agent.maxRequests" = 30;
 
         # Respecting .gitignore files
-        "search.useIgnoreFiles" = true; 
+        "search.useIgnoreFiles" = true;
         "search.useGlobalIgnoreFiles" = true;
         "search.useParentIgnoreFiles" = true;
         "explorer.excludeGitIgnore" = true;
@@ -240,12 +243,12 @@ in
             sentry = {
               type = "stdio";
               command = "${node}/bin/npx";
-              args = [ 
+              args = [
                 "-y"
                 "mcp-remote"
                 "https://mcp.sentry.dev/sse"
               ];
-              env = {};
+              env = { };
             };
             # atlassian = {
             #   transport = "sse";
@@ -263,15 +266,21 @@ in
                 "run"
                 "-i"
                 "--rm"
-                "-e" "JIRA_URL"
-                "-e" "JIRA_USERNAME"
-                "-e" "JIRA_API_TOKEN"
-                "-e" "CONFLUENCE_URL"
-                "-e" "CONFLUENCE_USERNAME"
-                "-e" "CONFLUENCE_API_TOKEN"
+                "-e"
+                "JIRA_URL"
+                "-e"
+                "JIRA_USERNAME"
+                "-e"
+                "JIRA_API_TOKEN"
+                "-e"
+                "CONFLUENCE_URL"
+                "-e"
+                "CONFLUENCE_USERNAME"
+                "-e"
+                "CONFLUENCE_API_TOKEN"
                 "ghcr.io/sooperset/mcp-atlassian:latest"
               ];
-              env =  {
+              env = {
                 JIRA_URL = "\${input:jira-url}";
                 JIRA_USERNAME = "\${input:jira-username}";
                 JIRA_API_TOKEN = "\${input:jira-api-token}";
@@ -333,8 +342,11 @@ in
         "vim.startup.firstline" = false;
         "vim.insertModeKeyBindings" = [
           {
-            "before" = ["j" "k"];
-            "after" = ["<Esc>"];
+            "before" = [
+              "j"
+              "k"
+            ];
+            "after" = [ "<Esc>" ];
           }
         ];
         "vim.normalModeKeyBindingsNonRecursive" = [
@@ -343,52 +355,81 @@ in
           #   "commands" = ["workbench.action.toggleSidebarVisibility"];
           # }
           {
-            "before" = ["," "n"];
-            "commands" = ["revealInExplorer"];
+            "before" = [
+              ","
+              "n"
+            ];
+            "commands" = [ "revealInExplorer" ];
           }
           {
-            "before" = ["<C-j>"];
-            "commands" = ["workbench.action.navigateDown"];
+            "before" = [ "<C-j>" ];
+            "commands" = [ "workbench.action.navigateDown" ];
           }
           {
-            "before" = ["<C-k>"];
-            "commands" = ["workbench.action.navigateUp"];
+            "before" = [ "<C-k>" ];
+            "commands" = [ "workbench.action.navigateUp" ];
           }
           {
-            "before" = ["<C-h>"];
-            "commands" = ["workbench.action.navigateLeft"];
+            "before" = [ "<C-h>" ];
+            "commands" = [ "workbench.action.navigateLeft" ];
           }
           {
-            "before" = ["<C-l>"];
-            "commands" = ["workbench.action.navigateRight"];
+            "before" = [ "<C-l>" ];
+            "commands" = [ "workbench.action.navigateRight" ];
           }
           {
-            "before" = ["<leader>" "g" "g"];
-            "commands" = ["workbench.view.scm"];
+            "before" = [
+              "<leader>"
+              "g"
+              "g"
+            ];
+            "commands" = [ "workbench.view.scm" ];
           }
           {
-            "before" = ["<leader>" "f" "f"];
-            "commands" = ["workbench.action.quickOpen"];
+            "before" = [
+              "<leader>"
+              "f"
+              "f"
+            ];
+            "commands" = [ "workbench.action.quickOpen" ];
           }
           {
-            "before" = ["<leader>" "s" "f"];
-            "commands" = ["workbench.action.findInFiles"];
+            "before" = [
+              "<leader>"
+              "s"
+              "f"
+            ];
+            "commands" = [ "workbench.action.findInFiles" ];
           }
           {
-            "before" = ["<leader>" "a" "a"];
-            "commands" = ["workbench.panel.chat"];
+            "before" = [
+              "<leader>"
+              "a"
+              "a"
+            ];
+            "commands" = [ "workbench.panel.chat" ];
           }
           {
-            "before" = ["<leader>" "a" "e"];
-            "commands" = ["inlineChat.start"];
+            "before" = [
+              "<leader>"
+              "a"
+              "e"
+            ];
+            "commands" = [ "inlineChat.start" ];
           }
           {
-            "before" = ["g" "r"];
-            "commands" = ["editor.action.goToReferences"];
+            "before" = [
+              "g"
+              "r"
+            ];
+            "commands" = [ "editor.action.goToReferences" ];
           }
           {
-            "before" = ["<leader>" "space"];
-            "commands" = [":nohlsearch"];
+            "before" = [
+              "<leader>"
+              "space"
+            ];
+            "commands" = [ ":nohlsearch" ];
           }
         ];
         "vim.leader" = "\\";
@@ -402,21 +443,20 @@ in
           "<C-f>" = false;
         };
 
-
-      #   "vscode-neovim.neovimExecutablePaths.linux" = "${pkgs.neovim-vscode}/bin/nvim";
-      #   "vscode-neovim.neovimClean" = true; # starts neovim without any plugins
-      #   "vscode-neovim.compositeKeys" = {
-      #     "jk" = {
-      #       # Use lua to execute any logic
-      #       "command" =  "vscode-neovim.lua";
-      #       "args" =  [
-      #         [
-      #           "local code = require('vscode')"
-      #           "code.action('vscode-neovim.escape')"
-      #         ]
-      #       ];
-      #     };
-      #   };
+        #   "vscode-neovim.neovimExecutablePaths.linux" = "${pkgs.neovim-vscode}/bin/nvim";
+        #   "vscode-neovim.neovimClean" = true; # starts neovim without any plugins
+        #   "vscode-neovim.compositeKeys" = {
+        #     "jk" = {
+        #       # Use lua to execute any logic
+        #       "command" =  "vscode-neovim.lua";
+        #       "args" =  [
+        #         [
+        #           "local code = require('vscode')"
+        #           "code.action('vscode-neovim.escape')"
+        #         ]
+        #       ];
+        #     };
+        #   };
 
         "roo-cline.allowedCommands" = [
           "npm test"

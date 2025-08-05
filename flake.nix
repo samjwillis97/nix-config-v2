@@ -16,11 +16,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    firefox-darwin = {
-      url = "github:bandithedoge/nixpkgs-firefox-darwin";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Home Manager Source
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -98,7 +93,6 @@
 
     nix-homebrew = {
       url = "github:zhaofengli-wip/nix-homebrew";
-      inputs.nix-darwin.follows = "darwin";
     };
     homebrew-core = {
       url = "github:homebrew/homebrew-core";
@@ -132,6 +126,8 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
+
+    firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
   };
 
   outputs =
@@ -149,7 +145,6 @@
       httpcraft,
       deploy-rs,
       firefox-darwin,
-
       ...
     }@inputs:
     let

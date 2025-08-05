@@ -10,8 +10,14 @@ in
 {
   programs.firefox = {
     enable = true;
+    # package = pkgs.firefox-bin;
+    # package = pkgs.librewolf;
+
+    package = lib.makeOverridable ({ ... }: pkgs.firefox-bin) { };
 
     profiles.${config.home.username} = {
+      id = 0;
+
       extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
         decentraleyes
         onepassword-password-manager
@@ -29,6 +35,12 @@ in
         force = true;
         default = "ddg";
         order = [ "ddg" ];
+        engines = {
+          "bing".metaData.hidden = true;
+          "ebay".metaData.hidden = true;
+          "google".metaData.hidden = true;
+          "wikipedia".hidden = true;
+        };
       };
       bookmarks = {
         force = true;
@@ -46,9 +58,15 @@ in
           }
           {
             name = "Github Code Search";
-            keyword = "ghcs";
-            url = "https://cs.github.com/?scopeName=All+repos&scope=&q=%s";
+            keyword = "cs";
+            url = "https://github.com/search?type=code&q=%s";
           }
+          {
+            name = "Github Nix Code Search";
+            keyword = "ncs";
+            url = "https://github.com/search?type=code&q=language%3Anix+%s";
+          }
+
           {
             name = "Nix Pkg Search";
             keyword = "np";
@@ -60,10 +78,17 @@ in
             url = "https://search.nixos.org/options?channel=unstable&from=0&size=50&sort=relevance&query=%s";
           }
           {
+            name = "Nix Home Manager Options Search";
+            keyword = "hm";
+            url = "https://home-manager-options.extranix.com/?query=%s";
+          }
+
+          {
             name = "OSRSWiki";
             keyword = "osrs";
             url = "https://oldschool.runescape.wiki/?search=%s&title=Special%3ASearch&fulltext=Search";
           }
+
           {
             name = "nib Jira Search";
             keyword = "j";
@@ -93,5 +118,6 @@ in
     # TODO: Bookmarks
     # TODO: Extensions
     # TODO: Profile
-  }; # // packageSettings;
+  };
+  # // packageSettings;
 }
