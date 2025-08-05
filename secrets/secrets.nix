@@ -66,7 +66,7 @@ in
 {
   # See: https://github.com/ryantm/agenix/issues/17#issuecomment-797174338
   # Workflow for a new machine according to Ryan:
-  # 
+  #
   # setup a git repo with your nix configuration
   # setup the machine to deploy to with NixOS
   # Use ssh-keyscan to get public ssh key of the machine you set up
@@ -78,6 +78,7 @@ in
   "default/tailscale_pre-auth.age".publicKeys = keys;
   "default/home-wifi-ssid.age".publicKeys = keys;
   "default/home-wifi-psk.age".publicKeys = keys;
+  "default/gemini-api-key.age".publicKeys = keys;
 
   "github/gh_pat.age".publicKeys = github-keys;
 
@@ -99,10 +100,6 @@ in
   "paperless/s3-backup-bucket-name.age".publicKeys = paperless-keys;
   "paperless/s3-bucket-region.age".publicKeys = paperless-keys;
 
-  "work/jira-url.age".publicKeys = keys;
-  "work/jira-username.age".publicKeys = keys;
-  "work/jira-token.age".publicKeys = keys;
-
   "mediaserver/real-debrid-token.age".publicKeys = mediaserver-keys;
   "mediaserver/tmdb-api-key.age".publicKeys = mediaserver-keys;
   "mediaserver/plex-token.age".publicKeys = mediaserver-keys;
@@ -112,4 +109,8 @@ in
   "mediaserver/dmm-refresh-token.age".publicKeys = mediaserver-keys;
   "mediaserver/dmm-client-id.age".publicKeys = mediaserver-keys;
   "mediaserver/dmm-client-secret.age".publicKeys = mediaserver-keys;
+
+  "work/jira-url.age".publicKeys = work-keys;
+  "work/jira-username.age".publicKeys = work-keys;
+  "work/jira-token.age".publicKeys = work-keys;
 }

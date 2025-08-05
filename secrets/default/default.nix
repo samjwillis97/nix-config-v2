@@ -10,7 +10,11 @@
       "home-wifi-PSK" = {
         file = ./home-wifi-psk.age;
       };
+      "gemini-api-key" = {
+        file = ./gemini-api-key.age;
+      };
     };
+
     identityPaths = [ "/var/agenix/id-ed25519-agenix-primary" ];
   };
 }

@@ -317,6 +317,7 @@
           ./home-manager/vscode
           ./home-manager/dev
           ./home-manager/dev/ops.nix
+          ./home-manager/dev/gemini.nix
           ./home-manager/aerospace
           ./home-manager/darwin
           ./home-manager/social
