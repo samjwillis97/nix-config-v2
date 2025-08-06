@@ -20,6 +20,7 @@ in
   modules.opencode = {
     enable = true;
     settings = {
+      share = "disabled";
       permission = {
         bash = {
           "*" = "ask";
@@ -27,6 +28,8 @@ in
           "git diff" = "allow";
           "git add" = "allow";
           "git commit" = "allow";
+          "git checkout" = "allow";
+          "git stash" = "allow";
           "ls" = "allow";
           "pwd" = "allow";
           "mkdir" = "allow";
@@ -54,13 +57,29 @@ in
             "mcp-remote"
             "https://mcp.sentry.dev/sse"
           ];
-          enabled = false;
+          enabled = true;
         };
         github = {
           type = "local";
           command = [
             "${github-mcp-wrapped}/bin/github-mcp-wrapped"
             "stdio"
+          ];
+          enabled = true;
+        };
+        playwright = {
+          type = "local";
+          command = [
+            (pkgs.lib.getExe pkgs.playwright-mcp)
+          ];
+          enabled = true;
+        };
+        context7 = {
+          type = "local";
+          command = [
+            "${node}/bin/npx"
+            "-y"
+            "@upstash/context7-mcp"
           ];
           enabled = true;
         };
