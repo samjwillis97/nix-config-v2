@@ -23,6 +23,15 @@ in
       httpcraft = flake.inputs.httpcraft.packages.${system}.default;
       ghostty = flake.inputs.ghostty.packages.${system}.default;
 
+      # something seems to have broken in latest moonlight-qt
+      moonlight-qt =
+        let
+          moonlight-nixpkgs = import (builtins.fetchTarball {
+            url = "https://github.com/NixOS/nixpkgs/archive/ab7b6889ae9d484eed2876868209e33eb262511d.tar.gz";
+          }) { inherit (prev) system; };
+        in
+        moonlight-nixpkgs.moonlight-qt;
+
       opencode = flake.inputs.opencode-flake.packages.${system}.default;
     })
     inputs.nur.overlays.default
