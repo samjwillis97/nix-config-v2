@@ -26,7 +26,6 @@
         };
         default_session = initial_session;
       };
-      vt = 7;
     };
 
     # Configure monitor hotplug

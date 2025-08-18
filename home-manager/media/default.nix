@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
-    plex-media-player
+    plex-desktop
     vlc
   ];
 }
