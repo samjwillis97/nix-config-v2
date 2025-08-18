@@ -2,6 +2,7 @@
 # and may be overwritten by future invocations.  Please make changes
 # to /etc/nixos/configuration.nix instead.
 {
+  flake,
   config,
   lib,
   pkgs,
@@ -10,7 +11,9 @@
 }:
 
 {
-  imports = [ <nixpkgs/nixos/modules/virtualisation/qemu-vm.nix> ];
+  imports = [ 
+    (flake.inputs.nixpkgs + "/nixos/modules/virtualisation/qemu-vm.nix")
+  ];
 
   virtualisation = {
     memorySize = 4096;

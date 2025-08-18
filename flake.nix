@@ -201,6 +201,18 @@
       })
 
       (mkNixosSystem {
+        hostname = "linux-vm";
+        system = "x86_64-linux";
+        username = "sam";
+        extraModules = [
+          {
+          }
+        ];
+        extraHomeModules = [ ];
+        useHomeManager = false;
+      })
+
+      (mkNixosSystem {
         hostname = "mac-vm";
         system = "aarch64-linux";
         username = "sam";
