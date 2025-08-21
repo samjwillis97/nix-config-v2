@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 with lib;
 let
   cfg = config.modules.media.plex;
@@ -13,6 +18,8 @@ in
   config = mkIf cfg.enable {
     services.plex = {
       enable = true;
+
+      openFirewall = true;
 
       user = if mediaUserEnabled then "media" else "plex";
       group = if mediaUserEnabled then "media" else "plex";

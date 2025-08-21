@@ -23,6 +23,9 @@ let
   work-primary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHqI65C4vKP7hUmjhIIcGDHl2Nvts9Eq23QeHwgmfcS8 samuel.willis@HF0013203";
   work-secondary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHgSgOfW6hKCrklVG6OXp5qsO0D8xnIMQc59Llo4A8cU samuel.willis@HF0013203";
 
+  mediaserver-primary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBg6zOzaITgXqYNl/jrEdOozLAlBKoVG8tCDToAX9H1v sam@personal-desktop";
+  mediaserver-secondary-key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFWY15JTS13Hft8RWLkCgEfETlV6xbq/FLKuzWcbDmt/ sam@personal-desktop";
+
   keys = [
     primary-key
     secondary-key
@@ -54,6 +57,10 @@ let
   work-keys = [
     work-primary-key
     work-secondary-key
+  ];
+  mediaserver-keys = [
+    mediaserver-primary-key
+    mediaserver-secondary-key
   ];
 in
 {
@@ -95,4 +102,14 @@ in
   "work/jira-url.age".publicKeys = keys;
   "work/jira-username.age".publicKeys = keys;
   "work/jira-token.age".publicKeys = keys;
+
+  "mediaserver/real-debrid-token.age".publicKeys = mediaserver-keys;
+  "mediaserver/tmdb-api-key.age".publicKeys = mediaserver-keys;
+  "mediaserver/plex-token.age".publicKeys = mediaserver-keys;
+  "mediaserver/overseerr-api-key.age".publicKeys = mediaserver-keys;
+  "mediaserver/trakt-api-key.age".publicKeys = mediaserver-keys;
+  "mediaserver/dmm-access-token.age".publicKeys = mediaserver-keys;
+  "mediaserver/dmm-refresh-token.age".publicKeys = mediaserver-keys;
+  "mediaserver/dmm-client-id.age".publicKeys = mediaserver-keys;
+  "mediaserver/dmm-client-secret.age".publicKeys = mediaserver-keys;
 }

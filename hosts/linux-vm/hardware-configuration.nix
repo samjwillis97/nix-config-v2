@@ -11,11 +11,12 @@
 }:
 
 {
-  imports = [ 
+  imports = [
     (flake.inputs.nixpkgs + "/nixos/modules/virtualisation/qemu-vm.nix")
   ];
 
   virtualisation = {
+    diskSize = 20000;
     memorySize = 4096;
     cores = 8;
   };

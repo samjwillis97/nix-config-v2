@@ -3,7 +3,8 @@
 
   inputs = {
     # Nixpkgs Source
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    # nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
 
     # Only being used for reducing flake lock duplications
     systems.url = "github:nix-systems/default";
@@ -18,7 +19,7 @@
 
     # Home Manager Source
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -184,6 +185,63 @@
           ./nixos/gaming.nix
           ./nixos/logitech.nix
           ./nixos/docker.nix
+          (
+            { config, ... }:
+            {
+              imports = [ ./secrets/mediaserver ];
+              modules.virtualisation.docker = {
+                enable = true;
+                useHostNetwork = true;
+              };
+
+              modules.media = {
+                plex.enable = true;
+
+                zurg = {
+                  enable = true;
+                  realDebridTokenFile = config.age.secrets.real-debrid-token.path;
+                  mount.enable = true;
+                };
+
+                cinesync = {
+                  enable = true;
+
+                  tmdbApiKeyFile = config.age.secrets.tmdb-api-key.path;
+
+                  dependsOn = [
+                    "zurg"
+                    "rclone"
+                  ];
+
+                  directories.source = "${config.modules.media.zurg.mount.path}/torrents";
+
+                  webInterface.authEnabled = false;
+
+                  integrations = {
+                    remoteStorage.enableMountVerification = true;
+                    plex = {
+                      enable = true;
+                      url = "http://127.0.0.1:32400";
+                      tokenFile = config.age.secrets.plex-token.path;
+                    };
+                  };
+                };
+                overseerr = {
+                  enable = true;
+                  openFirewall = true;
+                  dmmBridge = {
+                    enable = true;
+                    overseerrApiKeyFile = config.age.secrets.overseerr-api-key.path;
+                    traktApiKeyFile = config.age.secrets.trakt-api-key.path;
+                    dmmAccessTokenFile = config.age.secrets.dmm-access-token.path;
+                    dmmRefreshTokenFile = config.age.secrets.dmm-refresh-token.path;
+                    dmmClientIdFile = config.age.secrets.dmm-client-id.path;
+                    dmmClientSecretFile = config.age.secrets.dmm-client-secret.path;
+                  };
+                };
+              };
+            }
+          )
         ];
         extraHomeModules = [
           # hyprland.homeManagerModules.default
@@ -195,6 +253,7 @@
           ./home-manager/dev/ops.nix
           ./home-manager/dev/windsurf.nix
           ./home-manager/vscode
+          ./home-manager/firefox
           # ./home-manager/qutebrowser
           # ./home-manager/hyprland
         ];
@@ -206,6 +265,19 @@
         username = "sam";
         extraModules = [
           {
+            modules.virtualisation.docker = {
+              enable = true;
+            };
+
+            modules.media = {
+              zurg = {
+                enable = true;
+                mount.enable = true;
+              };
+              cinesync = {
+                enable = true;
+              };
+            };
           }
         ];
         extraHomeModules = [ ];

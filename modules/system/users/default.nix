@@ -65,7 +65,6 @@ in
                 "wheel"
                 "networkmanager"
                 "video"
-                "docker"
                 "libvirtd"
                 "qemu-libvirtd"
               ];
@@ -94,7 +93,8 @@ in
             ../../../home-manager/meta
             ../../../home-manager/cli
             ../../../home-manager/theme
-          ] ++ cfg.standardUser.home-manager.extraModules;
+          ]
+          ++ cfg.standardUser.home-manager.extraModules;
         };
         extraSpecialArgs = {
           inherit flake system super;

@@ -5,7 +5,7 @@
   ...
 }:
 let
-  # packageSettings = lib.optionalAttrs pkgs.stdenv.isDarwin { package = pkgs.firefox-bin; };
+  packageSettings = if pkgs.stdenv.isDarwin then { package = pkgs.firefox-bin; } else null;
 in
 {
   programs.firefox = {
@@ -13,7 +13,7 @@ in
     # package = pkgs.firefox-bin;
     # package = pkgs.librewolf;
 
-    package = lib.makeOverridable ({ ... }: pkgs.firefox-bin) { };
+    package = packageSettings;
 
     profiles.${config.home.username} = {
       id = 0;
