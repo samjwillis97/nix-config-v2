@@ -6,7 +6,7 @@
     # cachix # FIXME idk if needed, pipeline might throw fit
   ];
   nix = import ../shared/nix.nix { inherit pkgs flake; } // {
-    linux-builder.enable = false; # FIXME was breaking tings
+    linux-builder.enable = true; # FIXME was breaking tings
   };
 
   # FIXME: What was this migrated to?

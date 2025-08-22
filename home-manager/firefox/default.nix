@@ -5,7 +5,7 @@
   ...
 }:
 let
-  packageSettings = if pkgs.stdenv.isDarwin then { package = pkgs.firefox-bin; } else null;
+  # packageSettings = if pkgs.stdenv.isDarwin then { package = pkgs.firefox-bin; } else null;
 in
 {
   programs.firefox = {
@@ -13,7 +13,7 @@ in
     # package = pkgs.firefox-bin;
     # package = pkgs.librewolf;
 
-    package = packageSettings;
+    # package = packageSettings;
 
     profiles.${config.home.username} = {
       id = 0;
