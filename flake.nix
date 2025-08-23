@@ -203,8 +203,26 @@
                   mount.enable = true;
                 };
 
-                cinesync = {
+                riven = {
                   enable = true;
+                  openFirewall = true;
+                  downloaders = {
+                    realDebrid = {
+                      enable = true;
+                      apiKeyFile = config.age.secrets.real-debrid-token.path;
+                    };
+                  };
+                  updaters = {
+                    plex = {
+                      enable = true;
+                      url = "http://127.0.0.1:32400";
+                      tokenFile = config.age.secrets.plex-token.path;
+                    };
+                  };
+                };
+
+                cinesync = {
+                  enable = false;
 
                   tmdbApiKeyFile = config.age.secrets.tmdb-api-key.path;
 
@@ -226,8 +244,9 @@
                     };
                   };
                 };
+
                 overseerr = {
-                  enable = true;
+                  enable = false;
                   openFirewall = true;
                   dmmBridge = {
                     enable = true;
