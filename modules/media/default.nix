@@ -7,5 +7,6 @@
     ./cinesync
     ./overseerr
     ./plex
+    ./riven
   ];
 }

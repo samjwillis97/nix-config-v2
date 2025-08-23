@@ -289,14 +289,32 @@
         system = "aarch64-linux";
         username = "sam";
         extraModules = [
-          {
-            modules.home-automation.hass = {
-              enable = true;
-            };
-          }
+          (
+            { config, ... }:
+            {
+              imports = [ ./secrets/mediaserver ];
+              modules.virtualisation.docker = {
+                enable = true;
+                useHostNetwork = true;
+              };
+
+              modules.media = {
+                plex.enable = false;
+
+                zurg = {
+                  enable = true;
+                  realDebridTokenFile = config.age.secrets.real-debrid-token.path;
+                  mount.enable = true;
+                };
+
+                riven = {
+                  enable = true;
+                };
+              };
+            }
+          )
         ];
-        extraHomeModules = [ ];
-        useHomeManager = true;
+        useHomeManager = false;
       })
 
       (mkDarwinSystem {
@@ -310,7 +328,7 @@
         system = "aarch64-darwin";
         username = "sam";
         homePath = "/Users";
-        extraModules = [ ];
+        extraModules = [];
         extraHomeModules = [
           # ./home-manager/darwin/keyboard.nix
           ./home-manager/wezterm
