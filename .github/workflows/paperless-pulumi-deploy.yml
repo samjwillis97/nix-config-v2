@@ -1,4 +1,4 @@
-name: Paperless Pulumi Deploy
+name: Pulumi Deploy
 on:
   push:
     branches:

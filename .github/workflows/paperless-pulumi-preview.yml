@@ -1,4 +1,4 @@
-name: Paperless Pulumi Preview
+name: Pulumi Preview
 on:
   - pull_request
 jobs:
