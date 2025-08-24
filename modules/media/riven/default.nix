@@ -12,6 +12,10 @@ let
 
   dockerHostNetworkingEnabled = config.modules.virtualisation.docker.useHostNetwork;
   boolToString = x: if x then "true" else "false";
+
+  databaseUsername = config.modules.database.postgres.user;
+  databasePassword = config.modules.database.postgres.password;
+  databaseName = "riven";
 in
 {
   options.modules.media.riven = {
@@ -89,6 +93,13 @@ in
 
   config = mkIf cfg.enable (
     {
+      modules.database.postgres = {
+        enable = true;
+        databases = [
+          databaseName
+        ];
+      };
+
       networking.firewall.allowedTCPPorts = mkIf cfg.openFirewall [
         cfg.webPort
         cfg.apiPort
@@ -102,12 +113,6 @@ in
         ${pkgs.coreutils}/bin/chown -R ${user}:docker ${cfg.configDirectory}/frontend
         ${pkgs.coreutils}/bin/mkdir -p ${cfg.configDirectory}/backend
         ${pkgs.coreutils}/bin/chown -R ${user}:docker ${cfg.configDirectory}/backend
-
-        # Only do DB if it doesn't exist
-        if [ ! -d ${cfg.configDirectory}/db ]; then
-          ${pkgs.coreutils}/bin/mkdir -p ${cfg.configDirectory}/db
-          ${pkgs.coreutils}/bin/chown -R ${user}:docker ${cfg.configDirectory}/db
-        fi
       '';
 
       virtualisation.oci-containers.containers = {
@@ -148,7 +153,7 @@ in
             RIVEN_FORCE_ENV = boolToString true;
             RIVEN_SYMLINK_RCLONE_PATH = "/mnt/remote/zurg/__all__";
             RIVEN_SYMLINK_LIBRARY_PATH= "${cfg.libraryDirectory}"; # This is the path that symlinks will be placed in
-            RIVEN_DATABASE_HOST = "postgresql+psycopg2://postgres:postgres@127.0.0.1/riven";
+            RIVEN_DATABASE_HOST = "postgresql+psycopg2://${databaseUsername}:${databasePassword}@127.0.0.1/${databaseName}";
             RIVEN_DOWNLOADERS_REAL_DEBRID_ENABLED = boolToString cfg.downloaders.realDebrid.enable;
             # Anti-pattern but i cbf
             RIVEN_DOWNLOADERS_REAL_DEBRID_API_KEY = lib.trim (builtins.readFile cfg.downloaders.realDebrid.apiKeyFile);
@@ -177,27 +182,9 @@ in
           ];
           extraOptions = mkIf dockerHostNetworkingEnabled [ "--network=host" ];
           dependsOn = [
-            "riven-postgres"
           ];
         };
-
-        riven-postgres = {
-          pull = "missing";
-          image = "postgres:17-alpine";
-          autoStart = true;
-          environment = {
-            TZ = config.time.timeZone;
-            PGDATA = "/var/lib/postgresql/data/pgdata";
-            POSTGRES_USER = "postgres";
-            POSTGRES_PASSWORD = "postgres";
-            POSTGRES_DB = "riven";
-          };
-          volumes = [
-            "${cfg.configDirectory}/db:/var/lib/postgresql/data/pgdata"
-          ];
-          extraOptions = mkIf dockerHostNetworkingEnabled [ "--network=host" ];
-        };
-      };
+       };
     }
   );
 }

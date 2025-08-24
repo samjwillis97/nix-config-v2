@@ -219,6 +219,15 @@
                       tokenFile = config.age.secrets.plex-token.path;
                     };
                   };
+                  scrapers = {
+                    torrentio = {
+                      enable = true;
+                    };
+                  };
+                };
+
+                zilean = {
+                  enable = true;
                 };
 
                 cinesync = {

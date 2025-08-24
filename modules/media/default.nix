@@ -8,5 +8,6 @@
     ./overseerr
     ./plex
     ./riven
+    ./zilean
   ];
 }
