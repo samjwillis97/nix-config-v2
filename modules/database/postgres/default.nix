@@ -2,12 +2,14 @@
   config,
   pkgs,
   lib,
+  utils,
   ...
 }:
 with lib;
 let
   cfg = config.modules.database.postgres;
   dockerEnabled = config.modules.virtualisation.docker.enable;
+  systemd-lib = utils.systemdUtils.lib;
 in
 {
   options.modules.database.postgres = {
@@ -51,16 +53,16 @@ in
         description = "S3 bucket to upload backups to (e.g. my-bucket-name)";
       };
 
-      awsAccessKeyIdPath = mkOption {
+      awsAccessKeyIdFile = mkOption {
         type = types.str;
         default = if cfg.backup.enable then null else ""; 
-        description = "Path to file containing AWS access key ID";
+        description = "file containing AWS access key ID";
       };
 
-      awsSecretAccessKeyPath = mkOption {
+      awsSecretAccessKeyFile = mkOption {
         type = types.str;
         default = if cfg.backup.enable then null else ""; 
-        description = "Path to file containing AWS secret access key";
+        description = "file containing AWS secret access key";
       };
 
       options = mkOption {
@@ -121,6 +123,10 @@ in
           host all all ::1/128 scram-sha-256
           # Allow connections from the default Docker bridge network
           host all all 172.17.0.0/16 scram-sha-256
+          ${lib.optionalString cfg.backup.enable ''
+          # Allow replication connections from localhost
+          local replication ${cfg.user} trust
+          ''}
         '';
       };
     }
@@ -131,8 +137,8 @@ in
           echo "Preparing PostgreSQL backup"
 
           # environment
-          export AWS_ACCESS_KEY_ID=$(cat ${cfg.backup.awsAccessKeyIdPath})
-          export AWS_SECRET_ACCESS_KEY=$(cat ${cfg.backup.awsSecretAccessKeyPath})
+          export AWS_ACCESS_KEY_ID=$(cat ${cfg.backup.awsAccessKeyIdFile})
+          export AWS_SECRET_ACCESS_KEY=$(cat ${cfg.backup.awsSecretAccessKeyFile})
           export NOW=$(date -u +%Y%m%d-%H%M%S)
           export BACKUP_DIR_BASE=${cfg.backup.directory}
           export BACKUP_DIR=$BACKUP_DIR_BASE/$NOW

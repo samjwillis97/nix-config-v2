@@ -45,7 +45,7 @@ in
         image = "ipromknight/zilean:latest";
         autoStart = true;
         ports = [
-          "${cfg.apiPort}:${cfg.apiPort}"
+          "8181:8181"
         ];
         environment = {
           Zilean__Database__ConnectionString = "Host=127.0.0.1;Database=${databaseName};Username=${databaseUsername};Password=${databasePassword};Include Error Detail=true;Timeout=30;CommandTimeout=3600;";

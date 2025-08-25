@@ -188,10 +188,23 @@
           (
             { config, ... }:
             {
-              imports = [ ./secrets/mediaserver ];
+              imports = [ 
+                ./secrets/mediaserver
+                ./secrets/aws
+              ];
               modules.virtualisation.docker = {
                 enable = true;
                 useHostNetwork = true;
+              };
+
+              modules.database.postgres = {
+                enable = true;
+                backup = {
+                  enable = true;
+                  s3Bucket = "mediaserver-pgsql-backup-b96bddb";
+                  awsAccessKeyIdFile = config.age.secrets.infra-access-key-id.path;
+                  awsSecretAccessKeyFile = config.age.secrets.infra-secret-access-key.path;
+                };
               };
 
               modules.media = {
