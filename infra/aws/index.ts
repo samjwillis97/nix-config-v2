@@ -12,7 +12,7 @@ new aws.s3.BucketLifecycleConfigurationV2("mediaserver-pgsql-backup-lifecycle-ru
     id: "deleteAfter90Days",
     status: "Enabled",
     expiration: {
-      days: 30,
+      days: 90,
     },
     // An empty filter applies the rule to all objects in the bucket.
     filter: {},
