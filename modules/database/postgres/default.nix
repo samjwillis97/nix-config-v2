@@ -13,6 +13,12 @@ in
   options.modules.database.postgres = {
     enable = mkEnableOption "Enables Postgres";
 
+    package = mkOption {
+      type = types.package;
+      default = config.services.postgresql.package;
+      description = "The PostgreSQL package to use.";
+    };
+
     user = mkOption {
       type = types.str;
       default = "postgres";
@@ -28,6 +34,72 @@ in
     databases = mkOption {
       type = types.listOf types.str;
       description = "The initial databases to create.";
+    };
+
+    backup = {
+      enable = mkEnableOption "Enable backups of all databases";
+
+      directory = mkOption {
+        type = types.str;
+        default = "/var/backups/postgresql";
+        description = "Directory to store backups before uploading to S3";
+      };
+
+      s3Bucket = mkOption {
+        type = types.str;
+        default = if cfg.backup.enable then null else ""; 
+        description = "S3 bucket to upload backups to (e.g. my-bucket-name)";
+      };
+
+      awsAccessKeyIdPath = mkOption {
+        type = types.str;
+        default = if cfg.backup.enable then null else ""; 
+        description = "Path to file containing AWS access key ID";
+      };
+
+      awsSecretAccessKeyPath = mkOption {
+        type = types.str;
+        default = if cfg.backup.enable then null else ""; 
+        description = "Path to file containing AWS secret access key";
+      };
+
+      options = mkOption {
+        type = types.listOf types.str;
+        default = ["-X" "stream" "-Ft" "-v"];
+        description = "Additional pg_basebackup options";
+      };
+
+      zstdCompressionLevel = mkOption {
+        type = types.ints.between 1 19;
+        description = ''
+          Zstandard compression level (1-19, higher means more compression)
+        '';
+        default = 19;
+      };
+
+      schedule = mkOption {
+        type = types.str;
+        description = "Systemd calendar event to schedule backups";
+        default = "daily";
+      };
+
+      onFailure = mkOption {
+        default = [];
+        type = types.listOf systemd-lib.unitNameType;
+        description = ''
+          A list of one or more units that are activated when
+          this service enters the "failed" state.
+        '';
+      };
+
+      onSuccess = mkOption {
+        default = [];
+        type = types.listOf systemd-lib.unitNameType;
+        description = ''
+          A list of one or more units that are activated when
+          this service enters the "inactive" state.
+        '';
+      };
     };
   };
 
@@ -52,6 +124,68 @@ in
         '';
       };
     }
+    (mkIf cfg.backup.enable 
+      (let
+        pg-basebackup-script = pkgs.writeShellScript "pg-basebackup-script" ''
+          set -e
+          echo "Preparing PostgreSQL backup"
+
+          # environment
+          export AWS_ACCESS_KEY_ID=$(cat ${cfg.backup.awsAccessKeyIdPath})
+          export AWS_SECRET_ACCESS_KEY=$(cat ${cfg.backup.awsSecretAccessKeyPath})
+          export NOW=$(date -u +%Y%m%d-%H%M%S)
+          export BACKUP_DIR_BASE=${cfg.backup.directory}
+          export BACKUP_DIR=$BACKUP_DIR_BASE/$NOW
+          export BACKUP_FILE=$BACKUP_DIR_BASE/postgresql-backup-$NOW.tar.zst
+
+          # Create backup directory
+          mkdir -p $BACKUP_DIR
+
+          # Perform PostgreSQL base backup
+          ${cfg.package}/bin/pg_basebackup \
+            -U ${cfg.user} \
+            -D $BACKUP_DIR \
+            ${concatStringsSep " " cfg.backup.options}
+
+          # Compress the backup
+          ${pkgs.gnutar}/bin/tar -C $BACKUP_DIR_BASE -c $NOW  \
+            | ${pkgs.zstd}/bin/zstd \
+              -${toString cfg.backup.zstdCompressionLevel} -o $BACKUP_FILE
+
+          # Clean up temporary backup directory
+          rm -r $BACKUP_DIR
+
+          # Sync to S3
+          echo "Pushing $BACKUP_FILE to ${cfg.backup.s3Bucket}"
+          ${pkgs.awscli2}/bin/aws s3 sync --include "*.tar.zst" \
+             $BACKUP_DIR_BASE s3://${cfg.backup.s3Bucket}
+          echo "Backup uploaded"
+        '';
+      in
+      {
+        systemd.timers.pg-basebackup-timer = {
+          wantedBy = ["timers.target"];
+          timerConfig = {
+            OnCalendar = cfg.backup.schedule;
+            Persistent = true;
+            Unit = "pg-basebackup.service";
+          };
+        };
+
+        # Systemd service for performing backups
+        systemd.services.pg-basebackup = {
+          enable = true;
+          serviceConfig = {
+            Type = "oneshot";
+            StandardOutput = "journal";
+            StandardError = "journal";
+            ExecStart = pg-basebackup-script;
+          };
+          onFailure = cfg.backup.onFailure;
+          onSuccess = cfg.backup.onSuccess;
+        };
+      })
+    )
     (mkIf dockerEnabled {
       # By default, Docker containers run on the 172.17.0.0/16 subnet.
       # This rule allows containers on this network to connect to the host's PostgreSQL service.

@@ -1,4 +1,4 @@
-name: Paperless Pulumi Preview
+name: Pulumi Preview
 on:
   - pull_request
 jobs:
@@ -9,7 +9,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3.5.0
         with:
-          node-version-file: infra/paperless-ngx/package.json
+          node-version-file: infra/aws/package.json
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -17,14 +17,14 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - run: npm install
-        working-directory: infra/paperless-ngx
+        working-directory: infra/aws
       - uses: pulumi/actions@v3
         with:
           command: preview
           stack-name: paperless
           comment-on-pr: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          work-dir: infra/paperless-ngx
+          work-dir: infra/aws
           cloud-url: ${{ secrets.PULUMI_CLOUD_URL }}
           upsert: true
         env:
