@@ -233,7 +233,7 @@
                     };
                   };
                   scrapers = {
-                    torrentio = {
+                    zilean = {
                       enable = true;
                     };
                   };

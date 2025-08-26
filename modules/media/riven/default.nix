@@ -88,6 +88,13 @@ in
       torrentio = {
         enable = mkEnableOption "Enable Torrentio scraper";
       };
+      zilean = {
+        enable = mkEnableOption "Enable Zilean scraper";
+        url = mkOption {
+          type = types.str;
+          default = "http://127.0.0.1:8181";
+        };
+      };
     };
   };
 
@@ -169,8 +176,8 @@ in
 
             RIVEN_SCRAPING_TORRENTIO_ENABLED = boolToString cfg.scrapers.torrentio.enable;
 
-            # RIVEN_SCRAPING_ZILEAN_ENABLED=true
-            # RIVEN_SCRAPING_ZILEAN_URL=http://zilean:8181
+            RIVEN_SCRAPING_ZILEAN_ENABLED = boolToString cfg.scrapers.zilean.enable;
+            RIVEN_SCRAPING_ZILEAN_URL = cfg.scrapers.zilean.url;
           };
           volumes = [
             "/mnt/remote/zurg/__all__:/mnt/remote/zurg/__all__"
