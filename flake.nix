@@ -233,9 +233,8 @@
                     };
                   };
                   scrapers = {
-                    zilean = {
-                      enable = true;
-                    };
+                    torrentio.enable = true;
+                    zilean.enable = true;
                   };
                 };
 

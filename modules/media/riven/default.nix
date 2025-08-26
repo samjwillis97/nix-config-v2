@@ -122,6 +122,34 @@ in
         ${pkgs.coreutils}/bin/chown -R ${user}:docker ${cfg.configDirectory}/backend
       '';
 
+      system.activationScripts.createRivenSecretEnv = let
+        finalConfigFile = "${cfg.configDirectory}/.env.secret";
+        realDebridApiKeyTemplate = "@real-debrid-api-key@";
+        plexTokenTemplate = "@plex-token@";
+        envTemplate = pkgs.writeText "riven-env-template" ''
+          ${optionalString (cfg.downloaders.realDebrid.enable) ''
+          RIVEN_DOWNLOADERS_REAL_DEBRID_API_KEY=${realDebridApiKeyTemplate}
+          ''}
+          ${optionalString (cfg.updaters.plex.enable) ''
+          RIVEN_UPDATERS_PLEX_TOKEN=${plexTokenTemplate}
+          ''}
+        '';
+      in
+        lib.stringAfter [ "var" ] ''
+          configFile=${finalConfigFile}
+          ${pkgs.coreutils}/bin/cp ${envTemplate} $configFile
+
+          ${optionalString (cfg.downloaders.realDebrid.enable) ''
+          secret=$(cat "${cfg.downloaders.realDebrid.apiKeyFile}")
+          ${pkgs.gnused}/bin/sed -i "s#${realDebridApiKeyTemplate}#$secret#" "$configFile"
+          ''}
+
+          ${optionalString (cfg.updaters.plex.enable) ''
+          secret=$(cat "${cfg.updaters.plex.tokenFile}")
+          ${pkgs.gnused}/bin/sed -i "s#${plexTokenTemplate}#$secret#" "$configFile"
+          ''}
+      '';
+
       virtualisation.oci-containers.containers = {
         riven-frontend = let
           serverJson = pkgs.writers.writeJSON "server.json" {
@@ -154,6 +182,9 @@ in
           pull = "missing";
           image = "spoked/riven:latest";
           autoStart = true;
+          environmentFiles = [
+            "${cfg.configDirectory}/.env.secret"
+          ];
           environment = {
             TZ = config.time.timeZone;
             API_KEY = cfg.apiKey;
@@ -162,17 +193,9 @@ in
             RIVEN_SYMLINK_LIBRARY_PATH= "${cfg.libraryDirectory}"; # This is the path that symlinks will be placed in
             RIVEN_DATABASE_HOST = "postgresql+psycopg2://${databaseUsername}:${databasePassword}@127.0.0.1/${databaseName}";
             RIVEN_DOWNLOADERS_REAL_DEBRID_ENABLED = boolToString cfg.downloaders.realDebrid.enable;
-            # Anti-pattern but i cbf
-            RIVEN_DOWNLOADERS_REAL_DEBRID_API_KEY = lib.trim (builtins.readFile cfg.downloaders.realDebrid.apiKeyFile);
 
             RIVEN_UPDATERS_PLEX_ENABLED = boolToString cfg.updaters.plex.enable;
             RIVEN_UPDATERS_PLEX_URL = cfg.updaters.plex.url;
-            # Anti-pattern but i cbf
-            RIVEN_UPDATERS_PLEX_TOKEN = lib.trim (builtins.readFile cfg.updaters.plex.tokenFile);
-
-            # RIVEN_CONTENT_OVERSEERR_ENABLED=true
-            # RIVEN_CONTENT_OVERSEERR_URL=http://overseerr:5055
-            # RIVEN_CONTENT_OVERSEERR_API_KEY=xxxxx # set your overseerr token
 
             RIVEN_SCRAPING_TORRENTIO_ENABLED = boolToString cfg.scrapers.torrentio.enable;
 
