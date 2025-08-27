@@ -13,6 +13,7 @@
     ../media
     ../social
     ../firefox
+    ../alacritty
     ../wezterm
     ../ghostty
     ../theme

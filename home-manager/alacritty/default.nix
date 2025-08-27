@@ -36,10 +36,6 @@
             foreground = base00;
             background = base0B;
           };
-          footer_bar = {
-            foreground = base00;
-            background = base05;
-          };
         };
 
         selection = {
@@ -92,9 +88,19 @@
         ];
       };
 
-      font.size = 9; # need this to change depending on systems
-      font.normal.family = "FiraCode Nerd Font Mono";
+      font.size = 12; # need this to change depending on systems
+      font.normal.family = "JetBrainsMonoNerdFont";
       font.normal.style = "Regular";
+
+      window = {
+        padding = {
+          x = 5;
+          y = 5;
+        };
+        opacity = 0.9;
+        blur = true;
+        decorations = "None";
+      };
     };
   };
 }

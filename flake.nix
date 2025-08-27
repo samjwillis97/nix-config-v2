@@ -26,7 +26,6 @@
     # Hyprland Window Manager
     hyprland = {
       url = "github:hyprwm/Hyprland";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     flake-utils = {
@@ -178,8 +177,8 @@
         # networkAdapterName = "wlp7s0";
         extraModules = [
           # microvm.nixosModules.host
-          ./nixos/xserver.nix
-          # ./nixos/wayland.nix
+          # ./nixos/xserver.nix
+          ./nixos/wayland.nix
           ./nixos/fonts.nix
           ./nixos/audio.nix
           ./nixos/gaming.nix
@@ -292,7 +291,7 @@
           # hyprland.homeManagerModules.default
           ./home-manager/nixos.nix
           ./home-manager/desktop
-          ./home-manager/i3
+          # ./home-manager/i3
           ./home-manager/gaming
           ./home-manager/dev
           ./home-manager/dev/ops.nix
@@ -300,7 +299,7 @@
           ./home-manager/vscode
           ./home-manager/firefox
           # ./home-manager/qutebrowser
-          # ./home-manager/hyprland
+          ./home-manager/hyprland
         ];
       })
 

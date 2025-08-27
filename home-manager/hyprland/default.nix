@@ -1,21 +1,29 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
+let 
+  workspaceCount = 9;
+in
 {
   imports = [
-    ./wofi.nix
-    ./waybar.nix
+    ./wofi.nix # drun menu
+    ./waybar.nix # status bar
+    ./hyprlock.nix # lock screen
   ];
 
   wayland.windowManager.hyprland = {
     enable = true;
-    xwayland = {
+
+    xwayland.enable = true;
+
+    systemd = {
       enable = true;
+      enableXdgAutostart = true;
     };
-    # nvidiaPatches = false;
-    recommendedEnvironment = true;
+
+    package = pkgs.hyprland;
+    portalPackage = pkgs.hyprlandPortal;
 
     # TODO: Notification Daemon
     # TODO: Pipewire (screen sharing)
-    # TODO: XDG Desktop Portal 
     # TODO: Authentication Agent
     # TODO: QT Wayland Support
     # TODO: Clipboard Manager
@@ -25,50 +33,78 @@
     # TODO: Media Keys
     # TODO: STatus Bard
 
-    # TODO: Look at eww open bar, eww open bgdecor and eww open winbar
-    extraConfig = ''
-      exec-once = eww daemon && eww open topbar
+    # TODO: Power control etc
 
-      $mainMod = ALT
+    # hyprctl dispatch exit
 
-      bind = $mainMod, Return, exec, alacritty
-      bind = $mainMod, d, exec, wofi --show run
+      # exec-once = eww daemon && eww open topbar
 
-      bind = $mainMod, Space, toggleFloating
+    settings = {
+      # Monitor settings
+      # Only going to work for main desktop
+      monitor = [
+        "DP-2, 2560x1440@180, 0x0, 1"
+        "DP-3, 2560x1440@180, 2560x0, 1"
+      ];
 
-      bind = $mainMod, H, movefocus, l
-      bind = $mainMod, J, movefocus, d
-      bind = $mainMod, K, movefocus, u
-      bind = $mainMod, L, movefocus, r
+      "$mod" = "ALT";
 
-      bind = $mainMod SHIFT, H, movewindow, l
-      bind = $mainMod SHIFT, J, movewindow, d
-      bind = $mainMod SHIFT, K, movewindow, u
-      bind = $mainMod SHIFT, L, movewindow, r
+      input = {
+        # Keyboard settings
+        repeat_rate = 50;
+        repeat_delay = 250;
 
-      bind = $mainMod SHIFT, q, killactive
+        # mouse settings
+        accel_profile = "flat";
+        follow_mouse = 2; # Cursor focus will be detached from keyboard focus. Clicking on a window will move keyboard focus to that window.
+      };
 
-      bind = $mainMod, 1, workspace, 1
-      bind = $mainMod, 2, workspace, 2
-      bind = $mainMod, 3, workspace, 3
-      bind = $mainMod, 4, workspace, 4
-      bind = $mainMod, 5, workspace, 5
-      bind = $mainMod, 6, workspace, 6
-      bind = $mainMod, 7, workspace, 7
-      bind = $mainMod, 8, workspace, 8
-      bind = $mainMod, 9, workspace, 9
-      bind = $mainMod, 0, workspace, 10
+      decoration = {
+        rounding = 4;
+      };
 
-      bind = $mainMod SHIFT, 1, movetoworkspace, 1
-      bind = $mainMod SHIFT, 2, movetoworkspace, 2
-      bind = $mainMod SHIFT, 3, movetoworkspace, 3
-      bind = $mainMod SHIFT, 4, movetoworkspace, 4
-      bind = $mainMod SHIFT, 5, movetoworkspace, 5
-      bind = $mainMod SHIFT, 6, movetoworkspace, 6
-      bind = $mainMod SHIFT, 7, movetoworkspace, 7
-      bind = $mainMod SHIFT, 8, movetoworkspace, 8
-      bind = $mainMod SHIFT, 9, movetoworkspace, 9
-      bind = $mainMod SHIFT, 0, movetoworkspace, 10
-    '';
+      animations = {
+        workspace_wraparound = false;
+      };
+
+      misc = {
+        # font_family = "";
+        vrr = 3;
+      };
+
+      binds = {
+        workspace_back_and_forth = true;
+      };
+
+      bindm = [
+        "$mod, mouse:272, movewindow"
+        "$mod, mouse:273, resizewindow"
+      ];
+
+      bind = [
+        "$mod, Return, exec, alacritty"
+        "$mod, d, exec, wofi --show run"
+
+        "$mod, Space, toggleFloating"
+
+        "$mod, H, movefocus, l"
+        "$mod, J, movefocus, d"
+        "$mod, K, movefocus, u"
+        "$mod, L, movefocus, r"
+
+        "$mod SHIFT, H, movewindow, l"
+        "$mod SHIFT, J, movewindow, d"
+        "$mod SHIFT, K, movewindow, u"
+        "$mod SHIFT, L, movewindow, r"
+
+        "$mod SHIFT, q, killactive"
+
+      ] ++ (lib.genList (n:
+        "$mod, ${toString (n + 1)}, workspace, ${toString (n + 1)}"
+      ) workspaceCount)
+        ++ (lib.genList (n:
+        "$mod SHIFT, ${toString (n + 1)}, movetoworkspace, ${toString (n + 1)}"
+      ) workspaceCount);
+    };
   };
 }

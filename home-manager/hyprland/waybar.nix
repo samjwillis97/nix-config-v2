@@ -7,6 +7,7 @@
 {
   programs.waybar = {
     enable = true;
+
     systemd.enable = true;
 
     settings = {
@@ -17,20 +18,22 @@
         spacing = 4;
 
         modules-left = [
-          "sway/workspaces"
-          "sway/mode"
+          "hyprland/workspaces"
+          "hyprland/mode"
           "wlr/taskbar"
         ];
-        modules-center = [ "sway/window" ];
+
+        modules-center = [ "hyprland/window" ];
+
         modules-right = [
           "mpd"
-          "temperature"
+          "clock"
         ];
 
-        "sway/workspaces" = {
-          disable-scroll = true;
-          all-outputs = true;
-        };
+        # "sway/workspaces" = {
+        #   disable-scroll = true;
+        #   all-outputs = true;
+        # };
       };
     };
 

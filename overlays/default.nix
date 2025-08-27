@@ -19,6 +19,7 @@ in
       neovim-vscode = pkgs.neovim;
       nix-serve = flake.inputs.nix-serve.packages.${system}.nix-serve;
       hyprland = flake.inputs.hyprland.packages.${system}.hyprland;
+      hyprlandPortal = flake.inputs.hyprland.packages.${system}.xdg-desktop-portal-hyprland;
       f = flake.inputs.f.packages.${system}.default;
       httpcraft = flake.inputs.httpcraft.packages.${system}.default;
       ghostty = flake.inputs.ghostty.packages.${system}.default;
