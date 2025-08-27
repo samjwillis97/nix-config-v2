@@ -96,6 +96,12 @@ in
         };
       };
     };
+
+    contentProviders = {
+      plexWatchlist = {
+        enable = mkEnableOption "Enable Plex Watchlist content provider";
+      };
+    };
   };
 
   config = mkIf cfg.enable (
@@ -199,6 +205,8 @@ in
 
             RIVEN_SCRAPING_TORRENTIO_ENABLED = boolToString cfg.scrapers.torrentio.enable;
 
+            RIVEN_CONTENT_PLEX_WATCHLIST_ENABLED = boolToString cfg.contentProviders.plexWatchlist.enable;
+
             RIVEN_SCRAPING_ZILEAN_ENABLED = boolToString cfg.scrapers.zilean.enable;
             RIVEN_SCRAPING_ZILEAN_URL = cfg.scrapers.zilean.url;
           };
@@ -211,8 +219,6 @@ in
             "${toString cfg.webPort}:${toString cfg.webPort}"
           ];
           extraOptions = mkIf dockerHostNetworkingEnabled [ "--network=host" ];
-          dependsOn = [
-          ];
         };
        };
     }

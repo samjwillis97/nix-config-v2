@@ -227,7 +227,7 @@
                   };
                   updaters = {
                     plex = {
-                      enable = true;
+                      enable = false;
                       url = "http://127.0.0.1:32400";
                       tokenFile = config.age.secrets.plex-token.path;
                     };
@@ -235,6 +235,11 @@
                   scrapers = {
                     torrentio.enable = true;
                     zilean.enable = true;
+                  };
+                  contentProviders = {
+                    plexWatchlist = {
+                      enable = false;
+                    };
                   };
                 };
 

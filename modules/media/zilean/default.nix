@@ -49,7 +49,7 @@ in
         ];
         environment = {
           Zilean__Database__ConnectionString = "Host=127.0.0.1;Database=${databaseName};Username=${databaseUsername};Password=${databasePassword};Include Error Detail=true;Timeout=30;CommandTimeout=3600;";
-          Zilean__Ingestion__ScrapeSchedule = "15 2 * * *";
+          Zilean__Dmm__ScrapeSchedule = "55 * * * *";
         };
         volumes = [
           "${cfg.dataDirectory}:/app/data"
