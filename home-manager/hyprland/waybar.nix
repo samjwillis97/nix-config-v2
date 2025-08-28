@@ -17,6 +17,14 @@
         height = 34;
         spacing = 4;
 
+        "custom/notification" = {
+          format = "notifications";
+          on-click = pkgs.writeShellScript "open-notifications" ''
+            ${config.services.swaync.package}/bin/swaync-client -t -sw
+          '';
+          escape = true;
+        };
+
         modules-left = [
           "hyprland/workspaces"
           "hyprland/mode"
@@ -28,6 +36,7 @@
         modules-right = [
           "mpd"
           "clock"
+          "custom/notification"
         ];
 
         # "sway/workspaces" = {

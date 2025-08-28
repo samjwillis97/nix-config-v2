@@ -7,6 +7,8 @@ in
     ./wofi.nix # drun menu
     ./waybar.nix # status bar
     ./hyprlock.nix # lock screen
+    ./hypridle.nix # idle management
+    ./swaync.nix # notifications
   ];
 
   wayland.windowManager.hyprland = {
