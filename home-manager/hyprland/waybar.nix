@@ -18,11 +18,19 @@
         spacing = 4;
 
         "custom/notification" = {
-          format = "notifications";
+          format = "  ";
           on-click = pkgs.writeShellScript "open-notifications" ''
             ${config.services.swaync.package}/bin/swaync-client -t -sw
           '';
           escape = true;
+        };
+
+        "custom/powermenu" = {
+          format = " ⏻ ";
+          on-click = pkgs.writeShellScript "open-power-menu" ''
+            ${pkgs.wlogout}/bin/wlogout
+          '';
+          on-click-right = "hyprlock";
         };
 
         modules-left = [
@@ -37,6 +45,7 @@
           "mpd"
           "clock"
           "custom/notification"
+          "custom/powermenu"
         ];
 
         # "sway/workspaces" = {

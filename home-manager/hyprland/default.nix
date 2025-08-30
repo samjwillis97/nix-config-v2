@@ -9,7 +9,26 @@ in
     ./hyprlock.nix # lock screen
     ./hypridle.nix # idle management
     ./swaync.nix # notifications
+    ./wlogout.nix # logout menu
+    ./hyprpaper.nix # wallpaper manager
   ];
+
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-hyprland
+      xdg-desktop-portal-gtk
+    ];
+
+    config = {
+      hyprland = {
+        default = [ "hyprland" "gtk" ];
+        "org.freedesktop.impl.portal.ScreenCast" = [
+          "hyprland"
+        ];
+      };
+    };
+  };
 
   wayland.windowManager.hyprland = {
     enable = true;
@@ -21,12 +40,13 @@ in
       enableXdgAutostart = true;
     };
 
-    package = pkgs.hyprland;
-    portalPackage = pkgs.hyprlandPortal;
+    # package = pkgs.hyprland;
+    # portalPackage = pkgs.xdg-desktop-portal-hyprland;
+    # package = null;
+    # portalPackage = null;
 
-    # TODO: Notification Daemon
     # TODO: Pipewire (screen sharing)
-    # TODO: Authentication Agent
+    # TODO: Authentication Agent?..
     # TODO: QT Wayland Support
     # TODO: Clipboard Manager
 
@@ -35,11 +55,8 @@ in
     # TODO: Media Keys
     # TODO: STatus Bard
 
-    # TODO: Power control etc
-
     # hyprctl dispatch exit
 
-      # exec-once = eww daemon && eww open topbar
 
     settings = {
       # Monitor settings
@@ -50,6 +67,12 @@ in
       ];
 
       "$mod" = "ALT";
+
+      exec-once = [
+        "swaync"
+        "hypridle"
+        "hyprpaper"
+      ];
 
       input = {
         # Keyboard settings

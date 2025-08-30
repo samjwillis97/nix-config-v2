@@ -289,8 +289,8 @@
           )
         ];
         extraHomeModules = [
-          ./hm-modules
           # hyprland.homeManagerModules.default
+          ./hm-modules
           ./home-manager/nixos.nix
           ./home-manager/desktop
           # ./home-manager/i3
