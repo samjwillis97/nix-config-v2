@@ -191,6 +191,7 @@
                 ./secrets/mediaserver
                 ./secrets/aws
               ];
+
               modules.virtualisation.docker = {
                 enable = true;
                 useHostNetwork = true;
@@ -299,6 +300,7 @@
           ./home-manager/dev/windsurf.nix
           ./home-manager/vscode
           ./home-manager/firefox
+          ./home-manager/hyprland
           # ./home-manager/qutebrowser
           {
             modules.gaming.runescape.enable = true;
