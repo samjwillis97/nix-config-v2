@@ -288,6 +288,7 @@
           )
         ];
         extraHomeModules = [
+          ./hm-modules
           # hyprland.homeManagerModules.default
           ./home-manager/nixos.nix
           ./home-manager/desktop
@@ -299,7 +300,9 @@
           ./home-manager/vscode
           ./home-manager/firefox
           # ./home-manager/qutebrowser
-          ./home-manager/hyprland
+          {
+            modules.gaming.runescape.enable = true;
+          }
         ];
       })
 
