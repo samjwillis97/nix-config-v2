@@ -19,6 +19,8 @@ in
       description = "Port for the zurg service";
     };
 
+    openFirewall = mkEnableOption "Open firewall for zurg port";
+
     realDebridTokenFile = mkOption {
       type = types.str;
       default = "";
@@ -30,7 +32,7 @@ in
 
       path = mkOption {
         type = types.str;
-        default = "/mnt/remote/zurg";
+        default = "/mnt/zurg";
         description = "Path to mount the zurg drive";
       };
     };
@@ -71,6 +73,31 @@ in
         ${pkgs.gnused}/bin/sed "s#${debridTokenTemplate}#$secret#" "$configFile" > ${finalConfigFile}
       '';
 
+      boot.kernelModules = mkIf cfg.mount.enable [
+        "fuse"
+      ];
+
+      modules.storage.rclone = mkIf cfg.mount.enable {
+        enable = true;
+        mounts.zurg = {
+          mountLocation = cfg.mount.path;
+          settings = {
+            type = "webdav";
+            url = "http://127.0.0.1:${toString cfg.port}/dav";
+            vendor = "other";
+            pacer_min_sleep = "0";
+          };
+          deviceOptions = [
+            "allow_non_empty"
+            "allow_other"
+          ];
+        };
+      };
+
+      networking.firewall.allowedTCPPorts = mkIf cfg.openFirewall [
+        cfg.port
+      ];
+
       virtualisation.oci-containers.containers = {
         zurg =
           {
@@ -86,49 +113,6 @@ in
             ];
             extraOptions = mkIf dockerHostNetworkingEnabled [ "--network=host" ];
           };
-
-        rclone = mkIf cfg.mount.enable (
-          let
-            configFile = pkgs.writeText "rclone.conf" ''
-              [zurg]
-              type = webdav
-              url = http://127.0.0.1:${toString cfg.port}/dav
-              vendor = other
-              pacer_min_sleep = 0
-            '';
-          in
-          {
-            pull = "missing";
-            image = "rclone/rclone:latest";
-            environment = {
-              TZ = config.time.timeZone;
-            };
-            capabilities = {
-              "SYS_ADMIN" = true;
-            };
-            devices = [
-              "/dev/fuse:/dev/fuse:rwm"
-            ];
-            volumes = [
-              "${cfg.mount.path}:/data:rshared"
-              "${configFile}:/config/rclone/rclone.conf"
-            ];
-            cmd = [
-              "mount"
-              "zurg:"
-              "/data"
-              "--allow-non-empty"
-              "--allow-other"
-              "--uid=1000"
-              "--gid=1000"
-              "--umask=002"
-              "--dir-cache-time"
-              "10s"
-            ];
-            dependsOn = [ "zurg" ];
-            extraOptions = mkIf dockerHostNetworkingEnabled [ "--network=host" ];
-          }
-        );
       };
   });
 }

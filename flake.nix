@@ -208,7 +208,7 @@
               };
 
               modules.media = {
-                plex.enable = true;
+                plex.enable = false;
 
                 zurg = {
                   enable = true;
@@ -217,7 +217,7 @@
                 };
 
                 riven = {
-                  enable = true;
+                  enable = false;
                   openFirewall = true;
                   downloaders = {
                     realDebrid = {
