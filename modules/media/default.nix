@@ -9,5 +9,7 @@
     ./plex
     ./riven
     ./zilean
+    ./prowlarr
+    ./sonarr
   ];
 }

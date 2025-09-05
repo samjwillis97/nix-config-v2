@@ -1,41 +1,58 @@
 {
-  pkgs,
+  flake,
   config,
+  pkgs,
   lib,
   ...
 }:
 with lib;
 let
-  inherit (import ../../../lib/curl.nix { inherit pkgs; }) mkCurlCommand;
-
   cfg = config.modules.media.prowlarr;
+  postgresCfg = config.modules.database.postgres;
+  sonarrCfg = config.modules.media.sonarr;
 
-  mkProwlarrRequest =
-    args:
-    let
-      curlArgs = removeAttrs (
-        args
-        // {
-          headers = {
-            "X-Api-Key" = cfg.apiKey;
-            "Content-Type" = "application/json";
+  terraform-executable = pkgs.terraform;
+
+  prowlarrTerranixConfig = flake.inputs.terranix.lib.terranixConfiguration {
+    system = pkgs.stdenv.system;
+    inherit pkgs;
+
+    modules = [ 
+      ./terraform.nix
+      {
+        prowlarr = {
+          port = cfg.port;
+          apiKey = cfg.apiKey;
+          username = cfg.auth.username;
+          password = cfg.auth.password;
+          logLevel = cfg.logLevel;
+
+          zilean = {
+            enable = cfg.integrations.zilean.enable;
+            baseUrl = cfg.integrations.zilean.baseUrl;
           };
-          url = if (hasAttr "uri" args) then "localhost:${toString cfg.port}${args.uri}" else args.url;
-        }
-      ) [ "uri" ];
-    in
-    mkCurlCommand (curlArgs);
 
-  prowlarrStatusCheck = mkProwlarrRequest { uri = "/ping"; };
+          sonarr = {
+            enable = cfg.integrations.sonarr.enable;
+            baseUrl = cfg.integrations.sonarr.baseUrl;
+            apiKey = cfg.integrations.sonarr.apiKey;
+          };
+        };
+      }
+    ];
+  };
 in
 {
   options.modules.media.prowlarr = {
-    enable = mkEnableOption "Enables Prowlarr service";
+    enable = mkEnableOption "Enables Prowlarr";
+
+    openFirewall = mkEnableOption "Open firewall for Prowlarr";
 
     port = mkOption {
       default = 9696;
       type = types.port;
     };
+
     apiKey = mkOption {
       default = "00000000000000000000000000000000";
       type = types.string;
@@ -50,324 +67,111 @@ in
       ];
     };
 
-    indexers = mkOption {
-      type = types.listOf types.attrs;
-      default = [
-        {
-          name = "eztv";
-          priority = 25;
-          fields = {
-            baseUrl = "https://eztvx.to/";
-            torrentBaseSettings = {
-              appMinimumSeeders = 10;
-              seedRatio = 2;
-            };
-          };
-        }
-        {
-          name = "isohunt2";
-          priority = 25;
-          fields = {
-            torrentBaseSettings = {
-              appMinimumSeeders = 10;
-              seedRatio = 2;
-            };
-          };
-        }
-        # TODO: handle illegal chars in name
-        # {
-        #   name = "kickasstorrents-to";
-        #   priority = 25;
-        #   fields = {};
-        # }
-        {
-          name = "limetorrents";
-          priority = 25;
-          fields = {
-            torrentBaseSettings = {
-              appMinimumSeeders = 10;
-              seedRatio = 2;
-            };
-          };
-        }
-        {
-          name = "thepiratebay";
-          priority = 25;
-          fields = {
-            torrentBaseSettings = {
-              appMinimumSeeders = 10;
-              seedRatio = 2;
-            };
-          };
-        }
-        {
-          name = "therarbg";
-          priority = 25;
-          fields = {
-            torrentBaseSettings = {
-              appMinimumSeeders = 10;
-              seedRatio = 2;
-            };
-          };
-        }
-      ];
+    auth = {
+      username = mkOption {
+        default = "sam";
+        type = types.string;
+      };
+
+      password = mkOption {
+        default = "nixos";
+        type = types.string;
+      };
     };
 
-    radarrConnection = {
-      enable = mkEnableOption "enables radarr connection";
+    database = {
+      postgres = {
+        enable = mkEnableOption "Use PostgreSQL for Prowlarr";
 
-      useSSL = mkOption {
-        default = false;
-        type = types.bool;
+        user = mkOption {
+          default = postgresCfg.user;
+          type = types.string;
+        };
+
+        password = mkOption {
+          default = postgresCfg.password;
+          type = types.string;
+        };
+      };
+    };
+
+    integrations = {
+      zilean = {
+        enable = mkEnableOption "Enable Zilean integration";
+        
+        baseUrl = mkOption {
+          default = "http://localhost:8181";
+          type = types.string;
+        };
       };
 
-      hostname = mkOption {
-        default = "localhost";
-        type = types.string;
-      };
+      sonarr = {
+        enable = mkEnableOption "Enable Sonarr integration";
+        
+        baseUrl = mkOption {
+          default = "http://localhost:${toString sonarrCfg.port}";
+          type = types.string;
+        };
 
-      port = mkOption {
-        default = 7878;
-        type = types.port;
-      };
-
-      apiKey = mkOption {
-        default = "00000000000000000000000000000000";
-        type = types.string;
+        apiKey = mkOption {
+          default = sonarrCfg.apiKey;
+          type = types.string;
+        };
       };
     };
   };
 
-  # TODO: Sync Profiles
   config = mkIf cfg.enable {
-    services.prowlarr.enable = true;
-
-    system.activationScripts.makeProwlarrConfig =
-      let
-        configFile = pkgs.writeTextFile {
-          name = "prowlarr-config.xml";
-          text = ''
-            <Config>
-              <BindAddress>*</BindAddress>
-              <Port>${toString cfg.port}</Port>
-              <ApiKey>${cfg.apiKey}</ApiKey>
-              <AuthenticationMethod>External</AuthenticationMethod>
-              <LogLevel>${cfg.logLevel}</LogLevel>
-              <AnalyticsEnabled>False</AnalyticsEnabled>
-              <LogDbEnabled>False</LogDbEnabled>
-              <InstanceName>Prowlarr</InstanceName>
-            </Config>'';
-        };
-        owner = "prowlarr";
-        group = "prowlarr";
-        outputFile = "/var/lib/prowlarr/config.xml";
-      in
-      lib.stringAfter [ "var" ] ''
-        ${pkgs.coreutils}/bin/cp ${configFile} ${outputFile}
-        ${pkgs.coreutils}/bin/chown ${owner}:${group} ${outputFile}
-        ${pkgs.coreutils}/bin/chmod 644 ${outputFile}
-      '';
-
-    systemd.services.create-radarr-prowlarr-connection = mkIf cfg.radarrConnection.enable {
-      description = "setting radarr in prowlarr";
-      wants = [
-        "prowlarr.service"
-        "tailscale-autoconnect.service"
-      ];
-      after = [
-        "prowlarr.service"
-        "tailscale-autoconnect.service"
-      ];
+    systemd.services.prowlarr-terraform = {
+      description = "Prowlarr Terraform Apply";
+      after = [ "prowlarr.service" ];
+      wants = [ "prowlarr.service" ];
       wantedBy = [ "multi-user.target" ];
       serviceConfig.Type = "oneshot";
-      script =
-        let
-          getAllApps = mkProwlarrRequest { uri = "/api/v1/applications"; };
-          radarrApp = pkgs.writers.writeJSON "radarr-app" {
-            syncLevel = "fullSync";
-            name = "Radarr";
-            fields = [
-              {
-                order = 0;
-                name = "prowlarrUrl";
-                value = "http://${config.networking.hostName}";
-              }
-              {
-                order = 1;
-                name = "baseUrl";
-                value = "${
-                  if cfg.radarrConnection.useSSL then "https://" else "http://"
-                }${cfg.radarrConnection.hostname}:${toString cfg.radarrConnection.port}";
-              }
-              {
-                order = 2;
-                name = "apiKey";
-                value = cfg.radarrConnection.apiKey;
-              }
-              {
-                order = 3;
-                name = "syncCategories";
-                value = [
-                  2000 # Movies
-                  2010 # Movies/Foreign
-                  2020 # Movies/Other
-                  2030 # Movies/SD
-                  2040 # Movies/HD
-                  2045 # Movies/UHD
-                  2050 # Movies/BluRay
-                  2060 # Movies/3D
-                  2070 # Movies/DVD
-                  2080 # Movies/WEB-DL
-                  2090 # Movies/x265
-                ];
-              }
-              {
-                order = 4;
-                name = "syncRejectBlocklistedTorrentHashesWhileGrabbing";
-                value = false;
-              }
-            ];
-            implementationName = "Radarr";
-            implementation = "Radarr";
-            configContract = "RadarrSettings";
-            infoLink = "https://wiki.servarr.com/prowlarr/supported#radarr";
-            tags = [ ];
-          };
-          createRadarrApp = mkProwlarrRequest {
-            uri = "/api/v1/applications";
-            method = "POST";
-            dataFile = radarrApp;
-          };
-        in
-        ''
-          # Wait for prowlarr to be available
-          ${prowlarrStatusCheck}
+      script = ''
+        export PROWLARR_API_KEY="${cfg.apiKey}"
 
-          # Wait for radarr to be available
-          ${pkgs.iputils}/bin/ping -c1 -W10 ${cfg.radarrConnection.hostname}
+        ${pkgs.curl}/bin/curl --retry-connrefused --connect-timeout 5 --max-time 10 --retry 5 --retry-delay 5 --retry-max-time 45 http://localhost:9696/ping
 
-          AllApps=$(${getAllApps})
-          RadarrApp=$(echo $AllApps | ${pkgs.jq}/bin/jq '.[] | select(.name=="Radarr") | .id')
+        STATE_DIR="/var/lib/prowlarr-terraform"
 
-          if [ ! -z ''${RadarrApp} ]; then
-            echo "Deleting old radarr app"
-            ${
-              mkProwlarrRequest {
-                uri = "/api/v1/applications/$RadarrApp";
-                method = "DELETE";
-              }
-            }
-          fi
+        if [ ! -d "$STATE_DIR" ]; then
+          mkdir -p "$STATE_DIR"
+          cp ${prowlarrTerranixConfig} "$STATE_DIR/config.tf.json"
+          ${terraform-executable}/bin/terraform -chdir="$STATE_DIR" init -no-color
+        else
+          cp ${prowlarrTerranixConfig} "$STATE_DIR/config.tf.json"
+        fi
 
-          echo "Creating new radarr app"
-          ${createRadarrApp}
-        '';
+        ${terraform-executable}/bin/terraform -chdir="$STATE_DIR" apply -auto-approve -no-color
+      '';
     };
 
-    systemd.services.add-indexers = mkIf cfg.radarrConnection.enable {
-      description = "adding indexers to prowlarr";
-      wants = [
-        "prowlarr.service"
-        "tailscale-autoconnect.service"
-        "create-radarr-prowlarr-connection.service"
-      ];
-      after = [
-        "prowlarr.service"
-        "tailscale-autoconnect.service"
-        "create-radarr-prowlarr-connection.service"
-      ];
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig.Type = "oneshot";
-      script =
-        let
-          getIndexers = mkProwlarrRequest { uri = "/api/v1/indexer"; };
-          getIndexerSchemas = mkProwlarrRequest { uri = "/api/v1/indexer/schema"; };
-          flattenAttrs =
-            attrs: prefix:
-            let
-              processAttr =
-                attrName: attrValue:
-                if builtins.isAttrs attrValue then
-                  flattenAttrs attrValue (prefix + attrName + ".")
-                else
-                  [ (prefix + attrName) ];
-            in
-            builtins.concatLists (lib.mapAttrsToList processAttr attrs);
+    modules.database.postgres = mkIf cfg.database.postgres.enable {
+      databases = ["prowlarr" "prowlarr-logs"];
+    };
 
-          getValueByPath =
-            attrs: path:
-            let
-              components = lib.splitString "." path;
-              traverse =
-                attrSet: keys:
-                if builtins.length keys == 0 then
-                  attrSet
-                else
-                  traverse (attrSet.${builtins.head keys}) (builtins.tail keys);
-            in
-            traverse attrs components;
-        in
-        ''
-          # Wait for prowlarr to be available
-          ${prowlarrStatusCheck}
-
-          Indexers=$(${getIndexers})
-          Schemas=$(${getIndexerSchemas})
-
-          echo "Starting to create missing indexers"
-          ${builtins.concatStringsSep "\n" (
-            builtins.map (v: ''
-              ${v.name}Schema=$(echo $Schemas | ${pkgs.jq}/bin/jq '.[] | select(.definitionName == "${v.name}")')
-              if [ -n "${v.name}Schema" ]; then
-
-                if [ ! -z "$(echo $Indexers | ${pkgs.jq}/bin/jq '.[] | select(.definitionName == "${v.name}")')" ]; then
-                  ${
-                    mkProwlarrRequest {
-                      uri = ''/api/v1/indexer/$(echo $Indexers | ${pkgs.jq}/bin/jq '.[] | select(.definitionName == "${v.name}") | .id')'';
-                      method = "DELETE";
-                    }
-                  }
-                fi
-
-                echo "Creating ${v.name} indexer from schema"
-                ${v.name}Indexer=$(echo "''$${v.name}Schema" | ${pkgs.jq}/bin/jq '.priority |= ${toString v.priority}')
-
-                # TODO: think about letting appProfileId be configured
-                ${v.name}Indexer=$(echo "''$${v.name}Schema" | ${pkgs.jq}/bin/jq '.appProfileId |= 1')
-                ${
-                  builtins.concatStringsSep "\n" (
-                    builtins.map (fieldName: ''
-                      ${v.name}Indexer=$(echo "''$${v.name}Indexer" | ${pkgs.jq}/bin/jq '.fields |= map(
-                        if .name=="${fieldName}" then 
-                          {name, value: ${
-                            let
-                              value = getValueByPath v.fields fieldName;
-                            in
-                            if builtins.typeOf value == "string" then
-                              ''"${toString (getValueByPath v.fields fieldName)}"''
-                            else
-                              toString (getValueByPath v.fields fieldName)
-                          }} 
-                        else 
-                          {name}  + (if .value then {value} else {} end)
-                        end
-                      )')
-                    '') (flattenAttrs v.fields "")
-                  )
-                }
-
-                echo "''$${v.name}Indexer" > /tmp/${v.name}-indexer
-                ${
-                  mkProwlarrRequest {
-                    uri = "/api/v1/indexer";
-                    method = "POST";
-                    dataFile = "/tmp/${v.name}-indexer";
-                  }
-                }
-              fi
-            '') cfg.indexers
-          )}
-        '';
+    services.prowlarr = {
+      enable = true;
+      openFirewall = cfg.openFirewall;
+      settings = {
+        auth = {
+          apikey = cfg.apiKey;
+        };
+        log.analyticsEnabled = false;
+        server = {
+          bindaddress = "*";
+          port = cfg.port;
+        };
+        postgres = mkIf cfg.database.postgres.enable {
+          host = "127.0.0.1";
+          port = 5432;
+          user = postgresCfg.user;
+          password = postgresCfg.password;
+          maindb = "prowlarr";
+          logdb = "prowlarr-logs";
+        };
+      };
     };
   };
 }

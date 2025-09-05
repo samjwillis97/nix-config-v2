@@ -132,6 +132,10 @@
     opencode-flake = {
       url = "github:aodhanhayter/opencode-flake";
     };
+
+    terranix = {
+      url = "github:terranix/terranix";
+    };
   };
 
   outputs =
@@ -150,6 +154,7 @@
       deploy-rs,
       firefox-darwin,
       opencode-flake,
+      terranix,
       ...
     }@inputs:
     let
@@ -214,6 +219,23 @@
                   enable = true;
                   realDebridTokenFile = config.age.secrets.real-debrid-token.path;
                   mount.enable = true;
+                };
+
+                prowlarr = {
+                  enable = true;
+
+                  database.postgres.enable = true;
+
+                  integrations = {
+                    zilean.enable = true;
+                    sonarr.enable = true;
+                  };
+                };
+
+                sonarr = {
+                  enable = true;
+
+                  database.postgres.enable = true;
                 };
 
                 riven = {
