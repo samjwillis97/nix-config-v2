@@ -255,69 +255,9 @@
                   openFirewall = true;
                 };
 
-                riven = {
-                  enable = false;
-                  openFirewall = true;
-                  downloaders = {
-                    realDebrid = {
-                      enable = true;
-                      apiKeyFile = config.age.secrets.real-debrid-token.path;
-                    };
-                  };
-                  updaters = {
-                    plex = {
-                      enable = false;
-                      url = "http://127.0.0.1:32400";
-                      tokenFile = config.age.secrets.plex-token.path;
-                    };
-                  };
-                  scrapers = {
-                    torrentio.enable = true;
-                    zilean.enable = true;
-                  };
-                  contentProviders = {
-                    plexWatchlist = {
-                      enable = false;
-                    };
-                  };
-                };
-
-                cinesync = {
-                  enable = false;
-
-                  tmdbApiKeyFile = config.age.secrets.tmdb-api-key.path;
-
-                  dependsOn = [
-                    "zurg"
-                    "rclone"
-                  ];
-
-                  directories.source = "${config.modules.media.zurg.mount.path}/torrents";
-
-                  webInterface.authEnabled = false;
-
-                  integrations = {
-                    remoteStorage.enableMountVerification = true;
-                    plex = {
-                      enable = true;
-                      url = "http://127.0.0.1:32400";
-                      tokenFile = config.age.secrets.plex-token.path;
-                    };
-                  };
-                };
-
                 overseerr = {
                   enable = false;
                   openFirewall = true;
-                  dmmBridge = {
-                    enable = true;
-                    overseerrApiKeyFile = config.age.secrets.overseerr-api-key.path;
-                    traktApiKeyFile = config.age.secrets.trakt-api-key.path;
-                    dmmAccessTokenFile = config.age.secrets.dmm-access-token.path;
-                    dmmRefreshTokenFile = config.age.secrets.dmm-refresh-token.path;
-                    dmmClientIdFile = config.age.secrets.dmm-client-id.path;
-                    dmmClientSecretFile = config.age.secrets.dmm-client-secret.path;
-                  };
                 };
               };
             }
