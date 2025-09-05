@@ -11,5 +11,7 @@
     ./zilean
     ./prowlarr
     ./sonarr
+    ./recyclarr
+    ./decypharr
   ];
 }

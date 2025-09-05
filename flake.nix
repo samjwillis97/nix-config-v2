@@ -223,6 +223,10 @@
                   mount.enable = true;
                 };
 
+                zilean = {
+                  enable = true;
+                };
+
                 prowlarr = {
                   enable = true;
                   openFirewall = true;
@@ -237,6 +241,18 @@
                   enable = true;
                   openFirewall = true;
                   database.postgres.enable = true;
+                };
+
+                recyclarr = {
+                  enable = true;
+                  sonarr = {
+                    enable = true;
+                  };
+                };
+
+                decypharr = {
+                  enable = true;
+                  openFirewall = true;
                 };
 
                 riven = {
@@ -264,10 +280,6 @@
                       enable = false;
                     };
                   };
-                };
-
-                zilean = {
-                  enable = true;
                 };
 
                 cinesync = {

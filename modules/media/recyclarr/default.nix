@@ -9,8 +9,6 @@ let
   inherit (import ../../../lib/curl.nix { inherit pkgs; }) mkCurlCommand;
 
   cfg = config.modules.media.recyclarr;
-  radarrEnabled = config.modules.media.radarr.enable;
-  sonarrEnabled = config.modules.media.sonarr.enable;
 
   mkRadarrRequest =
     args:
@@ -61,7 +59,6 @@ let
       max_files = 1;
     };
   };
-  outputFile = "/root/.config/recyclarr/settings.yaml";
 in
 {
   imports = [
@@ -79,19 +76,20 @@ in
           type = types.string;
         };
         sha = mkOption {
-          description = "commit from July 8 2024";
-          default = "bbd893f196cb0f35e3375753bae4ae6f974a1cbf";
+          description = "commit from Sept 5 2025";
+          default = "df73f8d13b648fc4740a74757c56bf48ac5dbb4b";
           type = types.string;
         };
       };
+
       config_templates = {
         cloneUrl = mkOption {
           default = "https://github.com/recyclarr/config-templates.git";
           type = types.string;
         };
         sha = mkOption {
-          description = "commit from June 10 2024";
-          default = "3808a20be197c2013484c23ae0726d5b2476194d";
+          description = "commit from Aug 28 2025";
+          default = "f4ad0dde03b77de227700e26ade3e22d4b41a2ce";
           type = types.string;
         };
       };
@@ -195,9 +193,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [ pkgs.recyclarr ];
-
-    systemd.services.recyclarr-radarr-sync = mkIf (cfg.radarr.enable && radarrEnabled) {
+    systemd.services.recyclarr-radarr-sync = mkIf (cfg.radarr.enable) {
       description = "configuring radarr with recyclarr";
       wants = [ "radarr.service" ];
       after = [ "radarr.service" ];
@@ -212,16 +208,14 @@ in
           };
         in
         ''
-          ${pkgs.coreutils}/bin/mkdir -p /root/.config/recyclarr
-          ${pkgs.coreutils}/bin/ln -s ${configFile} ${outputFile}
           echo "Check if radarr is up"
           ${radarrStatusCheck}
           echo "Radarr is now running"
-          ${pkgs.recyclarr}/bin/recyclarr sync radarr -c ${radarrConfig}
+          ${pkgs.recyclarr}/bin/recyclarr sync radarr -c ${radarrConfig} -c ${configFile}
         '';
     };
 
-    systemd.services.recyclarr-sonarr-sync = mkIf (cfg.sonarr.enable && sonarrEnabled) {
+    systemd.services.recyclarr-sonarr-sync = mkIf (cfg.sonarr.enable) {
       description = "configuring sonarr with recyclarr";
       wants = [ "sonarr.service" ];
       after = [ "sonarr.service" ];
@@ -236,12 +230,10 @@ in
           };
         in
         ''
-          ${pkgs.coreutils}/bin/mkdir -p /root/.config/recyclarr
-          ${pkgs.coreutils}/bin/ln -s ${configFile} ${outputFile}
           echo "Check if sonarr is up"
           ${sonarrStatusCheck}
           echo "Radarr is now running"
-          ${pkgs.recyclarr}/bin/recyclarr sync sonarr -c ${sonarrConfig}
+          ${pkgs.recyclarr}/bin/recyclarr sync sonarr -c ${sonarrConfig} -c ${configFile}
         '';
     };
   };
