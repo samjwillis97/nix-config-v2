@@ -129,9 +129,10 @@ in
       wantedBy = [ "multi-user.target" ];
       serviceConfig.Type = "oneshot";
       script = ''
-        export PROWLARR_API_KEY="${cfg.apiKey}"
-
-        ${pkgs.curl}/bin/curl --retry-connrefused --connect-timeout 5 --max-time 10 --retry 5 --retry-delay 5 --retry-max-time 45 http://localhost:9696/ping
+        ${pkgs.curl}/bin/curl --retry-connrefused --connect-timeout 5 --max-time 10 --retry 5 --retry-delay 5 --retry-max-time 45 http://localhost:${toString cfg.port}/ping
+        ${optionalString cfg.integrations.sonarr.enable ''
+          ${pkgs.curl}/bin/curl --retry-connrefused --connect-timeout 5 --max-time 10 --retry 5 --retry-delay 5 --retry-max-time 45 http://localhost:${toString cfg.integrations.sonarr.baseUrl}/ping
+        ''}
 
         STATE_DIR="/var/lib/prowlarr-terraform"
 
@@ -145,6 +146,7 @@ in
 
         ${terraform-executable}/bin/terraform -chdir="$STATE_DIR" apply -auto-approve -no-color
       '';
+      # TODO: Force a double application sync of prowlarr
     };
 
     modules.database.postgres = mkIf cfg.database.postgres.enable {

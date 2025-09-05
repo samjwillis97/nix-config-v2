@@ -197,6 +197,8 @@
                 ./secrets/aws
               ];
 
+              modules.system.users.media = true;
+
               modules.virtualisation.docker = {
                 enable = true;
                 useHostNetwork = true;
@@ -223,9 +225,8 @@
 
                 prowlarr = {
                   enable = true;
-
+                  openFirewall = true;
                   database.postgres.enable = true;
-
                   integrations = {
                     zilean.enable = true;
                     sonarr.enable = true;
@@ -234,7 +235,7 @@
 
                 sonarr = {
                   enable = true;
-
+                  openFirewall = true;
                   database.postgres.enable = true;
                 };
 
