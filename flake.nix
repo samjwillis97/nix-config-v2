@@ -215,8 +215,6 @@
               };
 
               modules.media = {
-                plex.enable = false;
-
                 zilean = {
                   enable = true;
                 };
@@ -250,6 +248,14 @@
                   openFirewall = true;
                   realdebrid.tokenFile = config.age.secrets.real-debrid-token.path;
                 };
+
+                autopulse = {
+                  enable = true;
+                  openFirewall = true;
+                  database.postgres.enable = true;
+                };
+
+                plex.enable = false;
 
                 overseerr = {
                   enable = false;

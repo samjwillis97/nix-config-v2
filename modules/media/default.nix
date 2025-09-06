@@ -13,5 +13,6 @@
     ./sonarr
     ./recyclarr
     ./decypharr
+    ./autopulse
   ];
 }
