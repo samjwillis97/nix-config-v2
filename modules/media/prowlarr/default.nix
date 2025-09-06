@@ -7,6 +7,8 @@
 }:
 with lib;
 let
+  inherit (import ../../../lib/curl.nix { inherit pkgs; }) mkCurlCommand;
+
   cfg = config.modules.media.prowlarr;
   postgresCfg = config.modules.database.postgres;
   sonarrCfg = config.modules.media.sonarr;
@@ -40,6 +42,16 @@ let
         };
       }
     ];
+  };
+
+  syncAppIndexersRequest = mkCurlCommand {
+    method = "POST";
+    headers = {
+      "X-Api-Key" = cfg.apiKey;
+      "Content-Type" = "application/json";
+    };
+    url = "http://localhost:${toString cfg.port}/v1/command";
+    dataFile = pkgs.writeText "syncAppIndexers.json" ''{ "forceSync": true, "name": "ApplicationIndexerSync" }'';
   };
 in
 {
@@ -131,7 +143,10 @@ in
       script = ''
         ${pkgs.curl}/bin/curl --retry-connrefused --connect-timeout 5 --max-time 10 --retry 5 --retry-delay 5 --retry-max-time 45 http://localhost:${toString cfg.port}/ping
         ${optionalString cfg.integrations.sonarr.enable ''
-          ${pkgs.curl}/bin/curl --retry-connrefused --connect-timeout 5 --max-time 10 --retry 5 --retry-delay 5 --retry-max-time 45 http://localhost:${toString cfg.integrations.sonarr.baseUrl}/ping
+          ${pkgs.curl}/bin/curl --retry-connrefused --connect-timeout 5 --max-time 10 --retry 5 --retry-delay 5 --retry-max-time 45 ${toString cfg.integrations.sonarr.baseUrl}/ping
+        ''}
+        ${optionalString cfg.integrations.zilean.enable ''
+          ${pkgs.curl}/bin/curl --retry-connrefused --connect-timeout 5 --max-time 10 --retry 5 --retry-delay 5 --retry-max-time 45 ${toString cfg.integrations.zilean.baseUrl}/healthcheck/ping
         ''}
 
         STATE_DIR="/var/lib/prowlarr-terraform"
@@ -144,9 +159,14 @@ in
           cp ${prowlarrTerranixConfig} "$STATE_DIR/config.tf.json"
         fi
 
-        ${terraform-executable}/bin/terraform -chdir="$STATE_DIR" apply -auto-approve -no-color
+        ${terraform-executable}/bin/terraform -chdir="$STATE_DIR" apply -auto-approve -no-color || true
+
+        ${optionalString cfg.integrations.sonarr.enable ''
+          ${syncAppIndexersRequest}
+          sleep 10
+          ${syncAppIndexersRequest}
+        ''}
       '';
-      # TODO: Force a double application sync of prowlarr
     };
 
     modules.database.postgres = mkIf cfg.database.postgres.enable {
