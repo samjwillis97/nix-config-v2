@@ -19,6 +19,8 @@ in
   options.modules.media.zilean = {
     enable = mkEnableOption "Enables Zilean";
 
+    openFirewall = mkEnableOption "Expose through firewall";
+
     dataDirectory = mkOption {
       type = types.str;
       default = "/opt/zilean";
@@ -27,6 +29,8 @@ in
   };
   
   config = mkIf cfg.enable {
+    networking.firewall.allowedTCPPorts = mkIf cfg.openFirewall [ 8181 ];
+
     modules.database.postgres = {
       enable = true;
       databases = [

@@ -145,6 +145,15 @@ in
         sequential_order = false;
       };
 
+      sonarr_notification_webhook.main = {
+        on_import_complete = true;
+        name = "Autopulse";
+        url = "http://localhost:2875/triggers/sonarr";
+        method   = 1;
+        username = "admin";
+        password = "admin";
+      };
+
       sonarr_root_folder = {
         main = {
           path = cfg.rootFolderPath;

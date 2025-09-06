@@ -224,7 +224,10 @@
                   openFirewall = true;
                   database.postgres.enable = true;
                   integrations = {
-                    zilean.enable = true;
+                    zilean = {
+                      enable = true;
+                      baseUrl = "https://zilean.elfhosted.com";
+                    };
                     sonarr.enable = true;
                   };
                 };
