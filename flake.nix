@@ -256,9 +256,13 @@
                   enable = true;
                   openFirewall = true;
                   database.postgres.enable = true;
+                  plex = {
+                    enable = true;
+                    tokenFile = config.age.secrets.plex-token.path;
+                  };
                 };
 
-                plex.enable = false;
+                plex.enable = true;
 
                 overseerr = {
                   enable = false;
