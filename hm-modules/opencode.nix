@@ -14,7 +14,6 @@ in
 
     settings = mkOption {
       type = types.attrsOf types.anything;
-      # type = types.attrsOf types.str;
       default = { };
       description = "Configuration settings for opencode.";
     };
