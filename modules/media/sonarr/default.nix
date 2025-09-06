@@ -30,6 +30,8 @@ let
           rootFolderPath = cfg.libraryDirectory;
 
           zilean.enable = false;
+
+          decypharr.enable = cfg.decypharr.enable;
         };
       }
     ];
@@ -69,6 +71,10 @@ in
           type = types.string;
         };
       };
+    };
+
+    decypharr = {
+      enable = mkEnableOption "Enable Decypharr integration";
     };
   };
 

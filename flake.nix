@@ -217,12 +217,6 @@
               modules.media = {
                 plex.enable = false;
 
-                zurg = {
-                  enable = true;
-                  realDebridTokenFile = config.age.secrets.real-debrid-token.path;
-                  mount.enable = true;
-                };
-
                 zilean = {
                   enable = true;
                 };
@@ -241,6 +235,7 @@
                   enable = true;
                   openFirewall = true;
                   database.postgres.enable = true;
+                  decypharr.enable = true;
                 };
 
                 recyclarr = {
@@ -253,6 +248,7 @@
                 decypharr = {
                   enable = true;
                   openFirewall = true;
+                  realdebrid.tokenFile = config.age.secrets.real-debrid-token.path;
                 };
 
                 overseerr = {

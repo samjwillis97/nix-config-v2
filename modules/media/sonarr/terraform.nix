@@ -53,6 +53,20 @@ in
         type = types.string;
       };
     };
+
+    decypharr = {
+      enable = mkEnableOption "Enable Decypharr integration";
+
+      hostname = mkOption {
+        default = "localhost";
+        type = types.string;
+      };
+
+      port = mkOption {
+        default = 8282;
+        type = types.port;
+      };
+    };
   };
 
   config = {
@@ -116,6 +130,19 @@ in
           base_url = cfg.zilean.baseUrl + "/torznab";
           api_path = "/api";
         };
+      };
+
+      sonarr_download_client_qbittorrent.main = mkIf cfg.decypharr.enable {
+        enable = true;
+        priority = 1;
+        name = "Decypharr";
+        host = cfg.decypharr.hostname;
+        url_base = "";
+        username = "http://${cfg.decypharr.hostname}:${toString cfg.decypharr.port}";
+        password = cfg.apiKey;
+        port = cfg.decypharr.port;
+        use_ssl = false;
+        sequential_order = false;
       };
 
       sonarr_root_folder = {
