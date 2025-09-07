@@ -14,5 +14,6 @@
     ./recyclarr
     ./decypharr
     ./autopulse
+    ./autoscan
   ];
 }

@@ -146,12 +146,11 @@ in
       };
 
       sonarr_notification_webhook.main = {
-        on_import_complete = true;
-        name = "Autopulse";
-        url = "http://localhost:2875/triggers/sonarr";
+        on_download = true;
+        on_upgrade = true;
+        name = "Autoscan";
+        url = "http://localhost:3030/triggers/sonarr";
         method   = 1;
-        username = "admin";
-        password = "admin";
       };
 
       sonarr_root_folder = {

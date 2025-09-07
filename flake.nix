@@ -252,10 +252,9 @@
                   realdebrid.tokenFile = config.age.secrets.real-debrid-token.path;
                 };
 
-                autopulse = {
+                autoscan = {
                   enable = true;
                   openFirewall = true;
-                  database.postgres.enable = true;
                   plex = {
                     enable = true;
                     tokenFile = config.age.secrets.plex-token.path;
