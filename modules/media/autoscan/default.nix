@@ -37,10 +37,10 @@ let
       ];
     };
     targets = {
-      plex = [] ++ (if cfg.plex.enable then {
+      plex = [] ++ (if cfg.plex.enable then [{
         url = cfg.plex.url;
         token = plexTokenTemplate;
-      } else {});
+      }] else []);
     };
   };
 in
@@ -90,7 +90,7 @@ in
 
     system.activationScripts.setupAutopulseDirs = lib.stringAfter [ "var" ] ''
       ${pkgs.coreutils}/bin/mkdir -p ${cfg.dataDirectory}
-      ${pkgs.coreutils}/bin/chown -R ${user}:${group} ${cfg.datairectory}
+      ${pkgs.coreutils}/bin/chown -R ${user}:${group} ${cfg.dataDirectory}
       ${pkgs.coreutils}/bin/cp ${configFile} ${finalConfigFile}
 
       ${optionalString cfg.plex.enable ''

@@ -132,11 +132,24 @@ in
             include = [
               # Comment out any of the following includes to disable them
               { template = "sonarr-quality-definition-series"; }
-              { template = "sonarr-v4-quality-profile-web-1080p"; }
+              { template = "sonarr-v4-quality-profile-web-1080p-alternative"; }
               { template = "sonarr-v4-custom-formats-web-1080p"; }
             ];
 
-            custom_formats = [ { quality_profiles = [ { name = "WEB-1080p"; } ]; } ];
+            custom_formats = [ 
+              {
+                # Allows x265 HD Releases with HDR/DV
+                trash_ids = [
+                  "47435ece6b99a0b477caf360e79ba0bb" # x265 (HD)
+                ];
+                assign_scores_to = [
+                  {
+                    name = "WEB-1080p";
+                    score = 0;
+                  }
+                ];
+              }
+            ];
           };
         };
       };
