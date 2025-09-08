@@ -54,6 +54,10 @@ in
       };
     };
 
+    elfhosted = {
+      enable = mkEnableOption "Enable elfhosted Zilean indexers integration";
+    };
+
     decypharr = {
       enable = mkEnableOption "Enable Decypharr integration";
 
@@ -123,11 +127,26 @@ in
       sonarr_indexer = {
         "zilean" = mkIf cfg.zilean.enable {
           enable_automatic_search = true;
-          name = "Zilean";
+          enable_interactive_search = true;
+          enable_rss = true;
+          name = "Zilean (terraform)";
+          priority = 20;
           implementation = "Torznab";
           protocol = "torrent";
           config_contract = "TorznabSettings";
           base_url = cfg.zilean.baseUrl + "/torznab";
+          api_path = "/api";
+        };
+        "elfhosted" = mkIf cfg.elfhosted.enable {
+          enable_automatic_search = true;
+          enable_interactive_search = true;
+          enable_rss = true;
+          name = "Elfhosted (terraform)";
+          priority = 25;
+          implementation = "Torznab";
+          protocol = "torrent";
+          config_contract = "TorznabSettings";
+          base_url = "https://zilean.elfhosted.com/torznab";
           api_path = "/api";
         };
       };

@@ -18,11 +18,11 @@ in
 
   modules.monitoring = {
     promtail = {
-      enable = true;
+      enable = false;
       lokiUrl = "http://insights:3100";
     };
 
-    exporters.system.enable = true;
+    exporters.system.enable = false;
   };
 
   # Use the systemd-boot EFI boot loader.

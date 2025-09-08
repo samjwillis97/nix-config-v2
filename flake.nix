@@ -219,24 +219,17 @@
                   enable = true;
                 };
 
-                prowlarr = {
-                  enable = true;
-                  openFirewall = true;
-                  database.postgres.enable = true;
-                  integrations = {
-                    zilean = {
-                      enable = true;
-                      baseUrl = "https://zilean.elfhosted.com";
-                    };
-                    sonarr.enable = true;
-                  };
-                };
-
                 sonarr = {
                   enable = true;
                   openFirewall = true;
                   database.postgres.enable = true;
-                  decypharr.enable = true;
+                  downloaders = {
+                    decypharr = true;
+                  };
+                  indexers = {
+                    zilean = true;
+                    elfhosted = true;
+                  };
                 };
 
                 recyclarr = {

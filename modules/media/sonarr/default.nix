@@ -29,9 +29,10 @@ let
 
           rootFolderPath = cfg.libraryDirectory;
 
-          zilean.enable = false;
+          zilean.enable = cfg.indexers.zilean;
+          elfhosted.enable = cfg.indexers.elfhosted;
 
-          decypharr.enable = cfg.decypharr.enable;
+          decypharr.enable = cfg.downloaders.decypharr;
         };
       }
     ];
@@ -73,8 +74,13 @@ in
       };
     };
 
-    decypharr = {
-      enable = mkEnableOption "Enable Decypharr integration";
+    downloaders = {
+      decypharr = mkEnableOption "Enable Decypharr downloader integration";
+    };
+
+    indexers = {
+      zilean = mkEnableOption "Enable Zilean indexer integration";
+      elfhosted = mkEnableOption "Enable elfhosted zilean indexers integration";
     };
   };
 
