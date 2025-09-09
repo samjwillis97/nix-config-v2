@@ -13,6 +13,9 @@
       "gemini-api-key" = {
         file = ./gemini-api-key.age;
       };
+      "borg-passphrase" = {
+        file = ./borg-passphrase.age;
+      };
     };
 
     identityPaths = [ "/var/agenix/id-ed25519-agenix-primary" ];

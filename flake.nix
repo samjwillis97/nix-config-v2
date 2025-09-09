@@ -182,7 +182,6 @@
         # networkAdapterName = "wlp7s0";
         extraModules = [
           # microvm.nixosModules.host
-          # ./nixos/xserver.nix
           ./nixos/wayland.nix
           ./nixos/fonts.nix
           ./nixos/audio.nix
@@ -212,6 +211,14 @@
                   awsAccessKeyIdFile = config.age.secrets.infra-access-key-id.path;
                   awsSecretAccessKeyFile = config.age.secrets.infra-secret-access-key.path;
                 };
+              };
+
+              modules.storage.backups = {
+                enable = true;
+                backupPaths = [
+                  config.modules.media.sonarr.libraryDirectory
+                ];
+                passphraseFile = config.age.secrets.borg-passphrase.path;
               };
 
               modules.media = {
@@ -265,11 +272,9 @@
           )
         ];
         extraHomeModules = [
-          # hyprland.homeManagerModules.default
           ./hm-modules
           ./home-manager/nixos.nix
           ./home-manager/desktop
-          # ./home-manager/i3
           ./home-manager/gaming
           ./home-manager/dev
           ./home-manager/dev/ops.nix
@@ -277,7 +282,6 @@
           ./home-manager/vscode
           ./home-manager/firefox
           ./home-manager/hyprland
-          # ./home-manager/qutebrowser
           {
             modules.gaming.runescape.enable = true;
           }

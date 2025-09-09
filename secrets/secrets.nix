@@ -79,6 +79,7 @@ in
   "default/home-wifi-ssid.age".publicKeys = keys;
   "default/home-wifi-psk.age".publicKeys = keys;
   "default/gemini-api-key.age".publicKeys = keys;
+  "default/borg-passphrase.age".publicKeys = keys;
 
   "github/gh_pat.age".publicKeys = github-keys;
 
