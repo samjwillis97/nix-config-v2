@@ -124,6 +124,36 @@ in
         };
       };
 
+      sonarr_media_management = {
+        "main" = {
+          # Folders
+          create_empty_folders        = false;
+          delete_empty_folders        = false;
+
+          # Importing
+          episode_title_required      = "never";
+          skip_free_space_check       = true;
+          minimum_free_space          = 100;
+          hardlinks_copy              = true;
+          import_extra_files          = false;
+          extra_file_extensions       = "srt,info";
+
+          # File Management
+          unmonitor_previous_episodes = false;
+          download_propers_repacks    = "preferAndUpgrade";
+          enable_media_info           = true;
+          rescan_after_refresh        = "always";
+          file_date                   = "none";
+          recycle_bin_path            = "";
+          recycle_bin_days            = 7;
+
+          # Permissions
+          set_permissions             = false;
+          chmod_folder                = "755";
+          chown_group                 = "media";
+        };
+      };
+
       sonarr_indexer = {
         "zilean" = mkIf cfg.zilean.enable {
           enable_automatic_search = true;
