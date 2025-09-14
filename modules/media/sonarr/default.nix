@@ -119,6 +119,13 @@ in
       databases = ["sonarr" "sonarr-logs"];
     };
 
+    systemd.services.sonarr.wants = mkIf cfg.database.postgres.enable [
+      "postgresql.service"
+    ];
+    systemd.services.sonarr.after = mkIf cfg.database.postgres.enable [
+      "postgresql.service"
+    ];
+
     services.sonarr = {
       enable = true;
       openFirewall = cfg.openFirewall;

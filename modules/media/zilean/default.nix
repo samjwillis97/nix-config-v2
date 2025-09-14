@@ -43,6 +43,13 @@ in
       ${pkgs.coreutils}/bin/chown -R ${user}:docker ${cfg.dataDirectory}
     '';
 
+    systemd.services.docker-zilean.after = [
+      "postgresql.service"
+    ];
+    systemd.services.docker-zilean.wants = [
+      "postgresql.service"
+    ];
+
     virtualisation.oci-containers.containers = {
       zilean = {
         pull = "missing";
