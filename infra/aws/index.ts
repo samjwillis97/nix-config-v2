@@ -5,6 +5,8 @@ const paperlessDocuementBucket = new aws.s3.Bucket("document-storage");
 const paperlessSqliteBackupBucket = new aws.s3.Bucket("paperless-pgsql-backup");
 const mediaserverPostgresBackupBucket = new aws.s3.Bucket("mediaserver-pgsql-backup", {
 })
+const borgBackups = new aws.s3.Bucket("borg-backups", {
+})
 
 new aws.s3.BucketLifecycleConfigurationV2("mediaserver-pgsql-backup-lifecycle-rule", {
   bucket: mediaserverPostgresBackupBucket.id,
@@ -24,3 +26,4 @@ new aws.s3.BucketLifecycleConfigurationV2("mediaserver-pgsql-backup-lifecycle-ru
 export const paperlessDocumentBucketName = paperlessDocuementBucket.id;
 export const paperlessSqliteBackupBucketName = paperlessSqliteBackupBucket.id;
 export const mediaserverPostgresBackupBucketName = mediaserverPostgresBackupBucket.id;
+export const borgBackupsBucketName = borgBackups.id;
