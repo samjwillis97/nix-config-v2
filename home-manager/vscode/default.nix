@@ -5,7 +5,7 @@ let
     ${pkgs.github-mcp-server}/bin/github-mcp-server "$@"
   '';
 
-  node = pkgs.nodejs;
+  node = pkgs.nodejs_24;
 in
 {
   home.packages = [

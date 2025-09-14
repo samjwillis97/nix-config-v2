@@ -17,7 +17,6 @@ in
       jq
       direnv
       difftastic
-      nodePackages.json-diff
       _1password-cli
       neovim
       dive # docker image explorer

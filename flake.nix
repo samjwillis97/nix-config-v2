@@ -73,6 +73,12 @@
       inputs.flake-utils.follows = "flake-utils";
     };
 
+    httpcraft-mcp = {
+      url = "github:samjwillis97/httpcraft-mcp";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
+
     deploy-rs = {
       url = "github:serokell/deploy-rs";
       inputs = {
@@ -128,10 +134,6 @@
 
     firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
 
-    opencode-flake = {
-      url = "github:aodhanhayter/opencode-flake";
-    };
-
     terranix = {
       url = "github:terranix/terranix";
     };
@@ -150,9 +152,9 @@
       microvm,
       f,
       httpcraft,
+      httpcraft-mcp,
       deploy-rs,
       firefox-darwin,
-      opencode-flake,
       terranix,
       ...
     }@inputs:
@@ -382,11 +384,12 @@
         system = "aarch64-darwin";
         username = "samuel.willis";
         homePath = "/Users";
+        nixbldGid = 30000;
         extraModules = [ ];
         extraHomeModules = [
           ./home-manager/dev
           ./home-manager/dev/ops.nix
-          ./home-manager/dev/cursor.nix
+          ./home-manager/dev/node.nix
           ./home-manager/wezterm
           ./home-manager/vscode
           ./home-manager/work

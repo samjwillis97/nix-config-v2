@@ -35,10 +35,10 @@ with lib;
       type = types.bool;
       default = true;
     };
-    # configPath = mkOption {
-    # description = "Location of this config";
-    # type = types.path;
-    # default = "/etc/nixos";
-    # };
+    nixbldGid = mkOption {
+      description = "GID for nixbld group";
+      type = types.int;
+      default = 350;
+    };
   };
 }
