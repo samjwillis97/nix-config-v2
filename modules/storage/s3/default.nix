@@ -54,7 +54,7 @@ in
     };
   };
 
-  config = {
+  config = mkIf cfg.enable {
     environment.systemPackages = [ pkgs.rclone ];
 
     system.activationScripts = builtins.listToAttrs (

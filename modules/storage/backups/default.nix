@@ -8,11 +8,33 @@ with lib;
 let
   cfg = config.modules.storage.backups;
 
-  localRepoPath = "/var/backups/borg";
+  mountLocation = "/mnt/borg-backups";
+  repoPath = mountLocation + "/" + config.networking.hostName;
 in
 {
   options.modules.storage.backups = {
-    enable = mkEnableOption "Enable borg backups";
+    enable = mkEnableOption "Enable borg backups via. s3";
+
+    s3BucketNameFile = mkOption {
+      type = types.str;
+      default = "/etc/borg-backups-s3-bucket";
+      description = "S3 bucket to store borg backups";
+    };
+
+    awsRegionFile = mkOption {
+      type = types.str;
+      default = "/etc/borg-backups-aws-region";
+    };
+
+    awsAccessKeyIdFile = mkOption {
+      type = types.str;
+      default = "/etc/borg-backups-aws-access-key-id";
+    };
+
+    awsAccessKeySecretFile = mkOption {
+      type = types.str;
+      default = "/etc/borg-backups-aws-access-secret-id";
+    };
 
     backupPaths = mkOption {
       type = types.listOf types.str;
@@ -34,15 +56,24 @@ in
   };
 
   config = mkIf cfg.enable {
-    # system.activationScripts.setupBorgRepoDir = lib.stringAfter [ "var" ]''
-    #   ${pkgs.coreutils}/bin/mkdir -p ${localRepoPath}
-    # '';
+    modules.storage.s3 = {
+      enable = true;
+      buckets = [
+        {
+          mountLocation = mountLocation;
+          bucketNameFile = cfg.s3BucketNameFile;
+          bucketRegionFile = cfg.awsRegionFile;
+          awsAccessKeyIdFile = cfg.awsAccessKeyIdFile;
+          awsSecretAccessKeyFile = cfg.awsAccessKeySecretFile;
+        }
+      ];
+    };
 
     services.borgbackup.jobs.localToS3 = {
       doInit = true;
       paths = cfg.backupPaths;
-      exclude = cfg.excludePaths ++ [ localRepoPath ];
-      repo = localRepoPath;
+      exclude = cfg.excludePaths;
+      repo = repoPath;
       encryption = {
         mode = "repokey";
         passCommand = "cat ${cfg.passphraseFile}";

@@ -213,14 +213,6 @@
                 };
               };
 
-              modules.storage.backups = {
-                enable = true;
-                backupPaths = [
-                  config.modules.media.sonarr.libraryDirectory
-                ];
-                passphraseFile = config.age.secrets.borg-passphrase.path;
-              };
-
               modules.media = {
                 zilean = {
                   enable = true;

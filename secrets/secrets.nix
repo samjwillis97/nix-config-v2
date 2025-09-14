@@ -96,6 +96,8 @@ in
 
   "aws/infra-access-key-id.age".publicKeys = aws-infra-keys;
   "aws/infra-secret-access-key.age".publicKeys = aws-infra-keys;
+  "aws/borg-bucket-name.age".publicKeys = aws-infra-keys;
+  "aws/borg-bucket-region.age".publicKeys = aws-infra-keys;
 
   "paperless/s3-bucket-name.age".publicKeys = paperless-keys;
   "paperless/s3-backup-bucket-name.age".publicKeys = paperless-keys;
