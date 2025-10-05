@@ -4,10 +4,6 @@ on:
 jobs:
   comparisons:
     runs-on: ubuntu-latest
-    outputs:
-      diff: ${{ steps.compare.outputs.diff }}
-      stdout: ${{ steps.compare.outputs.stdout }}
-      out: ${{ steps.compare.outputs.out }}
     steps:
     - uses: cachix/install-nix-action@v31
       with:
@@ -26,12 +22,19 @@ jobs:
       run: |
         nix build .#nixosConfigurations.mini-media-server.config.system.build.toplevel
         mv result ../main-result
+
     - name: Compare builds
       id: compare
       run: |
         nix-env -i nvd -f '<nixpkgs>' >/dev/null 2>&1
-        output=$(nvd diff ../main-result ../branch-result)
-        echo "diff=${output}" >> $GITHUB_OUTPUT
+        nvd diff ../main-result ../branch-result | tee nvd.diff
+
+        # Expose multiline output for later steps
+        {
+          echo 'diff<<EOF'
+          cat nvd.diff
+          echo 'EOF'
+        } >> "$GITHUB_OUTPUT"
 
     - name: Update Pull Request
       uses: actions/github-script@v7
@@ -42,7 +45,7 @@ jobs:
           <details><summary>Show Plan</summary>
  
           \`\`\`\n
-          ${{ steps.compare.outputs.diff }}
+          ${ process.env.DIFF || `${{ steps.compare.outputs.diff }}`}
           \`\`\`
  
           </details>
