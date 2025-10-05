@@ -141,7 +141,7 @@ in
           export NOW=$(date -u +%Y%m%d-%H%M%S)
           export BACKUP_DIR_BASE=${cfg.backup.directory}
           export BACKUP_DIR=$BACKUP_DIR_BASE/$NOW
-          export BACKUP_FILE=$BACKUP_DIR_BASE/postgresql-backup-$NOW.tar.zst
+          export BACKUP_FILE=$BACKUP_DIR_BASE/${config.networking.hostName}-postgresql-backup-$NOW.tar.zst
 
           # Create backup directory
           mkdir -p $BACKUP_DIR
