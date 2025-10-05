@@ -26,7 +26,7 @@ jobs:
       id: compare
       run: |
         nix-env -i nvd -f '<nixpkgs>' >/dev/null 2>&1
-        nvd diff ../main-result ../branch-result
+        nvd diff ../main-result ../branch-result >> $GIITHUB_OUTPUT
 
     - name: Update Pull Request
       uses: actions/github-script@v7
