@@ -17,5 +17,5 @@ jobs:
     - run: nix build .#nixosConfigurations.mini-media-server.config.system.build.toplevel
     - run: mv result ../main-result
     - run: |
-        nix-shell -p nvd
+        nix-env -i nvd -f '<nixpkgs>'
         nvd diff ../main-result ../branch-result
