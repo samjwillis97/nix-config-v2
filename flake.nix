@@ -214,10 +214,6 @@
               };
 
               modules.media = {
-                zilean = {
-                  enable = true;
-                };
-
                 sonarr = {
                   enable = true;
                   openFirewall = true;
@@ -226,7 +222,18 @@
                     decypharr = true;
                   };
                   indexers = {
-                    zilean = true;
+                    elfhosted = true;
+                  };
+                };
+
+                radarr = {
+                  enable = true;
+                  openFirewall = true;
+                  database.postgres.enable = true;
+                  downloaders = {
+                    decypharr = true;
+                  };
+                  indexers = {
                     elfhosted = true;
                   };
                 };
@@ -234,6 +241,9 @@
                 recyclarr = {
                   enable = true;
                   sonarr = {
+                    enable = true;
+                  };
+                  radarr = {
                     enable = true;
                   };
                 };
@@ -256,7 +266,7 @@
                 plex.enable = true;
 
                 overseerr = {
-                  enable = false;
+                  enable = true;
                   openFirewall = true;
                 };
               };

@@ -60,7 +60,7 @@ in
 
     database = {
       postgres = {
-        enable = mkEnableOption "Use PostgreSQL for Prowlarr";
+        enable = mkEnableOption "Use PostgreSQL for Sonarr";
 
         user = mkOption {
           default = postgresCfg.user;

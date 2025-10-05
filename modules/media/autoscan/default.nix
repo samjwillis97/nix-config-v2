@@ -8,14 +8,9 @@ with lib;
 let
   cfg = config.modules.media.autoscan;
 
-  dockerHostNetworkingEnabled = config.modules.virtualisation.docker.useHostNetwork;
-
   mediaUserEnabled = config.modules.system.users.media;
   user = if mediaUserEnabled then "media" else "docker";
   group = if mediaUserEnabled then "media" else "docker";
-
-  puid = if mediaUserEnabled then config.users.users.media.uid else "1000";
-  pgid = if mediaUserEnabled then config.users.groups.media.gid else "1000";
 
   plexTokenTemplate = "@plex-token@";
 
@@ -35,6 +30,12 @@ let
           priority = 1;
         }
       ];
+      radarr = [
+        {
+          name = "radarr";
+          priority = 1;
+        }
+      ];
     };
     targets = {
       plex = [] ++ (if cfg.plex.enable then [{
@@ -43,6 +44,20 @@ let
       }] else []);
     };
   };
+
+  autoscan = pkgs.buildGoModule (finalAttrs: {
+    name = "autoscan";
+    version = "1.4.0";
+
+    vendorHash = "sha256-/Lc5AabPQsIknIwnGAXwqgrZKJo2QOPDD7FcgkfBJ8Q=";
+
+    src = pkgs.fetchFromGitHub {
+      owner = "Cloudbox";
+      repo = "autoscan";
+      rev = "v${finalAttrs.version}";
+      sha256 = "sha256-cW/mOjXzVwCf/FBtAh4kCz9jJOzUnOuOsUTGfJ9XyLk=";
+    };
+  });
 in
 {
   options.modules.media.autoscan= {
@@ -88,7 +103,7 @@ in
   config = mkIf cfg.enable {
     networking.firewall.allowedTCPPorts = mkIf cfg.openFirewall [ cfg.port ];
 
-    system.activationScripts.setupAutopulseDirs = lib.stringAfter [ "var" ] ''
+    system.activationScripts.setupAutoscan = lib.stringAfter [ "var" ] ''
       ${pkgs.coreutils}/bin/mkdir -p ${cfg.dataDirectory}
       ${pkgs.coreutils}/bin/chown -R ${user}:${group} ${cfg.dataDirectory}
       ${pkgs.coreutils}/bin/cp ${configFile} ${finalConfigFile}
@@ -99,20 +114,26 @@ in
       ''}
     '';
 
-    virtualisation.oci-containers.containers.autoscan = {
-      pull = "missing";
-      image = "saltydk/autoscan:latest";
-      ports = [ "${toString cfg.port}:${toString cfg.port}" ];
-      volumes = [
-        "${cfg.debridMountLocation}:${cfg.debridMountLocation}"
-        "${finalConfigFile}:/config/config.yml"
-      ];
-      environment = {
-        PUID = toString puid;
-        PGID = toString pgid;
-        TZ = config.time.timeZone;
+    environment.systemPackages = [ autoscan ];
+
+    systemd.services.autoscan = {
+      description = "autoscan";
+      after = [ "docker-decypharr.service" "plex.service" ];
+      wants = [ "docker-decypharr.service" "plex.service" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        Type = "exec";
       };
-      extraOptions = mkIf dockerHostNetworkingEnabled [ "--network=host" ];
+      environment = {
+        HOME = "/root";
+      };
+      restartIfChanged = true;
+      script = ''
+        ${autoscan}/bin/autoscan \
+         --config="${finalConfigFile}" \
+         --database="${cfg.dataDirectory}/autoscan.db" \
+         --log="${cfg.dataDirectory}/activity.log"
+      '';
     };
   };
 }

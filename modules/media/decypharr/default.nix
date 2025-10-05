@@ -151,6 +151,11 @@ in
       ${pkgs.coreutils}/bin/chown -R ${user}:${group} ${cfg.rclone.mountPath}
     '';
 
+    systemd.services.docker-decypharr = {
+      restartIfChanged = true;
+      requiredBy = [ "docker-autoscan.service" ];
+    };
+
     virtualisation.oci-containers.containers.decypharr = {
       pull = "missing";
       image = "cy01/blackhole:v1.1.3";

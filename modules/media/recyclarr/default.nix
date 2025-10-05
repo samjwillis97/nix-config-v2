@@ -42,23 +42,30 @@ let
     in
     mkCurlCommand (curlArgs);
 
+  trash_guides = {
+    clone_url = cfg.repositoryConfig.trash_guides.cloneUrl;
+    sha1 = cfg.repositoryConfig.trash_guides.sha;
+  };
+
+  config_templates = {
+    clone_url = cfg.repositoryConfig.config_templates.cloneUrl;
+    sha1 = cfg.repositoryConfig.config_templates.sha;
+  };
+
   configFile = pkgs.writers.writeYAML "settings.yaml" {
-    enable_ssl_certificate_validation = true;
     git_path = "${pkgs.git}/bin/git";
     repositories = {
-      trash_guides = {
-        clone_url = cfg.repositoryConfig.trash_guides.cloneUrl;
-        sha1 = cfg.repositoryConfig.trash_guides.sha;
-      };
-      config_templates = {
-        clone_url = cfg.repositoryConfig.config_templates.cloneUrl;
-        sha1 = cfg.repositoryConfig.config_templates.sha;
-      };
+      inherit trash_guides config_templates;
     };
     log_janitor = {
       max_files = 1;
     };
   };
+
+  # trashGuideRepo = builtins.fetchGit {
+  #   url = cfg.repositoryConfig.trash_guides.cloneUrl;
+  #   rev = cfg.repositoryConfig.trash_guides.sha;
+  # };
 in
 {
   imports = [
@@ -206,12 +213,20 @@ in
   };
 
   config = mkIf cfg.enable {
+    system.activationScripts."recyclarr-working-dir" = ''
+      mkdir -p /root/.config/recyclarr
+      rm -rf /root/.config/recyclarr/settings.yml
+      ln -s /root/.config/recyclarr/settings.yml ${configFile}
+    '';
+
     systemd.services.recyclarr-radarr-sync = mkIf (cfg.radarr.enable) {
       description = "configuring radarr with recyclarr";
       wants = [ "radarr.service" ];
       after = [ "radarr.service" ];
       wantedBy = [ "multi-user.target" ];
-      serviceConfig.Type = "oneshot";
+      serviceConfig = {
+        Type = "oneshot";
+      };
       script =
         let
           radarrStatusCheck = mkRadarrRequest { uri = "/ping"; };
@@ -224,7 +239,7 @@ in
           echo "Check if radarr is up"
           ${radarrStatusCheck}
           echo "Radarr is now running"
-          ${pkgs.recyclarr}/bin/recyclarr sync radarr -c ${radarrConfig} -c ${configFile}
+          ${pkgs.recyclarr}/bin/recyclarr sync radarr -c ${radarrConfig}
         '';
     };
 
@@ -233,7 +248,9 @@ in
       wants = [ "sonarr.service" ];
       after = [ "sonarr.service" ];
       wantedBy = [ "multi-user.target" ];
-      serviceConfig.Type = "oneshot";
+      serviceConfig = {
+        Type = "oneshot";
+      };
       script =
         let
           sonarrStatusCheck = mkSonarrRequest { uri = "/ping"; };
@@ -246,7 +263,7 @@ in
           echo "Check if sonarr is up"
           ${sonarrStatusCheck}
           echo "Radarr is now running"
-          ${pkgs.recyclarr}/bin/recyclarr sync sonarr -c ${sonarrConfig} -c ${configFile}
+          ${pkgs.recyclarr}/bin/recyclarr sync sonarr -c ${sonarrConfig}
         '';
     };
   };

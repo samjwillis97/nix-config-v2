@@ -30,6 +30,10 @@ in
       ${pkgs.coreutils}/bin/chown -R ${user}:${group} ${cfg.dataDirectory}
     '';
 
+    systemd.services.plex = {
+      requiredBy = [ "autoscan.service" ];
+    };
+
     services.plex = {
       enable = true;
 
