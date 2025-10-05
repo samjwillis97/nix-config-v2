@@ -4,6 +4,10 @@ on:
 jobs:
   comparisons:
     runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.compare.outputs.diff }}
+      stdout: ${{ steps.compare.outputs.stdout }}
+      out: ${{ steps.compare.outputs.out }}
     steps:
     - uses: cachix/install-nix-action@v31
       with:
@@ -26,7 +30,7 @@ jobs:
       id: compare
       run: |
         nix-env -i nvd -f '<nixpkgs>' >/dev/null 2>&1
-        nvd diff ../main-result ../branch-result >> $GIITHUB_OUTPUT
+        echo "diff=$(nvd diff ../main-result ../branch-result)" >> $GITHUB_OUTPUT
 
     - name: Update Pull Request
       uses: actions/github-script@v7
@@ -37,7 +41,7 @@ jobs:
           <details><summary>Show Plan</summary>
  
           \`\`\`\n
-          ${{ steps.compare.outputs.stdout }}
+          ${{ steps.compare.outputs.diff }}
           \`\`\`
  
           </details>
