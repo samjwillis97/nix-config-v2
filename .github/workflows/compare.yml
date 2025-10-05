@@ -10,11 +10,10 @@ jobs:
         nix_path: nixpkgs=channel:nixos-unstable
     - run: nix-shell -p nh
     - uses: actions/checkout@v5
-      # with:
-      #   ref: "main"
-      #   path: "../main"
     - run: nix build .#nixosConfigurations.mini-media-server.config.system.build.toplevel
     - run: mv result ../branch-result
-    # - uses: actions/checkout@v5
+    - uses: actions/checkout@v5
+      with:
+        ref: "main"
+    - run: mv result ../main-result
     - run: ls -al ../
-    # - run: pwd
