@@ -22,6 +22,9 @@ in
       isNormalUser = true;
       extraGroups = [ "wheel" ];
       password = "very-complex-password";
+      packages = with pkgs; [
+        deploy-rs
+      ];
       openssh = {
         authorizedKeys.keys = [
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA2FeFN6YQEUr22lJCeuQHcDawLuAPnoizlZLJOwhch4 sam@williscloud.org"
