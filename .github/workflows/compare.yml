@@ -5,14 +5,15 @@ jobs:
   comparisons:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
-      with:
-        ref: "main"
-        path: "../main"
-    - uses: actions/checkout@v5
     - uses: cachix/install-nix-action@v31
       with:
         nix_path: nixpkgs=channel:nixos-unstable
     - run: nix-shell -p nh
+    - uses: actions/checkout@v5
+      # with:
+      #   ref: "main"
+      #   path: "../main"
+    - run: nix build .#nixosConfigurations.mini-media-server.config.system.build.toplevel
+    # - uses: actions/checkout@v5
     - run: ls -al
-    - run: pwd
+    # - run: pwd
