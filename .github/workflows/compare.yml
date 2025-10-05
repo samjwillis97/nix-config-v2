@@ -14,6 +14,7 @@ jobs:
       #   ref: "main"
       #   path: "../main"
     - run: nix build .#nixosConfigurations.mini-media-server.config.system.build.toplevel
+    - run: mv result ../branch-result
     # - uses: actions/checkout@v5
-    - run: ls -al
+    - run: ls -al ../
     # - run: pwd
