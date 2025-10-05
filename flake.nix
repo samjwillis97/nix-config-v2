@@ -359,7 +359,9 @@
         system = "aarch64-darwin";
         username = "sam";
         homePath = "/Users";
-        extraModules = [];
+        extraModules = [
+          ./nix-darwin/tailscale.nix
+        ];
         extraHomeModules = [
           # ./home-manager/darwin/keyboard.nix
           ./home-manager/wezterm
@@ -429,12 +431,19 @@
       ))
 
       ({
-        deploy.nodes.teeny-pc = {
-          hostname = "teeny-pc";
-          profiles.system = {
-            user = "root";
-            sshUser = "deployer";
-            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.teeny-pc;
+        deploy.nodes = {
+          mini-media-server = {
+            hostname = "mini-media-server";
+            profiles.system = {
+              user = "root";
+              sshUser = "deployer";
+              path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.mini-media-server;
+              autoRollback = true;
+              magicRollback = true;
+              remoteBuild = true;
+              activationTimeout = 600;
+              confirmTimeout = 60;
+            };
           };
         };
 
