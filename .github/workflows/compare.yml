@@ -23,8 +23,6 @@ jobs:
         nix build .#nixosConfigurations.mini-media-server.config.system.build.toplevel
         mv result ../main-result
     - name: compare
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
       run: |
         nix-env -i nvd -f '<nixpkgs>' >/dev/null 2>&1
         nvd diff ../main-result ../branch-result
