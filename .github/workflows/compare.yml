@@ -1,0 +1,14 @@
+name: "Compare"
+on:
+  pull_request:
+jobs:
+  comparisons:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+    - uses: cachix/install-nix-action@v31
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+    - run: nix-env -iA nixos.nh
+    - run: ls -al
+    - run: pwd
