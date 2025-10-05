@@ -8,7 +8,6 @@ jobs:
     - uses: cachix/install-nix-action@v31
       with:
         nix_path: nixpkgs=channel:nixos-unstable
-    - run: nix-shell -p nvd
     - uses: actions/checkout@v5
     - run: nix build .#nixosConfigurations.mini-media-server.config.system.build.toplevel
     - run: mv result ../branch-result
@@ -17,4 +16,5 @@ jobs:
         ref: "main"
     - run: nix build .#nixosConfigurations.mini-media-server.config.system.build.toplevel
     - run: mv result ../main-result
-    - run: nvd diff ../main-result ../branch-result
+    - run: nix-shell -p nvd |
+        nvd diff ../main-result ../branch-result
