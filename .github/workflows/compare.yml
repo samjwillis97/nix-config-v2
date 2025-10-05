@@ -15,5 +15,6 @@ jobs:
     - uses: actions/checkout@v5
       with:
         ref: "main"
+    - run: nix build .#nixosConfigurations.mini-media-server.config.system.build.toplevel
     - run: mv result ../main-result
     - run: ls -al ../
