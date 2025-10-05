@@ -400,6 +400,15 @@
       })
 
       (mkNixosSystem {
+        hostname = "mini-media-server";
+        system = "x86_64-linux";
+        username = "sam";
+        extraHomeModules = [ ];
+        extraModules = [ ];
+        useHomeManager = false;
+      })
+
+      (mkNixosSystem {
         hostname = "teeny-pc";
         system = "x86_64-linux";
         username = "sam";
