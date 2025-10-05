@@ -9,13 +9,45 @@ jobs:
       with:
         nix_path: nixpkgs=channel:nixos-unstable
     - uses: actions/checkout@v5
-    - run: nix build .#nixosConfigurations.mini-media-server.config.system.build.toplevel
-    - run: mv result ../branch-result
+
+    - name: Build mini-media-server for PR
+      run: |
+        nix build .#nixosConfigurations.mini-media-server.config.system.build.toplevel
+        mv result ../branch-result
+
     - uses: actions/checkout@v5
       with:
         ref: "main"
-    - run: nix build .#nixosConfigurations.mini-media-server.config.system.build.toplevel
-    - run: mv result ../main-result
-    - run: |
-        nix-env -i nvd -f '<nixpkgs>'
+    - name: Build mini-media-server main
+      run: |
+        nix build .#nixosConfigurations.mini-media-server.config.system.build.toplevel
+        mv result ../main-result
+    - name: compare
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        nix-env -i nvd -f '<nixpkgs>' >/dev/null 2>&1
         nvd diff ../main-result ../branch-result
+
+    - name: Update Pull Request
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.USER_TOKEN }}
+        script: |
+          const output = `
+          <details><summary>Show Plan</summary>
+ 
+          \`\`\`\n
+          ${{ steps.compare.outputs.stdout }}
+          \`\`\`
+ 
+          </details>
+ 
+          *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+ 
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          })
