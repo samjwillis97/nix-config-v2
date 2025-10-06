@@ -21,13 +21,6 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
 
-      - uses: actions/checkout@v5
-
-      - name: Build ${{ env.CONFIG }} for PR
-        run: |
-          nix build .#nixosConfigurations.${CONFIG}.config.system.build.toplevel
-          mv result ../branch-result-${CONFIG}
-
       - name: Maximize build space
         if: env.CONFIG == 'personal-desktop'
         uses: easimon/maximize-build-space@master
@@ -35,6 +28,13 @@ jobs:
           root-reserve-mb: 512
           swap-size-mb: 1024
           remove-dotnet: 'true'
+
+      - uses: actions/checkout@v5
+
+      - name: Build ${{ env.CONFIG }} for PR
+        run: |
+          nix build .#nixosConfigurations.${CONFIG}.config.system.build.toplevel
+          mv result ../branch-result-${CONFIG}
 
       - uses: actions/checkout@v5
         with:
