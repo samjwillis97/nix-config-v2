@@ -1,11 +1,13 @@
 name: "Compare Nix Outputs"
 on:
   pull_request:
+    types: [opened, synchronize, reopened, closed]
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 jobs:
   comparisons:
+    if: github.event.action != 'closed'
     strategy:
       matrix:
         os: [ubuntu-latest]
