@@ -5,115 +5,118 @@ jobs:
   comparisons:
     strategy:
       matrix:
-        os:
-          - ubuntu-latest
+        os: [ubuntu-latest]
         config:
           - mini-media-server
           - personal-desktop
     runs-on: ${{ matrix.os }}
 
+    env:
+      CONFIG: ${{ matrix.config }}
+
     steps:
-    - uses: DeterminateSystems/nix-installer-action@main
-    - uses: DeterminateSystems/magic-nix-cache-action@main
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
 
-    - uses: actions/checkout@v5
+      - uses: actions/checkout@v5
 
-    - name: Build ${{ matrix.config }} for PR
-      run: |
-        nix build .#nixosConfigurations.${{ matrix.config }}.config.system.build.toplevel
-        mv result ../branch-result-${{ matrix.config }}
+      - name: Build ${{ env.CONFIG }} for PR
+        run: |
+          nix build .#nixosConfigurations.${CONFIG}.config.system.build.toplevel
+          mv result ../branch-result-${CONFIG}
 
-    - uses: actions/checkout@v5
-      with:
-        ref: "main"
-    - name: Build ${{ matrix.config }} main
-      run: |
-        nix build .#nixosConfigurations.${{ matrix.config }}.config.system.build.toplevel
-        mv result ../main-result-${{ matrix.config }}
+      - uses: actions/checkout@v5
+        with:
+          ref: main
 
-    - name: Compare builds
-      id: compare
-      run: |
-        nix-env -i nvd -f '<nixpkgs>'
-        nvd diff ../main-result-${{ matrix-config }} ../branch-result-${{ matrix.config }} | tee nvd.diff
+      - name: Build ${{ env.CONFIG }} main
+        run: |
+          nix build .#nixosConfigurations.${CONFIG}.config.system.build.toplevel
+          mv result ../main-result-${CONFIG}
 
-        # Expose multiline output for later steps
-        {
-          echo '${{ matrix.config }}-diff<<EOF'
-          cat nvd.diff
-          echo 'EOF'
-        } >> "$GITHUB_OUTPUT"
+      - name: Compare builds (${{ env.CONFIG }})
+        id: compare
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Prefer nix run over nix-env -i
+          nix run nixpkgs#nvd -- diff ../main-result-${CONFIG} ../branch-result-${CONFIG} | tee "nvd-${CONFIG}.diff"
 
-    - name: Update Pull Request
-      uses: actions/github-script@v7
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const GLOBAL_MARKER = '<!-- nvd-diff-comment -->';
-          const title = 'Nix build diffs';
+          {
+            echo 'diff<<EOF'
+            cat "nvd-${CONFIG}.diff"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
 
-          const SECTION_START = `<!-- nvd-section:${{ matrix.config }} -->`;
-          const SECTION_END = `<!-- /nvd-section:${{ matrix.config }} -->`;;
+      - name: Update Pull Request (section for ${{ env.CONFIG }})
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const GLOBAL_MARKER = '<!-- nvd-diff-comment -->';
+            const cfg = process.env.CONFIG;
+            const SECTION_START = `<!-- nvd-section:${cfg} -->`;
+            const SECTION_END   = `<!-- /nvd-section:${cfg} -->`;
 
-          const diff = `${process.env.DIFF || `${{ steps.compare.outputs.${{ matrix.config }}-diff }}`}`.trim();
-          const body = `
-          ${SECTION_START}
-          #### \`nvd diff\` on ${{ matrix.config }}
-          <details><summary>Diff report</summary>
+            const diff = `${{ steps.compare.outputs.diff }}`.trim();
 
-          \`\`\`text
-          ${diff}
-          \`\`\`
+            const section = `
+            ${SECTION_START}
+            #### \`nvd diff\` on \`${cfg}\`
+            <details><summary>Diff report</summary>
 
-          </details>
-          ${SECTION_END}
-          `;
+            \`\`\`text
+            ${diff}
+            \`\`\`
 
-          const { data: comments } = await github.rest.issues.listComments({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: context.issue.number,
-            per_page: 100
-          });
-
-          const existing = comments.find(c =>
-            c.body?.includes(MARKER) &&
-            (c.user?.type === 'Bot' || c.user?.login === context.actor)
-          );
-
-          if (existing) {
-            let body = existing.body;
-
-            // If this config section exists, replace it; else append it after header.
-            const startIdx = body.indexOf(SECTION_START);
-            const endIdx = body.indexOf(SECTION_END);
-
-            if (startIdx !== -1 && endIdx !== -1) {
-              const before = body.slice(0, startIdx);
-              const after  = body.slice(endIdx + SECTION_END.length);
-              body = `${before}${section}\n\n${after}`.trim();
-            } else {
-              body = `${body.trim()}\n\n${section}`;
-            }
-
-            await github.rest.issues.updateComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              comment_id: existing.id,
-              body
-            });
-          } else {
-            // Create a fresh global comment with a stable header and our first section
-            const header = `
-            ${GLOBAL_MARKER}
-            ## Nix build diffs
+            </details>
+            ${SECTION_END}
             `.trim();
 
-            const body = `${header}\n\n${section}`;
-            await github.rest.issues.createComment({
+            const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body
+              per_page: 100
             });
-          }
+
+            const existing = comments.find(c =>
+              c.body?.includes(GLOBAL_MARKER) &&
+              (c.user?.type === 'Bot' || c.user?.login === context.actor)
+            );
+
+            if (existing) {
+              let body = existing.body;
+
+              const startIdx = body.indexOf(SECTION_START);
+              const endIdx   = body.indexOf(SECTION_END);
+
+              if (startIdx !== -1 && endIdx !== -1) {
+                const before = body.slice(0, startIdx);
+                const after  = body.slice(endIdx + SECTION_END.length);
+                body = `${before}${section}\n\n${after}`.trim();
+              } else {
+                body = `${body.trim()}\n\n${section}`;
+              }
+
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body
+              });
+            } else {
+              const header = `
+              ${GLOBAL_MARKER}
+              ## Nix build diffs
+              `.trim();
+
+              const body = `${header}\n\n${section}`;
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body
+              });
+            }
+
