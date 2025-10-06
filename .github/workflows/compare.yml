@@ -42,17 +42,20 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           const MARKER = '<!-- nvd-diff-comment -->';
-          const output = `
+          const title = 'Nix build diffs';
+          const diff = `${process.env.DIFF || `${{ steps.compare.outputs.diff }}`}`.trim();
+          const body = `
           ${MARKER}
-          \# ndv diff
-          <details><summary>\`ndv\` on mini-media-server</summary>
-          \`\`\`\n
-          ${ process.env.DIFF || `${{ steps.compare.outputs.diff }}`}
+          ## ${title}
+
+          <details><summary>\`nvd\` on mini-media-server</summary>
+
+          \`\`\`text
+          ${diff}
           \`\`\`
 
-          </details>;
+          </details>`;
 
-           // List comments on the PR
           const { data: comments } = await github.rest.issues.listComments({
             owner: context.repo.owner,
             repo: context.repo.repo,
@@ -61,8 +64,7 @@ jobs:
           });
 
           const existing = comments.find(c =>
-            c.body && c.body.includes(MARKER) &&
-            // either the GitHub Actions bot or this workflow actor
+            c.body?.includes(MARKER) &&
             (c.user?.type === 'Bot' || c.user?.login === context.actor)
           );
 
