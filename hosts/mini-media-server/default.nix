@@ -35,6 +35,7 @@
       sonarr = {
         enable = true;
         openFirewall = true;
+        libraryDirectory = "/shows";
         database.postgres.enable = true;
         downloaders = {
           decypharr = true;
@@ -47,6 +48,7 @@
       radarr = {
         enable = true;
         openFirewall = true;
+        libraryDirectory = "/movies";
         database.postgres.enable = true;
         downloaders = {
           decypharr = true;
