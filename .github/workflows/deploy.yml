@@ -27,6 +27,24 @@ jobs:
         uses: tailscale/github-action@v3
         with:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+      - name: Pin SSH host key for ${{ env.CONFIG }} (via Tailscale)
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+          # Try to get the Tailscale IP; fallback to the MagicDNS name if you use it.
+          # Replace tailnet domain if you rely on FQDN like mini-media-server.<tailnet>.ts.net
+          TS_HOST="$CONFIG"
+          TS_IP="$(tailscale ip -4 "${TS_HOST}" || true)"
+          TARGET="${TS_IP:-${TS_HOST}}"
+
+          # Grab and pin host key
+          ssh-keyscan -T 15 -H "${TARGET}" >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+          # If you use MagicDNS FQDN too, pin that as well:
+          # ssh-keyscan -T 15 -H "mini-media-server.<your-tailnet>.ts.net" >> ~/.ssh/known_hosts
       - name: Deploy (${{ env.CONFIG }})
         id: deploy
         shell: bash
