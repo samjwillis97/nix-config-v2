@@ -28,6 +28,14 @@ jobs:
           nix build .#nixosConfigurations.${CONFIG}.config.system.build.toplevel
           mv result ../branch-result-${CONFIG}
 
+      - name: Maximize build space
+        if: env.CONFIG == 'personal-desktop'
+        uses: easimon/maximize-build-space@master
+        with:
+          root-reserve-mb: 512
+          swap-size-mb: 1024
+          remove-dotnet: 'true'
+
       - uses: actions/checkout@v5
         with:
           ref: main
