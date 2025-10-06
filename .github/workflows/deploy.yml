@@ -1,5 +1,6 @@
 name: "Deploy Nix configs"
 on:
+  workflow_dispatch: # allows manual triggering
   push:
     branches:
       - main
@@ -27,6 +28,10 @@ jobs:
         uses: tailscale/github-action@v3
         with:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
       - name: Pin SSH host key for ${{ env.CONFIG }} (via Tailscale)
         shell: bash
         run: |
