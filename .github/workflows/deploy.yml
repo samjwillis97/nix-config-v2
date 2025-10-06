@@ -36,15 +36,30 @@ jobs:
 
           # Try to get the Tailscale IP; fallback to the MagicDNS name if you use it.
           # Replace tailnet domain if you rely on FQDN like mini-media-server.<tailnet>.ts.net
-          TS_HOST="$CONFIG"
-          TS_IP="$(tailscale ip -4 "${TS_HOST}" || true)"
-          TARGET="${TS_IP:-${TS_HOST}}"
+          HOST_SHORT="$CONFIG"
+          HOST_FQDN=""
+          if [ -n "${TAILSCALE_FQDN_SUFFIX:-}" ]; then
+            HOST_FQDN="${HOST_SHORT}.${TAILSCALE_FQDN_SUFFIX}"
+          fi
 
-          # Grab and pin host key
-          ssh-keyscan -T 15 -H "${TARGET}" >> ~/.ssh/known_hosts
+          IP4="$(tailscale ip -4 "${HOST_SHORT}" || true)"
+          IP6="$(tailscale ip -6 "${HOST_SHORT}" || true)"
+
+          # Build scan list with unique, non-empty tokens
+          SCAN_LIST=()
+          for H in "$HOST_SHORT" "$HOST_FQDN" "$IP4" "$IP6"; do
+            [ -n "$H" ] && SCAN_LIST+=("$H")
+          done
+
+          # Scan only ed25519 (adjust if your server uses another type)
+          ssh-keyscan -T 20 -t ed25519 -H "${SCAN_LIST[@]}" >> ~/.ssh/known_hosts 2>/dev/null
           chmod 600 ~/.ssh/known_hosts
-          # If you use MagicDNS FQDN too, pin that as well:
-          # ssh-keyscan -T 15 -H "mini-media-server.<your-tailnet>.ts.net" >> ~/.ssh/known_hosts
+
+          # Make both ssh and nix use the same strict policy + file
+          export KH=~/.ssh/known_hosts
+          echo "NIX_SSHOPTS=-o StrictHostKeyChecking=yes -o UserKnownHostsFile=${KH}" >> $GITHUB_ENV
+          echo "DEPLOY_SSH_OPTS=-o StrictHostKeyChecking=yes -o UserKnownHostsFile=${KH}" >> $GITHUB_ENV
+
       - name: Deploy (${{ env.CONFIG }})
         id: deploy
         shell: bash
