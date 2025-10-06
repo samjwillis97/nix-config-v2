@@ -41,20 +41,43 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
+          const MARKER = '<!-- nvd-diff-comment -->';
           const output = `
-          <details><summary>Show Plan</summary>
- 
+          ${MARKER}
+          \# ndv diff
+          <details><summary>\`ndv\` on mini-media-server</summary>
           \`\`\`\n
           ${ process.env.DIFF || `${{ steps.compare.outputs.diff }}`}
           \`\`\`
- 
-          </details>
- 
-          *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
- 
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
+
+          </details>;
+
+           // List comments on the PR
+          const { data: comments } = await github.rest.issues.listComments({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: output
-          })
+            issue_number: context.issue.number,
+            per_page: 100
+          });
+
+          const existing = comments.find(c =>
+            c.body && c.body.includes(MARKER) &&
+            // either the GitHub Actions bot or this workflow actor
+            (c.user?.type === 'Bot' || c.user?.login === context.actor)
+          );
+
+          if (existing) {
+            await github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: existing.id,
+              body
+            });
+          } else {
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body
+            });
+          }
