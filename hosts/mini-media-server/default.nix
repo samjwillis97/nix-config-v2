@@ -1,15 +1,29 @@
-{ lib, ... }:
+{ config, lib, ... }:
 {
   imports =
     [
       ./hardware-configuration.nix
       ../../nixos
       ../../modules/ops/deploy.nix
+      ../../secrets/mediaserver
+      ../../secrets/aws
     ];
 
   modules = {
     ops.deploy = {
       createDeployUser = true;
+    };
+
+    system.users.media = true;
+
+    database.postgres = {
+      enable = true;
+      backup = {
+        enable = true;
+        s3Bucket = "mediaserver-pgsql-backup-b96bddb";
+        awsAccessKeyIdFile = config.age.secrets.infra-access-key-id.path;
+        awsSecretAccessKeyFile = config.age.secrets.infra-secret-access-key.path;
+      };
     };
   };
 

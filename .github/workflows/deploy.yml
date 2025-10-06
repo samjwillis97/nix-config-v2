@@ -1,0 +1,35 @@
+name: "Deploy Nix configs"
+on:
+  push:
+    branches:
+      - main
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  comparisons:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        config:
+          - mini-media-server
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      CONFIG: ${{ matrix.config }}
+
+    steps:
+      - uses: actions/checkout@v5
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v3
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+      - name: Deploy (${{ env.CONFIG }})
+        id: deploy
+        shell: bash
+        run: |
+          # Prefer nix run over nix-env -i
+          nix run nixpkgs#deploy-rs .#${CONFIG}

@@ -35,6 +35,7 @@ in
 
     databases = mkOption {
       type = types.listOf types.str;
+      default = [];
       description = "The initial databases to create.";
     };
 
