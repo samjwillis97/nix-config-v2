@@ -25,6 +25,71 @@
         awsSecretAccessKeyFile = config.age.secrets.infra-secret-access-key.path;
       };
     };
+
+    virtualisation.docker = {
+      enable = true;
+      useHostNetwork = true;
+    };
+
+    media = {
+      sonarr = {
+        enable = true;
+        openFirewall = true;
+        libraryDirectory = "/shows";
+        database.postgres.enable = true;
+        downloaders = {
+          decypharr = true;
+        };
+        indexers = {
+          elfhosted = true;
+        };
+      };
+
+      radarr = {
+        enable = true;
+        openFirewall = true;
+        libraryDirectory = "/movies";
+        database.postgres.enable = true;
+        downloaders = {
+          decypharr = true;
+        };
+        indexers = {
+          elfhosted = true;
+        };
+      };
+
+      recyclarr = {
+        enable = true;
+        sonarr = {
+          enable = true;
+        };
+        radarr = {
+          enable = true;
+        };
+      };
+
+      decypharr = {
+        enable = true;
+        openFirewall = true;
+        realdebrid.tokenFile = config.age.secrets.real-debrid-token.path;
+      };
+
+      autoscan = {
+        enable = true;
+        openFirewall = true;
+        plex = {
+          enable = true;
+          tokenFile = config.age.secrets.plex-token.path;
+        };
+      };
+
+      plex.enable = true;
+
+      overseerr = {
+        enable = true;
+        openFirewall = true;
+      };
+    };
   };
 
   # This option defines the first version of NixOS you have installed on this particular machine,
