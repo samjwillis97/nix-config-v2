@@ -27,7 +27,7 @@ jobs:
     - name: Compare builds
       id: compare
       run: |
-        nix-env -i nvd -f '<nixpkgs>' >/dev/null 2>&1
+        nix-env -i nvd -f '<nixpkgs>'
         nvd diff ../main-result ../branch-result | tee nvd.diff
 
         # Expose multiline output for later steps
@@ -49,7 +49,7 @@ jobs:
           ${MARKER}
           ## ${title}
           
-          #### `nvd diff` on mini-media-server
+          #### \`nvd diff\` on mini-media-server
           <details><summary>Diff report</summary>
 
           \`\`\`text
