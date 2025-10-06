@@ -3,40 +3,43 @@ on:
   pull_request:
 jobs:
   comparisons:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+        config:
+          - mini-media-server
+          - personal-desktop
+    runs-on: ${{ matrix.os }}
+
     steps:
-
-    # - uses: cachix/install-nix-action@v31
-    #   with:
-    #     nix_path: nixpkgs=channel:nixos-unstable
-
     - uses: DeterminateSystems/nix-installer-action@main
     - uses: DeterminateSystems/magic-nix-cache-action@main
 
     - uses: actions/checkout@v5
 
-    - name: Build mini-media-server for PR
+    - name: Build ${{ matrix.config }} for PR
       run: |
-        nix build .#nixosConfigurations.mini-media-server.config.system.build.toplevel
-        mv result ../branch-result
+        nix build .#nixosConfigurations.${{ matrix.config }}.config.system.build.toplevel
+        mv result ../branch-result-${{ matrix.config }}
 
     - uses: actions/checkout@v5
       with:
         ref: "main"
-    - name: Build mini-media-server main
+    - name: Build ${{ matrix.config }} main
       run: |
-        nix build .#nixosConfigurations.mini-media-server.config.system.build.toplevel
-        mv result ../main-result
+        nix build .#nixosConfigurations.${{ matrix.config }}.config.system.build.toplevel
+        mv result ../main-result-${{ matrix.config }}
 
     - name: Compare builds
       id: compare
       run: |
         nix-env -i nvd -f '<nixpkgs>'
-        nvd diff ../main-result ../branch-result | tee nvd.diff
+        nvd diff ../main-result-${{ matrix-config }} ../branch-result-${{ matrix.config }} | tee nvd.diff
 
         # Expose multiline output for later steps
         {
-          echo 'diff<<EOF'
+          echo '${{ matrix.config }}-diff<<EOF'
           cat nvd.diff
           echo 'EOF'
         } >> "$GITHUB_OUTPUT"
@@ -46,21 +49,25 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const MARKER = '<!-- nvd-diff-comment -->';
+          const GLOBAL_MARKER = '<!-- nvd-diff-comment -->';
           const title = 'Nix build diffs';
-          const diff = `${process.env.DIFF || `${{ steps.compare.outputs.diff }}`}`.trim();
+
+          const SECTION_START = `<!-- nvd-section:${{ matrix.config }} -->`;
+          const SECTION_END = `<!-- /nvd-section:${{ matrix.config }} -->`;;
+
+          const diff = `${process.env.DIFF || `${{ steps.compare.outputs.${{ matrix.config }}-diff }}`}`.trim();
           const body = `
-          ${MARKER}
-          ## ${title}
-          
-          #### \`nvd diff\` on mini-media-server
+          ${SECTION_START}
+          #### \`nvd diff\` on ${{ matrix.config }}
           <details><summary>Diff report</summary>
 
           \`\`\`text
           ${diff}
           \`\`\`
 
-          </details>`;
+          </details>
+          ${SECTION_END}
+          `;
 
           const { data: comments } = await github.rest.issues.listComments({
             owner: context.repo.owner,
@@ -75,6 +82,20 @@ jobs:
           );
 
           if (existing) {
+            let body = existing.body;
+
+            // If this config section exists, replace it; else append it after header.
+            const startIdx = body.indexOf(SECTION_START);
+            const endIdx = body.indexOf(SECTION_END);
+
+            if (startIdx !== -1 && endIdx !== -1) {
+              const before = body.slice(0, startIdx);
+              const after  = body.slice(endIdx + SECTION_END.length);
+              body = `${before}${section}\n\n${after}`.trim();
+            } else {
+              body = `${body.trim()}\n\n${section}`;
+            }
+
             await github.rest.issues.updateComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -82,6 +103,13 @@ jobs:
               body
             });
           } else {
+            // Create a fresh global comment with a stable header and our first section
+            const header = `
+            ${GLOBAL_MARKER}
+            ## Nix build diffs
+            `.trim();
+
+            const body = `${header}\n\n${section}`;
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
