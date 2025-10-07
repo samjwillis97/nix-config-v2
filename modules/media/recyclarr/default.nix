@@ -58,14 +58,14 @@ let
       trash_guides = [
         {
           name = "official";
-          clone_url = trash_guides.cloneUrl;
+          clone_url = trash_guides.clone_url;
           reference = trash_guides.sha1;
         }
       ];
       config_templates = [
         {
           name = "official";
-          clone_url = config_templates.cloneUrl;
+          clone_url = config_templates.clone_url;
           reference = config_templates.sha1;
         }
       ];
