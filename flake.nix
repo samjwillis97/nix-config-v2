@@ -3,7 +3,7 @@
 
   inputs = {
     # Nixpkgs Source
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     # nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
 
     # Only being used for reducing flake lock duplications
@@ -13,13 +13,13 @@
 
     # nix-darwin module
     darwin = {
-      url = "github:lnl7/nix-darwin/nix-darwin-25.05";
+      url = "github:lnl7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Home Manager Source
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.05";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -37,7 +37,6 @@
 
     modular-neovim = {
       url = "github:samjwillis97/modular-neovim-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nix-serve = {
@@ -191,7 +190,7 @@
           (
             { config, ... }:
             {
-              imports = [ 
+              imports = [
                 ./secrets/mediaserver
                 ./secrets/aws
               ];
