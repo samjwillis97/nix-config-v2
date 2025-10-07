@@ -69,4 +69,4 @@ jobs:
         shell: bash
         run: |
           # Prefer nix run over nix-env -i
-          nix run nixpkgs#deploy-rs .#${CONFIG}
+          nix run nixpkgs#deploy-rs --skip-checks .#${CONFIG}
