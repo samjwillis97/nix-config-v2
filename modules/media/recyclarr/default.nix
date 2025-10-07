@@ -123,7 +123,7 @@ in
               { template = "sonarr-v4-custom-formats-web-1080p"; }
             ];
 
-            custom_formats = [ 
+            custom_formats = [
               {
                 # Allows x265 HD Releases with HDR/DV
                 trash_ids = [
@@ -263,7 +263,28 @@ in
               }
               {
                 trash_ids = [
+                  "e0c07d59beb37348e975a930d5e50319" # Criterion Collection
                   "9f6cbff8cfe4ebbc1bde14c7b7bec0de" # IMAX Enhanced
+                ];
+                assign_scores_to = [
+                  { name = "HD Bluray + WEB"; }
+                ];
+              }
+              # Allowing x265 HD releases with HDR/DV
+              {
+                trash_ids = [
+                  "dc98083864ea246d05a42df0d05f81cc" # x265 (HD)
+                ];
+                assign_scores_to = [
+                  {
+                    name = "HD Bluray + WEB";
+                    score = 0;
+                  }
+                ];
+              }
+              {
+                trash_ids = [
+                  "839bea857ed2c0a8e084f3cbdbd65ecb" # x265 (no HDR/DV)
                 ];
                 assign_scores_to = [
                   { name = "HD Bluray + WEB"; }
@@ -282,48 +303,50 @@ in
       ${pkgs.coreutils}/bin/cp ${configFile} /root/.config/recyclarr/settings.yml
     '';
 
-    systemd.services.recyclarr-sync = let 
-      requiredServices = [] 
-        ++ (if cfg.radarr.enable then [ "radarr.service" ] else []) 
-        ++ (if cfg.sonarr.enable then [ "sonarr.service" ] else []);
-    in
-    {
-      description = "configuring sonarr/radarr with recyclarr";
-      wants = requiredServices;
-      after = requiredServices;
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig = {
-        Type = "oneshot";
+    systemd.services.recyclarr-sync =
+      let
+        requiredServices =
+          [ ]
+          ++ (if cfg.radarr.enable then [ "radarr.service" ] else [ ])
+          ++ (if cfg.sonarr.enable then [ "sonarr.service" ] else [ ]);
+      in
+      {
+        description = "configuring sonarr/radarr with recyclarr";
+        wants = requiredServices;
+        after = requiredServices;
+        wantedBy = [ "multi-user.target" ];
+        serviceConfig = {
+          Type = "oneshot";
+        };
+        script =
+          let
+            radarrStatusCheck = mkRadarrRequest { uri = "/ping"; };
+
+            radarrConfig = pkgs.writers.writeYAML "radarr-recyclarr-config.yaml" {
+              radarr = cfg.radarr.config;
+            };
+
+            sonarrStatusCheck = mkSonarrRequest { uri = "/ping"; };
+
+            sonarrConfig = pkgs.writers.writeYAML "sonarr-recyclarr-config.yaml" {
+              sonarr = cfg.sonarr.config;
+            };
+          in
+          ''
+            ${optionalString cfg.radarr.enable ''
+              echo "Check if radarr is up"
+              ${radarrStatusCheck}
+              echo "Radarr is now running"
+              ${pkgs.recyclarr}/bin/recyclarr sync radarr -c ${radarrConfig}
+            ''}
+
+            ${optionalString cfg.sonarr.enable ''
+              echo "Check if sonarr is up"
+              ${sonarrStatusCheck}
+              echo "Sonarr is now running"
+              ${pkgs.recyclarr}/bin/recyclarr sync sonarr -c ${sonarrConfig}
+            ''}
+          '';
       };
-      script =
-        let
-          radarrStatusCheck = mkRadarrRequest { uri = "/ping"; };
-
-          radarrConfig = pkgs.writers.writeYAML "radarr-recyclarr-config.yaml" {
-            radarr = cfg.radarr.config;
-          };
-
-          sonarrStatusCheck = mkSonarrRequest { uri = "/ping"; };
-
-          sonarrConfig = pkgs.writers.writeYAML "sonarr-recyclarr-config.yaml" {
-            sonarr = cfg.sonarr.config;
-          };
-        in
-        ''
-          ${optionalString cfg.radarr.enable ''
-            echo "Check if radarr is up"
-            ${radarrStatusCheck}
-            echo "Radarr is now running"
-            ${pkgs.recyclarr}/bin/recyclarr sync radarr -c ${radarrConfig}
-          ''}
-
-          ${optionalString cfg.sonarr.enable ''
-            echo "Check if sonarr is up"
-            ${sonarrStatusCheck}
-            echo "Sonarr is now running"
-            ${pkgs.recyclarr}/bin/recyclarr sync sonarr -c ${sonarrConfig}
-          ''}
-        '';
-    };
   };
 }
