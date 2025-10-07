@@ -22,6 +22,7 @@ in
       # xdg-desktop-portal-hyprland = flake.inputs.hyprland.packages.${system}.xdg-desktop-portal-hyprland;
       f = flake.inputs.f.packages.${system}.default;
       httpcraft = flake.inputs.httpcraft.packages.${system}.default;
+      httpcraft-mcp = flake.inputs.httpcraft-mcp.packages.${system}.default;
       ghostty = flake.inputs.ghostty.packages.${system}.default;
 
       # something seems to have broken in latest moonlight-qt
@@ -33,8 +34,6 @@ in
           }) { inherit (prev) system; };
         in
         moonlight-nixpkgs.moonlight-qt;
-
-      opencode = flake.inputs.opencode-flake.packages.${system}.default;
     })
     inputs.nur.overlays.default
     inputs.brew-nix.overlays.default

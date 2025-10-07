@@ -54,7 +54,8 @@ in
           inputs.agenix.nixosModules.default
           ../shared
           ../modules
-        ] ++ extraModules;
+        ]
+        ++ extraModules;
         specialArgs = {
           inherit system;
           flake = self;
@@ -67,7 +68,8 @@ in
               ;
             extraHomeModules = [
               inputs.httpcraft.homeManagerModules.${system}.httpcraft
-            ] ++ extraHomeModules;
+            ]
+            ++ extraHomeModules;
             isDarwin = false;
           };
         };
@@ -83,6 +85,7 @@ in
       extraHomeModules ? [ ],
       darwinSystem ? darwin.lib.darwinSystem,
       useHomeManager ? true,
+      nixbldGid ? 350,
       ...
     }:
     {
@@ -99,12 +102,13 @@ in
           inputs.agenix.darwinModules.default
           inputs.nix-homebrew.darwinModules.nix-homebrew
           ../shared
-        ] ++ extraModules;
+        ]
+        ++ extraModules;
         specialArgs = {
           inherit system;
           flake = self;
           super.meta = {
-            inherit useHomeManager;
+            inherit useHomeManager nixbldGid;
             hostname = hostname;
             isDarwin = true;
             username = username;
@@ -112,7 +116,8 @@ in
               inputs.httpcraft.homeManagerModules.${system}.httpcraft
               inputs.agenix.homeManagerModules.age
               ../hm-modules
-            ] ++ extraHomeModules;
+            ]
+            ++ extraHomeModules;
           };
         };
       };

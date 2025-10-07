@@ -1,10 +1,15 @@
-{ pkgs, flake, ... }:
 {
-  ids.gids.nixbld = 350;
+  pkgs,
+  flake,
+  super,
+  ...
+}:
+let
+  inherit (super.meta) nixbldGid;
+in
+{
+  ids.gids.nixbld = nixbldGid;
 
-  environment.systemPackages = with pkgs; [
-    # cachix # FIXME idk if needed, pipeline might throw fit
-  ];
   nix = import ../shared/nix.nix { inherit pkgs flake; } // {
     linux-builder.enable = true; # FIXME was breaking tings
   };

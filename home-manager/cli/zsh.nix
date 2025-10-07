@@ -22,6 +22,7 @@ let
     export PATH="$PATH:${homeDirectory}/.dotnet/tools"
     export PATH="$PATH:${homeDirectory}/go/bin"
     export PATH="$PATH:${homeDirectory}/.local/bin"
+    export PATH="$PATH:${homeDirectory}/.npm-packages/bin"
 
     # alias nvim="nix run github:samjwillis97/neovim-flake --"
 
