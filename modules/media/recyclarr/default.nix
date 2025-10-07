@@ -49,7 +49,7 @@ let
         clone_url = cfg.repositoryConfig.trash_guides.cloneUrl;
       };
       config_templates = {
-        lone_url = cfg.repositoryConfig.config_templates.cloneUrl;
+        clone_url = cfg.repositoryConfig.config_templates.cloneUrl;
       };
     };
     log_janitor = {
