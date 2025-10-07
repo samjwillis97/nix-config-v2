@@ -37,7 +37,6 @@
 
     modular-neovim = {
       url = "github:samjwillis97/modular-neovim-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nix-serve = {
