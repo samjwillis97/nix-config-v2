@@ -56,11 +56,6 @@ let
       max_files = 1;
     };
   };
-
-  # trashGuideRepo = builtins.fetchGit {
-  #   url = cfg.repositoryConfig.trash_guides.cloneUrl;
-  #   rev = cfg.repositoryConfig.trash_guides.sha;
-  # };
 in
 {
   imports = [
