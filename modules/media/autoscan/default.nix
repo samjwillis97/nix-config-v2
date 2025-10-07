@@ -6,6 +6,8 @@
 }:
 with lib;
 let
+  inherit (import ../../../lib/curl.nix { inherit pkgs; }) mkCurlCommand;
+
   cfg = config.modules.media.autoscan;
 
   mediaUserEnabled = config.modules.system.users.media;
@@ -44,6 +46,18 @@ let
       }] else []);
     };
   };
+
+  mkPlexRequest =
+    args:
+    let
+      curlArgs = removeAttrs (
+        args
+        // {
+          url = if (hasAttr "uri" args) then "http://localhost:3200${args.uri}" else args.url;
+        }
+      ) [ "uri" ];
+    in
+    mkCurlCommand (curlArgs);
 
   autoscan = pkgs.buildGoModule (finalAttrs: {
     name = "autoscan";
@@ -128,7 +142,14 @@ in
         HOME = "/root";
       };
       restartIfChanged = true;
-      script = ''
+      script = let
+        plexStatusCheck = mkPlexRequest { uri = "/identity"; };
+      in
+        ''
+        echo "Check if plex is up"
+        ${plexStatusCheck}
+        echo "Plex is now running"  
+
         ${autoscan}/bin/autoscan \
          --config="${finalConfigFile}" \
          --database="${cfg.dataDirectory}/autoscan.db" \
