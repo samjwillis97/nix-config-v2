@@ -215,8 +215,7 @@ in
   config = mkIf cfg.enable {
     system.activationScripts."recyclarr-working-dir" = ''
       mkdir -p /root/.config/recyclarr
-      rm -rf /root/.config/recyclarr/settings.yml
-      ln -s /root/.config/recyclarr/settings.yml ${configFile}
+      ${pkgs.coreutils}/bin/cp ${configFile} /root/.config/recyclarr/settings.yml
     '';
 
     systemd.services.recyclarr-radarr-sync = mkIf (cfg.radarr.enable) {
