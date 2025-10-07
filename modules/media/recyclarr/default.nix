@@ -218,10 +218,15 @@ in
       ${pkgs.coreutils}/bin/cp ${configFile} /root/.config/recyclarr/settings.yml
     '';
 
-    systemd.services.recyclarr-radarr-sync = mkIf (cfg.radarr.enable) {
-      description = "configuring radarr with recyclarr";
-      wants = [ "radarr.service" ];
-      after = [ "radarr.service" ];
+    systemd.services.recyclarr-sync = let 
+      requiredServices = [] 
+        ++ (if cfg.radarr.enable then [ "radarr.service" ] else []) 
+        ++ (if cfg.sonarr.enable then [ "sonarr.service" ] else []);
+    in
+    {
+      description = "configuring sonarr/radarr with recyclarr";
+      wants = requiredServices;
+      after = requiredServices;
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
         Type = "oneshot";
@@ -233,25 +238,7 @@ in
           radarrConfig = pkgs.writers.writeYAML "radarr-recyclarr-config.yaml" {
             radarr = cfg.radarr.config;
           };
-        in
-        ''
-          echo "Check if radarr is up"
-          ${radarrStatusCheck}
-          echo "Radarr is now running"
-          ${pkgs.recyclarr}/bin/recyclarr sync radarr -c ${radarrConfig}
-        '';
-    };
 
-    systemd.services.recyclarr-sonarr-sync = mkIf (cfg.sonarr.enable) {
-      description = "configuring sonarr with recyclarr";
-      wants = [ "sonarr.service" ];
-      after = [ "sonarr.service" ];
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig = {
-        Type = "oneshot";
-      };
-      script =
-        let
           sonarrStatusCheck = mkSonarrRequest { uri = "/ping"; };
 
           sonarrConfig = pkgs.writers.writeYAML "sonarr-recyclarr-config.yaml" {
@@ -259,10 +246,19 @@ in
           };
         in
         ''
-          echo "Check if sonarr is up"
-          ${sonarrStatusCheck}
-          echo "Radarr is now running"
-          ${pkgs.recyclarr}/bin/recyclarr sync sonarr -c ${sonarrConfig}
+          ${optionalString cfg.radarr.enable ''
+            echo "Check if radarr is up"
+            ${radarrStatusCheck}
+            echo "Radarr is now running"
+            ${pkgs.recyclarr}/bin/recyclarr sync radarr -c ${radarrConfig}
+          ''}
+
+          ${optionalString cfg.sonarr.enable ''
+            echo "Check if sonarr is up"
+            ${sonarrStatusCheck}
+            echo "Sonarr is now running"
+            ${pkgs.recyclarr}/bin/recyclarr sync sonarr -c ${sonarrConfig}
+          ''}
         '';
     };
   };
