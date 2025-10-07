@@ -122,18 +122,25 @@ in
 
             quality_profiles = [
               {
-                name = "WEB-1080p";
+                name = "WEB-1080/2160p";
                 reset_unmatched_scores = {
                   enabled = true;
                 };
                 upgrade = {
                   allowed = true;
-                  until_quality = "WEB 1080p";
+                  until_quality = "WEB 2160p";
                   until_score = 10000;
                 };
                 min_format_score = 0;
                 quality_sort = "top";
                 qualities = [
+                  {
+                    name = "WEB 2160p";
+                    qualities = [
+                      "WEBL-2160p"
+                      "WEBRip-2160p"
+                    ];
+                  }
                   {
                     name = "WEB 1080p";
                     qualities = [
@@ -141,6 +148,8 @@ in
                       "WEBRip-1080p"
                     ];
                   }
+                  { name = "Bluray-2160p Remux"; }
+                  { name = "Bluray-2160p"; }
                   { name = "Bluray-1080p"; }
                   { name = "HDTV-1080p"; }
                   {
@@ -159,6 +168,9 @@ in
             custom_formats = [
               {
                 trash_ids = [
+                  # Unified HDR
+                  "505d871304820ba7106b693be6fe4a9e" # HDR
+
                   # Unwanted
                   "85c61753df5da1fb2aab6f2a47426b09" # BR-DISK
                   "9c11cd3f07101cdba90a2d81cf0e56b4" # LQ
@@ -199,7 +211,7 @@ in
                   "d0c516558625b04b363fa6c5c2c7cfd4" # WEB Scene
                 ];
                 assign_scores_to = [
-                  { name = "WEB-1080p"; }
+                  { name = "WEB-1080/2160p"; }
                 ];
               }
               # Allows x265 HD Releases with HDR/DV
@@ -209,7 +221,7 @@ in
                 ];
                 assign_scores_to = [
                   {
-                    name = "WEB-1080p";
+                    name = "WEB-1080/2160p";
                     score = 0;
                   }
                 ];
@@ -219,7 +231,17 @@ in
                   "9b64dff695c2115facf1b6ea59c9bd07" # x265 (no HDR/DV)
                 ];
                 assign_scores_to = [
-                  { name = "WEB-1080p"; }
+                  { name = "WEB-1080/2160p"; }
+                ];
+              }
+              # Dolby Vision
+              {
+                trash_ids = [
+                  "0c4b99df9206d2cfac3c05ab897dd62a" # HDR10+ Boost
+                  "7c3a61a9c6cb04f52f1544be6d44a026" # DV Boost
+                ];
+                assign_scores_to = [
+                  { name = "WEB-1080/2160p"; }
                 ];
               }
             ];
