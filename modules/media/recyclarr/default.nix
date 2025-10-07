@@ -265,19 +265,27 @@ in
 
             quality_profiles = [
               {
-                name = "HD Bluray + WEB";
+                name = "U/HD Bluray + WEB";
                 reset_unmatched_scores = {
                   enabled = true;
                 };
                 upgrade = {
                   allowed = true;
-                  until_quality = "Bluray-1080p";
+                  until_quality = "Bluray-2160p";
                   until_score = 10000;
                 };
                 min_format_score = 0;
                 quality_sort = "top";
                 qualities = [
-                  { name = "Bluray-1080p"; }
+                  { name = "Bluray-2160p"; }
+                  {
+                    name = "WEB 2160p";
+                    qualities = [
+                      "WEBL-2160p"
+                      "WEBRip-2160p"
+                    ];
+                  }
+                  { name = "Bluray-2160p"; }
                   {
                     name = "WEB 1080p";
                     qualities = [
@@ -294,6 +302,9 @@ in
               {
                 trash_ids = [
                   # HQ Release Groups
+                  "4d74ac4c4db0b64bff6ce0cffef99bf0" # UHD Bluray Tier 01
+                  "a58f517a70193f8e578056642178419d" # UHD Bluray Tier 02
+                  "e71939fae578037e7aed3ee219bbe7c1" # UHD Bluray Tier 03
                   "ed27ebfef2f323e964fb1f61391bcb35" # HD Bluray Tier 01
                   "c20c8647f2746a1f4c4262b0fbbeeeae" # HD Bluray Tier 02
                   "5608c71bcebba0a5e666223bae8c9227" # HD Bluray Tier 03
@@ -324,7 +335,7 @@ in
                   "2a6039655313bf5dab1e43523b62c374" # MA
                 ];
                 assign_scores_to = [
-                  { name = "HD Bluray + WEB"; }
+                  { name = "U/HD Bluray + WEB"; }
                 ];
               }
               {
@@ -344,7 +355,29 @@ in
                   "c2863d2a50c9acad1fb50e53ece60817" # STAN
                 ];
                 assign_scores_to = [
-                  { name = "HD Bluray + WEB"; }
+                  { name = "U/HD Bluray + WEB"; }
+                ];
+              }
+              # Advanced Audio Formats
+              {
+                trash_ids = [
+                  "496f355514737f7d83bf7aa4d24f8169" # TrueHD Atmos
+                  "2f22d89048b01681dde8afe203bf2e95" # DTS X
+                  "417804f7f2c4308c1f4c5d380d4c4475" # ATMOS (undefined)
+                  "1af239278386be2919e1bcee0bde047e" # DD+ ATMOS
+                  "3cafb66171b47f226146a0770576870f" # TrueHD
+                  "dcf3ec6938fa32445f590a4da84256cd" # DTS-HD MA
+                  "a570d4a0e56a2874b64e5bfa55202a1b" # FLAC
+                  "e7c2fcae07cbada050a0af3357491d7b" # PCM
+                  "8e109e50e0a0b83a5098b056e13bf6db" # DTS-HD HRA
+                  "185f1dd7264c4562b9022d963ac37424" # DD+
+                  "f9f847ac70a0af62ea4a08280b859636" # DTS-ES
+                  "1c1a4c5e823891c75bc50380a6866f73" # DTS
+                  "240770601cc226190c367ef59aba7463" # AAC
+                  "c2998bd0d90ed5621d8df281e839436e" # DD
+                ];
+                assign_scores_to = [
+                  { name = "U/HD Bluray + WEB"; }
                 ];
               }
               {
@@ -353,7 +386,7 @@ in
                   "9f6cbff8cfe4ebbc1bde14c7b7bec0de" # IMAX Enhanced
                 ];
                 assign_scores_to = [
-                  { name = "HD Bluray + WEB"; }
+                  { name = "U/HD Bluray + WEB"; }
                 ];
               }
               # Allowing x265 HD releases with HDR/DV
@@ -363,7 +396,7 @@ in
                 ];
                 assign_scores_to = [
                   {
-                    name = "HD Bluray + WEB";
+                    name = "U/HD Bluray + WEB";
                     score = 0;
                   }
                 ];
@@ -373,7 +406,17 @@ in
                   "839bea857ed2c0a8e084f3cbdbd65ecb" # x265 (no HDR/DV)
                 ];
                 assign_scores_to = [
-                  { name = "HD Bluray + WEB"; }
+                  { name = "U/HD Bluray + WEB"; }
+                ];
+              }
+              # Dolby Vision
+              {
+                trash_ids = [
+                  "b337d6812e06c200ec9a2d3cfa9d20a7" # DV Boost
+                  "caa37d0df9c348912df1fb1d88f9273a" # HDR10+ Boost
+                ];
+                assign_scores_to = [
+                  { name = "U/HD Bluray + WEB"; }
                 ];
               }
             ];
