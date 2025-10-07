@@ -54,9 +54,25 @@ let
 
   configFile = pkgs.writers.writeYAML "settings.yaml" {
     git_path = "${pkgs.git}/bin/git";
-    repositories = {
-      inherit trash_guides config_templates;
+    resource_providers = {
+      trash_guides = [
+        {
+          name = "official";
+          clone_url = trash_guides.cloneUrl;
+          reference = trash_guides.sha1;
+        }
+      ];
+      config_templates = [
+        {
+          name = "official";
+          clone_url = config_templates.cloneUrl;
+          reference = config_templates.sha1;
+        }
+      ];
     };
+    # repositories = {
+    #   inherit trash_guides config_templates;
+    # };
     log_janitor = {
       max_files = 1;
     };
@@ -84,8 +100,7 @@ in
         };
         sha = mkOption {
           description = "commit from Sept 5 2025";
-          default = "df73f8";
-          # default = "df73f8d13b648fc4740a74757c56bf48ac5dbb4b";
+          default = "df73f8d13b648fc4740a74757c56bf48ac5dbb4b";
           type = types.string;
         };
       };
@@ -97,8 +112,7 @@ in
         };
         sha = mkOption {
           description = "commit from Aug 28 2025";
-          default = "f4ad0d";
-          # default = "f4ad0dde03b77de227700e26ade3e22d4b41a2ce";
+          default = "f4ad0dde03b77de227700e26ade3e22d4b41a2ce";
           type = types.string;
         };
       };
