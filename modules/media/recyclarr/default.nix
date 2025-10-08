@@ -137,14 +137,14 @@ in
                   {
                     name = "WEB 2160p";
                     qualities = [
-                      "WEBL-2160p"
+                      "WEBDL-2160p"
                       "WEBRip-2160p"
                     ];
                   }
                   {
                     name = "WEB 1080p";
                     qualities = [
-                      "WEBL-1080p"
+                      "WEBDL-1080p"
                       "WEBRip-1080p"
                     ];
                   }
@@ -155,7 +155,7 @@ in
                   {
                     name = "WEB 720p";
                     qualities = [
-                      "WEBL-720p"
+                      "WEBDL-720p"
                       "WEBRip-720p"
                     ];
                   }
@@ -302,7 +302,7 @@ in
                   {
                     name = "WEB 2160p";
                     qualities = [
-                      "WEBL-2160p"
+                      "WEBDL-2160p"
                       "WEBRip-2160p"
                     ];
                   }
@@ -310,7 +310,7 @@ in
                   {
                     name = "WEB 1080p";
                     qualities = [
-                      "WEBL-1080p"
+                      "WEBDL-1080p"
                       "WEBRip-1080p"
                     ];
                   }
