@@ -306,7 +306,7 @@ in
                       "WEBRip-2160p"
                     ];
                   }
-                  { name = "Bluray-2160p"; }
+                  { name = "Bluray-1080p"; }
                   {
                     name = "WEB 1080p";
                     qualities = [
