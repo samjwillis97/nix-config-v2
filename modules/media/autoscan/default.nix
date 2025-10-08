@@ -53,7 +53,7 @@ let
       curlArgs = removeAttrs (
         args
         // {
-          url = if (hasAttr "uri" args) then "http://localhost:3200${args.uri}" else args.url;
+          url = if (hasAttr "uri" args) then "http://localhost:32400${args.uri}" else args.url;
         }
       ) [ "uri" ];
     in
