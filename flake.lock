@@ -681,11 +681,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1755513840,
-        "narHash": "sha256-VktqrbxRROCkIkWQFnoR7iH+n/NLCkCRf8L3mpqqNbw=",
+        "lastModified": 1756965934,
+        "narHash": "sha256-50CfPfKxwStOLTg40movBFNGNnYn563ORZmVe5wvUd4=",
         "owner": "samjwillis97",
         "repo": "shc-ai",
-        "rev": "9c6480b3c0eebde7b45f2dcef59dd92c18b9ae4a",
+        "rev": "ba1779d99d7b0805965e1014b5a72018a5d9f378",
         "type": "github"
       },
       "original": {
