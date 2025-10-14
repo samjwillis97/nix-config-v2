@@ -1,1 +1,7 @@
-{ imports = [ ./aerospace.nix ./gaming ]; }
+{
+  imports = [
+    ./aerospace.nix
+    ./gaming
+    ./rift.nix
+  ];
+}

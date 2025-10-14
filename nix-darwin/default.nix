@@ -16,7 +16,8 @@ in
     ./dock.nix
     ./spaces.nix
     ../overlays
-  ] ++ (if useHomeManager then [ ./home.nix ] else [ ]);
+  ]
+  ++ (if useHomeManager then [ ./home.nix ] else [ ]);
 
   # TODO:
   #   - See About MacOS Apps:

@@ -32,6 +32,7 @@ in
   home.packages = with pkgs; [
     node
     terminal-notifier
+    ai-sandbox
   ];
 
   modules.opencode = {

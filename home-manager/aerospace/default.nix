@@ -12,12 +12,12 @@
         {
           "if".app-id = "org.mozilla.nightly";
           check-further-callbacks = true;
-          run = ["layout floating"];
+          run = [ "layout floating" ];
         }
         {
           "if".window-title-regex-substring = "Picture-in-Picture";
           check-further-callbacks = true;
-          run = ["layout floating"];
+          run = [ "layout floating" ];
         }
       ];
 
@@ -101,10 +101,12 @@
           "cmd-h" = [ ]; # Disable cmd-h hiding windows
           "alt-enter" = "exec-and-forget open -n ${pkgs.wezterm}/Applications/Wezterm.app/wezterm-gui";
 
-          "alt-h" = "focus left --boundaries all-monitors-outer-frame --boundaries-action wrap-around-all-monitors";
+          "alt-h" =
+            "focus left --boundaries all-monitors-outer-frame --boundaries-action wrap-around-all-monitors";
           "alt-j" = "focus down";
           "alt-k" = "focus up";
-          "alt-l" = "focus right --boundaries all-monitors-outer-frame --boundaries-action wrap-around-all-monitors";
+          "alt-l" =
+            "focus right --boundaries all-monitors-outer-frame --boundaries-action wrap-around-all-monitors";
 
           "alt-shift-h" = "move left";
           "alt-shift-j" = "move down";

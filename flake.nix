@@ -39,6 +39,10 @@
       url = "github:samjwillis97/modular-neovim-flake";
     };
 
+    ai-sandbox = {
+      url = "github:samjwillis97/ai-sandbox";
+    };
+
     nix-serve = {
       url = "github:samjwillis97/nix-serve?ref=priority_change";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -156,6 +160,7 @@
       deploy-rs,
       firefox-darwin,
       terranix,
+      ai-sandbox,
       ...
     }@inputs:
     let
@@ -385,7 +390,9 @@
         username = "samuel.willis";
         homePath = "/Users";
         nixbldGid = 30000;
-        extraModules = [ ];
+        extraModules = [
+          # ./nix-darwin/sketchybar.nix
+        ];
         extraHomeModules = [
           ./home-manager/dev
           ./home-manager/dev/ops.nix
@@ -399,6 +406,7 @@
           ./home-manager/firefox
           ./home-manager/moonlight
           ./home-manager/opencode
+          # ./home-manager/rift
           { modules.darwin.work = true; }
         ];
       })

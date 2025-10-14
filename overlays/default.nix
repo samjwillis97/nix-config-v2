@@ -24,6 +24,7 @@ in
       httpcraft = flake.inputs.httpcraft.packages.${system}.default;
       httpcraft-mcp = flake.inputs.httpcraft-mcp.packages.${system}.default;
       ghostty = flake.inputs.ghostty.packages.${system}.default;
+      ai-sandbox = flake.inputs.ai-sandbox.packages.${system}.sandbox-docker;
 
       # something seems to have broken in latest moonlight-qt
       moonlight-qt =
