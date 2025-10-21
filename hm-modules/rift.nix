@@ -12,7 +12,7 @@ let
 
   riftPkg = pkgs.rustPlatform.buildRustPackage rec {
     pname = "rift";
-    version = "main";
+    version = "v0.0.4.1-beta";
 
     src = pkgs.fetchFromGitHub {
       owner = "acsandmann";

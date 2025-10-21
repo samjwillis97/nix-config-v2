@@ -391,7 +391,7 @@
         homePath = "/Users";
         nixbldGid = 30000;
         extraModules = [
-          # ./nix-darwin/sketchybar.nix
+          ./nix-darwin/sketchybar
         ];
         extraHomeModules = [
           ./home-manager/dev
