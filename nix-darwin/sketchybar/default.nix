@@ -52,6 +52,11 @@ let
     HOUR=$(date '+%H')
     ${sketchyBarExe} --set $NAME label="$(date '+%a %I:%M %p')" label.color=$COLOR_DEFAULT
   '';
+
+  space-handling = pkgs.writeShellScriptBin "space-handling" ''
+    # This script would contain logic to manage spaces
+    # For example, it could listen to space change events and update sketchybar accordingly
+  '';
 in
 {
   system.defaults.NSGlobalDomain._HIHideMenuBar = true;
@@ -63,114 +68,172 @@ in
   services.sketchybar = {
     enable = true;
 
-    config = ''
-      COLOR_DEFAULT="0xffdddddd"
-      COLOR_BACKGROUND="0xe01d2021"
+    config =
+      let
+        MenuBarItems = [
+          "Control Centre,Battery"
+          "Control Centre,Sound"
+          "NetWorker Lite,network"
+        ];
 
-      ICON_APPLE=􀣺
-      ICONS_SPACE=(󰬺 󰬻 󰬼 󰬽 󰬾 󰬿 󰭀 󰭁 󰭂)
+        buildMenuBarItem = (
+          name: ''
+            ${sketchyBarExe} \
+              --add alias "${name}" right \
+              --set "${name}" \
+                alias.color="0xFFFFFFFF" \
+                width=40 \
+                padding_left=12 \
+                padding_right=12 \
+                icon.drawing=off \
+                label.drawing=off
+          ''
+        );
 
-      default=(
-        label.font.family="SF Pro Roudned"
-        label.font.size=12
-        label.padding_left=10
-        label.padding_right=10
-        label.align=center
-        icon.padding_left=16
-        icon.padding_right=16
-        icon.font.size=14
-      )
+        spacesCount = 10;
+        spaceIndexes = map (v: toString v) (lib.range 1 spacesCount);
+        buildSpaceItem = (
+          index: ''
+            ${sketchyBarExe} \
+              --add space "space.${toString index}" left \
+              --set "space.${toString index}" \
+                icon.width=0 \
+                label="${toString index}" \
+                label.align=center \
+                label.background.height=24 \
+                label.background.corner_radius=5 \
+                associated_space=${toString index}
+                # TODO: Displays
+                # TODO: Script
+          ''
+        );
 
-      blur_background=(
-        background.drawing=on
-        blur_radius=24
-        background.height=36
-        background.corner_radius=10
-        background.color=""
-      )
+      in
+      ''
+        source ${pkgs.sketchybar-app-font}/bin/icon_map.sh
 
-      ${sketchyBarExe} --bar color=0x00000000 \
-        height=40 \
-        margin=5 \
-        y_offset=5 \
-        padding_left=8 \
-        padding_right=0 \
-        sticky=on \
-        topmost=window
+        bar=(
+          position=top
+          color=0x00000000
+          height=54
+          padding_left=5
+          padding_right=10
+        )
 
-      ${sketchyBarExe} --default padding_left=8 \
-        padding_right=4 \
-        background.border_color=$COLOR_DEFAULT \
-        background.border_width=0 \
-        background.height=24                             \
-        background.corner_radius=5 \
-        icon.color=$COLOR_DEFAULT                        \
-        icon.highlight_color=$COLOR_BACKGROUND           \
-        icon.padding_left=6 icon.padding_right=2         \
-        icon.font="Nerd Font:Regular:16.0"               \
-        label.color=$COLOR_DEFAULT                       \
-        label.highlight_color=$COLOR_BACKGROUND          \
-        label.padding_left=2 label.padding_right=6       \
-        label.font="SF Pro Rounded"                      \
-        label.font.size=12.0
+        default=(
+          label.font.family="SF Pro Rounded"
+          label.padding_left=10
+          label.padding_right=10
+          label.align=center
+          icon.padding_left=16
+          icon.padding_right=16
+          icon.font.size=14.0
+        )
 
-      ${sketchyBarExe} --add event window_change \
-        --add event window_focus \
-        --add event title_change
+        blur_background=(
+          background.drawing=on
+          blur_radius=24
+          background.height=36
+          background.corner_radius=10
+          background.color="0x20FFF7ED"
+        )
 
-      ${sketchyBarExe} --add item apple left \
-        --set apple background.border_width=0 background.height=24 icon=$ICON_APPLE  click_script="./bin/menus -s 0"  \
-        --subscribe apple mouse.clicked \
-        --add bracket button apple \
-        --set button background.color=0x5ddddddd background.border_color=$COLOR_DEFAULT \
-        --add item sep.l1 left \
-        --set sep.l1 padding_left=4 padding_right=4 background.drawing=off icon.drawing=off label.drawing=off
+        spacer=(
+            label.drawing=off
+            icon.drawing=off
+        )
 
-      LENGTH=''${#ICONS_SPACE[@]}
-      for i in "''${!ICONS_SPACE[@]}"
-      do
-        sid=$((i+1))
-        PAD_LEFT=2
-        PAD_RIGHT=8
-        if [[ $i == 0 ]]; then
-          PAD_LEFT=8
-        elif [[ $i == $((LENGTH-1)) ]]; then
-          PAD_RIGHT=8
-        fi
-        # ${sketchyBarExe} --add space space.$sid left \
-        #   --set space.$sid script="$PLUGIN_DIR/app_space.sh" associated_space=$sid padding_left=$PAD_LEFT padding_right=$PAD_RIGHT background.color=$COLOR_DEFAULT background.border_width=0 background.corner_radius=6 background.height=24 icon="''${ICONS_SPACE[$i]}" \
-        #   --subscribe space.$sid front_app_switched window_change
-      done
+        # Default bar config
+        ${sketchyBarExe} --bar "''${bar[@]}" --default "''${default[@]}"
 
-      ${sketchyBarExe} --add bracket spaces '/space\..*/' \
-        --set spaces background.color=0x5ddddddd
+        ## Adding items
 
-      ${sketchyBarExe} --add item sep.r1 right \
-        --set sep.r1 padding_left=4 padding_right=4 background.drawing=off icon.drawing=off label.drawing=off
+        ## Apple System Menu
+        ${sketchyBarExe} \
+          --add item apple left \
+          --set apple \
+            display=1 \
+            label="􀣺" \
+            label.width=40 \
+            icon.drawing=off
 
-      ${sketchyBarExe} --add item time right \
-        --set time script="${lib.getExe clockScript}" update_freq=5 padding_left=6 padding_right=8 background.border_width=0 background.corner_radius=6 background.height=24 click_script="osascript -e 'tell application \"System Events\" to click menu bar item 1 of menu bar 1 of application process \"ControlCenter\"'" \
-        --add bracket clock time \
-        --set clock background.color=0x5ddddddd background.border_color=$COLOR_DEFAULT \
-        --add item sep.r3 right \
-        --set sep.r3 padding_left=4 padding_right=4 background.drawing=off icon.drawing=off label.drawing=off
+        # Spacer
+        ${sketchyBarExe} \
+          --add item spacer.1 left \
+          --set spacer.1 \
+            width=12 \
+            "''${spacer[@]}"
 
-      # ${sketchyBarExe} --add item centre right \
-      #   --set centre icon.color=$COLOR_DEFAULT icon=$ICON_CMD padding_left=0 padding_right=4 background.border_width=0 background.corner_radius=6 background.height=24 click_script="osascript -e 'tell application \"System Events\" to click menu bar item 2 of menu bar 1 of application process \"ControlCenter\"'" \
-      #   --add item wifi right \
-      #   --set wifi script="$PLUGIN_DIR/wifi.sh" update_freq=5 padding_left=0 padding_right=0 background.border_width=0 background.corner_radius=6 background.height=24 \
-      #   --subscribe wifi wifi_change \
-      #   --add item yabai_mode right \
-      #   --set yabai_mode padding_left=4 padding_right=4 update_freq=1 script="$PLUGIN_DIR/yabai.sh" click_script="$PLUGIN_DIR/yabai_click.sh" \
-      #   --subscribe yabai_mode mouse.clicked window_focus front_app_switched space_change title_change \
-      #   --add bracket status centre yabai_mode wifi \
-      #   --set status background.color=0x5ddddddd background.border_color=$COLOR_DEFAULT \
-      #   --add item seperator.r5 right \
-      #   --set seperator.r5 padding_left=4 padding_right=4 background.drawing=off icon.drawing=off label.drawing=off
+        # Spacer
+        ${sketchyBarExe} \
+          --add item spacer.2 left \
+          --set spacer.2 \
+            width=12 \
+            "''${spacer[@]}"
 
-      ${sketchyBarExe} --hotload true
-      ${sketchyBarExe} --update
-    '';
+        # Spaces
+        ${lib.strings.concatStringsSep "\n" (map buildSpaceItem spaceIndexes)}
+
+        # Spacer
+        ${sketchyBarExe} \
+          --add item spacer.3 left \
+          --set spacer.3 \
+            width=12 \
+            "''${spacer[@]}"
+
+        # Spaces Bracket
+        ${sketchyBarExe} \
+          --add bracket spaces_bracket ${
+            lib.strings.concatStringsSep " " (map (v: "\"space.${v}\"") spaceIndexes)
+          } "spacer.2" "spacer.3" \
+          --set spaces_bracket "''${blur_background[@]}"
+
+
+        # Time
+        ${sketchyBarExe} \
+          --add item time right \
+          --set time \
+          script='${sketchyBarExe} -m --set $NAME label="$(date +%H:%M)"' update_freq=10 \
+          icon.drawing=off label.padding_left=0 label.padding_right=20 \
+          click_script="osascript -e 'tell application \"System Events\" to click menu bar item 1 of menu bar 1 of application process \"ControlCenter\"'"
+
+        # Date
+        ${sketchyBarExe} \
+          --add item date right \
+          --set date \
+          script='${sketchyBarExe} -m --set $NAME label="$(date +%a\ %b\ %d)"' update_freq=60 \
+          icon.drawing=off label.padding_left=16 label.padding_right=8 \
+          click_script="open -a \"Calendar\""
+
+        ## Bracket (Item groups)
+        # Name: dt_bracket
+        # Members: date, time
+        ${sketchyBarExe} \
+          --add bracket dt_bracket date time \
+          --set dt_bracket "''${blur_background[@]}"
+
+        # Spacer
+        ${sketchyBarExe} \
+          --add item spacer.5 right \
+          --set spacer.5 \
+            width=12 \
+            "''${spacer[@]}"
+
+        # Aliases mirror items of the original status bar
+        ${lib.strings.concatStringsSep "\n" (map buildMenuBarItem MenuBarItems)}
+
+        ## Bracket (Item groups)
+        # Name: sysst_bracket
+        # Members: battery
+        ${sketchyBarExe} \
+          --add bracket sysst_bracket ${
+            lib.strings.concatStringsSep " " (map (v: "\"${v}\"") MenuBarItems)
+          } \
+          --set sysst_bracket "''${blur_background[@]}"
+
+        ${sketchyBarExe} --hotload true
+        ${sketchyBarExe} --update
+      '';
 
     # config = ''
     #   # This is a demo config to showcase some of the most important commands.

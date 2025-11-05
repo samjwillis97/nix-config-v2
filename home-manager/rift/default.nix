@@ -2,7 +2,9 @@
 {
   modules.rift =
     let
-      workspaceCount = 9;
+      riftCliExe = "${config.modules.rift.package}/bin/rift-cli";
+
+      workspaceCount = 10;
 
       changeWorkspaceBinds = builtins.listToAttrs (
         builtins.genList (i: {
@@ -10,7 +12,7 @@
           value = {
             switch_to_workspace = i;
           };
-        }) workspaceCount
+        }) (workspaceCount - 1)
       );
 
       moveWindowToWorkspaceBinds = builtins.listToAttrs (
@@ -19,7 +21,11 @@
           value = {
             move_window_to_workspace = i;
           };
-        }) workspaceCount
+        }) (workspaceCount - 1)
+      );
+
+      workspaceNames = builtins.map (i: "${toString (i + 1)}") (
+        builtins.genList (x: x) (workspaceCount - 1)
       );
     in
     {
@@ -51,7 +57,7 @@
           #   and you must toggle activation via a keybind (toggle_space_activated).
           # - If false, spaces are managed by default and you can disable specific ones.
           # Default is true; uncomment to change.
-          default_disable = true;
+          default_disable = false;
 
           # Mouse/Focus behavior
           # - focus_follows_mouse: moving the mouse into a window focuses it
@@ -83,8 +89,8 @@
           #   RIFT_EVENT_JSON            # full JSON payload of the event
           #
           run_on_start = [
-            "${config.modules.rift.package}/bin/rift-cli subscribe cli --event workspace_changed --command sh --args -c --args '${pkgs.sketchybar}/bin/sketchybar --trigger rift_workspace_changed RIFT_WORKSPACE_NAME=\"$RIFT_WORKSPACE_NAME\" RIFT_WORKSPACE_ID=\"$RIFT_WORKSPACE_ID\"'"
-            "${config.modules.rift.package}/bin/rift-cli subscribe cli --event windows_changed --command sh --args -c --args '${pkgs.sketchybar}/bin/sketchybar --trigger rift_windows_changed RIFT_WORKSPACE_NAME=\"$RIFT_WORKSPACE_NAME\" RIFT_WINDOW_COUNT=\"$RIFT_WINDOW_COUNT\"'"
+            # "${riftCliExe}  cli --event workspace_changed --command sh --args -c --args '${pkgs.sketchybar}/bin/sketchybar --trigger rift_workspace_changed RIFT_WORKSPACE_NAME=\"$RIFT_WORKSPACE_NAME\" RIFT_WORKSPACE_ID=\"$RIFT_WORKSPACE_ID\"'"
+            # "${riftCliExe} subscribe cli --event windows_changed --command sh --args -c --args '${pkgs.sketchybar}/bin/sketchybar --trigger rift_windows_changed RIFT_WORKSPACE_NAME=\"$RIFT_WORKSPACE_NAME\" RIFT_WINDOW_COUNT=\"$RIFT_WINDOW_COUNT\"'"
           ];
 
           # Hot Reloading
@@ -110,10 +116,10 @@
               # - outer: space between windows and screen edges
               # - inner: space between tiled windows
               outer = {
-                top = 40;
-                left = 0;
+                top = 54;
+                left = 5;
                 bottom = 0;
-                right = 0;
+                right = 5;
               };
 
               inner = {
@@ -191,21 +197,19 @@
           # - auto_assign_windows: when true, new windows can be auto-assigned using app_rules
           # - preserve_focus_per_workspace: remember last focused window per workspace
           enabled = true;
-          default_workspace_count = 10;
+          default_workspace_count = workspaceCount;
           auto_assign_windows = true;
           preserve_focus_per_workspace = true;
 
           # Default workspace to activate on startup (0-based index).
           # If omitted, defaults to 0 (first workspace). Must be less than default_workspace_count.
           # Uncomment to change:
-          # default_workspace = 0
+          default_workspace = 0;
 
           # Workspace names (indexed order). If fewer than default_workspace_count are provided,
           # remaining workspaces are named "Workspace X".
           # Do not provide more names than default_workspace_count.
-          # workspace_names = [
-          #   "first"
-          # ];
+          workspace_names = workspaceNames;
 
           # App rules (automatic assignment)
           # Define rules that match new windows and set properties (workspace, floating, etc).
@@ -269,7 +273,12 @@
           #       ]
           #
           # By default there are no app rules; add or uncomment rules below as needed.
-          app_rules = [ ];
+          app_rules = [
+            {
+              title_substring = "Preferences";
+              floating = true;
+            }
+          ];
         };
 
         # Modifier combinations that can be reused in key bindings

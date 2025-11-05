@@ -12,16 +12,16 @@ let
 
   riftPkg = pkgs.rustPlatform.buildRustPackage rec {
     pname = "rift";
-    version = "v0.0.4.1-beta";
+    version = "v0.0.6.2";
 
     src = pkgs.fetchFromGitHub {
       owner = "acsandmann";
       repo = pname;
       rev = version;
-      sha256 = "3iAM+TX0W6tBp4uSWtEptb9VrOOhBk9S5HXo6ItA974=";
+      sha256 = "RQGxJOIB9mVlkIuVP5deLqWjG9ayN8SOFOe6bOAzIdA=";
     };
 
-    cargoHash = "sha256-KsbbeuVEkvZgRLbP9ZMBYnRVNMOuxtJpXb3Us9ewiGY=";
+    cargoHash = "sha256-+DWieSNh7B2EW9AvAT97Q6wSE+T4h5McVW6X6lqDA6Y=";
 
     meta = {
       description = "Rift is a tiling window manager for macOS that focuses on performance and usability. ";
