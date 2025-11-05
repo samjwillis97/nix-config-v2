@@ -390,6 +390,7 @@
           ./home-manager/dev
           ./home-manager/dev/ops.nix
           ./home-manager/dev/node.nix
+          ./home-manager/dev/claude.nix
           ./home-manager/wezterm
           ./home-manager/vscode
           ./home-manager/work
