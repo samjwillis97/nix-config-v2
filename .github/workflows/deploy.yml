@@ -21,7 +21,7 @@ jobs:
       CONFIG: ${{ matrix.config }}
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: DeterminateSystems/nix-installer-action@main
       - name: Connect to Tailscale
         uses: tailscale/github-action@v3
