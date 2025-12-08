@@ -36,7 +36,7 @@
     nur.url = "github:nix-community/NUR";
 
     modular-neovim = {
-      url = "github:samjwillis97/modular-neovim-flake";
+      url = "github:samjwillis97/modular-neovim-flake?rev=351255dc2995cace0d6da1b5afde121f897be459";
     };
 
     nix-serve = {
@@ -69,13 +69,13 @@
 
     httpcraft = {
       url = "github:samjwillis97/shc-ai";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
 
     httpcraft-mcp = {
       url = "github:samjwillis97/httpcraft-mcp";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
 
@@ -127,9 +127,6 @@
 
     nix-vscode-extensions = {
       url = "github:nix-community/nix-vscode-extensions";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-      };
     };
 
     firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";

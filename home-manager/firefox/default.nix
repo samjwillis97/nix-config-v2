@@ -12,8 +12,7 @@ in
     enable = true;
     # package = pkgs.firefox-bin;
     # package = pkgs.librewolf;
-
-    # package = packageSettings;
+    package = lib.makeOverridable ({ ... }: pkgs.firefox-bin) { };
 
     profiles.${config.home.username} = {
       id = 0;

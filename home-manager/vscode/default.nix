@@ -6,6 +6,8 @@ let
   '';
 
   node = pkgs.nodejs_24;
+
+  opencodeEnabled = config.modules.opencode.enable;
 in
 {
   home.packages = [
@@ -32,6 +34,7 @@ in
           esbenp.prettier-vscode
           dbaeumer.vscode-eslint
           yoavbls.pretty-ts-errors
+          denoland.vscode-deno
 
           # Dont even bother
           # C#
@@ -53,8 +56,6 @@ in
           ms-azuretools.vscode-docker
 
           # Intellisense
-          visualstudioexptteam.vscodeintellicode
-          visualstudioexptteam.intellicode-api-usage-examples
           christian-kohler.path-intellisense
 
           # Copilot
@@ -62,14 +63,14 @@ in
           github.copilot-chat
 
           # Roo Code AI
-          rooveterinaryinc.roo-cline
+          # rooveterinaryinc.roo-cline
 
           # Github
           github.vscode-pull-request-github
           github.vscode-github-actions
 
           # Terraform
-          hashicorp.terraform
+          # hashicorp.terraform
 
           # Markdown
           bierner.markdown-mermaid
@@ -81,14 +82,14 @@ in
           # Temporarily using this instead
           vscodevim.vim
         ]
-        ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+        ++ (pkgs.vscode-utils.extensionsFromVscodeMarketplace [
           {
-            name = "amp";
-            publisher = "sourcegraph";
-            version = "0.0.1748419909";
-            sha256 = "NIKtEC/EFbuzdtKIzo7L8mYukD3gJLyA+EItEjIca5o=";
+            name = "opencode";
+            publisher = "sst-dev";
+            version = "0.0.12";
+            sha256 = "sha256-0Bql5AWQKw2937sfjm22mi675kAyh8v447b+IjkGKjU=";
           }
-        ];
+        ]);
 
       globalSnippets = { };
 
@@ -156,12 +157,14 @@ in
           "vscodevim.vim" = 1;
         };
 
+        "extensions.ignoreRecommendations" = true;
+
         # Styling
         "editor.fontFamily" = "FiraMono Nerd Font Mono";
         "workbench.colorTheme" = "Catppuccin Mocha";
         "workbench.iconTheme" = "catppuccin-mocha";
         "editor.bracketPairColorization.enabled" = true;
-        "workbench.editor.showTabs" = false;
+        "workbench.editor.showTabs" = "none";
         "workbench.editor.enablePreview" = false;
         "workbench.editor.enablePreviewFromQuickOpen" = false;
         "workbench.startupEditor" = "newUntitledFile";
@@ -171,7 +174,7 @@ in
         "editor.cursorSurroundingLines" = 8;
         "editor.smoothScrolling" = true;
         "editor.guides.bracketPairs" = true;
-        "editor.cursorSmoothCaretAnimation" = true;
+        "editor.cursorSmoothCaretAnimation" = "on";
         "editor.wordWrap" = "on";
 
         # Copilot
@@ -194,103 +197,103 @@ in
         };
 
         # Copilot Agent MCP
-        "mcp" = {
-          "inputs" = [
-            {
-              description = "Jira URL";
-              type = "promptString";
-              id = "jira-url";
-              password = false;
-            }
-            {
-              description = "Jira Username";
-              type = "promptString";
-              id = "jira-username";
-              password = false;
-            }
-            {
-              description = "Jira API Token";
-              type = "promptString";
-              id = "jira-api-token";
-              password = true;
-            }
-            {
-              description = "Confluence URL";
-              type = "promptString";
-              id = "confluence-url";
-              password = false;
-            }
-            {
-              description = "Confluence Username";
-              type = "promptString";
-              id = "confluence-username";
-              password = false;
-            }
-            {
-              description = "Confluence API Token";
-              type = "promptString";
-              id = "confluence-api-token";
-              password = true;
-            }
-          ];
-
-          "servers" = {
-            github = {
-              type = "stdio";
-              command = "${github-mcp-wrapped}/bin/github-mcp-wrapped";
-              args = [ "stdio" ];
-            };
-            sentry = {
-              type = "stdio";
-              command = "${node}/bin/npx";
-              args = [
-                "-y"
-                "mcp-remote"
-                "https://mcp.sentry.dev/sse"
-              ];
-              env = { };
-            };
-            # atlassian = {
-            #   transport = "sse";
-            #   command = "${node}/bin/npx";
-            #   args = [
-            #     "-y"
-            #     "mcp-remote"
-            #     "https://mcp.atlassian.com/v1/sse"
-            #   ];
-            #   env = {};
-            # };
-            atlassian-mcp = {
-              command = "docker";
-              args = [
-                "run"
-                "-i"
-                "--rm"
-                "-e"
-                "JIRA_URL"
-                "-e"
-                "JIRA_USERNAME"
-                "-e"
-                "JIRA_API_TOKEN"
-                "-e"
-                "CONFLUENCE_URL"
-                "-e"
-                "CONFLUENCE_USERNAME"
-                "-e"
-                "CONFLUENCE_API_TOKEN"
-                "ghcr.io/sooperset/mcp-atlassian:latest"
-              ];
-              env = {
-                JIRA_URL = "\${input:jira-url}";
-                JIRA_USERNAME = "\${input:jira-username}";
-                JIRA_API_TOKEN = "\${input:jira-api-token}";
-                CONFLUENCE_URL = "\${input:confluence-url}";
-                CONFLUENCE_USERNAME = "\${input:confluence-username}";
-                CONFLUENCE_API_TOKEN = "\${input:confluence-api-token}";
-              };
-            };
-          };
-        };
+        # "mcp" = {
+        #   "inputs" = [
+        #     {
+        #       description = "Jira URL";
+        #       type = "promptString";
+        #       id = "jira-url";
+        #       password = false;
+        #     }
+        #     {
+        #       description = "Jira Username";
+        #       type = "promptString";
+        #       id = "jira-username";
+        #       password = false;
+        #     }
+        #     {
+        #       description = "Jira API Token";
+        #       type = "promptString";
+        #       id = "jira-api-token";
+        #       password = true;
+        #     }
+        #     {
+        #       description = "Confluence URL";
+        #       type = "promptString";
+        #       id = "confluence-url";
+        #       password = false;
+        #     }
+        #     {
+        #       description = "Confluence Username";
+        #       type = "promptString";
+        #       id = "confluence-username";
+        #       password = false;
+        #     }
+        #     {
+        #       description = "Confluence API Token";
+        #       type = "promptString";
+        #       id = "confluence-api-token";
+        #       password = true;
+        #     }
+        #   ];
+        #
+        #   "servers" = {
+        #     github = {
+        #       type = "stdio";
+        #       command = "${github-mcp-wrapped}/bin/github-mcp-wrapped";
+        #       args = [ "stdio" ];
+        #     };
+        #     sentry = {
+        #       type = "stdio";
+        #       command = "${node}/bin/npx";
+        #       args = [
+        #         "-y"
+        #         "mcp-remote"
+        #         "https://mcp.sentry.dev/sse"
+        #       ];
+        #       env = { };
+        #     };
+        #     # atlassian = {
+        #     #   transport = "sse";
+        #     #   command = "${node}/bin/npx";
+        #     #   args = [
+        #     #     "-y"
+        #     #     "mcp-remote"
+        #     #     "https://mcp.atlassian.com/v1/sse"
+        #     #   ];
+        #     #   env = {};
+        #     # };
+        #     atlassian-mcp = {
+        #       command = "docker";
+        #       args = [
+        #         "run"
+        #         "-i"
+        #         "--rm"
+        #         "-e"
+        #         "JIRA_URL"
+        #         "-e"
+        #         "JIRA_USERNAME"
+        #         "-e"
+        #         "JIRA_API_TOKEN"
+        #         "-e"
+        #         "CONFLUENCE_URL"
+        #         "-e"
+        #         "CONFLUENCE_USERNAME"
+        #         "-e"
+        #         "CONFLUENCE_API_TOKEN"
+        #         "ghcr.io/sooperset/mcp-atlassian:latest"
+        #       ];
+        #       env = {
+        #         JIRA_URL = "\${input:jira-url}";
+        #         JIRA_USERNAME = "\${input:jira-username}";
+        #         JIRA_API_TOKEN = "\${input:jira-api-token}";
+        #         CONFLUENCE_URL = "\${input:confluence-url}";
+        #         CONFLUENCE_USERNAME = "\${input:confluence-username}";
+        #         CONFLUENCE_API_TOKEN = "\${input:confluence-api-token}";
+        #       };
+        #     };
+        #   };
+        # };
 
         "editor.formatOnSave" = true;
         "[typescript]" = {
@@ -301,9 +304,6 @@ in
         };
         "[yaml]" = {
           "editor.defaultFormatter" = "esbenp.prettier-vscode";
-        };
-        "[dockercompose]" = {
-          "editor.defaultFormatter" = "ms-azuretools.vscode-docker";
         };
         "[nix]" = {
           "editor.defaultFormatter" = "jnoortheen.nix-ide";
@@ -320,7 +320,6 @@ in
 
         "nix.serverPath" = "${pkgs.nixd}/bin/nixd";
         "nix.enableLanguageServer" = true;
-        "nix.formatterPath" = "${pkgs.nixfmt-rfc-style}/bin/nixfmt";
         "nix.serverSettings" = {
           nixd = {
             formatting.command = [ "${pkgs.nixfmt-rfc-style}/bin/nixfmt" ];
@@ -339,7 +338,6 @@ in
         "vim.useSystemClipboard" = true;
         "vim.useCtrlKeys" = true;
         "vim.hlsearch" = true;
-        "vim.startup.firstline" = false;
         "vim.insertModeKeyBindings" = [
           {
             "before" = [
@@ -458,14 +456,6 @@ in
         #     };
         #   };
 
-        "roo-cline.allowedCommands" = [
-          "npm test"
-          "npm install"
-          "tsc"
-          "git log"
-          "git diff"
-          "git show"
-        ];
       };
     };
   };
