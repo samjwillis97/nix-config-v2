@@ -39,6 +39,7 @@ in
     plugins = plugins;
     commands = getFilesInDir ./commands ".md";
     agents = getFilesInDir ./agents ".md";
+    prompts = getFilesInDir ./prompts ".txt";
     settings = {
       share = "disabled";
       instructions = [
@@ -69,6 +70,73 @@ in
           "pnpm run" = "allow";
         };
       };
+      agent = {
+        github-researcher = {
+          mode = "subagent";
+          prompt = "{file:./prompts/github-researcher.txt}";
+          description = "Use this agent to research code on GitHub, finding relevant repositories, files, and code snippets based on the user's query. Provide links to the most relevant results.";
+          permission = {
+            edit = "deny";
+            bash = "deny";
+            webfetch = "deny";
+          };
+          tools = {
+            "*" = false;
+            github_search_repositories = true;
+            github_search_code = true;
+            github_get_file_contents = true;
+            github_list_branches = true;
+            github_list_commits = true;
+            github_get_commit = true;
+          };
+        };
+        jira-writer = {
+          mode = "primary";
+          prompt = "{file:./prompts/jira-writer.txt}";
+          permission = {
+            edit = "deny";
+            bash = "deny";
+            webfetch = "deny";
+          };
+          tools = {
+            "atlassian_*" = false;
+            atlassian_getJiraIssue = true;
+            atlassian_getJiraIssueRemoteIssueLinks = true;
+            atlassian_getTransitionsForJiraIssue = true;
+            atlassian_getVisibleJiraProjects = true;
+            atlassian_getJiraProjectIssueTypesMetadata = true;
+            atlassian_getJiraIssueTypeMetaWithFields = true;
+            atlassian_searchJiraIssuesUsingJql = true;
+            atlassian_lookupJiraAccountId = true;
+            atlassian_createJiraIssue = true;
+            atlassian_editJiraIssue = true;
+            atlassian_addCommentToJiraIssue = true;
+            atlassian_transitionJiraIssue = true;
+          };
+        };
+        jira-planner = {
+          mode = "primary";
+          prompt = "{file:./prompts/jira-planner.txt}";
+          permission = {
+            edit = "allow";
+            bash = "deny";
+            webfetch = "deny";
+          };
+          tools = {
+            write = true;
+            edit = true;
+            "atlassian_*" = false;
+            atlassian_getJiraIssue = true;
+            atlassian_getJiraIssueRemoteIssueLinks = true;
+            atlassian_getTransitionsForJiraIssue = true;
+            atlassian_getVisibleJiraProjects = true;
+            atlassian_getJiraProjectIssueTypesMetadata = true;
+            atlassian_getJiraIssueTypeMetaWithFields = true;
+            atlassian_searchJiraIssuesUsingJql = true;
+            atlassian_lookupJiraAccountId = true;
+          };
+        };
+      };
       mcp = {
         atlassian = {
           type = "local";
@@ -78,7 +146,7 @@ in
             "mcp-remote"
             "https://mcp.atlassian.com/v1/sse"
           ];
-          enabled = false; # Need admin approval to enable
+          enabled = true;
         };
         sentry = {
           type = "local";
@@ -96,7 +164,7 @@ in
             "${github-mcp-wrapped}/bin/github-mcp-wrapped"
             "stdio"
           ];
-          enabled = false;
+          enabled = true;
         };
         playwright =
           let

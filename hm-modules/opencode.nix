@@ -1,4 +1,5 @@
 {
+  pkgs,
   config,
   lib,
   ...
@@ -34,10 +35,19 @@ in
       default = [ ];
       description = "Custom commands to add to opencode config. Should be file paths of markdown files";
     };
+
+    prompts = mkOption {
+      type = types.listOf types.path;
+      default = [ ];
+      description = "Custom prompts to be used from opencode config. Should be file paths of text files";
+    };
   };
 
   config = (
     mkIf cfg.enable (mkMerge [
+      {
+        home.packages = [ pkgs.opencode ];
+      }
       {
         home.file.".config/opencode/opencode.json".text = builtins.toJSON (
           cfg.settings
@@ -71,6 +81,17 @@ in
             agent_name=''${agent_bn#*-}
             cp "$agent_src" "$HOME/.config/opencode/agent/$agent_name"
           '') cfg.agents}
+        '';
+
+        home.activation.opencode-prompts = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          mkdir -p $HOME/.config/opencode/prompts
+          rm -f $HOME/.config/opencode/prompts/*
+          ${concatMapStringsSep "\n" (prompt: ''
+            prompt_src=${prompt}
+            prompt_bn=$(basename "$prompt_src")
+            prompt_name=''${prompt_bn#*-}
+            cp "$prompt_src" "$HOME/.config/opencode/prompts/$prompt_name"
+          '') cfg.prompts}
         '';
       }
     ])
