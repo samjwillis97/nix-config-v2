@@ -310,8 +310,8 @@ If ANY slides need fixes:
 4. **Repeat until** all slides pass review or only minor acceptable issues remain
 
 ### Maximum Iterations
-- Limit to 2 revision iterations maximum to avoid infinite loops
-- After 2 iterations, proceed to final PDF even if minor issues remain
+- Limit to 5 revision iterations maximum to avoid infinite loops
+- After 5 iterations, proceed to final PDF even if minor issues remain
 
 ## 6. Final Compilation - MANDATORY STEP
 **Once slides pass visual review, create the final PDF**
