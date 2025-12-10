@@ -22,15 +22,30 @@ let
   plugins =
     getFilesInDir ./plugins ".js"
     ++ (if (pkgs.stdenv.isDarwin) then getFilesInDir ./plugins/darwin ".js" else [ ]);
+
+  marpThemes = getFilesInDir ./themes/marp ".css";
 in
 {
   imports = [
     ../../hm-modules/opencode.nix
   ];
 
+  # Install Marp themes to user config directory
+  home.activation.opencode-marp-themes = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    mkdir -p $HOME/.config/opencode/themes/marp
+    rm -f $HOME/.config/opencode/themes/marp/*
+    ${lib.concatMapStringsSep "\n" (theme: ''
+      theme_src=${theme}
+      theme_bn=$(basename "$theme_src")
+      theme_name=''${theme_bn#*-}
+      cp "$theme_src" "$HOME/.config/opencode/themes/marp/$theme_name"
+    '') marpThemes}
+  '';
+
   # For some reason with these MCP's you need node globally :(
   home.packages = with pkgs; [
     node
+    marp-cli
     terminal-notifier
   ];
 
@@ -193,6 +208,53 @@ in
             atlassian_getPagesInConfluenceSpace = true;
             atlassian_getConfluencePageDescendants = true;
             atlassian_searchConfluenceUsingCql = true;
+          };
+        };
+        slides-generator = {
+          mode = "primary";
+          prompt = "{file:./prompts/slides-generator.txt}";
+          description = "Generate presentation slides from markdown documents";
+          permission = {
+            edit = "allow";
+            bash = {
+              "*" = "ask";
+              "cd" = "allow";
+              "marp" = "allow";
+              "test -w" = "allow";
+              "test -d" = "allow";
+              "mkdir -p" = "allow";
+              "ls" = "allow";
+              "rm" = "ask";
+              "which" = "allow";
+              "grep" = "allow";
+              "mv" = "allow";
+              "rm -rf marp-preview" = "allow";
+              "rm -rf marp-preview/*" = "allow";
+            };
+            webfetch = "deny";
+          };
+          tools = {
+            bash = true;
+            read = true;
+            write = true;
+            edit = true;
+            glob = true;
+            list = true;
+            task = true;
+          };
+        };
+        slide-reviewer = {
+          mode = "subagent";
+          prompt = "{file:./prompts/slide-reviewer.txt}";
+          description = "Review individual presentation slides for visual quality and readability";
+          permission = {
+            edit = "deny";
+            bash = "deny";
+            webfetch = "deny";
+          };
+          tools = {
+            "*" = false;
+            read = true;
           };
         };
       };

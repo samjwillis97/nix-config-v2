@@ -1,0 +1,281 @@
+/*
+ * @theme nib
+ * @author Based on nib style guide
+ */
+
+@import 'default';
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
+
+:root {
+  --nib-dark-green: #134A38;
+  --nib-light-green: #C2D6B5;
+  --nib-bright-green: #82E578;
+  --nib-peach: #FDD7BC;
+  --nib-white: #FFFFFF;
+  --nib-gray: #E8E8E8;
+  --nib-border-width: 12px;
+}
+
+section {
+  background-color: var(--nib-gray);
+  font-family: 'Open Sans', sans-serif;
+  padding: 0;
+  color: var(--nib-dark-green);
+}
+
+/* Default slide with border */
+section {
+  border: var(--nib-border-width) solid var(--nib-dark-green);
+  padding: 60px 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Title slide - dark green background with bright green border */
+section.title {
+  background-color: var(--nib-dark-green);
+  border-color: var(--nib-bright-green);
+  color: var(--nib-white);
+  text-align: center;
+}
+
+section.title h1 {
+  font-size: 3.5rem;
+  font-weight: 300;
+  margin-bottom: 0.5em;
+}
+
+section.title h2 {
+  font-size: 1.5rem;
+  font-weight: 300;
+  opacity: 0.9;
+}
+
+/* White background slide */
+section.light {
+  background-color: var(--nib-white);
+  border-color: var(--nib-dark-green);
+}
+
+/* Slide with light green header */
+section.green-header {
+  background-color: var(--nib-white);
+  border-color: var(--nib-dark-green);
+  padding: 0;
+}
+
+section.green-header h1 {
+  background-color: var(--nib-light-green);
+  color: var(--nib-dark-green);
+  padding: 30px 80px;
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 400;
+}
+
+section.green-header > *:not(h1) {
+  padding-left: 80px;
+  padding-right: 80px;
+}
+
+section.green-header > p:first-of-type {
+  margin-top: 60px;
+}
+
+/* Slide with peach header */
+section.peach-header {
+  background-color: var(--nib-white);
+  border-color: var(--nib-dark-green);
+  padding: 0;
+}
+
+section.peach-header h1 {
+  background-color: var(--nib-peach);
+  color: var(--nib-dark-green);
+  padding: 30px 80px;
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 400;
+}
+
+section.peach-header > *:not(h1) {
+  padding-left: 80px;
+  padding-right: 80px;
+}
+
+section.peach-header > p:first-of-type {
+  margin-top: 60px;
+}
+
+/* Bright green header variant */
+section.bright-header {
+  background-color: var(--nib-dark-green);
+  border-color: var(--nib-bright-green);
+  padding: 0;
+  color: var(--nib-white);
+}
+
+section.bright-header h1 {
+  background-color: var(--nib-bright-green);
+  color: var(--nib-dark-green);
+  padding: 30px 80px;
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 400;
+}
+
+section.bright-header > *:not(h1) {
+  padding-left: 80px;
+  padding-right: 80px;
+}
+
+section.bright-header > p:first-of-type {
+  margin-top: 60px;
+}
+
+/* Two column layouts */
+section.two-column {
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+section.two-column.left-green .left {
+  background-color: var(--nib-light-green);
+  color: var(--nib-dark-green);
+  padding: 60px 40px;
+}
+
+section.two-column.left-green .right {
+  background-color: var(--nib-white);
+  color: var(--nib-dark-green);
+  padding: 60px 40px;
+}
+
+section.two-column.left-peach .left {
+  background-color: var(--nib-peach);
+  color: var(--nib-dark-green);
+  padding: 60px 40px;
+}
+
+section.two-column.left-peach .right {
+  background-color: var(--nib-white);
+  color: var(--nib-dark-green);
+  padding: 60px 40px;
+}
+
+section.two-column.left-dark .left {
+  background-color: var(--nib-dark-green);
+  color: var(--nib-white);
+  padding: 60px 40px;
+}
+
+section.two-column.left-dark .right {
+  background-color: var(--nib-bright-green);
+  color: var(--nib-dark-green);
+  padding: 60px 40px;
+}
+
+/* Typography */
+h1 {
+  font-size: 2.5rem;
+  font-weight: 400;
+  margin-bottom: 0.5em;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 400;
+  margin-bottom: 0.5em;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-bottom: 0.5em;
+}
+
+p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 1em;
+}
+
+ul, ol {
+  font-size: 1.2rem;
+  line-height: 1.8;
+}
+
+li {
+  margin-bottom: 0.5em;
+}
+
+/* Links */
+a {
+  color: var(--nib-bright-green);
+  text-decoration: none;
+}
+
+section.title a,
+section.bright-header a {
+  color: var(--nib-bright-green);
+}
+
+section.light a,
+section.green-header a,
+section.peach-header a {
+  color: var(--nib-dark-green);
+  text-decoration: underline;
+}
+
+/* Code blocks */
+pre {
+  background-color: var(--nib-dark-green);
+  color: var(--nib-white);
+  padding: 1em;
+  border-radius: 4px;
+}
+
+code {
+  background-color: var(--nib-light-green);
+  color: var(--nib-dark-green);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-family: 'Monaco', 'Courier New', monospace;
+}
+
+/* Tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+}
+
+th {
+  background-color: var(--nib-dark-green);
+  color: var(--nib-white);
+  padding: 0.75em;
+  text-align: left;
+}
+
+td {
+  padding: 0.75em;
+  border-bottom: 1px solid var(--nib-light-green);
+}
+
+/* Blockquotes */
+blockquote {
+  border-left: 4px solid var(--nib-bright-green);
+  padding-left: 1em;
+  margin: 1em 0;
+  font-style: italic;
+}
+
+/* Footer with small text */
+section::after {
+  font-size: 0.7rem;
+  color: inherit;
+  opacity: 0.6;
+}

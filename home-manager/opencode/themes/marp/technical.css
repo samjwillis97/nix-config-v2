@@ -1,0 +1,207 @@
+/* @theme technical */
+
+@import 'default';
+
+:root {
+  --color-background: #1e1e1e;
+  --color-foreground: #d4d4d4;
+  --color-highlight: #4fc3f7;
+  --color-accent: #ab47bc;
+  --color-dimmed: #808080;
+  --color-code-bg: #2d2d2d;
+}
+
+section {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: 'Monaco', 'Fira Code', 'Courier New', monospace;
+  font-size: 26px;
+  padding: 60px 80px;
+}
+
+h1 {
+  color: var(--color-highlight);
+  font-size: 2.5em;
+  font-weight: 700;
+  margin-bottom: 0.5em;
+  font-family: 'Monaco', 'Fira Code', monospace;
+  letter-spacing: -1px;
+}
+
+h2 {
+  color: var(--color-highlight);
+  font-size: 1.8em;
+  font-weight: 600;
+  margin-bottom: 0.5em;
+  border-bottom: 2px solid var(--color-accent);
+  padding-bottom: 0.3em;
+  font-family: 'Monaco', 'Fira Code', monospace;
+}
+
+h3 {
+  color: var(--color-accent);
+  font-size: 1.3em;
+  font-weight: 500;
+  margin-bottom: 0.4em;
+}
+
+a {
+  color: var(--color-highlight);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--color-highlight);
+}
+
+a:hover {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+}
+
+ul, ol {
+  margin: 0.5em 0;
+}
+
+li {
+  margin: 0.5em 0;
+  line-height: 1.6;
+}
+
+li::marker {
+  color: var(--color-accent);
+}
+
+strong {
+  color: var(--color-highlight);
+  font-weight: 700;
+}
+
+em {
+  color: var(--color-accent);
+  font-style: italic;
+}
+
+code {
+  background: var(--color-code-bg);
+  color: var(--color-accent);
+  padding: 0.2em 0.5em;
+  border-radius: 4px;
+  font-family: 'Fira Code', 'Monaco', 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+pre {
+  background: var(--color-code-bg);
+  padding: 1.5em;
+  border-radius: 8px;
+  border-left: 4px solid var(--color-accent);
+  overflow-x: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+pre code {
+  background: none;
+  color: var(--color-foreground);
+  padding: 0;
+}
+
+blockquote {
+  border-left: 5px solid var(--color-highlight);
+  padding-left: 1em;
+  margin: 1em 0;
+  color: var(--color-dimmed);
+  background: rgba(79, 195, 247, 0.1);
+  padding: 0.5em 1em;
+  border-radius: 4px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+  font-size: 0.9em;
+}
+
+th {
+  background: var(--color-accent);
+  color: var(--color-background);
+  padding: 0.6em;
+  font-weight: 700;
+  text-align: left;
+}
+
+td {
+  border: 1px solid var(--color-dimmed);
+  padding: 0.6em;
+}
+
+tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Two-column layout support */
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2em;
+}
+
+.columns > div {
+  min-width: 0;
+}
+
+/* Title slide styling */
+section.lead {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+}
+
+section.lead h1 {
+  font-size: 3.5em;
+  margin-bottom: 0.3em;
+  color: var(--color-highlight);
+  text-shadow: 0 0 20px rgba(79, 195, 247, 0.5);
+}
+
+section.lead h2 {
+  border: none;
+  color: var(--color-dimmed);
+  font-size: 1.5em;
+  font-weight: 400;
+}
+
+/* Section divider styling */
+section.divider {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--color-code-bg);
+}
+
+section.divider h1 {
+  font-size: 4em;
+  color: var(--color-accent);
+}
+
+/* Code syntax highlighting hint */
+.language-bash::before,
+.language-shell::before {
+  content: "$ ";
+  color: var(--color-highlight);
+  user-select: none;
+}
+
+/* Footer/page number styling */
+section::after {
+  color: var(--color-dimmed);
+  font-size: 0.6em;
+}
+
+/* Mermaid diagram container */
+.mermaid {
+  background: var(--color-code-bg);
+  padding: 1em;
+  border-radius: 8px;
+}
