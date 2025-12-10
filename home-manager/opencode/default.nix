@@ -88,6 +88,7 @@ in
               "tail" = "allow";
               "wc" = "allow";
               "rg" = "allow";
+              "sort" = "allow";
             };
             webfetch = "deny";
           };
@@ -163,6 +164,35 @@ in
             atlassian_getJiraIssueTypeMetaWithFields = true;
             atlassian_searchJiraIssuesUsingJql = true;
             atlassian_lookupJiraAccountId = true;
+            atlassian_getConfluencePage = true;
+          };
+        };
+        jira-query = {
+          mode = "all";
+          prompt = "{file:./prompts/jira-query.txt}";
+          description = "Use this agent to query and search Jira issues. Provides quick access to issue details, search using JQL or natural language, and retrieve issue information.";
+          permission = {
+            edit = "allow";
+            bash = "deny";
+            webfetch = "deny";
+          };
+          tools = {
+            write = true;
+            read = true;
+            "atlassian_*" = false;
+            atlassian_getAccessibleAtlassianResources = true;
+            atlassian_getJiraIssue = true;
+            atlassian_searchJiraIssuesUsingJql = true;
+            atlassian_search = true;
+            atlassian_fetch = true;
+            atlassian_getJiraIssueRemoteIssueLinks = true;
+            atlassian_getTransitionsForJiraIssue = true;
+            atlassian_lookupJiraAccountId = true;
+            atlassian_getConfluenceSpaces = true;
+            atlassian_getConfluencePage = true;
+            atlassian_getPagesInConfluenceSpace = true;
+            atlassian_getConfluencePageDescendants = true;
+            atlassian_searchConfluenceUsingCql = true;
           };
         };
       };
