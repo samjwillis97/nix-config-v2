@@ -71,25 +71,54 @@ in
         };
       };
       agent = {
-        github-researcher = {
+        code-researcher = {
           mode = "subagent";
-          prompt = "{file:./prompts/github-researcher.txt}";
-          description = "Use this agent to research code on GitHub, finding relevant repositories, files, and code snippets based on the user's query. Provide links to the most relevant results.";
+          prompt = "{file:./prompts/code-researcher.txt}";
+          description = "Always use this agent when asked to research a codebase.";
           permission = {
             edit = "deny";
-            bash = "deny";
+            bash = {
+              "*" = "ask";
+              "f -p" = "allow";
+              "f -L" = "allow";
+              "grep" = "allow";
+              "find" = "allow";
+              "cd" = "allow";
+              "head" = "allow";
+              "tail" = "allow";
+              "wc" = "allow";
+              "rg" = "allow";
+            };
             webfetch = "deny";
           };
           tools = {
             "*" = false;
-            github_search_repositories = true;
-            github_search_code = true;
-            github_get_file_contents = true;
-            github_list_branches = true;
-            github_list_commits = true;
-            github_get_commit = true;
+            bash = true;
+            read = true;
+            grep = true;
+            glob = true;
+            list = true;
           };
         };
+        # github-researcher = {
+        #   mode = "subagent";
+        #   prompt = "{file:./prompts/github-researcher.txt}";
+        #   description = "Use this agent to research code on GitHub, finding relevant repositories, files, and code snippets based on the user's query. Provide links to the most relevant results.";
+        #   permission = {
+        #     edit = "deny";
+        #     bash = "deny";
+        #     webfetch = "deny";
+        #   };
+        #   tools = {
+        #     "*" = false;
+        #     github_search_repositories = true;
+        #     github_search_code = true;
+        #     github_get_file_contents = true;
+        #     github_list_branches = true;
+        #     github_list_commits = true;
+        #     github_get_commit = true;
+        #   };
+        # };
         jira-writer = {
           mode = "primary";
           prompt = "{file:./prompts/jira-writer.txt}";
