@@ -205,7 +205,7 @@ in
         };
         slides-generator = {
           mode = "primary";
-          prompt = "{file:./prompts/slides-generator-v2.txt}";
+          prompt = "{file:./prompts/slides-generator.txt}";
           description = "Generate presentation slides from markdown documents";
           permission = {
             edit = "allow";
