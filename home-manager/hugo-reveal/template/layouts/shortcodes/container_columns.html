@@ -1,0 +1,14 @@
+{{/* container_columns.html */}}
+<div style="width: {{ .Get 0 }}; height: {{ .Get 1 }}; margin: 0 auto; text-align: {{ .Get 2 | default " left" }};
+  padding: {{ .Get 3 | default "0" }};">
+  <div class="columns" style="display: flex; gap: 0px; width: 100%; box-sizing: border-box;">
+    {{ $columnCount := len (split .Inner "----") }}
+    {{ $columnWidth := div 100.0 $columnCount }}
+    {{ range $index, $value := split .Inner "----" }}
+    <div class="column" style="flex: 0 0 {{ printf " %.2f" $columnWidth }}%; padding: 10px; text-align: left;
+      box-sizing: border-box;">
+      {{ $value | markdownify }}
+    </div>
+    {{ end }}
+  </div>
+</div>

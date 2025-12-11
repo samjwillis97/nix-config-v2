@@ -1,0 +1,33 @@
+baseURL = "http://localhost:1314/"
+languageCode = "en-us"
+title = "Presentation"
+theme = ["github.com/joshed-io/reveal-hugo"]
+
+[markup]
+defaultMarkdownHandler = "goldmark"
+
+[markup.goldmark.renderer]
+unsafe = true
+
+[markup.goldmark.extensions.extras.superscript]
+enable = true
+
+[markup.highlight]
+codeFences = true
+
+[outputFormats.Reveal]
+baseName = "index"
+mediaType = "text/html"
+isHTML = true
+
+[params.reveal_hugo]
+highlight_theme = "dracula"
+slide_number = true
+transition = "slide"
+transition_speed = "fast"
+
+[reveal_hugo.custom_theme_options]
+targetPath = "css/nib-theme.css"
+enableSourceMap = true
+
+

@@ -1,0 +1,283 @@
+/**
+ * nib theme for Reveal.js
+ * Converted from Marp nib-theme.css
+ * @author Based on nib style guide
+ */
+
+// Import Reveal.js theme templates
+@import "../reveal-js/dist/theme/template/mixins";
+@import "../reveal-js/dist/theme/template/settings";
+
+// nib Brand Colors
+$nibDarkGreen: #134A38;
+$nibLightGreen: #C2D6B5;
+$nibBrightGreen: #82E578;
+$nibPeach: #FDD7BC;
+$nibWhite: #FFFFFF;
+$nibGray: #E8E8E8;
+
+// Base theme settings for Reveal.js
+$backgroundColor: $nibGray;
+$mainColor: $nibDarkGreen;
+$headingColor: $nibDarkGreen;
+$linkColor: $nibBrightGreen;
+$linkColorHover: lighten($nibBrightGreen, 15%);
+$selectionBackgroundColor: $nibLightGreen;
+$selectionColor: $nibDarkGreen;
+
+// Fonts
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
+
+$mainFont: 'Open Sans', sans-serif;
+$headingFont: 'Open Sans', sans-serif;
+$mainFontSize: 32px;
+$headingFontSize: 2.5em;
+$heading1Size: 2.5em;
+$heading2Size: 2.0em;
+$heading3Size: 1.5em;
+
+// Generate base Reveal.js theme
+@import "../reveal-js/dist/theme/template/theme";
+
+// Custom nib styling overrides
+.reveal {
+  
+  // Default slide styling with border
+  .slides section {
+    border: 12px solid $nibDarkGreen;
+    padding: 60px 80px;
+    background-color: $nibGray;
+    color: $nibDarkGreen;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  // Title slide - dark green background with bright green border
+  .slides section.title {
+    background-color: $nibDarkGreen;
+    border-color: $nibBrightGreen;
+    color: $nibWhite;
+    text-align: center;
+    
+    h1 {
+      font-size: 3.5rem;
+      font-weight: 300;
+      margin-bottom: 0.5em;
+      color: $nibWhite;
+    }
+    
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 300;
+      opacity: 0.9;
+      color: $nibWhite;
+    }
+    
+    a {
+      color: $nibBrightGreen;
+    }
+  }
+  
+  // White background slide
+  .slides section.light {
+    background-color: $nibWhite;
+    border-color: $nibDarkGreen;
+    
+    a {
+      color: $nibDarkGreen;
+      text-decoration: underline;
+    }
+  }
+  
+  // Slide with light green header
+  .slides section.green-header {
+    background-color: $nibWhite;
+    border-color: $nibDarkGreen;
+    padding: 0;
+    
+    h1 {
+      background-color: $nibLightGreen;
+      color: $nibDarkGreen;
+      padding: 30px 80px;
+      margin: 0 0 30px 0;
+      font-size: 2.5rem;
+      font-weight: 400;
+      width: 100%;
+    }
+    
+    > *:not(h1) {
+      padding-left: 80px;
+      padding-right: 80px;
+    }
+    
+    > p:first-of-type {
+      margin-top: 60px;
+    }
+    
+    a {
+      color: $nibDarkGreen;
+      text-decoration: underline;
+    }
+  }
+  
+  // Slide with peach header
+  .slides section.peach-header {
+    background-color: $nibWhite;
+    border-color: $nibDarkGreen;
+    padding: 0;
+    
+    h1 {
+      background-color: $nibPeach;
+      color: $nibDarkGreen;
+      padding: 30px 80px;
+      margin: 0 0 30px 0;
+      font-size: 2.5rem;
+      font-weight: 400;
+      width: 100%;
+    }
+    
+    > *:not(h1) {
+      padding-left: 80px;
+      padding-right: 80px;
+    }
+    
+    > p:first-of-type {
+      margin-top: 60px;
+    }
+    
+    a {
+      color: $nibDarkGreen;
+      text-decoration: underline;
+    }
+  }
+  
+  // Bright green header variant
+  .slides section.bright-header {
+    background-color: $nibDarkGreen;
+    border-color: $nibBrightGreen;
+    padding: 0;
+    color: $nibWhite;
+    
+    h1 {
+      background-color: $nibBrightGreen;
+      color: $nibDarkGreen;
+      padding: 30px 80px;
+      margin: 0 0 30px 0;
+      font-size: 2.5rem;
+      font-weight: 400;
+      width: 100%;
+    }
+    
+    > *:not(h1) {
+      padding-left: 80px;
+      padding-right: 80px;
+    }
+    
+    > p:first-of-type {
+      margin-top: 60px;
+    }
+    
+    a {
+      color: $nibBrightGreen;
+    }
+  }
+  
+  // Typography adjustments
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 400;
+    margin-bottom: 0.5em;
+  }
+  
+  h2 {
+    font-size: 2rem;
+    font-weight: 400;
+    margin-bottom: 0.5em;
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 0.5em;
+  }
+  
+  p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 1em;
+  }
+  
+  ul, ol {
+    font-size: 1.2rem;
+    line-height: 1.8;
+  }
+  
+  li {
+    margin-bottom: 0.5em;
+  }
+  
+  // Code blocks - dark green background
+  pre {
+    background-color: $nibDarkGreen;
+    color: $nibWhite;
+    border-radius: 4px;
+    margin: 1em 0;
+    box-shadow: none;
+    
+    code {
+      background-color: transparent;
+      color: $nibWhite;
+      padding: 1em;
+      font-family: 'Monaco', 'Courier New', monospace;
+    }
+  }
+  
+  // Inline code - light green background
+  code {
+    background-color: $nibLightGreen;
+    color: $nibDarkGreen;
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-family: 'Monaco', 'Courier New', monospace;
+  }
+  
+  // Tables
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+    font-size: 1rem;
+    
+    th {
+      background-color: $nibDarkGreen;
+      color: $nibWhite;
+      padding: 0.75em;
+      text-align: left;
+    }
+    
+    td {
+      padding: 0.75em;
+      border-bottom: 1px solid $nibLightGreen;
+    }
+  }
+  
+  // Blockquotes
+  blockquote {
+    border-left: 4px solid $nibBrightGreen;
+    padding-left: 1em;
+    margin: 1em 0;
+    font-style: italic;
+  }
+  
+  // Mermaid diagrams - ensure visibility
+  .mermaid {
+    background-color: transparent;
+    
+    svg {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+}

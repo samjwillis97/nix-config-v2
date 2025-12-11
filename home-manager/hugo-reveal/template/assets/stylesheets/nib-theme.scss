@@ -1,0 +1,106 @@
+/**
+ * nib theme for Reveal.js
+ * Converted from Marp nib-theme.css
+ * @author Based on nib style guide
+ */
+
+// Import Reveal.js theme templates
+@import "../reveal-js/dist/theme/template/mixins";
+@import "../reveal-js/dist/theme/template/settings";
+
+// Fonts
+@font-face {
+  font-family: 'Grenette Pro';
+  font-weight: 600;
+  font-style: semibold;
+  src: url('https://static.nib.com.au/fonts/nib/Grenette-SemiBold-Pro.woff2') format('woff2');
+};
+@font-face {
+  font-family: 'Buenos Aires';
+  font-weight: 400;
+  font-style: regular;
+  src: url('https://static.nib.com.au/fonts/nib/BuenosAiresWeb-Regular.woff2') format('woff2');
+};
+
+// nib Brand Colors
+$nibTrueGreen: #144A38;
+$nibDarkest: #434343;
+$nibSageGreen: #C2D6B5;
+$nibBrightGreen: #82E578;
+$nibSunsetPink: #FDD6BC;
+$nibWarmWhite: #F5F0D6;
+$nibClearWhite: #FFFFFF;
+$nibLightest: #F1F1F1;
+$nibBlack: #111111;
+
+// Base theme settings for Reveal.js
+$backgroundColor: $nibSageGreen;
+
+$mainColor: $nibTrueGreen;
+$headingColor: $nibTrueGreen;
+
+$mainFontSize: 24px;
+$mainFont: 'Buenos Aires', sans-serif;
+
+$headingFont: 'Grenette Pro', serif;
+$headingTextShadow: none;
+$headingLetterSpacing: normal;
+$headingTextTransform: none;
+$headingFontWeight: 600;
+
+$linkColor: $nibBrightGreen;
+$linkColorHover: lighten($nibBrightGreen, 15%);
+
+$selectionBackgroundColor: $nibSunsetPink;
+$selectionColor: $nibTrueGreen;
+
+$heading1Size: 3.375em;
+$heading2Size: 2.25em;
+$heading3Size: 1.5em;
+$heading4Size: 1.125em;
+
+$codeBlockRadius: 5px;
+
+// Generate base Reveal.js theme
+@import "../reveal-js/dist/theme/template/theme";
+
+.reveal {
+  // Codeblocks
+  code {
+    background-color: $nibBlack;
+    color: $nibLightest;
+
+    // Only seems to apply to inline
+    border-radius: $codeBlockRadius;
+    padding: 0.1em 0.3em;
+  }
+
+  .code-wrapper {
+    background-color: $nibBlack !important;
+    border-color: $nibDarkest;
+    border-radius: $codeBlockRadius;
+    padding: 0.1em 0.3em;
+    box-shadow: 0 5px 15px rgba(0,0,0,.15);
+  }
+
+  // mermaid wrapper
+  pre {
+    box-shadow: none;
+
+    // mermaid diagram
+    svg {
+      display: block;
+      position: relative;
+      width: 90%;
+      margin: var(--r-block-margin) auto;
+
+      // text inside mermaid
+      p {
+        text-align: left;
+        font-family: $mainFont;
+        font-size: 2em;
+        padding: 0.2em 0.7em;
+      }
+    }
+  }
+}

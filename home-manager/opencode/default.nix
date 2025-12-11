@@ -10,6 +10,11 @@ let
     ${pkgs.github-mcp-server}/bin/github-mcp-server "$@"
   '';
 
+  # DeckTape wrapper for macOS using Docker
+  decktape-wrapped = pkgs.writeShellScriptBin "decktape" ''
+    docker run --rm -t --net=host -v "$(pwd):/slides" astefanutti/decktape "$@"
+  '';
+
   getFilesInDir = (
     dir: ext:
     lib.mapAttrsToList (name: value: dir + ("/" + name)) (
@@ -22,30 +27,18 @@ let
   plugins =
     getFilesInDir ./plugins ".js"
     ++ (if (pkgs.stdenv.isDarwin) then getFilesInDir ./plugins/darwin ".js" else [ ]);
-
-  marpThemes = getFilesInDir ./themes/marp ".css";
 in
 {
   imports = [
     ../../hm-modules/opencode.nix
   ];
 
-  # Install Marp themes to user config directory
-  home.activation.opencode-marp-themes = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    mkdir -p $HOME/.config/opencode/themes/marp
-    rm -f $HOME/.config/opencode/themes/marp/*
-    ${lib.concatMapStringsSep "\n" (theme: ''
-      theme_src=${theme}
-      theme_bn=$(basename "$theme_src")
-      theme_name=''${theme_bn#*-}
-      cp "$theme_src" "$HOME/.config/opencode/themes/marp/$theme_name"
-    '') marpThemes}
-  '';
-
   # For some reason with these MCP's you need node globally :(
   home.packages = with pkgs; [
     node
-    marp-cli
+    hugo
+    go # Required for Hugo modules
+    decktape-wrapped
     terminal-notifier
   ];
 
@@ -212,24 +205,41 @@ in
         };
         slides-generator = {
           mode = "primary";
-          prompt = "{file:./prompts/slides-generator.txt}";
+          prompt = "{file:./prompts/slides-generator-v2.txt}";
           description = "Generate presentation slides from markdown documents";
           permission = {
             edit = "allow";
             bash = {
               "*" = "ask";
+              "echo" = "allow";
               "cd" = "allow";
-              "marp" = "allow";
+              "hugo" = "allow";
+              "hugo server" = "allow";
+              "hugo new site" = "allow";
+              "hugo mod" = "allow";
+              "hugo mod init" = "allow";
+              "hugo mod get" = "allow";
+              "decktape" = "allow";
+              "docker" = "allow";
+              "docker run" = "allow";
               "test -w" = "allow";
               "test -d" = "allow";
               "mkdir -p" = "allow";
               "ls" = "allow";
+              "head" = "allow";
+              "wc" = "allow";
               "rm" = "ask";
+              "rm -rf" = "ask";
               "which" = "allow";
               "grep" = "allow";
               "mv" = "allow";
-              "rm -rf marp-preview" = "allow";
-              "rm -rf marp-preview/*" = "allow";
+              "cp" = "allow";
+              "cat" = "allow";
+              "kill" = "allow";
+              "mktemp" = "allow";
+              "sleep" = "allow";
+              "curl" = "allow";
+              "hugo-reveal-bootstrap" = "allow";
             };
             webfetch = "deny";
           };

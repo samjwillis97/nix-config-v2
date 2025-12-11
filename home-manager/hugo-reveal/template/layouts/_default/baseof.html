@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+
+<head>
+  <meta charset="utf-8">
+  {{ partial "reveal-hugo/head.html" . }}
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+      {{ block "main" . }}{{ end }}
+    </div>
+  </div>
+  {{ partial "reveal-hugo/body.html" . }}
+
+  {{- if .Page.Store.Get "hasMermaid" -}}
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#C2D6B5',
+        primaryTextColor: '#134A38',
+        primaryBorderColor: '#134A38',
+        lineColor: '#134A38',
+        secondaryColor: '#FDD7BC',
+        tertiaryColor: '#82E578'
+      }
+    });
+  </script>
+  {{- end -}}
+</body>
+
+</html>
