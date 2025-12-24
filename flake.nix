@@ -194,7 +194,7 @@
           ./home-manager/gaming
           ./home-manager/dev
           ./home-manager/dev/ops.nix
-          ./home-manager/dev/windsurf.nix
+          ./home-manager/dev/claude.nix
           ./home-manager/vscode
           ./home-manager/firefox
           ./home-manager/hyprland
