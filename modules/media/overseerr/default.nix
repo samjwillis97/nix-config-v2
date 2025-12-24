@@ -14,7 +14,7 @@ in
     enable = mkEnableOption "Enables Overseerr";
 
     dependsOn = mkOption {
-      type = types.listOf types.string;
+      type = types.listOf types.str;
       default = [ ];
       description = "List of containers that required";
     };

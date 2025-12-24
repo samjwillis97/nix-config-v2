@@ -9,6 +9,8 @@ in
     ../modules/system/users
   ];
 
+  environment.pathsToLink = if useHomeManager then [ "/share/applications" "/share/xdg-desktop-portal" ] else [ ];
+
   modules.system.users.standardUser = {
     enable = true;
     username = username;
