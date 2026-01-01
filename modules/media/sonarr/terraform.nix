@@ -17,25 +17,29 @@ in
 
     username = mkOption {
       default = "sam";
-      type = types.string;
+      type = types.str;
       description = "The username for Prowlarr authentication.";
     };
 
     password = mkOption {
       default = "nixos";
-      type = types.string;
+      type = types.str;
       description = "The password for Prowlarr authentication.";
     };
 
     apiKey = mkOption {
       default = "";
-      type = types.string;
+      type = types.str;
       description = "The API key for Sonarr";
     };
 
     logLevel = mkOption {
       default = "info";
-      type = types.enum [ "info" "debug" "trace" ];
+      type = types.enum [
+        "info"
+        "debug"
+        "trace"
+      ];
       description = "The log level for Prowlarr.";
     };
 
@@ -50,7 +54,7 @@ in
 
       baseUrl = mkOption {
         default = "http://localhost:8181";
-        type = types.string;
+        type = types.str;
       };
     };
 
@@ -63,7 +67,7 @@ in
 
       hostname = mkOption {
         default = "localhost";
-        type = types.string;
+        type = types.str;
       };
 
       port = mkOption {
@@ -127,30 +131,30 @@ in
       sonarr_media_management = {
         "main" = {
           # Folders
-          create_empty_folders        = false;
-          delete_empty_folders        = false;
+          create_empty_folders = false;
+          delete_empty_folders = false;
 
           # Importing
-          episode_title_required      = "never";
-          skip_free_space_check       = true;
-          minimum_free_space          = 100;
-          hardlinks_copy              = true;
-          import_extra_files          = false;
-          extra_file_extensions       = "srt,info";
+          episode_title_required = "never";
+          skip_free_space_check = true;
+          minimum_free_space = 100;
+          hardlinks_copy = true;
+          import_extra_files = false;
+          extra_file_extensions = "srt,info";
 
           # File Management
           unmonitor_previous_episodes = false;
-          download_propers_repacks    = "preferAndUpgrade";
-          enable_media_info           = true;
-          rescan_after_refresh        = "always";
-          file_date                   = "none";
-          recycle_bin_path            = "";
-          recycle_bin_days            = 7;
+          download_propers_repacks = "preferAndUpgrade";
+          enable_media_info = true;
+          rescan_after_refresh = "always";
+          file_date = "none";
+          recycle_bin_path = "";
+          recycle_bin_days = 7;
 
           # Permissions
-          set_permissions             = false;
-          chmod_folder                = "755";
-          chown_group                 = "media";
+          set_permissions = false;
+          chmod_folder = "755";
+          chown_group = "media";
         };
       };
 
@@ -199,7 +203,7 @@ in
         on_upgrade = true;
         name = "Autoscan";
         url = "http://localhost:3030/triggers/sonarr";
-        method   = 1;
+        method = 1;
       };
 
       sonarr_root_folder = {

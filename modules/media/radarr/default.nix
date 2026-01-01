@@ -20,7 +20,7 @@ let
     system = pkgs.stdenv.system;
     inherit pkgs;
 
-    modules = [ 
+    modules = [
       ./terraform.nix
       {
         radarr = {
@@ -60,14 +60,13 @@ in
 
     apiKey = mkOption {
       default = "00000000000000000000000000000000";
-      type = types.string;
+      type = types.str;
     };
 
     libraryDirectory = mkOption {
       default = "/var/lib/radarr-library";
-      type = types.string;
+      type = types.str;
     };
-
 
     database = {
       postgres = {
@@ -75,12 +74,12 @@ in
 
         user = mkOption {
           default = postgresCfg.user;
-          type = types.string;
+          type = types.str;
         };
 
         password = mkOption {
           default = postgresCfg.password;
-          type = types.string;
+          type = types.str;
         };
       };
     };
@@ -96,7 +95,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    system.activationScripts.setupRadarrDirs = lib.stringAfter [ "var" ]''
+    system.activationScripts.setupRadarrDirs = lib.stringAfter [ "var" ] ''
       ${pkgs.coreutils}/bin/mkdir -p ${cfg.libraryDirectory}
       ${pkgs.coreutils}/bin/chown -R ${user}:${group} ${cfg.libraryDirectory}
     '';
@@ -127,7 +126,10 @@ in
     };
 
     modules.database.postgres = mkIf cfg.database.postgres.enable {
-      databases = ["radarr" "radarr-logs"];
+      databases = [
+        "radarr"
+        "radarr-logs"
+      ];
     };
 
     systemd.services.radarr.wants = mkIf cfg.database.postgres.enable [
@@ -144,7 +146,7 @@ in
       group = group;
       settings = {
         server = {
-         port = cfg.port;
+          port = cfg.port;
         };
         auth = {
           apikey = cfg.apiKey;
@@ -161,23 +163,22 @@ in
     };
 
     services.prometheus = {
-      exporters =
-        {
+      exporters = {
 
-        }
-        // (mkIf cfg.prometheus.enable {
-          exportarr-radarr = {
-            enable = true;
-            url = "http://127.0.0.1:${toString cfg.config.port}";
-            port = cfg.prometheus.port;
-            user = user;
-            group = group;
-            apiKeyFile = pkgs.writeTextFile {
-              name = "radarr-key";
-              text = cfg.config.apiKey;
-            };
+      }
+      // (mkIf cfg.prometheus.enable {
+        exportarr-radarr = {
+          enable = true;
+          url = "http://127.0.0.1:${toString cfg.config.port}";
+          port = cfg.prometheus.port;
+          user = user;
+          group = group;
+          apiKeyFile = pkgs.writeTextFile {
+            name = "radarr-key";
+            text = cfg.config.apiKey;
           };
-        });
+        };
+      });
     };
   };
 }

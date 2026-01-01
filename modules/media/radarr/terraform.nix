@@ -17,25 +17,29 @@ in
 
     username = mkOption {
       default = "sam";
-      type = types.string;
+      type = types.str;
       description = "The username for Radarr authentication.";
     };
 
     password = mkOption {
       default = "nixos";
-      type = types.string;
+      type = types.str;
       description = "The password for Radarr authentication.";
     };
 
     apiKey = mkOption {
       default = "";
-      type = types.string;
+      type = types.str;
       description = "The API key for Radarr";
     };
 
     logLevel = mkOption {
       default = "info";
-      type = types.enum [ "info" "debug" "trace" ];
+      type = types.enum [
+        "info"
+        "debug"
+        "trace"
+      ];
       description = "The log level for Radarr";
     };
 
@@ -50,7 +54,7 @@ in
 
       baseUrl = mkOption {
         default = "http://localhost:8181";
-        type = types.string;
+        type = types.str;
       };
     };
 
@@ -63,7 +67,7 @@ in
 
       hostname = mkOption {
         default = "localhost";
-        type = types.string;
+        type = types.str;
       };
 
       port = mkOption {
@@ -75,7 +79,7 @@ in
 
   config = {
     # This section defines the providers Terraform needs to download.
-    terraform.required_providers.radarr= {
+    terraform.required_providers.radarr = {
       source = "devopsarr/radarr";
       version = "2.3.3";
     };
@@ -127,31 +131,31 @@ in
       radarr_media_management = {
         "main" = {
           # Folders
-          create_empty_movie_folders  = false;
-          delete_empty_folders        = false;
+          create_empty_movie_folders = false;
+          delete_empty_folders = false;
 
           # Importing
           skip_free_space_check_when_importing = true;
           minimum_free_space_when_importing = 100;
-          copy_using_hardlinks        = true;
-          import_extra_files          = false;
-          extra_file_extensions       = "srt,info";
+          copy_using_hardlinks = true;
+          import_extra_files = false;
+          extra_file_extensions = "srt,info";
 
           # File Management
-          auto_rename_folders         = true;
+          auto_rename_folders = true;
           auto_unmonitor_previously_downloaded_movies = false;
           download_propers_and_repacks = "preferAndUpgrade";
-          enable_media_info           = true;
-          rescan_after_refresh        = "always";
-          file_date                   = "none";
-          paths_default_static        = false;
-          recycle_bin                 = "";
-          recycle_bin_cleanup_days    = 7;
+          enable_media_info = true;
+          rescan_after_refresh = "always";
+          file_date = "none";
+          paths_default_static = false;
+          recycle_bin = "";
+          recycle_bin_cleanup_days = 7;
 
           # Permissions
-          set_permissions_linux       = false;
-          chmod_folder                = "755";
-          chown_group                 = "media";
+          set_permissions_linux = false;
+          chmod_folder = "755";
+          chown_group = "media";
         };
       };
 
@@ -201,7 +205,7 @@ in
         on_movie_delete = false;
         name = "Autoscan";
         url = "http://localhost:3030/triggers/radarr";
-        method   = 1;
+        method = 1;
       };
 
       radarr_root_folder = {

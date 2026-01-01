@@ -70,14 +70,14 @@ in
       trash_guides = {
         cloneUrl = mkOption {
           default = "https://github.com/samjwillis97/Guides.git";
-          type = types.string;
+          type = types.str;
         };
       };
 
       config_templates = {
         cloneUrl = mkOption {
           default = "https://github.com/samjwillis97/config-templates.git";
-          type = types.string;
+          type = types.str;
         };
       };
     };
@@ -87,12 +87,12 @@ in
 
       url = mkOption {
         default = "http://localhost:8989";
-        type = types.string;
+        type = types.str;
       };
 
       apiKey = mkOption {
         default = "00000000000000000000000000000000";
-        type = types.string;
+        type = types.str;
       };
 
       config = mkOption {
@@ -254,12 +254,12 @@ in
 
       url = mkOption {
         default = "http://localhost:7878";
-        type = types.string;
+        type = types.str;
       };
 
       apiKey = mkOption {
         default = "00000000000000000000000000000000";
-        type = types.string;
+        type = types.str;
       };
 
       config = mkOption {
