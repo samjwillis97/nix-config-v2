@@ -104,60 +104,61 @@ in
     };
   };
 
-  config = mkIf cfg.enable (
-    {
-      modules.database.postgres = {
-        enable = true;
-        databases = [
-          databaseName
-        ];
-      };
-
-      networking.firewall.allowedTCPPorts = mkIf cfg.openFirewall [
-        cfg.webPort
-        cfg.apiPort
+  config = mkIf cfg.enable ({
+    modules.database.postgres = {
+      enable = true;
+      databases = [
+        databaseName
       ];
+    };
 
-      system.activationScripts.setupRivenDirs = lib.stringAfter [ "var" ]''
-        ${pkgs.coreutils}/bin/mkdir -p ${cfg.libraryDirectory}
-        ${pkgs.coreutils}/bin/chown -R ${user}:docker ${cfg.libraryDirectory}
+    networking.firewall.allowedTCPPorts = mkIf cfg.openFirewall [
+      cfg.webPort
+      cfg.apiPort
+    ];
 
-        ${pkgs.coreutils}/bin/mkdir -p ${cfg.configDirectory}/frontend
-        ${pkgs.coreutils}/bin/chown -R ${user}:docker ${cfg.configDirectory}/frontend
-        ${pkgs.coreutils}/bin/mkdir -p ${cfg.configDirectory}/backend
-        ${pkgs.coreutils}/bin/chown -R ${user}:docker ${cfg.configDirectory}/backend
-      '';
+    system.activationScripts.setupRivenDirs = lib.stringAfter [ "var" ] ''
+      ${pkgs.coreutils}/bin/mkdir -p ${cfg.libraryDirectory}
+      ${pkgs.coreutils}/bin/chown -R ${user}:docker ${cfg.libraryDirectory}
 
-      system.activationScripts.createRivenSecretEnv = let
+      ${pkgs.coreutils}/bin/mkdir -p ${cfg.configDirectory}/frontend
+      ${pkgs.coreutils}/bin/chown -R ${user}:docker ${cfg.configDirectory}/frontend
+      ${pkgs.coreutils}/bin/mkdir -p ${cfg.configDirectory}/backend
+      ${pkgs.coreutils}/bin/chown -R ${user}:docker ${cfg.configDirectory}/backend
+    '';
+
+    system.activationScripts.createRivenSecretEnv =
+      let
         finalConfigFile = "${cfg.configDirectory}/.env.secret";
         realDebridApiKeyTemplate = "@real-debrid-api-key@";
         plexTokenTemplate = "@plex-token@";
         envTemplate = pkgs.writeText "riven-env-template" ''
           ${optionalString (cfg.downloaders.realDebrid.enable) ''
-          RIVEN_DOWNLOADERS_REAL_DEBRID_API_KEY=${realDebridApiKeyTemplate}
+            RIVEN_DOWNLOADERS_REAL_DEBRID_API_KEY=${realDebridApiKeyTemplate}
           ''}
           ${optionalString (cfg.updaters.plex.enable) ''
-          RIVEN_UPDATERS_PLEX_TOKEN=${plexTokenTemplate}
+            RIVEN_UPDATERS_PLEX_TOKEN=${plexTokenTemplate}
           ''}
         '';
       in
-        lib.stringAfter [ "var" ] ''
-          configFile=${finalConfigFile}
-          ${pkgs.coreutils}/bin/cp ${envTemplate} $configFile
+      lib.stringAfter [ "var" ] ''
+        configFile=${finalConfigFile}
+        ${pkgs.coreutils}/bin/cp ${envTemplate} $configFile
 
-          ${optionalString (cfg.downloaders.realDebrid.enable) ''
+        ${optionalString (cfg.downloaders.realDebrid.enable) ''
           secret=$(cat "${cfg.downloaders.realDebrid.apiKeyFile}")
           ${pkgs.gnused}/bin/sed -i "s#${realDebridApiKeyTemplate}#$secret#" "$configFile"
-          ''}
+        ''}
 
-          ${optionalString (cfg.updaters.plex.enable) ''
+        ${optionalString (cfg.updaters.plex.enable) ''
           secret=$(cat "${cfg.updaters.plex.tokenFile}")
           ${pkgs.gnused}/bin/sed -i "s#${plexTokenTemplate}#$secret#" "$configFile"
-          ''}
+        ''}
       '';
 
-      virtualisation.oci-containers.containers = {
-        riven-frontend = let
+    virtualisation.oci-containers.containers = {
+      riven-frontend =
+        let
           serverJson = pkgs.writers.writeJSON "server.json" {
             backendUrl = "http://127.0.0.1:${toString cfg.apiPort}";
             apiKey = cfg.apiKey;
@@ -184,43 +185,42 @@ in
           ];
         };
 
-        riven-backend = {
-          pull = "missing";
-          image = "spoked/riven:latest";
-          autoStart = true;
-          environmentFiles = [
-            "${cfg.configDirectory}/.env.secret"
-          ];
-          environment = {
-            TZ = config.time.timeZone;
-            API_KEY = cfg.apiKey;
-            RIVEN_FORCE_ENV = boolToString true;
-            RIVEN_SYMLINK_RCLONE_PATH = "/mnt/remote/zurg/__all__";
-            RIVEN_SYMLINK_LIBRARY_PATH= "${cfg.libraryDirectory}"; # This is the path that symlinks will be placed in
-            RIVEN_DATABASE_HOST = "postgresql+psycopg2://${databaseUsername}:${databasePassword}@127.0.0.1/${databaseName}";
-            RIVEN_DOWNLOADERS_REAL_DEBRID_ENABLED = boolToString cfg.downloaders.realDebrid.enable;
+      riven-backend = {
+        pull = "missing";
+        image = "spoked/riven:latest";
+        autoStart = true;
+        environmentFiles = [
+          "${cfg.configDirectory}/.env.secret"
+        ];
+        environment = {
+          TZ = config.time.timeZone;
+          API_KEY = cfg.apiKey;
+          RIVEN_FORCE_ENV = boolToString true;
+          RIVEN_SYMLINK_RCLONE_PATH = "/mnt/remote/zurg/__all__";
+          RIVEN_SYMLINK_LIBRARY_PATH = "${cfg.libraryDirectory}"; # This is the path that symlinks will be placed in
+          RIVEN_DATABASE_HOST = "postgresql+psycopg2://${databaseUsername}:${databasePassword}@127.0.0.1/${databaseName}";
+          RIVEN_DOWNLOADERS_REAL_DEBRID_ENABLED = boolToString cfg.downloaders.realDebrid.enable;
 
-            RIVEN_UPDATERS_PLEX_ENABLED = boolToString cfg.updaters.plex.enable;
-            RIVEN_UPDATERS_PLEX_URL = cfg.updaters.plex.url;
+          RIVEN_UPDATERS_PLEX_ENABLED = boolToString cfg.updaters.plex.enable;
+          RIVEN_UPDATERS_PLEX_URL = cfg.updaters.plex.url;
 
-            RIVEN_SCRAPING_TORRENTIO_ENABLED = boolToString cfg.scrapers.torrentio.enable;
+          RIVEN_SCRAPING_TORRENTIO_ENABLED = boolToString cfg.scrapers.torrentio.enable;
 
-            RIVEN_CONTENT_PLEX_WATCHLIST_ENABLED = boolToString cfg.contentProviders.plexWatchlist.enable;
+          RIVEN_CONTENT_PLEX_WATCHLIST_ENABLED = boolToString cfg.contentProviders.plexWatchlist.enable;
 
-            RIVEN_SCRAPING_ZILEAN_ENABLED = boolToString cfg.scrapers.zilean.enable;
-            RIVEN_SCRAPING_ZILEAN_URL = cfg.scrapers.zilean.url;
-          };
-          volumes = [
-            "/mnt/remote/zurg/__all__:/mnt/remote/zurg/__all__"
-            "${cfg.libraryDirectory}:${cfg.libraryDirectory}"
-            "${cfg.configDirectory}/backend:/riven/data"
-          ];
-          ports = [
-            "${toString cfg.webPort}:${toString cfg.webPort}"
-          ];
-          extraOptions = mkIf dockerHostNetworkingEnabled [ "--network=host" ];
+          RIVEN_SCRAPING_ZILEAN_ENABLED = boolToString cfg.scrapers.zilean.enable;
+          RIVEN_SCRAPING_ZILEAN_URL = cfg.scrapers.zilean.url;
         };
-       };
-    }
-  );
+        volumes = [
+          "/mnt/remote/zurg/__all__:/mnt/remote/zurg/__all__"
+          "${cfg.libraryDirectory}:${cfg.libraryDirectory}"
+          "${cfg.configDirectory}/backend:/riven/data"
+        ];
+        ports = [
+          "${toString cfg.webPort}:${toString cfg.webPort}"
+        ];
+        extraOptions = mkIf dockerHostNetworkingEnabled [ "--network=host" ];
+      };
+    };
+  });
 }

@@ -41,7 +41,7 @@ let
       workers = 1;
       zurg_url = "";
     };
-    webdav = {};
+    webdav = { };
     rclone = {
       enabled = true;
       attr_timeout = "1s";
@@ -77,7 +77,7 @@ let
         folder = cfg.rclone.mountPath + "/realdebrid/__all__";
       }
     ];
-    arrs = [];
+    arrs = [ ];
     allowed_file_types = [
       "mp4"
       "mkv"
@@ -136,7 +136,7 @@ in
       "fuse"
     ];
 
-    system.activationScripts.setupDecypharrDirs = lib.stringAfter [ "var" ]''
+    system.activationScripts.setupDecypharrDirs = lib.stringAfter [ "var" ] ''
       ${pkgs.coreutils}/bin/mkdir -p ${cfg.dataDirectory}
       ${pkgs.coreutils}/bin/chown -R ${user}:${group} ${cfg.dataDirectory}
       ${pkgs.coreutils}/bin/cp ${configFile} ${finalConfigFile}

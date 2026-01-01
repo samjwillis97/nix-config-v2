@@ -25,7 +25,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    system.activationScripts.setupPlex = lib.stringAfter [ "var" ]''
+    system.activationScripts.setupPlex = lib.stringAfter [ "var" ] ''
       ${pkgs.coreutils}/bin/mkdir -p ${cfg.dataDirectory}
       ${pkgs.coreutils}/bin/chown -R ${user}:${group} ${cfg.dataDirectory}
     '';

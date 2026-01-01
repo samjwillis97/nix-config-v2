@@ -27,7 +27,7 @@ in
       description = "Directory for Zilean data";
     };
   };
-  
+
   config = mkIf cfg.enable {
     networking.firewall.allowedTCPPorts = mkIf cfg.openFirewall [ 8181 ];
 
@@ -38,7 +38,7 @@ in
       ];
     };
 
-    system.activationScripts.setupZileanDirs = lib.stringAfter [ "var" ]''
+    system.activationScripts.setupZileanDirs = lib.stringAfter [ "var" ] ''
       ${pkgs.coreutils}/bin/mkdir -p ${cfg.dataDirectory}
       ${pkgs.coreutils}/bin/chown -R ${user}:docker ${cfg.dataDirectory}
     '';
