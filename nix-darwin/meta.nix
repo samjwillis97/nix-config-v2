@@ -11,7 +11,10 @@ in
   ids.gids.nixbld = nixbldGid;
 
   nix = import ../shared/nix.nix { inherit pkgs flake; } // {
-    linux-builder.enable = true; # FIXME was breaking tings
+    linux-builder = {
+      enable = true; # FIXME was breaking tings
+      ephemeral = true;
+    };
   };
 
   # FIXME: What was this migrated to?

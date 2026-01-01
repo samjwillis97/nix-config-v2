@@ -4,6 +4,7 @@
   trusted-users = [
     "root"
     "@wheel"
+    "@admin"
   ];
   experimental-features = [
     "nix-command"
