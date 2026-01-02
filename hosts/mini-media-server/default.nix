@@ -41,6 +41,7 @@
         };
         indexers = {
           elfhosted = true;
+          savvy = true;
         };
       };
 
