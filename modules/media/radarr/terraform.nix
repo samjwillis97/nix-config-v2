@@ -62,6 +62,10 @@ in
       enable = mkEnableOption "Enable elfhosted Zilean indexers integration";
     };
 
+    savvy = {
+      enable = mkEnableOption "Enable savvy indexers integration";
+    };
+
     decypharr = {
       enable = mkEnableOption "Enable Decypharr integration";
 
@@ -176,12 +180,48 @@ in
           enable_automatic_search = true;
           enable_interactive_search = true;
           enable_rss = true;
-          name = "Elfhosted (terraform)";
+          name = "Elfhosted Stremthru (terraform)";
           priority = 25;
           implementation = "Torznab";
           protocol = "torrent";
           config_contract = "TorznabSettings";
           base_url = "https://stremthru.elfhosted.com/v0/torznab";
+          api_path = "/api";
+        };
+        "savvy_zilean" = mkIf cfg.savvy.enable {
+          enable_automatic_search = true;
+          enable_interactive_search = true;
+          enable_rss = true;
+          name = "Savvy Zilean (terraform)";
+          priority = 25;
+          implementation = "Torznab";
+          protocol = "torrent";
+          config_contract = "TorznabSettings";
+          base_url = "https://zilean.savvyservers.org/torznab";
+          api_path = "/api";
+        };
+        "savvy_tweakio" = mkIf cfg.savvy.enable {
+          enable_automatic_search = true;
+          enable_interactive_search = true;
+          enable_rss = true;
+          name = "Savvy Tweakio (terraform)";
+          priority = 25;
+          implementation = "Torznab";
+          protocol = "torrent";
+          config_contract = "TorznabSettings";
+          base_url = "https://tweakio.savvyservers.org";
+          api_path = "/api";
+        };
+        "savvy_stremthru" = mkIf cfg.savvy.enable {
+          enable_automatic_search = true;
+          enable_interactive_search = true;
+          enable_rss = true;
+          name = "Savvy Stremthru (terraform)";
+          priority = 25;
+          implementation = "Torznab";
+          protocol = "torrent";
+          config_contract = "TorznabSettings";
+          base_url = "https://stremthru.savvyservers.org/v0/torznab";
           api_path = "/api";
         };
       };

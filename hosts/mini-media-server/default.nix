@@ -1,13 +1,12 @@
 { config, lib, ... }:
 {
-  imports =
-    [
-      ./hardware-configuration.nix
-      ../../nixos
-      ../../modules/ops/deploy.nix
-      ../../secrets/mediaserver
-      ../../secrets/aws
-    ];
+  imports = [
+    ./hardware-configuration.nix
+    ../../nixos
+    ../../modules/ops/deploy.nix
+    ../../secrets/mediaserver
+    ../../secrets/aws
+  ];
 
   modules = {
     ops.deploy = {
@@ -55,6 +54,7 @@
         };
         indexers = {
           elfhosted = true;
+          savvy = true;
         };
       };
 
@@ -111,4 +111,3 @@
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = lib.mkForce "25.05"; # Did you read the comment?
 }
-
