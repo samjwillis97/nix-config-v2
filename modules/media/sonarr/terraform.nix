@@ -180,7 +180,7 @@ in
           implementation = "Torznab";
           protocol = "torrent";
           config_contract = "TorznabSettings";
-          base_url = "https://zilean.elfhosted.com/torznab";
+          base_url = "https://streamthru.elfhosted.com/v0/torznab";
           api_path = "/api";
         };
       };

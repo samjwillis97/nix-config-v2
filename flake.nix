@@ -356,7 +356,7 @@
               path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.mini-media-server;
               autoRollback = true;
               magicRollback = true;
-              remoteBuild = false;
+              remoteBuild = true;
               activationTimeout = 600;
               confirmTimeout = 60;
             };
