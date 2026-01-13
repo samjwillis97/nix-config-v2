@@ -82,6 +82,8 @@ in
   "default/borg-passphrase.age".publicKeys = keys;
 
   "github/gh_pat.age".publicKeys = github-keys;
+  "github/ssh-key.age".publicKeys = github-keys;
+  "github/ssh-key-public.age".publicKeys = github-keys;
 
   "iptv/xtream_password.age".publicKeys = iptv-keys;
 

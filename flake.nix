@@ -134,6 +134,11 @@
     terranix = {
       url = "github:terranix/terranix";
     };
+
+    nixos-wsl = {
+      url = "github:nix-community/NixOS-WSL/main";
+    };
+
   };
 
   outputs =
@@ -153,6 +158,7 @@
       deploy-rs,
       firefox-darwin,
       terranix,
+      nixos-wsl,
       ...
     }@inputs:
     let
@@ -315,6 +321,23 @@
           ./home-manager/opencode
           { modules.darwin.work = true; }
         ];
+      })
+
+      (mkNixosSystem {
+        hostname = "wsl";
+        system = "x86_64-linux";
+        username = "sam";
+        extraHomeModules = [
+          ./hm-modules
+          ./home-manager/dev
+          ./home-manager/dev/ops.nix
+          ./home-manager/dev/claude.nix
+          ./home-manager/vscode
+        ];
+        extraModules = [
+          nixos-wsl.nixosModules.default
+        ];
+        useHomeManager = true;
       })
 
       (mkNixosSystem {
