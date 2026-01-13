@@ -28,7 +28,8 @@ in
   # Assuming git is enabled
   programs.git = {
     signing = {
-      key = config.age.secrets."ssh-key".path;
+      key = config.age.secrets."ssh-key.pub".path;
+      format = "ssh";
       signByDefault = true;
     };
 
