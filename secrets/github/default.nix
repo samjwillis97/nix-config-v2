@@ -6,11 +6,11 @@
       };
       "ssh-key" = {
         file = ./ssh-key.age;
-        path = "/home/sam/.ssh/ssh-key";
+        path = "$HOME/.ssh/ssh-key";
       };
       "ssh-key.pub" = {
         file = ./ssh-key-public.age;
-        path = "/home/sam/.ssh/ssh-key.pub";
+        path = "$HOME/.ssh/ssh-key.pub";
       };
     };
     identityPaths = [ "/var/agenix/github-primary" ];

@@ -44,6 +44,7 @@ in
 
           # Testing
           pkgs.vscode-marketplace.ms-playwright.playwright
+          pkgs.vscode-marketplace.vitest.explorer
 
           # YAML
           redhat.vscode-yaml

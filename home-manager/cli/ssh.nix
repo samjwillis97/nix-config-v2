@@ -20,7 +20,7 @@ in
     forwardAgent = true;
 
     matchBlocks."github.com" = {
-      identityFile = config.age.secrets."ssh-key".path;
+      identityFile = builtins.replaceStrings [ "$HOME" ] [ "~" ] config.age.secrets."ssh-key".path;
       identitiesOnly = true;
     };
   };
@@ -28,7 +28,7 @@ in
   # Assuming git is enabled
   programs.git = {
     signing = {
-      key = config.age.secrets."ssh-key.pub".path;
+      key = builtins.replaceStrings [ "$HOME" ] [ "~" ] config.age.secrets."ssh-key.pub".path;
       format = "ssh";
       signByDefault = true;
     };
