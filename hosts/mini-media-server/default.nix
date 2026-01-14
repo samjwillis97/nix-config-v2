@@ -40,7 +40,7 @@
           decypharr = true;
         };
         indexers = {
-          elfhosted = true;
+          developer = true;
           savvy = true;
         };
       };
@@ -54,7 +54,7 @@
           decypharr = true;
         };
         indexers = {
-          elfhosted = true;
+          developer = true;
           savvy = true;
         };
       };

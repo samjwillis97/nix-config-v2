@@ -62,6 +62,10 @@ in
       enable = mkEnableOption "Enable elfhosted Zilean indexers integration";
     };
 
+    developer = {
+      enable = mkEnableOption "Enable developer Stremthru indexers integration";
+    };
+
     savvy = {
       enable = mkEnableOption "Enable savvy indexers integration";
     };
@@ -186,6 +190,18 @@ in
           protocol = "torrent";
           config_contract = "TorznabSettings";
           base_url = "https://stremthru.elfhosted.com/v0/torznab";
+          api_path = "/api";
+        };
+        "developer" = mkIf cfg.developer.enable {
+          enable_automatic_search = true;
+          enable_interactive_search = true;
+          enable_rss = true;
+          name = "Developer Stremthru (terraform)";
+          priority = 25;
+          implementation = "Torznab";
+          protocol = "torrent";
+          config_contract = "TorznabSettings";
+          base_url = "https://stremthru.13377001.xyz/v0/torznab";
           api_path = "/api";
         };
         "savvy_zilean" = mkIf cfg.savvy.enable {
