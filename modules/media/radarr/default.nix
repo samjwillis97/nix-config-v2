@@ -32,6 +32,7 @@ let
           zilean.enable = cfg.indexers.zilean;
           elfhosted.enable = cfg.indexers.elfhosted;
           savvy.enable = cfg.indexers.savvy;
+          developer.enable = cfg.indexers.developer;
 
           decypharr.enable = cfg.downloaders.decypharr;
         };
@@ -92,6 +93,7 @@ in
     indexers = {
       zilean = mkEnableOption "Enable Zilean indexer integration";
       elfhosted = mkEnableOption "Enable elfhosted zilean indexers integration";
+      developer = mkEnableOption "Enable developer stremthru indexers integration";
       savvy = mkEnableOption "Enable Savvy indexer integration";
     };
   };
