@@ -70,6 +70,10 @@ in
       enable = mkEnableOption "Enable savvy indexers integration";
     };
 
+    omni = {
+      enable = mkEnableOption "Enable Omni indexers integration";
+    };
+
     decypharr = {
       enable = mkEnableOption "Enable Decypharr integration";
 
@@ -201,6 +205,18 @@ in
           protocol = "torrent";
           config_contract = "TorznabSettings";
           base_url = "https://stremthru.13377001.xyz/v0/torznab";
+          api_path = "/api";
+        };
+        "omni" = mkIf cfg.developer.enable {
+          enable_automatic_search = true;
+          enable_interactive_search = true;
+          enable_rss = true;
+          name = "Omni Stremthru (terraform)";
+          priority = 25;
+          implementation = "Torznab";
+          protocol = "torrent";
+          config_contract = "TorznabSettings";
+          base_url = "https://stremthru.12312023.xyz/v0/torznab";
           api_path = "/api";
         };
         "savvy_zilean" = mkIf cfg.savvy.enable {

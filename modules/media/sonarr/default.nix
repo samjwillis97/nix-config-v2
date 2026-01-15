@@ -31,6 +31,7 @@ let
 
           zilean.enable = cfg.indexers.zilean;
           elfhosted.enable = cfg.indexers.elfhosted;
+          omni.enable = cfg.indexers.omni;
           savvy.enable = cfg.indexers.savvy;
           developer.enable = cfg.indexers.developer;
 
@@ -84,6 +85,7 @@ in
       zilean = mkEnableOption "Enable Zilean indexer integration";
       elfhosted = mkEnableOption "Enable elfhosted zilean indexers integration";
       developer = mkEnableOption "Enable developer stremthru indexers integration";
+      omni = mkEnableOption "Enable Omni indexer integration";
       savvy = mkEnableOption "Enable Savvy indexer integration";
     };
   };
