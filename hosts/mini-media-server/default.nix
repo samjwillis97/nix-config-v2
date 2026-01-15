@@ -42,7 +42,6 @@
         indexers = {
           developer = true;
           savvy = true;
-          omni = true;
         };
       };
 
@@ -57,7 +56,6 @@
         indexers = {
           developer = true;
           savvy = true;
-          omni = true;
         };
       };
 
