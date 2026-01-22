@@ -8,6 +8,7 @@
 let
   inherit (super.meta) username;
   firefoxEnabled = config.home-manager.users.${username}.programs.firefox.enable;
+  firefoxPackage = config.home-manager.users.${username}.programs.firefox.package;
   workEnabled = config.home-manager.users.${username}.modules.darwin.work;
 in
 {
@@ -30,7 +31,7 @@ in
     largesize = 56;
     persistent-apps = builtins.filter (a: a != "") ([
       # "/Applications/Safari.app/"
-      (lib.optionalString firefoxEnabled "${pkgs.firefox-bin}/Applications/Firefox.app")
+      (lib.optionalString firefoxEnabled "${firefoxPackage}/Applications/Firefox.app")
       "/system/Applications/Messages.app/"
       # "/system/Applications/Mail.app"
       "/system/Applications/Calendar.app/"
