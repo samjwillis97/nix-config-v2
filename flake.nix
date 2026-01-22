@@ -208,7 +208,7 @@
         # networkAdapterName = "wlp7s0";
         extraModules = [
           # microvm.nixosModules.host
-          ./nixos/wayland.nix
+          ./nixos/hyprland.nix
           ./nixos/fonts.nix
           ./nixos/audio.nix
           ./nixos/gaming.nix

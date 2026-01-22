@@ -1,5 +1,10 @@
-{ pkgs, lib, ... }:
-let 
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
+let
   workspaceCount = 9;
 in
 {
@@ -13,37 +18,19 @@ in
     ./hyprpaper.nix # wallpaper manager
   ];
 
-  xdg.portal = {
-    enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-hyprland
-      xdg-desktop-portal-gtk
-    ];
-
-    config = {
-      hyprland = {
-        default = [ "hyprland" "gtk" ];
-        "org.freedesktop.impl.portal.ScreenCast" = [
-          "hyprland"
-        ];
-      };
-    };
-  };
+  xdg.configFile."uwsm/env".source =
+    "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh";
 
   wayland.windowManager.hyprland = {
     enable = true;
 
-    xwayland.enable = true;
+    # Will use the ones from NixOS module
+    package = null;
+    portalPackage = null;
 
     systemd = {
-      enable = true;
-      enableXdgAutostart = true;
+      enable = false;
     };
-
-    # package = pkgs.hyprland;
-    # portalPackage = pkgs.xdg-desktop-portal-hyprland;
-    # package = null;
-    # portalPackage = null;
 
     # TODO: Pipewire (screen sharing)
     # TODO: Authentication Agent?..
@@ -57,13 +44,12 @@ in
 
     # hyprctl dispatch exit
 
-
     settings = {
       # Monitor settings
       # Only going to work for main desktop
       monitor = [
-        "DP-2, 2560x1440@180, 0x0, 1"
-        "DP-3, 2560x1440@180, 2560x0, 1"
+        "DP-3, 2560x1440@180, 0x0, 1"
+        "DP-2, 2560x1440@180, 2560x0, 1"
       ];
 
       "$mod" = "ALT";
@@ -124,11 +110,10 @@ in
 
         "$mod SHIFT, q, killactive"
 
-      ] ++ (lib.genList (n:
-        "$mod, ${toString (n + 1)}, workspace, ${toString (n + 1)}"
-      ) workspaceCount)
-        ++ (lib.genList (n:
-        "$mod SHIFT, ${toString (n + 1)}, movetoworkspace, ${toString (n + 1)}"
+      ]
+      ++ (lib.genList (n: "$mod, ${toString (n + 1)}, workspace, ${toString (n + 1)}") workspaceCount)
+      ++ (lib.genList (
+        n: "$mod SHIFT, ${toString (n + 1)}, movetoworkspace, ${toString (n + 1)}"
       ) workspaceCount);
     };
   };
