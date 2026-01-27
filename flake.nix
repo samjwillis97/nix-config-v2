@@ -36,7 +36,7 @@
     nur.url = "github:nix-community/NUR";
 
     modular-neovim = {
-      url = "github:samjwillis97/modular-neovim-flake?rev=351255dc2995cace0d6da1b5afde121f897be459";
+      url = "github:samjwillis97/modular-neovim-flake";
     };
 
     nix-serve = {

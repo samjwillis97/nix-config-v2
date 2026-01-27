@@ -63,19 +63,33 @@ in
       permission = {
         bash = {
           "*" = "ask";
-          "git status" = "allow";
-          "git diff" = "allow";
-          "git add" = "allow";
-          "git commit" = "allow";
-          "git checkout" = "allow";
-          "git stash" = "allow";
-          "ls" = "allow";
-          "pwd" = "allow";
-          "mkdir" = "allow";
-          "npm" = "allow";
-          "npm run" = "allow";
-          "bun run" = "allow";
-          "pnpm run" = "allow";
+          "git status*" = "allow";
+          "git diff*" = "allow";
+          "git add*" = "allow";
+          "git commit*" = "ask";
+          "git checkout*" = "allow";
+          "git stash*" = "allow";
+          "git log*" = "allow";
+          "git show*" = "allow";
+          "git remote*" = "allow";
+          "git rev-parse*" = "allow";
+          "ls*" = "allow";
+          "pwd*" = "allow";
+          "mkdir*" = "allow";
+          "npm*" = "allow";
+          "bun*" = "allow";
+          "pnpm*" = "allow";
+          "echo*" = "allow";
+          "cat*" = "allow";
+          "grep*" = "allow";
+          "find*" = "allow";
+          "fd*" = "allow";
+          "rg*" = "allow";
+          "wc*" = "allow";
+          "jq*" = "allow";
+          "sort*" = "allow";
+          "head*" = "allow";
+          "tail*" = "allow";
         };
       };
       agent = {
@@ -277,6 +291,11 @@ in
             "mcp-remote"
             "https://mcp.atlassian.com/v1/sse"
           ];
+          enabled = true;
+        };
+        buildkite = {
+          type = "remote";
+          url = "https://mcp.buildkite.com/mcp";
           enabled = true;
         };
         sentry = {

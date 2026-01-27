@@ -26,6 +26,7 @@ in
       iperf # network performance tool
       devenv
       jless
+      llama-cpp
     ]
     ++ (with pkgs; if isDarwin then [ f ] else [ inotify-info ]);
 
