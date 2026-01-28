@@ -36,9 +36,39 @@ let
         --color=marker:${base06},fg+:${base05},prompt:${base0E},hl+:${base08}"
 
     # See: https://discourse.nixos.org/t/brew-not-on-path-on-m1-mac/26770/4
-    ${if (super.meta.isDarwin) then "eval \"$(/opt/homebrew/bin/brew shellenv)\"" else ""}
+    # Cache brew shellenv to avoid repeated subprocess calls
+    ${if (super.meta.isDarwin) then ''
+      if [[ ! -f ~/.cache/brew_shellenv.zsh ]] || [[ /opt/homebrew/bin/brew -nt ~/.cache/brew_shellenv.zsh ]]; then
+        mkdir -p ~/.cache
+        /opt/homebrew/bin/brew shellenv > ~/.cache/brew_shellenv.zsh
+      fi
+      source ~/.cache/brew_shellenv.zsh
+    '' else ""}
+
+    # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+    # Initialization code that may require console input (password prompts, [y/n]
+    # confirmations, etc.) must go above this block; everything else may go below.
+    if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
+      source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
+    fi
 
     source ${p10kTheme}
+  '';
+
+  completionInit = ''
+    # Optimized compinit with caching
+    autoload -Uz compinit
+    setopt EXTENDEDGLOB
+
+    # Only regenerate compdump once per day
+    local zcompdump="${homeDirectory}/.zcompdump"
+    if [[ -n $zcompdump(#qNmh+24) ]]; then
+      compinit -u -d "$zcompdump"  # -u skips security check
+    else
+      compinit -C -d "$zcompdump"  # -C skips both check and regeneration
+    fi
+
+    unsetopt EXTENDEDGLOB
   '';
 in
 # Disabling shc whilst doing some development
@@ -56,8 +86,13 @@ in
 
     enable = true;
 
+    zprof.enable = false;
+
+    # Syntax highlighting enabled - the brew caching and p10k instant prompt 
+    # provide most of the speedup
     syntaxHighlighting.enable = true;
     enableCompletion = true;
+    completionInit = completionInit;
 
     history = {
       extended = true;
@@ -94,12 +129,9 @@ in
     ];
 
     oh-my-zsh = {
-      enable = true;
+      enable = false;
       plugins = [
-        "sudo"
         "git"
-        "docker-compose"
-        "cp"
       ];
       theme = "robbyrussell";
     };
@@ -114,6 +146,7 @@ in
       nix-direnv.enable = true;
       config = {
         hide_env_diff = true;
+        warn_timeout = "30s";  # Reduce timeout overhead
       };
       # stdlib = ''
       #   DIRENV_LOG_FORMAT=""

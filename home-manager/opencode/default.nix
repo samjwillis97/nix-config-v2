@@ -56,6 +56,11 @@ in
         ".cursor/rules/*.md"
         ".github/*.md"
       ];
+      tui = {
+        scroll_acceleration = {
+          enabled = true;
+        };
+      };
       keybinds = {
         messages_half_page_up = "ctrl+u";
         messages_half_page_down = "ctrl+d";
