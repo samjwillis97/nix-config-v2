@@ -27,6 +27,8 @@ let
   plugins =
     getFilesInDir ./plugins ".js"
     ++ (if (pkgs.stdenv.isDarwin) then getFilesInDir ./plugins/darwin ".js" else [ ]);
+
+  workEnabled = config.modules.darwin.work;
 in
 {
   imports = [
@@ -50,6 +52,19 @@ in
     prompts = getFilesInDir ./prompts ".txt";
     settings = {
       share = "disabled";
+      provider = lib.mkIf workEnabled {
+        amazon-bedrock = {
+          options = {
+            region = "ap-southeast-2";
+            profile = "default";
+          };
+          models = {
+            "anthropic-claude-sonnet-4.5" = {
+              id = "{file:~/.config/opencode/bedrock/inference-profile.txt}";
+            };
+          };
+        };
+      };
       instructions = [
         ".instructions.md"
         "CONTRIBUTING.md"
@@ -296,12 +311,12 @@ in
             "mcp-remote"
             "https://mcp.atlassian.com/v1/sse"
           ];
-          enabled = true;
+          enabled = false;
         };
         buildkite = {
           type = "remote";
           url = "https://mcp.buildkite.com/mcp";
-          enabled = true;
+          enabled = false;
         };
         sentry = {
           type = "local";
@@ -319,7 +334,7 @@ in
             "${github-mcp-wrapped}/bin/github-mcp-wrapped"
             "stdio"
           ];
-          enabled = true;
+          enabled = false;
         };
         playwright =
           let
@@ -341,14 +356,14 @@ in
               PLAYWRIGHT_NODEJS_PATH = "${node}/bin/node";
               USER_DATA_DIR = "$TMPDIR/chrome-mcp";
             };
-            enabled = true;
+            enabled = false;
           };
         httpcraft = {
           type = "local";
           command = [
             "${pkgs.httpcraft-mcp}/bin/httpcraft-mcp"
           ];
-          enabled = true;
+          enabled = false;
         };
       };
     };

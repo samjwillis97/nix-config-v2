@@ -37,13 +37,18 @@ let
 
     # See: https://discourse.nixos.org/t/brew-not-on-path-on-m1-mac/26770/4
     # Cache brew shellenv to avoid repeated subprocess calls
-    ${if (super.meta.isDarwin) then ''
-      if [[ ! -f ~/.cache/brew_shellenv.zsh ]] || [[ /opt/homebrew/bin/brew -nt ~/.cache/brew_shellenv.zsh ]]; then
-        mkdir -p ~/.cache
-        /opt/homebrew/bin/brew shellenv > ~/.cache/brew_shellenv.zsh
-      fi
-      source ~/.cache/brew_shellenv.zsh
-    '' else ""}
+    ${
+      if (super.meta.isDarwin) then
+        ''
+          if [[ ! -f ~/.cache/brew_shellenv.zsh ]] || [[ /opt/homebrew/bin/brew -nt ~/.cache/brew_shellenv.zsh ]]; then
+            mkdir -p ~/.cache
+            /opt/homebrew/bin/brew shellenv > ~/.cache/brew_shellenv.zsh
+          fi
+          source ~/.cache/brew_shellenv.zsh
+        ''
+      else
+        ""
+    }
 
     # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
     # Initialization code that may require console input (password prompts, [y/n]
@@ -51,6 +56,17 @@ let
     if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
       source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
     fi
+
+    # Seems to be a problem once I removed oh-mh-zsh, delete key would enter a ~
+    bindkey "^[[3~" delete-char
+
+    # better history completion
+    autoload -U up-line-or-beginning-search
+    autoload -U down-line-or-beginning-search
+    zle -N up-line-or-beginning-search
+    zle -N down-line-or-beginning-search
+    bindkey "^[[A" up-line-or-beginning-search
+    bindkey "^[[B" down-line-or-beginning-search
 
     source ${p10kTheme}
   '';
@@ -88,7 +104,7 @@ in
 
     zprof.enable = false;
 
-    # Syntax highlighting enabled - the brew caching and p10k instant prompt 
+    # Syntax highlighting enabled - the brew caching and p10k instant prompt
     # provide most of the speedup
     syntaxHighlighting.enable = true;
     enableCompletion = true;
@@ -146,7 +162,7 @@ in
       nix-direnv.enable = true;
       config = {
         hide_env_diff = true;
-        warn_timeout = "30s";  # Reduce timeout overhead
+        warn_timeout = "30s"; # Reduce timeout overhead
       };
       # stdlib = ''
       #   DIRENV_LOG_FORMAT=""
