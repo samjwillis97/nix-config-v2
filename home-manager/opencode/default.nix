@@ -110,6 +110,8 @@ in
           "sort*" = "allow";
           "head*" = "allow";
           "tail*" = "allow";
+          "nix*" = "allow";
+          "xargs*" = "allow";
         };
       };
       agent = {

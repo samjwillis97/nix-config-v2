@@ -30,6 +30,7 @@ in
       neofetch
       duf
       agenix
+      nix-sweep
     ]
     ++ osSpecificPackages;
 

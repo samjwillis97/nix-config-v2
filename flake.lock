@@ -235,11 +235,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1765334640,
-        "narHash": "sha256-uiDmjeLzqoZDxKFX29q9j28CjQoPrKY5/5QwE/Z5zNM=",
+        "lastModified": 1769727198,
+        "narHash": "sha256-jGY0lh/t2Ks7tW8Fm/wALZBeRolBUIP/0ZMt/jdsGhE=",
         "owner": "samjwillis97",
         "repo": "f",
-        "rev": "645b2047b717f3aac5eed68ca7688e48fc4542d9",
+        "rev": "e348b36261601d38d3163b5ef5e8222259b600b3",
         "type": "github"
       },
       "original": {
@@ -1077,14 +1077,15 @@
       "inputs": {
         "flake-utils": "flake-utils_4",
         "nixpkgs": "nixpkgs_7",
+        "nixpkgs-stable": "nixpkgs-stable_2",
         "nixvim": "nixvim"
       },
       "locked": {
-        "lastModified": 1769485712,
-        "narHash": "sha256-QWKPZBuO9t1ciZ7r+eT5lYypoGKkcVYhN225dBRccac=",
+        "lastModified": 1769738577,
+        "narHash": "sha256-XSRWWIC5X+9SIe6JBvBIxvCK+pfhvY0BGsYPtY8TWB4=",
         "owner": "samjwillis97",
         "repo": "modular-neovim-flake",
-        "rev": "74b7b2cebfff732e4122a6d9c61fff36d6ec38d3",
+        "rev": "46dd6f1e6eb604ab29fcee909c5a687b361cd377",
         "type": "github"
       },
       "original": {
@@ -1219,6 +1220,22 @@
       "original": {
         "owner": "NixOS",
         "ref": "nixos-25.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-stable_2": {
+      "locked": {
+        "lastModified": 1735563628,
+        "narHash": "sha256-OnSAY7XDSx7CtDoqNh8jwVwh4xNL/2HaJxGjryLWzX8=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "b134951a4c9f3c995fd7be05f3243f8ecd65d798",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-24.05",
         "repo": "nixpkgs",
         "type": "github"
       }
