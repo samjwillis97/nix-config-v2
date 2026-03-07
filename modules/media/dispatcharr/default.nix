@@ -16,6 +16,10 @@ let
 
   puid = if mediaUserEnabled then config.users.users.media.uid else "1000";
   pgid = if mediaUserEnabled then config.users.groups.media.gid else "1000";
+
+  databaseUsername = config.modules.database.postgres.user;
+  databasePassword = config.modules.database.postgres.password;
+  databaseName = "dispatcharr";
 in
 {
   options.modules.media.dispatcharr = {
@@ -43,6 +47,13 @@ in
       ${pkgs.coreutils}/bin/mkdir -p ${cfg.dataDirectory}
     '';
 
+    modules.database.postgres = {
+      enable = true;
+      databases = [
+        databaseName
+      ];
+    };
+
     virtualisation.oci-containers.containers.dispatcharr = {
       pull = "missing";
       image = "ghcr.io/dispatcharr/dispatcharr:latest";
@@ -55,6 +66,11 @@ in
       capabilities = {
       };
       environment = {
+        POSTGRES_HOST = "127.0.0.1";
+        POSTGRES_PORT = "5432";
+        POSTGRES_DB = databaseName;
+        POSTGRES_USER = databaseUsername;
+        POSTGRES_PASSWORD = databasePassword;
         PUID = toString puid;
         PGID = toString pgid;
         TZ = config.time.timeZone;
