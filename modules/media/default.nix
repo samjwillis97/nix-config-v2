@@ -15,5 +15,6 @@
     ./decypharr
     ./autopulse
     ./autoscan
+    ./dispatcharr
   ];
 }

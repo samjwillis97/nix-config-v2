@@ -31,6 +31,10 @@
     };
 
     media = {
+      dispatcharr = {
+        enable = true;
+      };
+
       sonarr = {
         enable = true;
         openFirewall = true;
