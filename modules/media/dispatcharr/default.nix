@@ -66,16 +66,16 @@ in
       capabilities = {
       };
       environment = {
-        POSTGRES_HOST = "127.0.0.1";
-        POSTGRES_PORT = "5432";
-        POSTGRES_DB = databaseName;
-        POSTGRES_USER = databaseUsername;
-        POSTGRES_PASSWORD = databasePassword;
+        # POSTGRES_HOST = "127.0.0.1";
+        # POSTGRES_PORT = "5432";
+        # POSTGRES_DB = databaseName;
+        # POSTGRES_USER = databaseUsername;
+        # POSTGRES_PASSWORD = databasePassword;
         PUID = toString puid;
         PGID = toString pgid;
         TZ = config.time.timeZone;
       };
-      extraOptions = mkIf dockerHostNetworkingEnabled [ "--network=host" ];
+      # extraOptions = mkIf dockerHostNetworkingEnabled [ "--network=host" ];
     };
   };
 }
