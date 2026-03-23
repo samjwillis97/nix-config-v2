@@ -5,7 +5,10 @@
   ...
 }:
 {
-  imports = [ ../../nix-darwin ];
+  imports = [
+    ../../nix-darwin
+    ../../nix-darwin/microvm/default.nix
+  ];
 
   system.stateVersion = 5;
 }
