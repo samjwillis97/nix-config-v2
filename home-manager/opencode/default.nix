@@ -100,9 +100,8 @@ in
     commands = getFilesInDir ./commands ".md";
     agents = getFilesInDir ./agents ".md";
     prompts = getFilesInDir ./prompts ".txt";
-    skills =
-      # getDirsInDir ./skills ++
-      externalSkills;
+    skills = getDirsInDir ./skills ++ externalSkills;
+    # agentsmd = ./AGENTS.md;
     settings = {
       share = "disabled";
       provider = lib.mkIf workEnabled {
@@ -142,13 +141,14 @@ in
           "git status*" = "allow";
           "git diff*" = "allow";
           "git add*" = "allow";
-          "git commit*" = "ask";
+          "git commit*" = "allow";
           "git checkout*" = "allow";
           "git stash*" = "allow";
           "git log*" = "allow";
           "git show*" = "allow";
           "git remote*" = "allow";
           "git rev-parse*" = "allow";
+          "git branch*" = "allow";
           "ls*" = "allow";
           "pwd*" = "allow";
           "mkdir*" = "allow";

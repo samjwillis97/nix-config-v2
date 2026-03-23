@@ -12,6 +12,12 @@ in
   options.modules.opencode = {
     enable = mkEnableOption "enable opencode";
 
+    agentsmd = mkOption {
+      type = types.nullOr types.path;
+      default = null;
+      description = "Markdown file to be used as agents in opencode config.";
+    };
+
     settings = mkOption {
       type = types.attrsOf types.anything;
       default = { };
@@ -52,8 +58,11 @@ in
   config = (
     mkIf cfg.enable (mkMerge [
       {
-        home.packages = [ pkgs.opencode ];
+        programs.opencode.enable = true;
       }
+      (mkIf (builtins.isNull (cfg.agentsmd) == false) {
+        programs.opencode.rules = cfg.agentsmd;
+      })
       {
         home.file.".config/opencode/opencode.json".text = builtins.toJSON (
           cfg.settings
