@@ -1,4 +1,4 @@
-{ flake, hostName, workspace, sshHostKeysPath, opencodeStatePath, mac, extraPackages ? [ ], extraZshInit ? "" }:
+{ flake, hostName, workspace, sshHostKeysPath, opencodeStatePath, mac, extraPackages ? [ ], extraZshInit ? "", enableSsh ? true, enableFirewall ? true, vcpu ? 8, mem ? 4096 }:
 { pkgs, ... }:
 {
   imports = [ flake.inputs.home-manager.nixosModules.home-manager ];
@@ -21,7 +21,7 @@
     workMicrovm.extraZshInit = extraZshInit;
   };
 
-  services.openssh.enable = true;
+  services.openssh.enable = enableSsh;
   services.openssh.hostKeys = [
     {
       path = "/etc/ssh/host-keys/ssh_host_ed25519_key";
@@ -29,7 +29,7 @@
     }
   ];
 
-  networking.firewall.enable = false;
+  networking.firewall.enable = enableFirewall;
 
   environment.systemPackages = with pkgs; [
     git curl wget ripgrep fd jq file which tree gnumake gcc pkg-config neovim
@@ -93,8 +93,8 @@
       }
     ];
 
-    vcpu = 8;
-    mem = 4096;
+    vcpu = vcpu;
+    mem = mem;
     socket = "control.socket";
   };
 }
