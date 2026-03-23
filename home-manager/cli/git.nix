@@ -7,6 +7,8 @@
     userName = "samjwillis97";
     userEmail = "sam@williscloud.org";
 
+    lfs.enable = true;
+
     extraConfig = {
       merge = {
         tool = "fugitive";

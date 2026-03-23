@@ -86,6 +86,10 @@ let
           {
             devShells.default = mkShell {
               inherit buildInputs nativeBuildInputs;
+
+              shellHook = '''
+                export PATH=\$PWD/node_modules/.bin/:\$PATH
+              ''';
             };
           }
         );

@@ -317,18 +317,17 @@ in
         };
         buildkite = {
           type = "remote";
-          url = "https://mcp.buildkite.com/mcp";
+          url = "https://mcp.buildkite.com/mcp/readonly";
           enabled = false;
+          headers = {
+            X-Buildkite-Toolsets = "user,pipelines,builds";
+          };
         };
         sentry = {
-          type = "local";
-          command = [
-            "${node}/bin/npx"
-            "-y"
-            "mcp-remote"
-            "https://mcp.sentry.dev/sse"
-          ];
-          enabled = false; # Bit annoying
+          type = "remote";
+          url = "https://mcp.sentry.dev/mcp";
+          enabled = false; # Bit annoying,
+          oauth = { };
         };
         github = {
           type = "local";
@@ -343,7 +342,7 @@ in
             browsers =
               (builtins.fromJSON (builtins.readFile "${pkgs.playwright-driver}/browsers.json")).browsers;
             chromium-rev = (builtins.head (builtins.filter (x: x.name == "chromium") browsers)).revision;
-            exePath = "${pkgs.playwright.browsers}/chromium-${chromium-rev}/chrome-mac/Chromium.app/Contents/MacOS/Chromium";
+            exePath = "${pkgs.playwright.browsers}/chromium-${chromium-rev}/chrome-mac-arm64/Google\ Chrome\ for\ Testing.app/Contents/MacOS/Google\ Chrome\ for\ Testing";
           in
           {
             type = "local";

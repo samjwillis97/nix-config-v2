@@ -27,10 +27,10 @@ in
       unzip
       htop
       fzf
-      neofetch
       duf
       agenix
       nix-sweep
+      nix-auth
     ]
     ++ osSpecificPackages;
 

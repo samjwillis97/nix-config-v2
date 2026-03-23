@@ -139,6 +139,9 @@
       url = "github:nix-community/NixOS-WSL/main";
     };
 
+    nix-auth= {
+      url = "github:numtide/nix-auth";
+    };
   };
 
   outputs =
@@ -159,6 +162,7 @@
       firefox-darwin,
       terranix,
       nixos-wsl,
+      nix-auth,
       ...
     }@inputs:
     let
@@ -319,7 +323,16 @@
           ./home-manager/firefox
           ./home-manager/moonlight
           ./home-manager/opencode
-          { modules.darwin.work = true; }
+          (
+            { pkgs, ... }:
+            {
+              modules.darwin.work = true;
+              home.packages = with pkgs; [
+                dbeaver-bin
+                insomnia
+              ];
+            }
+          )
         ];
       })
 
