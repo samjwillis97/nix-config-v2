@@ -22,27 +22,116 @@ Nix allows for easy to manage, collaborative, reproducible deployments. This mea
 
 copy required keys to `/var/agenix/`, unfortunately this means restarting the VM afterwards, haven't worked out how to copy them there automatically
 
-### work-mbp agentvm bootstrap
+### work-mbp Coding-Agent MicroVM
 
-Run these on `work-mbp` from the repository root.
+A disposable NixOS guest VM for running coding agents on Apple Silicon.
+Uses [microvm.nix](https://github.com/astro/microvm.nix) with the
+[vfkit](https://github.com/crc-org/vfkit) hypervisor and Apple Rosetta
+for transparent x86_64 binary execution.
+
+Based on [Michael Stapelberg's coding-agent MicroVM workflow](https://michael.stapelberg.ch/posts/2026-02-01-coding-agent-microvm-nix/),
+adapted for macOS.
+
+#### What it provides
+
+- **NixOS aarch64-linux guest** running on your Mac via vfkit
+- **Rosetta x86_64 support** -- run x86_64 Linux binaries seamlessly
+- **Shared workspace** -- `/workspace` in the guest maps to `~/microvm/agentvm` on the host
+- **Shared agent state** -- `~/opencode-microvm` on the host is mounted at `/home/sam/opencode-microvm` in the guest, so OpenCode/Claude config persists across VM restarts
+- **Autologin as `sam`** with zsh, dropping you straight into `/workspace`
+- **Pre-installed tools** -- git, curl, ripgrep, fd, jq, neovim, gcc, etc.
+- **SSH access** via host keys shared from the host
+- **Persistent `/var`** -- systemd state, logs, and installed packages survive restarts
+
+#### Architecture
+
+Because the microvm.nix host module is NixOS-only, the VM is defined as a
+standalone `nixosConfigurations.work-mbp-agentvm` entry (aarch64-linux) in the
+flake and exposed as `packages.aarch64-darwin.work-mbp-agentvm` (the runner
+package). The darwin host imports only a lightweight helper module that sets
+environment variables for discoverability.
+
+Key files:
+
+| File | Purpose |
+|------|---------|
+| `nix-darwin/microvm/base.nix` | Reusable guest base (vfkit, Rosetta, shares, users, SSH) |
+| `nix-darwin/microvm/home.nix` | Guest home-manager module (zsh, env vars, workspace cd) |
+| `nix-darwin/microvm/vms.nix` | VM declarations merged into flake outputs |
+| `nix-darwin/microvm/default.nix` | Host helper imported by work-mbp |
+
+#### First-time bootstrap
+
+Run once on `work-mbp` from the repository root to create host directories and
+an SSH host key for the guest:
 
 ```bash
-mkdir -p /Users/samuel.willis/microvm/agentvm
-mkdir -p /Users/samuel.willis/microvm/agentvm/ssh-host-keys
-mkdir -p /Users/samuel.willis/opencode-microvm
-if [ ! -f /Users/samuel.willis/microvm/agentvm/ssh-host-keys/ssh_host_ed25519_key ]; then
-  ssh-keygen -t ed25519 -N "" -f /Users/samuel.willis/microvm/agentvm/ssh-host-keys/ssh_host_ed25519_key
+mkdir -p ~/microvm/agentvm/ssh-host-keys
+mkdir -p ~/opencode-microvm
+if [ ! -f ~/microvm/agentvm/ssh-host-keys/ssh_host_ed25519_key ]; then
+  ssh-keygen -t ed25519 -N "" -f ~/microvm/agentvm/ssh-host-keys/ssh_host_ed25519_key
 fi
 ```
 
-### work-mbp agentvm build and run
+#### Build and run
 
-Run from the repository root.
+From the repository root:
 
 ```bash
 nix build .#packages.aarch64-darwin.work-mbp-agentvm
 ./result/bin/microvm-run
 ```
+
+The VM boots to a zsh shell as `sam` in `/workspace`. First boot creates the
+disk images (`nix-store-overlay.img`, `var.img`) in the current directory.
+
+#### Stopping the VM
+
+Press `Ctrl+C` in the terminal running `microvm-run`, or from another terminal:
+
+```bash
+./result/bin/microvm-shutdown
+```
+
+#### Day-to-day usage
+
+1. Place your project files in `~/microvm/agentvm/` on the host -- they appear
+   at `/workspace` in the guest
+2. Run `./result/bin/microvm-run` to start the VM
+3. You land in a zsh shell at `/workspace` with `OPENCODE_CONFIG_DIR` and
+   `CLAUDE_CONFIG_DIR` already pointing at the shared state directory
+4. Work in the guest; all changes to `/workspace` are immediately visible on
+   the host and vice versa
+5. `Ctrl+C` to stop; restart anytime -- `/var` and shared mounts persist
+
+#### Rebuilding after config changes
+
+After editing any file under `nix-darwin/microvm/`:
+
+```bash
+nix build .#packages.aarch64-darwin.work-mbp-agentvm
+```
+
+Then stop and restart the VM. The writable nix store overlay and `/var` volume
+persist across rebuilds (delete `nix-store-overlay.img` and `var.img` to reset).
+
+#### Verifying Rosetta
+
+Inside the guest:
+
+```bash
+file $(which hello)   # should show x86-64
+hello                 # should print "Hello, world!"
+```
+
+#### Adding another VM
+
+1. Add a new entry in `nix-darwin/microvm/vms.nix` calling `microvmBase` with
+   different `hostName`, `workspace`, `mac`, etc.
+2. Add matching `packages.aarch64-darwin.<name>` pointing at the new
+   `declaredRunner`
+3. Bootstrap the host directories for the new VM
+4. Build and run with `nix build .#packages.aarch64-darwin.<name>`
 
 ## Credits
 
