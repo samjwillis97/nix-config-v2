@@ -1,4 +1,5 @@
 result
 result-*
 *.qcow2
+*.img
 

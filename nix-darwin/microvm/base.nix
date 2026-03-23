@@ -6,12 +6,15 @@
   networking.hostName = hostName;
   system.stateVersion = "24.05";
 
+  programs.zsh.enable = true;
+
   users.groups.sam.gid = 1000;
   users.users.sam = {
     isNormalUser = true;
     uid = 1000;
     group = "sam";
     extraGroups = [ "wheel" ];
+    shell = pkgs.zsh;
   };
 
   home-manager.useGlobalPkgs = true;
@@ -21,6 +24,7 @@
     workMicrovm.extraZshInit = extraZshInit;
   };
 
+  services.getty.autologinUser = "sam";
   services.openssh.enable = enableSsh;
   services.openssh.hostKeys = [
     {
