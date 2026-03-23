@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  flake,
   ...
 }:
 let
@@ -22,6 +23,56 @@ let
     )
   );
 
+  getDirsInDir = (
+    dir:
+    lib.mapAttrsToList (name: value: dir + ("/" + name)) (
+      lib.filterAttrs (key: value: value == "directory") (builtins.readDir dir)
+    )
+  );
+
+  getDirNames = (
+    dir: lib.attrNames (lib.filterAttrs (key: value: value == "directory") (builtins.readDir dir))
+  );
+
+  # Get local skill directory names for dedup (local takes priority)
+  localSkillNames = getDirNames ./skills;
+
+  # External skill sources - each entry pulls skills from a flake input
+  # src:     the flake input (fetched with flake = false)
+  # path:    subdirectory containing skill dirs (default: "skills")
+  # exclude: skill names to skip (default: [])
+  # include: if set, ONLY include these skill names (default: null = all)
+  skillSources = [
+    {
+      src = flake.inputs.superpowers;
+      # path = "skills";
+      exclude = [ "using-git-worktrees" ];
+      # include = [ "test-driven-development" "systematic-debugging" ];
+    }
+  ];
+
+  # Resolve a single skill source into a list of skill directory paths
+  resolveSkillSource =
+    {
+      src,
+      path ? "skills",
+      exclude ? [ ],
+      include ? null,
+    }:
+    let
+      skillsDir = "${src}/${path}";
+      allNames = getDirNames skillsDir;
+      selectedNames =
+        if include != null then lib.filter (name: lib.elem name allNames) include else allNames;
+      filteredNames = lib.filter (
+        name: !(lib.elem name exclude) && !(lib.elem name localSkillNames)
+      ) selectedNames;
+    in
+    map (name: "${skillsDir}/${name}") filteredNames;
+
+  # Combine all external skill sources
+  externalSkills = lib.concatMap resolveSkillSource skillSources;
+
   node = pkgs.nodejs_24;
 
   plugins =
@@ -38,10 +89,9 @@ in
   # For some reason with these MCP's you need node globally :(
   home.packages = with pkgs; [
     node
-    hugo
-    go # Required for Hugo modules
-    decktape-wrapped
-    terminal-notifier
+    # hugo
+    # go # Required for Hugo modules
+    # decktape-wrapped
   ];
 
   modules.opencode = {
@@ -50,6 +100,9 @@ in
     commands = getFilesInDir ./commands ".md";
     agents = getFilesInDir ./agents ".md";
     prompts = getFilesInDir ./prompts ".txt";
+    skills =
+      # getDirsInDir ./skills ++
+      externalSkills;
     settings = {
       share = "disabled";
       provider = lib.mkIf workEnabled {
@@ -81,6 +134,9 @@ in
         messages_half_page_down = "ctrl+d";
       };
       permission = {
+        external_directory = {
+          "~/code/**" = "allow";
+        };
         bash = {
           "*" = "ask";
           "git status*" = "allow";
@@ -112,6 +168,8 @@ in
           "tail*" = "allow";
           "nix*" = "allow";
           "xargs*" = "allow";
+          "true*" = "allow";
+          "readlink*" = "allow";
         };
       };
       agent = {
@@ -123,16 +181,20 @@ in
             edit = "deny";
             bash = {
               "*" = "ask";
-              "f -p" = "allow";
-              "f -L" = "allow";
-              "grep" = "allow";
-              "find" = "allow";
-              "cd" = "allow";
-              "head" = "allow";
-              "tail" = "allow";
-              "wc" = "allow";
-              "rg" = "allow";
-              "sort" = "allow";
+              "ls*" = "allow";
+              "pwd*" = "allow";
+              "grep*" = "allow";
+              "find*" = "allow";
+              "cd*" = "allow";
+              "head*" = "allow";
+              "tail*" = "allow";
+              "wc*" = "allow";
+              "rg*" = "allow";
+              "sort*" = "allow";
+              "true*" = "allow";
+              "echo*" = "allow";
+              "jq*" = "allow";
+              "cat*" = "allow";
             };
             webfetch = "deny";
           };
@@ -143,164 +205,6 @@ in
             grep = true;
             glob = true;
             list = true;
-          };
-        };
-        # github-researcher = {
-        #   mode = "subagent";
-        #   prompt = "{file:./prompts/github-researcher.txt}";
-        #   description = "Use this agent to research code on GitHub, finding relevant repositories, files, and code snippets based on the user's query. Provide links to the most relevant results.";
-        #   permission = {
-        #     edit = "deny";
-        #     bash = "deny";
-        #     webfetch = "deny";
-        #   };
-        #   tools = {
-        #     "*" = false;
-        #     github_search_repositories = true;
-        #     github_search_code = true;
-        #     github_get_file_contents = true;
-        #     github_list_branches = true;
-        #     github_list_commits = true;
-        #     github_get_commit = true;
-        #   };
-        # };
-        jira-writer = {
-          mode = "primary";
-          prompt = "{file:./prompts/jira-writer.txt}";
-          permission = {
-            edit = "deny";
-            bash = "deny";
-            webfetch = "deny";
-          };
-          tools = {
-            "atlassian_*" = false;
-            atlassian_getJiraIssue = true;
-            atlassian_getJiraIssueRemoteIssueLinks = true;
-            atlassian_getTransitionsForJiraIssue = true;
-            atlassian_getVisibleJiraProjects = true;
-            atlassian_getJiraProjectIssueTypesMetadata = true;
-            atlassian_getJiraIssueTypeMetaWithFields = true;
-            atlassian_searchJiraIssuesUsingJql = true;
-            atlassian_lookupJiraAccountId = true;
-            atlassian_createJiraIssue = true;
-            atlassian_editJiraIssue = true;
-            atlassian_addCommentToJiraIssue = true;
-            atlassian_transitionJiraIssue = true;
-          };
-        };
-        jira-planner = {
-          mode = "primary";
-          prompt = "{file:./prompts/jira-planner.txt}";
-          permission = {
-            edit = "allow";
-            bash = "deny";
-            webfetch = "deny";
-          };
-          tools = {
-            write = true;
-            edit = true;
-            "atlassian_*" = false;
-            atlassian_getJiraIssue = true;
-            atlassian_getJiraIssueRemoteIssueLinks = true;
-            atlassian_getTransitionsForJiraIssue = true;
-            atlassian_getVisibleJiraProjects = true;
-            atlassian_getJiraProjectIssueTypesMetadata = true;
-            atlassian_getJiraIssueTypeMetaWithFields = true;
-            atlassian_searchJiraIssuesUsingJql = true;
-            atlassian_lookupJiraAccountId = true;
-            atlassian_getConfluencePage = true;
-          };
-        };
-        jira-query = {
-          mode = "all";
-          prompt = "{file:./prompts/jira-query.txt}";
-          description = "Use this agent to query and search Jira issues. Provides quick access to issue details, search using JQL or natural language, and retrieve issue information.";
-          permission = {
-            edit = "allow";
-            bash = "deny";
-            webfetch = "deny";
-          };
-          tools = {
-            write = true;
-            read = true;
-            "atlassian_*" = false;
-            atlassian_getAccessibleAtlassianResources = true;
-            atlassian_getJiraIssue = true;
-            atlassian_searchJiraIssuesUsingJql = true;
-            atlassian_search = true;
-            atlassian_fetch = true;
-            atlassian_getJiraIssueRemoteIssueLinks = true;
-            atlassian_getTransitionsForJiraIssue = true;
-            atlassian_lookupJiraAccountId = true;
-            atlassian_getConfluenceSpaces = true;
-            atlassian_getConfluencePage = true;
-            atlassian_getPagesInConfluenceSpace = true;
-            atlassian_getConfluencePageDescendants = true;
-            atlassian_searchConfluenceUsingCql = true;
-          };
-        };
-        slides-generator = {
-          mode = "primary";
-          prompt = "{file:./prompts/slides-generator.txt}";
-          description = "Generate presentation slides from markdown documents";
-          permission = {
-            edit = "allow";
-            bash = {
-              "*" = "ask";
-              "echo" = "allow";
-              "cd" = "allow";
-              "hugo" = "allow";
-              "hugo server" = "allow";
-              "hugo new site" = "allow";
-              "hugo mod" = "allow";
-              "hugo mod init" = "allow";
-              "hugo mod get" = "allow";
-              "decktape" = "allow";
-              "docker" = "allow";
-              "docker run" = "allow";
-              "test -w" = "allow";
-              "test -d" = "allow";
-              "mkdir -p" = "allow";
-              "ls" = "allow";
-              "head" = "allow";
-              "wc" = "allow";
-              "rm" = "ask";
-              "rm -rf" = "ask";
-              "which" = "allow";
-              "grep" = "allow";
-              "mv" = "allow";
-              "cp" = "allow";
-              "cat" = "allow";
-              "kill" = "allow";
-              "mktemp" = "allow";
-              "sleep" = "allow";
-              "curl" = "allow";
-              "hugo-reveal-bootstrap" = "allow";
-            };
-            webfetch = "deny";
-          };
-          tools = {
-            bash = true;
-            read = true;
-            write = true;
-            edit = true;
-            glob = true;
-            list = true;
-            task = true;
-          };
-        };
-        slide-reviewer = {
-          mode = "subagent";
-          prompt = "{file:./prompts/slide-reviewer.txt}";
-          description = "Review individual presentation slides for visual quality and readability";
-          permission = {
-            edit = "deny";
-            bash = "deny";
-            webfetch = "deny";
-          };
-          tools = {
-            "*" = false;
-            read = true;
           };
         };
       };

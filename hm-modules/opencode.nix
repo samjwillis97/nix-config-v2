@@ -41,6 +41,12 @@ in
       default = [ ];
       description = "Custom prompts to be used from opencode config. Should be file paths of text files";
     };
+
+    skills = mkOption {
+      type = types.listOf types.path;
+      default = [ ];
+      description = "Custom skills to be used from opencode config. Each skill should be a directory containing a SKILL.md file";
+    };
   };
 
   config = (
@@ -73,25 +79,40 @@ in
         '';
 
         home.activation.opencode-agents = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          strip_nix_hash() {
+            if [[ "$1" =~ ^[a-z0-9]{32}- ]]; then echo "''${1#*-}"; else echo "$1"; fi
+          }
           mkdir -p $HOME/.config/opencode/agent
           rm -f $HOME/.config/opencode/agent/*
           ${concatMapStringsSep "\n" (agent: ''
-            agent_src=${agent}
-            agent_bn=$(basename "$agent_src")
-            agent_name=''${agent_bn#*-}
-            cp "$agent_src" "$HOME/.config/opencode/agent/$agent_name"
+            agent_name=$(strip_nix_hash "$(basename "${agent}")")
+            cp "${agent}" "$HOME/.config/opencode/agent/$agent_name"
           '') cfg.agents}
         '';
 
         home.activation.opencode-prompts = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          strip_nix_hash() {
+            if [[ "$1" =~ ^[a-z0-9]{32}- ]]; then echo "''${1#*-}"; else echo "$1"; fi
+          }
           mkdir -p $HOME/.config/opencode/prompts
           rm -f $HOME/.config/opencode/prompts/*
           ${concatMapStringsSep "\n" (prompt: ''
-            prompt_src=${prompt}
-            prompt_bn=$(basename "$prompt_src")
-            prompt_name=''${prompt_bn#*-}
-            cp "$prompt_src" "$HOME/.config/opencode/prompts/$prompt_name"
+            prompt_name=$(strip_nix_hash "$(basename "${prompt}")")
+            cp "${prompt}" "$HOME/.config/opencode/prompts/$prompt_name"
           '') cfg.prompts}
+        '';
+
+        home.activation.opencode-skills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          strip_nix_hash() {
+            if [[ "$1" =~ ^[a-z0-9]{32}- ]]; then echo "''${1#*-}"; else echo "$1"; fi
+          }
+          mkdir -p $HOME/.config/opencode/skills
+          chmod -R u+w $HOME/.config/opencode/skills 2>/dev/null || true
+          rm -rf $HOME/.config/opencode/skills/*
+          ${concatMapStringsSep "\n" (skill: ''
+            skill_name=$(strip_nix_hash "$(basename "${skill}")")
+            ${pkgs.rsync}/bin/rsync -rL --chmod=u+rw "${skill}/" "$HOME/.config/opencode/skills/$skill_name/"
+          '') cfg.skills}
         '';
       }
     ])

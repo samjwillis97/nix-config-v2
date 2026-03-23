@@ -142,6 +142,11 @@
     nix-auth= {
       url = "github:numtide/nix-auth";
     };
+
+    superpowers = {
+      url = "github:obra/superpowers";
+      flake = false;
+    };
   };
 
   outputs =

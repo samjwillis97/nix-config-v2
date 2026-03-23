@@ -1584,6 +1584,7 @@
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_13",
         "nur": "nur",
+        "superpowers": "superpowers",
         "systems": "systems_7",
         "terranix": "terranix"
       }
@@ -1602,6 +1603,22 @@
       "original": {
         "type": "git",
         "url": "https://spectrum-os.org/git/spectrum"
+      }
+    },
+    "superpowers": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1773951977,
+        "narHash": "sha256-wmOArGgOahJK/mqzYJZW6qcUNaOB6yL57RQMe56S1uw=",
+        "owner": "obra",
+        "repo": "superpowers",
+        "rev": "8ea39819eed74fe2a0338e71789f06b30e953041",
+        "type": "github"
+      },
+      "original": {
+        "owner": "obra",
+        "repo": "superpowers",
+        "type": "github"
       }
     },
     "systems": {
