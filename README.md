@@ -24,14 +24,20 @@ copy required keys to `/var/agenix/`, unfortunately this means restarting the VM
 
 ### work-mbp agentvm bootstrap
 
+Run these on `work-mbp` from the repository root.
+
 ```bash
 mkdir -p /Users/samuel.willis/microvm/agentvm
 mkdir -p /Users/samuel.willis/microvm/agentvm/ssh-host-keys
 mkdir -p /Users/samuel.willis/opencode-microvm
-ssh-keygen -t ed25519 -N "" -f /Users/samuel.willis/microvm/agentvm/ssh-host-keys/ssh_host_ed25519_key
+if [ ! -f /Users/samuel.willis/microvm/agentvm/ssh-host-keys/ssh_host_ed25519_key ]; then
+  ssh-keygen -t ed25519 -N "" -f /Users/samuel.willis/microvm/agentvm/ssh-host-keys/ssh_host_ed25519_key
+fi
 ```
 
 ### work-mbp agentvm build and run
+
+Run from the repository root.
 
 ```bash
 nix build .#packages.aarch64-darwin.work-mbp-agentvm
