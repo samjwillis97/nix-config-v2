@@ -406,5 +406,7 @@
 
         checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
       })
+
+      (import ./nix-darwin/microvm/vms.nix { inherit self nixpkgs; })
     ]);
 }
