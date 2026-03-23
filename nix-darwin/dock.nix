@@ -43,7 +43,7 @@ in
       # "${pkgs.zoom-us}/Applications/zoom.us.app"
 
       "${pkgs.discord}/Applications/Discord.app"
-      "${config.home-manager.users.${username}.programs.wezterm.package}/Applications/WezTerm.app"
+      "${config.home-manager.users.${username}.modules.ghostty.package}/Applications/Ghostty.app"
       (lib.optionalString workEnabled "${pkgs.brewCasks.proxyman}/Applications/Proxyman.app")
       "/system/Applications/Music.app"
       "/system/Applications/iPhone Mirroring.app/"
