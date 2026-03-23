@@ -6,15 +6,18 @@
   ...
 }:
 let
-  github-mcp-wrapped = pkgs.writeShellScriptBin "github-mcp-wrapped" ''
-    export GITHUB_PERSONAL_ACCESS_TOKEN=$(cat ${config.age.secrets.gh_pat.path})
-    ${pkgs.github-mcp-server}/bin/github-mcp-server "$@"
-  '';
+  # TODO: gh skill + CLI
+  # TODO: buildktie skill + CLI
+  # TODO: browser skill + CLI
+  # TODO: Sentry skill + CLI
+  # TODO: JIRA skill + CLI + skill to notify about branch name being ticket number
+  # TODO: httpcraft skill
+  # TODO: f skill + replacing worktree usage in superpowers
 
-  # DeckTape wrapper for macOS using Docker
-  decktape-wrapped = pkgs.writeShellScriptBin "decktape" ''
-    docker run --rm -t --net=host -v "$(pwd):/slides" astefanutti/decktape "$@"
-  '';
+  # github-mcp-wrapped = pkgs.writeShellScriptBin "github-mcp-wrapped" ''
+  #   export GITHUB_PERSONAL_ACCESS_TOKEN=$(cat ${config.age.secrets.gh_pat.path})
+  #   ${pkgs.github-mcp-server}/bin/github-mcp-server "$@"
+  # '';
 
   getFilesInDir = (
     dir: ext:
@@ -86,14 +89,6 @@ in
     ../../hm-modules/opencode.nix
   ];
 
-  # For some reason with these MCP's you need node globally :(
-  home.packages = with pkgs; [
-    node
-    # hugo
-    # go # Required for Hugo modules
-    # decktape-wrapped
-  ];
-
   modules.opencode = {
     enable = true;
     plugins = plugins;
@@ -135,6 +130,10 @@ in
       permission = {
         external_directory = {
           "~/code/**" = "allow";
+          "~/.config/httpcraft" = "allow";
+        };
+        edit = {
+          "~/.config/httpcraft" = "deny";
         };
         bash = {
           "*" = "ask";
@@ -170,6 +169,8 @@ in
           "xargs*" = "allow";
           "true*" = "allow";
           "readlink*" = "allow";
+          "f*" = "allow";
+          "httpcraft*" = "allow";
         };
       };
       agent = {
@@ -208,69 +209,69 @@ in
           };
         };
       };
-      mcp = {
-        atlassian = {
-          type = "local";
-          command = [
-            "${node}/bin/npx"
-            "-y"
-            "mcp-remote"
-            "https://mcp.atlassian.com/v1/sse"
-          ];
-          enabled = false;
-        };
-        buildkite = {
-          type = "remote";
-          url = "https://mcp.buildkite.com/mcp/readonly";
-          enabled = false;
-          headers = {
-            X-Buildkite-Toolsets = "user,pipelines,builds";
-          };
-        };
-        sentry = {
-          type = "remote";
-          url = "https://mcp.sentry.dev/mcp";
-          enabled = false; # Bit annoying,
-          oauth = { };
-        };
-        github = {
-          type = "local";
-          command = [
-            "${github-mcp-wrapped}/bin/github-mcp-wrapped"
-            "stdio"
-          ];
-          enabled = false;
-        };
-        playwright =
-          let
-            browsers =
-              (builtins.fromJSON (builtins.readFile "${pkgs.playwright-driver}/browsers.json")).browsers;
-            chromium-rev = (builtins.head (builtins.filter (x: x.name == "chromium") browsers)).revision;
-            exePath = "${pkgs.playwright.browsers}/chromium-${chromium-rev}/chrome-mac-arm64/Google\ Chrome\ for\ Testing.app/Contents/MacOS/Google\ Chrome\ for\ Testing";
-          in
-          {
-            type = "local";
-            command = [
-              (pkgs.lib.getExe pkgs.playwright-mcp)
-              "--executable-path=${exePath}"
-              "--user-data-dir=$USER_DATA_DIR"
-            ];
-            environment = {
-              PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright.browsers}";
-              PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
-              PLAYWRIGHT_NODEJS_PATH = "${node}/bin/node";
-              USER_DATA_DIR = "$TMPDIR/chrome-mcp";
-            };
-            enabled = false;
-          };
-        httpcraft = {
-          type = "local";
-          command = [
-            "${pkgs.httpcraft-mcp}/bin/httpcraft-mcp"
-          ];
-          enabled = false;
-        };
-      };
+      # mcp = {
+      #   atlassian = {
+      #     type = "local";
+      #     command = [
+      #       "${node}/bin/npx"
+      #       "-y"
+      #       "mcp-remote"
+      #       "https://mcp.atlassian.com/v1/sse"
+      #     ];
+      #     enabled = false;
+      #   };
+      #   buildkite = {
+      #     type = "remote";
+      #     url = "https://mcp.buildkite.com/mcp/readonly";
+      #     enabled = false;
+      #     headers = {
+      #       X-Buildkite-Toolsets = "user,pipelines,builds";
+      #     };
+      #   };
+      #   sentry = {
+      #     type = "remote";
+      #     url = "https://mcp.sentry.dev/mcp";
+      #     enabled = false; # Bit annoying,
+      #     oauth = { };
+      #   };
+      #   github = {
+      #     type = "local";
+      #     command = [
+      #       "${github-mcp-wrapped}/bin/github-mcp-wrapped"
+      #       "stdio"
+      #     ];
+      #     enabled = false;
+      #   };
+      #   playwright =
+      #     let
+      #       browsers =
+      #         (builtins.fromJSON (builtins.readFile "${pkgs.playwright-driver}/browsers.json")).browsers;
+      #       chromium-rev = (builtins.head (builtins.filter (x: x.name == "chromium") browsers)).revision;
+      #       exePath = "${pkgs.playwright.browsers}/chromium-${chromium-rev}/chrome-mac-arm64/Google\ Chrome\ for\ Testing.app/Contents/MacOS/Google\ Chrome\ for\ Testing";
+      #     in
+      #     {
+      #       type = "local";
+      #       command = [
+      #         (pkgs.lib.getExe pkgs.playwright-mcp)
+      #         "--executable-path=${exePath}"
+      #         "--user-data-dir=$USER_DATA_DIR"
+      #       ];
+      #       environment = {
+      #         PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright.browsers}";
+      #         PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
+      #         PLAYWRIGHT_NODEJS_PATH = "${node}/bin/node";
+      #         USER_DATA_DIR = "$TMPDIR/chrome-mcp";
+      #       };
+      #       enabled = false;
+      #     };
+      #   httpcraft = {
+      #     type = "local";
+      #     command = [
+      #       "${pkgs.httpcraft-mcp}/bin/httpcraft-mcp"
+      #     ];
+      #     enabled = false;
+      #   };
+      # };
     };
   };
 }
