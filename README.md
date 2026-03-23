@@ -22,6 +22,22 @@ Nix allows for easy to manage, collaborative, reproducible deployments. This mea
 
 copy required keys to `/var/agenix/`, unfortunately this means restarting the VM afterwards, haven't worked out how to copy them there automatically
 
+### work-mbp agentvm bootstrap
+
+```bash
+mkdir -p /Users/samuel.willis/microvm/agentvm
+mkdir -p /Users/samuel.willis/microvm/agentvm/ssh-host-keys
+mkdir -p /Users/samuel.willis/opencode-microvm
+ssh-keygen -t ed25519 -N "" -f /Users/samuel.willis/microvm/agentvm/ssh-host-keys/ssh_host_ed25519_key
+```
+
+### work-mbp agentvm build and run
+
+```bash
+nix build .#packages.aarch64-darwin.work-mbp-agentvm
+./result/bin/microvm-run
+```
+
 ## Credits
 
 These Repo's are where I took major inspiration and chunks of code from :)
