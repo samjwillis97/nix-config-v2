@@ -72,10 +72,11 @@ in
         );
 
         home.activation.opencode-plugins = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          mkdir -p $HOME/.config/opencode/plugin
-          rm -f $HOME/.config/opencode/plugin/*
+          rm -rf $HOME/.config/opencode/plugin
+          mkdir -p $HOME/.config/opencode/plugins
+          rm -f $HOME/.config/opencode/plugins/*
           ${concatMapStringsSep "\n" (plugin: ''
-            cp ${plugin} $HOME/.config/opencode/plugin/
+            ln -sf ${plugin} $HOME/.config/opencode/plugins/
           '') cfg.plugins}
         '';
 
