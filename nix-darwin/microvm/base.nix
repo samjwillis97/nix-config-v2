@@ -1,4 +1,4 @@
-{ flake, hostName, workspace, sshHostKeysPath, opencodeStatePath, mac, extraPackages ? [ ], extraZshInit ? "", enableSsh ? true, enableFirewall ? true, vcpu ? 8, mem ? 4096 }:
+{ flake, hostName, workspace, opencodeStatePath, mac, extraPackages ? [ ], extraZshInit ? "", enableFirewall ? true, vcpu ? 8, mem ? 4096 }:
 { pkgs, ... }:
 {
   imports = [ flake.inputs.home-manager.nixosModules.home-manager ];
@@ -25,13 +25,6 @@
   };
 
   services.getty.autologinUser = "sam";
-  services.openssh.enable = enableSsh;
-  services.openssh.hostKeys = [
-    {
-      path = "/etc/ssh/host-keys/ssh_host_ed25519_key";
-      type = "ed25519";
-    }
-  ];
 
   networking.firewall.enable = enableFirewall;
 
@@ -74,12 +67,6 @@
         tag = "workspace";
         source = workspace;
         mountPoint = "/workspace";
-      }
-      {
-        proto = "virtiofs";
-        tag = "ssh-host-keys";
-        source = sshHostKeysPath;
-        mountPoint = "/etc/ssh/host-keys";
       }
       {
         proto = "virtiofs";

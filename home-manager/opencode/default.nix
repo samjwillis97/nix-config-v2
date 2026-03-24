@@ -148,6 +148,7 @@ in
           "git remote*" = "allow";
           "git rev-parse*" = "allow";
           "git branch*" = "allow";
+          "git ls-tree*" = "allow";
           "ls*" = "allow";
           "pwd*" = "allow";
           "mkdir*" = "allow";

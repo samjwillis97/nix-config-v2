@@ -40,8 +40,13 @@ adapted for macOS.
 - **Shared agent state** -- `~/opencode-microvm` on the host is mounted at `/home/sam/opencode-microvm` in the guest, so OpenCode/Claude config persists across VM restarts
 - **Autologin as `sam`** with zsh, dropping you straight into `/workspace`
 - **Pre-installed tools** -- git, curl, ripgrep, fd, jq, neovim, gcc, etc.
-- **SSH access** via host keys shared from the host
+- **Serial console access** -- `microvm-run` drops you straight into the guest shell
 - **Persistent `/var`** -- systemd state, logs, and installed packages survive restarts
+
+> **Note:** vfkit uses NAT networking with no host-to-guest port forwarding.
+> The guest has outbound internet access but cannot be reached from the host
+> via SSH or other inbound connections. The serial console is the primary
+> access method.
 
 #### Architecture
 
@@ -55,22 +60,18 @@ Key files:
 
 | File | Purpose |
 |------|---------|
-| `nix-darwin/microvm/base.nix` | Reusable guest base (vfkit, Rosetta, shares, users, SSH) |
+| `nix-darwin/microvm/base.nix` | Reusable guest base (vfkit, Rosetta, shares, users, networking) |
 | `nix-darwin/microvm/home.nix` | Guest home-manager module (zsh, env vars, workspace cd) |
 | `nix-darwin/microvm/vms.nix` | VM declarations merged into flake outputs |
 | `nix-darwin/microvm/default.nix` | Host helper imported by work-mbp |
 
 #### First-time bootstrap
 
-Run once on `work-mbp` from the repository root to create host directories and
-an SSH host key for the guest:
+Run once on `work-mbp` from the repository root to create host directories:
 
 ```bash
-mkdir -p ~/microvm/agentvm/ssh-host-keys
+mkdir -p ~/microvm/agentvm
 mkdir -p ~/opencode-microvm
-if [ ! -f ~/microvm/agentvm/ssh-host-keys/ssh_host_ed25519_key ]; then
-  ssh-keygen -t ed25519 -N "" -f ~/microvm/agentvm/ssh-host-keys/ssh_host_ed25519_key
-fi
 ```
 
 #### Build and run
