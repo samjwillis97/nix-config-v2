@@ -249,69 +249,76 @@ in
           };
         };
       };
-      # mcp = {
-      #   atlassian = {
-      #     type = "local";
-      #     command = [
-      #       "${node}/bin/npx"
-      #       "-y"
-      #       "mcp-remote"
-      #       "https://mcp.atlassian.com/v1/sse"
-      #     ];
-      #     enabled = false;
-      #   };
-      #   buildkite = {
-      #     type = "remote";
-      #     url = "https://mcp.buildkite.com/mcp/readonly";
-      #     enabled = false;
-      #     headers = {
-      #       X-Buildkite-Toolsets = "user,pipelines,builds";
-      #     };
-      #   };
-      #   sentry = {
-      #     type = "remote";
-      #     url = "https://mcp.sentry.dev/mcp";
-      #     enabled = false; # Bit annoying,
-      #     oauth = { };
-      #   };
-      #   github = {
-      #     type = "local";
-      #     command = [
-      #       "${github-mcp-wrapped}/bin/github-mcp-wrapped"
-      #       "stdio"
-      #     ];
-      #     enabled = false;
-      #   };
-      #   playwright =
-      #     let
-      #       browsers =
-      #         (builtins.fromJSON (builtins.readFile "${pkgs.playwright-driver}/browsers.json")).browsers;
-      #       chromium-rev = (builtins.head (builtins.filter (x: x.name == "chromium") browsers)).revision;
-      #       exePath = "${pkgs.playwright.browsers}/chromium-${chromium-rev}/chrome-mac-arm64/Google\ Chrome\ for\ Testing.app/Contents/MacOS/Google\ Chrome\ for\ Testing";
-      #     in
-      #     {
-      #       type = "local";
-      #       command = [
-      #         (pkgs.lib.getExe pkgs.playwright-mcp)
-      #         "--executable-path=${exePath}"
-      #         "--user-data-dir=$USER_DATA_DIR"
-      #       ];
-      #       environment = {
-      #         PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright.browsers}";
-      #         PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
-      #         PLAYWRIGHT_NODEJS_PATH = "${node}/bin/node";
-      #         USER_DATA_DIR = "$TMPDIR/chrome-mcp";
-      #       };
-      #       enabled = false;
-      #     };
-      #   httpcraft = {
-      #     type = "local";
-      #     command = [
-      #       "${pkgs.httpcraft-mcp}/bin/httpcraft-mcp"
-      #     ];
-      #     enabled = false;
-      #   };
-      # };
+      mcp = {
+        nixos = {
+          enabled = false;
+          type = "local";
+          command = [
+            "${pkgs.mcp-nixos}/bin/mcp-nixos"
+          ];
+        };
+        # atlassian = {
+        #   type = "local";
+        #   command = [
+        #     "${node}/bin/npx"
+        #     "-y"
+        #     "mcp-remote"
+        #     "https://mcp.atlassian.com/v1/sse"
+        #   ];
+        #   enabled = false;
+        # };
+        # buildkite = {
+        #   type = "remote";
+        #   url = "https://mcp.buildkite.com/mcp/readonly";
+        #   enabled = false;
+        #   headers = {
+        #     X-Buildkite-Toolsets = "user,pipelines,builds";
+        #   };
+        # };
+        # sentry = {
+        #   type = "remote";
+        #   url = "https://mcp.sentry.dev/mcp";
+        #   enabled = false; # Bit annoying,
+        #   oauth = { };
+        # };
+        # github = {
+        #   type = "local";
+        #   command = [
+        #     "${github-mcp-wrapped}/bin/github-mcp-wrapped"
+        #     "stdio"
+        #   ];
+        #   enabled = false;
+        # };
+        # playwright =
+        #   let
+        #     browsers =
+        #       (builtins.fromJSON (builtins.readFile "${pkgs.playwright-driver}/browsers.json")).browsers;
+        #     chromium-rev = (builtins.head (builtins.filter (x: x.name == "chromium") browsers)).revision;
+        #     exePath = "${pkgs.playwright.browsers}/chromium-${chromium-rev}/chrome-mac-arm64/Google\ Chrome\ for\ Testing.app/Contents/MacOS/Google\ Chrome\ for\ Testing";
+        #   in
+        #   {
+        #     type = "local";
+        #     command = [
+        #       (pkgs.lib.getExe pkgs.playwright-mcp)
+        #       "--executable-path=${exePath}"
+        #       "--user-data-dir=$USER_DATA_DIR"
+        #     ];
+        #     environment = {
+        #       PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright.browsers}";
+        #       PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
+        #       PLAYWRIGHT_NODEJS_PATH = "${node}/bin/node";
+        #       USER_DATA_DIR = "$TMPDIR/chrome-mcp";
+        #     };
+        #     enabled = false;
+        #   };
+        # httpcraft = {
+        #   type = "local";
+        #   command = [
+        #     "${pkgs.httpcraft-mcp}/bin/httpcraft-mcp"
+        #   ];
+        #   enabled = false;
+        # };
+      };
     };
   };
 }
