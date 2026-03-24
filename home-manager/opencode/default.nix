@@ -83,9 +83,11 @@ let
   # Combine all external skill sources
   externalSkills = lib.concatMap resolveSkillSource skillSources;
 
-  plugins =
-    getFilesInDir ./plugins ".js"
-    ++ (if (pkgs.stdenv.isDarwin) then getFilesInDir ./plugins/darwin ".js" else [ ]);
+  plugins = [
+    "${pkgs.opencode-notifier}/opencode-notifier.js"
+  ]
+  ++ getFilesInDir ./plugins ".js"
+  ++ (if (pkgs.stdenv.isDarwin) then getFilesInDir ./plugins/darwin ".js" else [ ]);
 
   workEnabled = config.modules.darwin.work;
 in
@@ -104,6 +106,21 @@ in
     llm-agents.agent-browser
   ];
 
+  home.file.".config/opencode/opencode-notifier.json".text = builtins.toJSON {
+    sound = true;
+    notification = true;
+    timeout = 5;
+    showProjectName = true;
+    showSessionTitle = true;
+    showIcon = true;
+    suppressWhenFocused = true;
+    enableOnDesktop = false;
+    notificationSystem = "osascript";
+    linux = {
+      grouping = false;
+    };
+  };
+
   modules.opencode = {
     enable = true;
     plugins = plugins;
@@ -114,6 +131,7 @@ in
     # agentsmd = ./AGENTS.md;
     settings = {
       share = "disabled";
+      plugin = [ ];
       provider = lib.mkIf workEnabled {
         amazon-bedrock = {
           options = {
@@ -146,7 +164,9 @@ in
         external_directory = {
           "~/.agent-browser/**" = "allow";
           "~/code/**" = "allow";
-          "~/.config/httpcraft" = "allow";
+          "~/.config/httpcraft/**" = "allow";
+          "~/.config/opencode/**" = "allow";
+          "~/.local/share/opencode/**" = "allow";
         };
         edit = {
           "~/.config/httpcraft" = "deny";
@@ -189,6 +209,8 @@ in
           "f*" = "allow";
           "httpcraft*" = "allow";
           "agent-browser*" = "allow";
+          "gh api*" = "allow";
+          "gh browse*" = "allow";
         };
       };
       agent = {
