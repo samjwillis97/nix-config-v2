@@ -56,6 +56,9 @@ let
       src = flake.inputs.github-skills;
       include = [ "gh-cli" ];
     }
+    {
+      src = flake.inputs.vercel-labs-agent-browser;
+    }
   ];
 
   # Resolve a single skill source into a list of skill directory paths
@@ -92,7 +95,13 @@ in
   ];
 
   home.packages = with pkgs; [
-    gh
+    gh # to go with the gh-cli skill
+    acli # Atlassian CLI - not auth'd by org
+    jira-cli-go # Alternative Jira CLI
+    # buildkite-cli # Buildkite auth is broken
+    # sentry-cli # Requires an auth token
+
+    llm-agents.agent-browser
   ];
 
   modules.opencode = {
@@ -135,6 +144,7 @@ in
       };
       permission = {
         external_directory = {
+          "~/.agent-browser/**" = "allow";
           "~/code/**" = "allow";
           "~/.config/httpcraft" = "allow";
         };
@@ -178,6 +188,7 @@ in
           "readlink*" = "allow";
           "f*" = "allow";
           "httpcraft*" = "allow";
+          "agent-browser*" = "allow";
         };
       };
       agent = {

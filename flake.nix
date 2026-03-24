@@ -143,6 +143,9 @@
       url = "github:numtide/nix-auth";
     };
 
+    # LLM Stuff
+    llm-agents.url = "github:numtide/llm-agents.nix";
+
     # Agent Skills
     superpowers = {
       url = "github:obra/superpowers";
@@ -150,6 +153,10 @@
     };
     github-skills = {
       url = "github:github/awesome-copilot";
+      flake = false;
+    };
+    vercel-labs-agent-browser = {
+      url = "github:vercel-labs/agent-browser";
       flake = false;
     };
   };
