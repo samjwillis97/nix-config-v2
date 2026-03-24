@@ -52,6 +52,10 @@ let
       exclude = [ "using-git-worktrees" ];
       # include = [ "test-driven-development" "systematic-debugging" ];
     }
+    {
+      src = flake.inputs.github-skills;
+      include = [ "gh-cli" ];
+    }
   ];
 
   # Resolve a single skill source into a list of skill directory paths
@@ -76,8 +80,6 @@ let
   # Combine all external skill sources
   externalSkills = lib.concatMap resolveSkillSource skillSources;
 
-  node = pkgs.nodejs_24;
-
   plugins =
     getFilesInDir ./plugins ".js"
     ++ (if (pkgs.stdenv.isDarwin) then getFilesInDir ./plugins/darwin ".js" else [ ]);
@@ -87,6 +89,10 @@ in
 {
   imports = [
     ../../hm-modules/opencode.nix
+  ];
+
+  home.packages = with pkgs; [
+    gh
   ];
 
   modules.opencode = {

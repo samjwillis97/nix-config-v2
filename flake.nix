@@ -139,12 +139,17 @@
       url = "github:nix-community/NixOS-WSL/main";
     };
 
-    nix-auth= {
+    nix-auth = {
       url = "github:numtide/nix-auth";
     };
 
+    # Agent Skills
     superpowers = {
       url = "github:obra/superpowers";
+      flake = false;
+    };
+    github-skills = {
+      url = "github:github/awesome-copilot";
       flake = false;
     };
   };

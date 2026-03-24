@@ -550,6 +550,22 @@
         "type": "github"
       }
     },
+    "github-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1774313389,
+        "narHash": "sha256-pabAxZtGrsZvbKcTS7YVedWriHRI+r8W8opjp+gjiDE=",
+        "owner": "github",
+        "repo": "awesome-copilot",
+        "rev": "82449a8be751311217c5900bab61875159cfade3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "github",
+        "repo": "awesome-copilot",
+        "type": "github"
+      }
+    },
     "gitignore": {
       "inputs": {
         "nixpkgs": [
@@ -1569,6 +1585,7 @@
         "flake-compat": "flake-compat",
         "flake-utils": "flake-utils",
         "ghostty": "ghostty",
+        "github-skills": "github-skills",
         "home-manager": "home-manager_2",
         "homebrew-cask": "homebrew-cask",
         "homebrew-core": "homebrew-core",
