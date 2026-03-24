@@ -84,7 +84,7 @@ let
   externalSkills = lib.concatMap resolveSkillSource skillSources;
 
   plugins = [
-    "${pkgs.opencode-notifier}/opencode-notifier.js"
+    "${pkgs.opencode-notifier}/dist/index.js"
   ]
   ++ getFilesInDir ./plugins ".js"
   ++ (if (pkgs.stdenv.isDarwin) then getFilesInDir ./plugins/darwin ".js" else [ ]);
@@ -211,6 +211,8 @@ in
           "agent-browser*" = "allow";
           "gh api*" = "allow";
           "gh browse*" = "allow";
+          "gh pr list*" = "allow";
+          "gh pr view*" = "allow";
         };
       };
       agent = {

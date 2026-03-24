@@ -76,7 +76,7 @@ in
           mkdir -p $HOME/.config/opencode/plugins
           rm -f $HOME/.config/opencode/plugins/*
           ${concatMapStringsSep "\n" (plugin: ''
-            cp ${plugin} $HOME/.config/opencode/plugins/
+            ln -sf ${plugin} $HOME/.config/opencode/plugins/
           '') cfg.plugins}
         '';
 

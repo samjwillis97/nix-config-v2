@@ -42,7 +42,13 @@ stdenvNoCC.mkDerivation {
   installPhase = ''
     runHook preInstall
 
-    install -Dm644 dist/index.js "$out/opencode-notifier.js"
+    # Install bundled JS into dist/ so that __dirname-based asset resolution
+    # (join(__dirname, '..', 'sounds/')) finds the sibling asset directories.
+    install -Dm644 dist/index.js "$out/dist/index.js"
+
+    # Copy sound and logo assets alongside dist/
+    cp -R sounds "$out/sounds"
+    cp -R logos "$out/logos"
 
     runHook postInstall
   '';
