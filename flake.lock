@@ -1215,11 +1215,11 @@
         "nixvim": "nixvim"
       },
       "locked": {
-        "lastModified": 1774226965,
-        "narHash": "sha256-G8vPf/BhrUFRrHP0Pc78kewKSelaMEGhuUFrGfSUt74=",
+        "lastModified": 1774416053,
+        "narHash": "sha256-wp6g0W/sqSFoBV0Uu653FhAZfH4Mhsj6vOiLj7poeIw=",
         "owner": "samjwillis97",
         "repo": "modular-neovim-flake",
-        "rev": "f05f37b1c7e0fb54dbbb76badc4a261030e30253",
+        "rev": "70706f9eeaba69c85fe22ea64976ac998275a15f",
         "type": "github"
       },
       "original": {

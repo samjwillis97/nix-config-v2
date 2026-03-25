@@ -213,6 +213,7 @@ in
           "gh browse*" = "allow";
           "gh pr list*" = "allow";
           "gh pr view*" = "allow";
+          "gh pr diff*" = "allow";
         };
       };
       agent = {
