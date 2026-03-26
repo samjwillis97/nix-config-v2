@@ -771,11 +771,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1761181303,
-        "narHash": "sha256-fXDA0Jl+9KT0WdmslEU2HzrZm+dVcJKYJo8WTOGEVpU=",
+        "lastModified": 1774498508,
+        "narHash": "sha256-KFSrWIeXU9DVeDPErBj7cYrR3NPfMsG1jxPNWY8NhGQ=",
         "owner": "samjwillis97",
         "repo": "shc-ai",
-        "rev": "3a23547a14c3ddd988055a69656543d527e9a154",
+        "rev": "ce7c87291372da849a5b60eb65293a96be1038be",
         "type": "github"
       },
       "original": {

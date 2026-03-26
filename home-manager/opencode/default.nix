@@ -11,8 +11,6 @@ let
   # TODO: browser skill + CLI
   # TODO: Sentry skill + CLI
   # TODO: JIRA skill + CLI + skill to notify about branch name being ticket number
-  # TODO: httpcraft skill
-  # TODO: f skill + replacing worktree usage in superpowers
 
   # github-mcp-wrapped = pkgs.writeShellScriptBin "github-mcp-wrapped" ''
   #   export GITHUB_PERSONAL_ACCESS_TOKEN=$(cat ${config.age.secrets.gh_pat.path})
@@ -61,6 +59,9 @@ let
     }
     {
       src = flake.inputs.f;
+    }
+    {
+      src = flake.inputs.httpcraft;
     }
   ];
 
