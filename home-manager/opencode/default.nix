@@ -215,10 +215,12 @@ in
           "httpcraft*" = "allow";
           "agent-browser*" = "allow";
           "gh api*" = "allow";
+          "gh api *" = "allow";
           "gh browse*" = "allow";
           "gh pr list*" = "allow";
           "gh pr view*" = "allow";
           "gh pr diff*" = "allow";
+          "f -L*" = "allow";
         };
       };
       agent = {
@@ -230,6 +232,7 @@ in
             edit = "deny";
             bash = {
               "*" = "ask";
+              "gh*" = "deny";
               "ls*" = "allow";
               "pwd*" = "allow";
               "grep*" = "allow";
@@ -244,6 +247,7 @@ in
               "echo*" = "allow";
               "jq*" = "allow";
               "cat*" = "allow";
+              "f*" = "allow";
             };
             webfetch = "deny";
           };
@@ -265,16 +269,16 @@ in
             "${pkgs.mcp-nixos}/bin/mcp-nixos"
           ];
         };
-        # atlassian = {
-        #   type = "local";
-        #   command = [
-        #     "${node}/bin/npx"
-        #     "-y"
-        #     "mcp-remote"
-        #     "https://mcp.atlassian.com/v1/sse"
-        #   ];
-        #   enabled = false;
-        # };
+        atlassian = {
+          type = "local";
+          command = [
+            "${pkgs.nodejs_24}/bin/npx"
+            "-y"
+            "mcp-remote"
+            "https://mcp.atlassian.com/v1/sse"
+          ];
+          enabled = false;
+        };
         # buildkite = {
         #   type = "remote";
         #   url = "https://mcp.buildkite.com/mcp/readonly";
