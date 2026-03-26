@@ -59,6 +59,9 @@ let
     {
       src = flake.inputs.vercel-labs-agent-browser;
     }
+    {
+      src = flake.inputs.f;
+    }
   ];
 
   # Resolve a single skill source into a list of skill directory paths
@@ -167,6 +170,7 @@ in
           "~/.config/httpcraft/**" = "allow";
           "~/.config/opencode/**" = "allow";
           "~/.local/share/opencode/**" = "allow";
+          "~/nix/store/**" = "allow";
         };
         edit = {
           "~/.config/httpcraft" = "deny";
