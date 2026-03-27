@@ -28,7 +28,7 @@ jobs:
         with:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
       - name: Add SSH key
-        uses: webfactory/ssh-agent@v0.9.0
+        uses: webfactory/ssh-agent@v0.9.1
         with:
           ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
       - name: Pin SSH host key for ${{ env.CONFIG }} (via Tailscale)
