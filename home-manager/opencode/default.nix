@@ -229,6 +229,10 @@ in
           prompt = "{file:./prompts/code-researcher.txt}";
           description = "Always use this agent when asked to research a codebase.";
           permission = {
+            external_directory = {
+              "~/code/**" = "allow";
+              "~/nix/store/**" = "allow";
+            };
             edit = "deny";
             bash = {
               "*" = "ask";
@@ -279,14 +283,15 @@ in
           ];
           enabled = false;
         };
-        # buildkite = {
-        #   type = "remote";
-        #   url = "https://mcp.buildkite.com/mcp/readonly";
-        #   enabled = false;
-        #   headers = {
-        #     X-Buildkite-Toolsets = "user,pipelines,builds";
-        #   };
-        # };
+        buildkite = {
+          type = "remote";
+          url = "https://mcp.buildkite.com/mcp/readonly";
+          enabled = false;
+          headers = {
+            X-Buildkite-Toolsets = "user,pipelines,builds,logs,tests,annotations";
+          };
+          oauth = { };
+        };
         # sentry = {
         #   type = "remote";
         #   url = "https://mcp.sentry.dev/mcp";
