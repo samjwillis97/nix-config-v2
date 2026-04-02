@@ -20,7 +20,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - run: npm install
         working-directory: infra/aws
-      - uses: pulumi/actions@v3
+      - uses: pulumi/actions@v6
         with:
           command: up
           stack-name: paperless
