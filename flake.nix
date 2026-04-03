@@ -221,7 +221,7 @@
           ./home-manager/gaming
           ./home-manager/dev
           ./home-manager/dev/ops.nix
-          ./home-manager/dev/claude.nix
+          ./home-manager/ai-coding
           ./home-manager/vscode
           ./home-manager/firefox
           ./home-manager/hyprland
@@ -315,7 +315,7 @@
           ./home-manager/social
           ./home-manager/firefox
           ./home-manager/cache
-          ./home-manager/opencode
+          ./home-manager/ai-coding
           { modules.darwin.work = false; }
         ];
       })
@@ -331,7 +331,7 @@
           ./home-manager/dev
           ./home-manager/dev/ops.nix
           ./home-manager/dev/node.nix
-          ./home-manager/dev/claude.nix
+          ./home-manager/ai-coding
           ./home-manager/wezterm
           ./home-manager/vscode
           ./home-manager/work
@@ -340,7 +340,6 @@
           ./home-manager/social
           ./home-manager/firefox
           ./home-manager/moonlight
-          ./home-manager/opencode
           (
             { pkgs, ... }:
             {
@@ -362,7 +361,7 @@
           ./hm-modules
           ./home-manager/dev
           ./home-manager/dev/ops.nix
-          ./home-manager/dev/claude.nix
+          ./home-manager/ai-coding
           ./home-manager/vscode
         ];
         extraModules = [
