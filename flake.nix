@@ -315,6 +315,7 @@
           ./home-manager/social
           ./home-manager/firefox
           ./home-manager/cache
+          ./home-manager/opencode
           { modules.darwin.work = false; }
         ];
       })
