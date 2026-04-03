@@ -81,30 +81,33 @@ let
   mergedPermissions = recursiveUpdate cfg.permissions claudeCfg.extraPermissions;
   compiledPermissions = compilePermissions mergedPermissions;
 
-  # Compile MCP servers for Claude
-  # Disabled servers are omitted entirely (Claude has no "enabled" concept)
-  allMcpServers = let
-    shared = cfg.mcpServers;
-    extra = claudeCfg.extraMcpServers;
-    merged = recursiveUpdate shared extra;
-  in filterAttrs (name: server:
-    server.enabled && !(builtins.elem name claudeCfg.disabledMcpServers)
-  ) merged;
+   # Compile MCP servers for Claude
+   # All servers are included regardless of enabled/disabled state
+   allMcpServers = let
+     shared = cfg.mcpServers;
+     extra = claudeCfg.extraMcpServers;
+     merged = recursiveUpdate shared extra;
+   in filterAttrs (name: _:
+     !(builtins.elem name claudeCfg.disabledMcpServers)
+   ) merged;
 
   compileMcpServer = name: server: {
     inherit (server) type;
   } // (if server.command != null then { inherit (server) command args; } else { })
   // (if server.url != null then { inherit (server) url; } else { })
   // (if server.env != { } then { inherit (server) env; } else { })
-  // (if server.headers != { } then { inherit (server) headers; } else { });
-  # oauth is NOT passed to Claude (not supported)
-  # enabled is NOT passed (disabled servers already filtered out)
+   // (if server.headers != { } then { inherit (server) headers; } else { });
+   # oauth is NOT passed to Claude (not supported)
+   # enabled is NOT passed (disabled servers already filtered out)
 
   compiledMcpServers = mapAttrs compileMcpServer allMcpServers;
 
-  # Build settings.json
+  # JSON blob for MCP servers to merge into ~/.claude.json
+  mcpServersJson = builtins.toJSON { mcpServers = compiledMcpServers; };
+
+  # Build settings.json (permissions, env, model config — NOT MCP servers)
   claudeSettings = {
-    "$schema" = "https://claude.ai/settings.json";
+    "$schema" = "https://json.schemastore.org/claude-code-settings.json";
   }
   // (if compiledPermissions.allow != [] || compiledPermissions.deny != [] || compiledPermissions.ask != [] then {
     permissions = {
@@ -113,7 +116,6 @@ let
       ask = compiledPermissions.ask;
     };
   } else { })
-  // (if compiledMcpServers != { } then { mcpServers = compiledMcpServers; } else { })
   // claudeCfg.extraSettings;
 
   # Compile agent to Claude markdown with frontmatter
@@ -234,6 +236,19 @@ in
 
       # settings.json
       home.file.".claude/settings.json".text = builtins.toJSON claudeSettings;
+
+      # MCP servers — merged into ~/.claude.json (user scope) preserving existing content
+      home.activation.ai-coding-claude-mcp = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        CLAUDE_JSON="$HOME/.claude.json"
+        MCP_JSON='${mcpServersJson}'
+        if [ -f "$CLAUDE_JSON" ]; then
+          # Merge: replace only the mcpServers key, preserve everything else
+          ${pkgs.jq}/bin/jq -s '.[0] * .[1]' "$CLAUDE_JSON" <(echo "$MCP_JSON") > "$CLAUDE_JSON.tmp" \
+            && mv "$CLAUDE_JSON.tmp" "$CLAUDE_JSON"
+        else
+          echo "$MCP_JSON" > "$CLAUDE_JSON"
+        fi
+      '';
 
       # CLAUDE.md (rules)
       home.activation.ai-coding-claude-rules = mkIf (cfg.rules != null)
