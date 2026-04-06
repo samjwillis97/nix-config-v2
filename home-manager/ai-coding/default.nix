@@ -19,12 +19,11 @@ let
       lib.filterAttrs (_: value: value == "directory") (builtins.readDir dir)
     );
 
-  plugins =
-    [
-      "${pkgs.opencode-notifier}/dist/index.js"
-    ]
-    ++ getFilesInDir ./plugins ".js"
-    ++ (if pkgs.stdenv.isDarwin then getFilesInDir ./plugins/darwin ".js" else [ ]);
+  plugins = [
+    "${pkgs.opencode-notifier}/dist/index.js"
+  ]
+  ++ getFilesInDir ./plugins ".js"
+  ++ (if pkgs.stdenv.isDarwin then getFilesInDir ./plugins/darwin ".js" else [ ]);
 
   workEnabled = config.modules.darwin.work;
 in
@@ -35,8 +34,8 @@ in
 
   home.packages = with pkgs; [
     gh
-    acli
-    jira-cli-go
+    # acli
+    # jira-cli-go
     llm-agents.agent-browser
   ];
 
@@ -57,7 +56,29 @@ in
     enable = true;
 
     backends.opencode.enable = true;
+    backends.opencode.sandbox.enable = true;
     backends.claude.enable = true;
+    backends.claude.sandbox.enable = true;
+
+    sandbox.extraAllowedPackages = with pkgs; [
+      gh
+      f
+      httpcraft
+      llm-agents.agent-browser
+      nix
+      bun
+      pnpm
+      rsync
+      # acli
+      # jira-cli-go
+    ];
+
+    sandbox.extraStateDirs = [
+      "$HOME/.npm"
+      "$HOME/.cache"
+      "$HOME/.agent-browser"
+      "$HOME/.config/httpcraft"
+    ];
 
     # rules = ./AGENTS.md;  # Uncomment when ready
 
@@ -275,8 +296,7 @@ in
       };
 
       architect = {
-        description = ''
-          Use this agent when you need architectural guidance, system design decisions, or technical leadership perspective on complex software problems. Examples: <example>Context: The user is designing a new microservices architecture for a high-traffic e-commerce platform. user: 'I need to design the order processing system for our e-commerce platform that handles 10k orders per minute' assistant: 'I'll use the lead-architect-advisor agent to provide comprehensive architectural guidance for this high-performance system design.'</example> <example>Context: The user is facing performance issues with their current database setup. user: 'Our application is slowing down as we scale - the database queries are taking too long' assistant: 'Let me engage the lead-architect-advisor agent to analyze your performance bottlenecks and recommend architectural improvements.'</example> <example>Context: The user needs to evaluate technology choices for a new project. user: 'Should we use GraphQL or REST for our new API, and what about database choices?' assistant: 'I'll use the lead-architect-advisor agent to help evaluate these technology decisions based on your specific requirements and constraints.'</example>'';
+        description = "Use this agent when you need architectural guidance, system design decisions, or technical leadership perspective on complex software problems. Examples: <example>Context: The user is designing a new microservices architecture for a high-traffic e-commerce platform. user: 'I need to design the order processing system for our e-commerce platform that handles 10k orders per minute' assistant: 'I'll use the lead-architect-advisor agent to provide comprehensive architectural guidance for this high-performance system design.'</example> <example>Context: The user is facing performance issues with their current database setup. user: 'Our application is slowing down as we scale - the database queries are taking too long' assistant: 'Let me engage the lead-architect-advisor agent to analyze your performance bottlenecks and recommend architectural improvements.'</example> <example>Context: The user needs to evaluate technology choices for a new project. user: 'Should we use GraphQL or REST for our new API, and what about database choices?' assistant: 'I'll use the lead-architect-advisor agent to help evaluate these technology decisions based on your specific requirements and constraints.'</example>";
         instructions = ./agents/architect.md;
         tools = {
           bash = false;

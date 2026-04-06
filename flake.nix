@@ -145,6 +145,7 @@
 
     # LLM Stuff
     llm-agents.url = "github:numtide/llm-agents.nix";
+    agent-sandbox.url = "github:samjwillis97/agent-sandbox.nix";
 
     # Agent Skills
     superpowers = {

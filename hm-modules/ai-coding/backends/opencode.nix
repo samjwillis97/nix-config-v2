@@ -3,15 +3,20 @@
   config,
   lib,
   pkgs,
+  flake,
   ...
 }:
 let
   inherit (lib) mkOption mkEnableOption mkIf mkMerge types concatMapStringsSep
-    filterAttrs mapAttrs mapAttrsToList optionalAttrs recursiveUpdate;
+    filterAttrs mapAttrs mapAttrsToList optionalAttrs recursiveUpdate optional;
 
   aiTypes = import ../types.nix { inherit lib; };
   cfg = config.modules.ai-coding;
   ocCfg = cfg.backends.opencode;
+  sandboxCfg = ocCfg.sandbox;
+
+  # Import agent-sandbox
+  agentSandbox = import flake.inputs.agent-sandbox { inherit pkgs; };
 
   # Resolve model alias for OpenCode
   resolveModel = alias:
@@ -120,6 +125,24 @@ ${instructionContent}'';
   allSkillPaths = cfg.skills.local
     ++ builtins.concatMap resolveSkillSource cfg.skills.sources;
 
+  # Sandbox derivation: wraps the opencode binary
+  opencodeSandboxed = agentSandbox.mkSandbox {
+    pkg = pkgs.opencode;
+    binName = "opencode";
+    outName = "opencode-sandboxed";
+    allowedPackages = cfg.sandbox.allowedPackages
+      ++ cfg.sandbox.extraAllowedPackages
+      ++ sandboxCfg.extraAllowedPackages;
+    stateDirs = [
+      "$HOME/.config/opencode"
+      "$HOME/.local/share/opencode"
+    ] ++ cfg.sandbox.extraStateDirs ++ sandboxCfg.extraStateDirs;
+    stateFiles = cfg.sandbox.extraStateFiles ++ sandboxCfg.extraStateFiles;
+    extraEnv = cfg.sandbox.extraEnv // sandboxCfg.extraEnv;
+    restrictNetwork = cfg.sandbox.restrictNetwork || sandboxCfg.restrictNetwork;
+    allowedDomains = cfg.sandbox.allowedDomains // sandboxCfg.allowedDomains;
+  };
+
 in
 {
   options.modules.ai-coding.backends.opencode = {
@@ -159,6 +182,53 @@ in
       type = types.listOf types.path;
       default = [ ];
       description = "Prompt text file paths (OpenCode-only).";
+    };
+
+    sandbox = {
+      enable = mkEnableOption "Sandboxed OpenCode binary (opencode-sandboxed)";
+
+      extraAllowedPackages = mkOption {
+        type = types.listOf types.package;
+        default = [ ];
+        description = "Additional packages available inside the OpenCode sandbox, appended to the shared allowedPackages.";
+      };
+
+      extraStateDirs = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        description = ''
+          Additional directories the sandboxed agent can read/write.
+          ~/.config/opencode and ~/.local/share/opencode are included by default.
+        '';
+      };
+
+      extraStateFiles = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        description = "Additional files the sandboxed agent can read/write.";
+      };
+
+      extraEnv = mkOption {
+        type = types.attrsOf types.str;
+        default = { };
+        description = ''
+          Additional environment variables for the OpenCode sandbox.
+          Use shell variable references (e.g. "$TOKEN") for secrets.
+          Merged with shared sandbox.extraEnv (backend-specific values win).
+        '';
+      };
+
+      restrictNetwork = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Restrict network to allowedDomains for the OpenCode sandbox. ORed with shared sandbox.restrictNetwork.";
+      };
+
+      allowedDomains = mkOption {
+        type = types.attrsOf (types.either types.str (types.listOf types.str));
+        default = { };
+        description = "Additional allowed domains for the OpenCode sandbox. Merged with shared sandbox.allowedDomains.";
+      };
     };
   };
 
@@ -230,5 +300,10 @@ in
         '') allSkillPaths}
       '';
     }
+
+    # Sandbox: install sandboxed binary alongside the original
+    (mkIf sandboxCfg.enable {
+      home.packages = [ opencodeSandboxed ];
+    })
   ]);
 }

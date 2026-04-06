@@ -3,6 +3,7 @@
   config,
   lib,
   pkgs,
+  flake,
   ...
 }:
 let
@@ -13,6 +14,10 @@ let
   aiTypes = import ../types.nix { inherit lib; };
   cfg = config.modules.ai-coding;
   claudeCfg = cfg.backends.claude;
+  sandboxCfg = claudeCfg.sandbox;
+
+  # Import agent-sandbox
+  agentSandbox = import flake.inputs.agent-sandbox { inherit pkgs; };
 
   # Tool name mapping: DSL name -> Claude name(s)
   # Returns a list because some DSL tools map to multiple Claude tools
@@ -199,6 +204,28 @@ ${instructionContent}'';
     }
   '';
 
+  # Sandbox derivation: wraps the claude binary
+  claudeSandboxed = agentSandbox.mkSandbox {
+    pkg = pkgs.claude-code;
+    binName = "claude";
+    outName = "claude-sandboxed";
+    allowedPackages = cfg.sandbox.allowedPackages
+      ++ cfg.sandbox.extraAllowedPackages
+      ++ sandboxCfg.extraAllowedPackages;
+    stateDirs = [
+      "$HOME/.claude"
+    ] ++ cfg.sandbox.extraStateDirs ++ sandboxCfg.extraStateDirs;
+    stateFiles = [
+      "$HOME/.claude.json"
+      "$HOME/.claude.json.lock"
+    ] ++ cfg.sandbox.extraStateFiles ++ sandboxCfg.extraStateFiles;
+    extraEnv = {
+      CLAUDE_CODE_OAUTH_TOKEN = "$CLAUDE_CODE_OAUTH_TOKEN";
+    } // cfg.sandbox.extraEnv // sandboxCfg.extraEnv;
+    restrictNetwork = cfg.sandbox.restrictNetwork || sandboxCfg.restrictNetwork;
+    allowedDomains = cfg.sandbox.allowedDomains // sandboxCfg.allowedDomains;
+  };
+
 in
 {
   options.modules.ai-coding.backends.claude = {
@@ -226,6 +253,57 @@ in
       type = types.listOf types.str;
       default = [ ];
       description = "MCP server names to exclude from Claude config.";
+    };
+
+    sandbox = {
+      enable = mkEnableOption "Sandboxed Claude Code binary (claude-sandboxed)";
+
+      extraAllowedPackages = mkOption {
+        type = types.listOf types.package;
+        default = [ ];
+        description = "Additional packages available inside the Claude sandbox, appended to the shared allowedPackages.";
+      };
+
+      extraStateDirs = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        description = ''
+          Additional directories the sandboxed agent can read/write.
+          ~/.claude is included by default.
+        '';
+      };
+
+      extraStateFiles = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        description = ''
+          Additional files the sandboxed agent can read/write.
+          ~/.claude.json and ~/.claude.json.lock are included by default.
+        '';
+      };
+
+      extraEnv = mkOption {
+        type = types.attrsOf types.str;
+        default = { };
+        description = ''
+          Additional environment variables for the Claude sandbox.
+          Use shell variable references (e.g. "$TOKEN") for secrets.
+          CLAUDE_CODE_OAUTH_TOKEN is included by default.
+          Merged with shared sandbox.extraEnv (backend-specific values win).
+        '';
+      };
+
+      restrictNetwork = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Restrict network to allowedDomains for the Claude sandbox. ORed with shared sandbox.restrictNetwork.";
+      };
+
+      allowedDomains = mkOption {
+        type = types.attrsOf (types.either types.str (types.listOf types.str));
+        default = { };
+        description = "Additional allowed domains for the Claude sandbox. Merged with shared sandbox.allowedDomains.";
+      };
     };
   };
 
@@ -291,5 +369,10 @@ in
         '') cfg.commands}
       '';
     }
+
+    # Sandbox: install sandboxed binary alongside the original
+    (mkIf sandboxCfg.enable {
+      home.packages = [ claudeSandboxed ];
+    })
   ]);
 }
