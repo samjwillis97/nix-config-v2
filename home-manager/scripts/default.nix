@@ -5,6 +5,8 @@
     ./hugo-reveal-bootstrap.nix
     ./tmux-sessionizer.nix
     ./tmux-live-sessionizer.nix
+    ./tmux-session-preview.nix
+    ./tmux-oc-session-picker.nix
     ./nix-shells
     # ./tmux-cht.nix
   ];

@@ -70,8 +70,8 @@
       # easy reload
       bind-key r source-file ~/.config/tmux/tmux.conf \; display-message "~/.tmux.conf reloaded"
 
-      # order sesions by name
-      bind s choose-tree -sZ -O name
+      # order sessions by name, with opencode preview
+      bind s display-popup -E -w 80% -h 80% "tmux-oc-session-picker"
 
       # default statusbar colors
 
