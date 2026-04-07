@@ -21,6 +21,7 @@ let
 
   plugins = [
     "${pkgs.opencode-notifier}/dist/index.js"
+    "${pkgs.tmux-session-cache-plugin}/dist/index.js"
   ]
   ++ getFilesInDir ./plugins ".js"
   ++ (if pkgs.stdenv.isDarwin then getFilesInDir ./plugins/darwin ".js" else [ ]);

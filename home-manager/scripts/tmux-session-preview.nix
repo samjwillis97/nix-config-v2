@@ -14,85 +14,66 @@ let
       exit 0
     fi
 
-    # Check if opencode is available
-    if ! command -v opencode >/dev/null 2>&1; then
-      ${pkgs.tmux}/bin/tmux capture-pane -t "$session_name" -p 2>/dev/null
-      exit 0
-    fi
+    # Hash the directory to find the cache file
+    dir_hash=$(printf '%s' "$dir" | ${pkgs.coreutils}/bin/sha256sum | ${pkgs.coreutils}/bin/cut -d' ' -f1)
+    cache_file="$HOME/.cache/opencode/tmux-cache/$dir_hash.json"
 
-    # Sanitize directory for SQL (double any single quotes for SQL escaping)
-    safe_dir=$(printf '%s' "$dir" | ${pkgs.gnused}/bin/sed "s/'/&&/g")
+    if [ -f "$cache_file" ]; then
+      # Read all cached fields in a single jq invocation
+      IFS=$'\t' read -r title model provider tokens_in tokens_out \
+        total_cost additions deletions files time_updated_ms < <(
+        ${pkgs.jq}/bin/jq -r '[
+          (.title // "untitled"),
+          (.model // "unknown"),
+          (.provider // "unknown"),
+          (.tokensIn // 0 | tostring),
+          (.tokensOut // 0 | tostring),
+          (.cost // 0 | tostring),
+          (.additions // 0 | tostring),
+          (.deletions // 0 | tostring),
+          (.files // 0 | tostring),
+          (.updatedAt // 0 | tostring)
+        ] | join("\t")' "$cache_file" 2>/dev/null
+      )
 
-    # Query opencode for the most recent session matching this directory
-    # Note: $.field in SQL json_extract is safe in nix indented strings
-    # because $ not followed by { is passed through literally
-    result=$(opencode db \
-      "SELECT s.title, s.time_updated,
-        s.summary_additions, s.summary_deletions, s.summary_files,
-        (SELECT json_extract(m2.data, '$.modelID')
-         FROM message m2 WHERE m2.session_id = s.id
-         ORDER BY m2.time_created DESC LIMIT 1) as model,
-        (SELECT json_extract(m2.data, '$.providerID')
-         FROM message m2 WHERE m2.session_id = s.id
-         ORDER BY m2.time_created DESC LIMIT 1) as provider,
-        COALESCE(SUM(json_extract(m.data, '$.tokens.input')), 0) as tokens_in,
-        COALESCE(SUM(json_extract(m.data, '$.tokens.output')), 0) as tokens_out,
-        COALESCE(SUM(json_extract(m.data, '$.cost')), 0) as total_cost
-      FROM session s
-      JOIN project p ON s.project_id = p.id
-      LEFT JOIN message m ON s.id = m.session_id
-      WHERE p.worktree = '$safe_dir'
-        AND s.time_archived IS NULL
-      GROUP BY s.id
-      ORDER BY s.time_updated DESC
-      LIMIT 1" --format json 2>/dev/null)
+      if [ -z "$title" ]; then
+        # jq failed or cache is corrupt -- fall back to pane capture
+        ${pkgs.tmux}/bin/tmux capture-pane -t "$session_name" -p 2>/dev/null
+        exit 0
+      fi
 
-    # Check if we got results
-    if echo "$result" | ${pkgs.jq}/bin/jq -e 'length > 0' >/dev/null 2>&1; then
-      # Extract fields
-      title=$(echo "$result" | ${pkgs.jq}/bin/jq -r '.[0].title // "untitled"')
-      model=$(echo "$result" | ${pkgs.jq}/bin/jq -r '.[0].model // "unknown"')
-      provider=$(echo "$result" | ${pkgs.jq}/bin/jq -r '.[0].provider // "unknown"')
-      tokens_in=$(echo "$result" | ${pkgs.jq}/bin/jq -r '.[0].tokens_in // 0')
-      tokens_out=$(echo "$result" | ${pkgs.jq}/bin/jq -r '.[0].tokens_out // 0')
-      total_cost=$(echo "$result" | ${pkgs.jq}/bin/jq -r '.[0].total_cost // 0')
-      additions=$(echo "$result" | ${pkgs.jq}/bin/jq -r '.[0].summary_additions // 0')
-      deletions=$(echo "$result" | ${pkgs.jq}/bin/jq -r '.[0].summary_deletions // 0')
-      files=$(echo "$result" | ${pkgs.jq}/bin/jq -r '.[0].summary_files // 0')
-      time_updated_ms=$(echo "$result" | ${pkgs.jq}/bin/jq -r '.[0].time_updated // 0')
-
-      # Compute relative time (time_updated is in milliseconds)
-      now=$(date +%s)
+      # Compute relative time (updatedAt is in milliseconds)
+      now=$(${pkgs.coreutils}/bin/date +%s)
       updated_s=$((time_updated_ms / 1000))
       delta=$((now - updated_s))
       if [ "$delta" -lt 60 ]; then
         rel="just now"
       elif [ "$delta" -lt 3600 ]; then
-        rel="$((delta / 60)) minutes ago"
+        mins=$((delta / 60))
+        if [ "$mins" -eq 1 ]; then rel="1 minute ago"; else rel="$mins minutes ago"; fi
       elif [ "$delta" -lt 86400 ]; then
-        rel="$((delta / 3600)) hours ago"
+        hrs=$((delta / 3600))
+        if [ "$hrs" -eq 1 ]; then rel="1 hour ago"; else rel="$hrs hours ago"; fi
       else
-        rel="$((delta / 86400)) days ago"
+        days=$((delta / 86400))
+        if [ "$days" -eq 1 ]; then rel="1 day ago"; else rel="$days days ago"; fi
       fi
 
-      # Format token numbers with commas using printf
-      fmt_tokens_in=$(printf "%'d" "$tokens_in" 2>/dev/null || echo "$tokens_in")
-      fmt_tokens_out=$(printf "%'d" "$tokens_out" 2>/dev/null || echo "$tokens_out")
-
-      # Format cost (use \$ to produce literal $ in bash double-quoted string)
-      fmt_cost=$(printf "\$%.2f" "$total_cost" 2>/dev/null || echo "$total_cost")
+      # Format cost
+      cost_formatted=$(printf '%.2f' "$total_cost" 2>/dev/null || echo "$total_cost")
+      fmt_cost="\$$cost_formatted"
 
       # Print formatted summary
       echo "── OpenCode ──────────────────────────"
       echo "Title:   $title"
       echo "Model:   $model ($provider)"
-      echo "Tokens:  $fmt_tokens_in in / $fmt_tokens_out out"
+      echo "Tokens:  $tokens_in in / $tokens_out out"
       echo "Cost:    $fmt_cost"
       echo "Changes: +$additions / -$deletions across $files files"
       echo "Updated: $rel"
       echo "──────────────────────────────────────"
     else
-      # No opencode session found -- fall back to pane capture
+      # No cache file -- fall back to pane capture
       ${pkgs.tmux}/bin/tmux capture-pane -t "$session_name" -p 2>/dev/null
     fi
   '';

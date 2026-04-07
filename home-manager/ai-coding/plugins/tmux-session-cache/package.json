@@ -1,0 +1,9 @@
+{
+  "name": "tmux-session-cache",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "devDependencies": {
+    "@opencode-ai/plugin": "latest"
+  }
+}
