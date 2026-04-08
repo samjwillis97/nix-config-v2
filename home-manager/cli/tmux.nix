@@ -103,6 +103,9 @@
       set-option -gq status-left-length "100"
       set-option -gq status-right-length "100"
 
+      # Refresh status bar every 5 seconds for notification indicator
+      set-option -gq status-interval 5
+
       # messages
       set-option -gq message-style "fg=''${thm_cyan},bg=''${thm_gray},align=centre"
       set-option -gq message-command-style "fg=''${thm_cyan},bg=''${thm_gray},align=centre"
@@ -119,7 +122,7 @@
       # --------=== Statusline
 
       set-option -gq status-left ""
-      set-option -gq status-right "#[fg=$thm_pink,bg=$thm_bg,nobold,nounderscore,noitalics]#[fg=$thm_bg,bg=$thm_pink,nobold,nounderscore,noitalics] #[fg=$thm_fg,bg=$thm_gray] #{b:pane_current_path} #{?client_prefix,#[fg=$thm_red],#[fg=$thm_green]}#[bg=$thm_gray]#{?client_prefix,#[bg=$thm_red],#[bg=$thm_green]}#[fg=$thm_bg] #[fg=$thm_fg,bg=$thm_gray] #S "
+      set-option -gq status-right "#[fg=$thm_yellow,bg=$thm_bg]#(tmux-oc-notification-status)#[default] #[fg=$thm_pink,bg=$thm_bg,nobold,nounderscore,noitalics]#[fg=$thm_bg,bg=$thm_pink,nobold,nounderscore,noitalics] #[fg=$thm_fg,bg=$thm_gray] #{b:pane_current_path} #{?client_prefix,#[fg=$thm_red],#[fg=$thm_green]}#[bg=$thm_gray]#{?client_prefix,#[bg=$thm_red],#[bg=$thm_green]}#[fg=$thm_bg] #[fg=$thm_fg,bg=$thm_gray] #S "
 
       # current_application
       set-window-option -gq window-status-format "#[fg=$thm_bg,bg=$thm_blue] #I #[fg=$thm_fg,bg=$thm_gray] #W "

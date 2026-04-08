@@ -7,6 +7,7 @@ import {
   renameSync,
   unlinkSync,
   readdirSync,
+  statSync,
 } from "fs";
 import { join } from "path";
 import { homedir } from "os";
@@ -22,6 +23,8 @@ const NOTIFICATION_FILE = join(
 );
 const MAX_QUEUE_SIZE = 50;
 const UPDATE_DEBOUNCE_MS = 500;
+const MAX_NOTIFICATION_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours
+const MAX_SESSION_CACHE_AGE_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 interface SessionData {
   worktree: string;
@@ -58,7 +61,7 @@ function ensureDir(dir: string): void {
 }
 
 function atomicWrite(filePath: string, data: string): void {
-  const tmpPath = `${filePath}.tmp`;
+  const tmpPath = `${filePath}.${process.pid}.${Date.now()}.tmp`;
   writeFileSync(tmpPath, data);
   renameSync(tmpPath, filePath);
 }
@@ -115,6 +118,28 @@ function pruneStalePidFiles(): void {
   }
 }
 
+function pruneStaleSessionFiles(): void {
+  try {
+    if (!existsSync(SESSIONS_DIR)) return;
+    const now = Date.now();
+    const files = readdirSync(SESSIONS_DIR);
+    for (const file of files) {
+      if (!file.endsWith(".json")) continue;
+      try {
+        const filePath = join(SESSIONS_DIR, file);
+        const stat = statSync(filePath);
+        if (now - stat.mtimeMs > MAX_SESSION_CACHE_AGE_MS) {
+          unlinkSync(filePath);
+        }
+      } catch {
+        // Best effort
+      }
+    }
+  } catch {
+    // Best effort cleanup
+  }
+}
+
 function appendNotification(entry: NotificationEntry): void {
   ensureDir(join(homedir(), ".cache", "opencode"));
 
@@ -127,6 +152,10 @@ function appendNotification(entry: NotificationEntry): void {
       queue = [];
     }
   }
+
+  // Prune entries older than 24 hours
+  const ageCutoff = Date.now() - MAX_NOTIFICATION_AGE_MS;
+  queue = queue.filter((e) => e.timestamp >= ageCutoff);
 
   queue.push(entry);
 
@@ -236,6 +265,9 @@ export const TmuxSessionCachePlugin: Plugin = async ({ client, directory }) => {
   // Prune stale PID files from dead processes before writing our own
   pruneStalePidFiles();
 
+  // Prune old session cache files (>7 days)
+  pruneStaleSessionFiles();
+
   // Write initial PID mapping (will be updated with sessionId on first event)
   writePidMapping({
     pid: process.pid,
@@ -252,6 +284,10 @@ export const TmuxSessionCachePlugin: Plugin = async ({ client, directory }) => {
     process.exit(0);
   });
   process.on("SIGTERM", () => {
+    cleanup();
+    process.exit(0);
+  });
+  process.on("SIGHUP", () => {
     cleanup();
     process.exit(0);
   });
