@@ -269,11 +269,23 @@ in
 
       # Plugins
       home.activation.ai-coding-opencode-plugins = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        ${stripNixHashScript}
         rm -rf $HOME/.config/opencode/plugin
         mkdir -p $HOME/.config/opencode/plugins
         rm -f $HOME/.config/opencode/plugins/*
         ${concatMapStringsSep "\n" (plugin: ''
-          ln -sf ${plugin} $HOME/.config/opencode/plugins/
+          plugin_path="${plugin}"
+          plugin_base="$(basename "$plugin_path")"
+          ext="''${plugin_path##*.}"
+          if [ "$plugin_base" = "index.$ext" ]; then
+            # Generic filename — derive unique name from nix store package name
+            store_entry="$(basename "$(dirname "$(dirname "$plugin_path")")")"
+            plugin_name="$(strip_nix_hash "$store_entry")"
+          else
+            # Already a unique filename — strip hash and extension
+            plugin_name="$(strip_nix_hash "''${plugin_base%.*}")"
+          fi
+          ln -sf "$plugin_path" "$HOME/.config/opencode/plugins/''${plugin_name}.''${ext}"
         '') ocCfg.plugins}
       '';
 

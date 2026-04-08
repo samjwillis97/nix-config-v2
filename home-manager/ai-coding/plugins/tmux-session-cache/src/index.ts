@@ -5,12 +5,15 @@ import {
   mkdirSync,
   existsSync,
   renameSync,
+  unlinkSync,
+  readdirSync,
 } from "fs";
 import { join } from "path";
-import { createHash } from "crypto";
 import { homedir } from "os";
 
-const CACHE_DIR = join(homedir(), ".cache", "opencode", "tmux-cache");
+const CACHE_BASE = join(homedir(), ".cache", "opencode", "tmux-cache");
+const SESSIONS_DIR = join(CACHE_BASE, "sessions");
+const PIDS_DIR = join(CACHE_BASE, "pids");
 const NOTIFICATION_FILE = join(
   homedir(),
   ".cache",
@@ -35,6 +38,13 @@ interface SessionData {
   updatedAt: number;
 }
 
+interface PidMapping {
+  pid: number;
+  ppid: number;
+  worktree: string;
+  currentSessionId: string;
+}
+
 interface NotificationEntry {
   worktree: string;
   event: "complete" | "error" | "permission" | "question" | "plan_exit";
@@ -43,28 +53,70 @@ interface NotificationEntry {
   timestamp: number;
 }
 
-function hashWorktree(worktree: string): string {
-  return createHash("sha256").update(worktree).digest("hex");
+function ensureDir(dir: string): void {
+  mkdirSync(dir, { recursive: true });
 }
 
-function ensureCacheDir(): void {
-  mkdirSync(CACHE_DIR, { recursive: true });
-}
-
-function ensureNotificationDir(): void {
-  mkdirSync(join(homedir(), ".cache", "opencode"), { recursive: true });
-}
-
-function writeCache(worktree: string, data: SessionData): void {
-  ensureCacheDir();
-  const filePath = join(CACHE_DIR, `${hashWorktree(worktree)}.json`);
+function atomicWrite(filePath: string, data: string): void {
   const tmpPath = `${filePath}.tmp`;
-  writeFileSync(tmpPath, JSON.stringify(data, null, 2));
+  writeFileSync(tmpPath, data);
   renameSync(tmpPath, filePath);
 }
 
+function writeSessionCache(sessionId: string, data: SessionData): void {
+  ensureDir(SESSIONS_DIR);
+  atomicWrite(
+    join(SESSIONS_DIR, `${sessionId}.json`),
+    JSON.stringify(data, null, 2),
+  );
+}
+
+function writePidMapping(mapping: PidMapping): void {
+  ensureDir(PIDS_DIR);
+  atomicWrite(
+    join(PIDS_DIR, `${mapping.ppid}.json`),
+    JSON.stringify(mapping, null, 2),
+  );
+}
+
+function cleanupPidFile(ppid: number): void {
+  try {
+    const filePath = join(PIDS_DIR, `${ppid}.json`);
+    if (existsSync(filePath)) {
+      unlinkSync(filePath);
+    }
+  } catch {
+    // Best effort cleanup
+  }
+}
+
+function pruneStalePidFiles(): void {
+  try {
+    if (!existsSync(PIDS_DIR)) return;
+    const files = readdirSync(PIDS_DIR);
+    for (const file of files) {
+      if (!file.endsWith(".json")) continue;
+      const ppid = parseInt(file.replace(".json", ""), 10);
+      if (isNaN(ppid)) continue;
+      try {
+        // Check if the process is still alive
+        process.kill(ppid, 0);
+      } catch {
+        // Process is dead — remove stale PID file
+        try {
+          unlinkSync(join(PIDS_DIR, file));
+        } catch {
+          // Best effort
+        }
+      }
+    }
+  } catch {
+    // Best effort cleanup
+  }
+}
+
 function appendNotification(entry: NotificationEntry): void {
-  ensureNotificationDir();
+  ensureDir(join(homedir(), ".cache", "opencode"));
 
   let queue: NotificationEntry[] = [];
   if (existsSync(NOTIFICATION_FILE)) {
@@ -83,9 +135,7 @@ function appendNotification(entry: NotificationEntry): void {
     queue = queue.slice(-MAX_QUEUE_SIZE);
   }
 
-  const tmpPath = `${NOTIFICATION_FILE}.tmp`;
-  writeFileSync(tmpPath, JSON.stringify(queue, null, 2));
-  renameSync(tmpPath, NOTIFICATION_FILE);
+  atomicWrite(NOTIFICATION_FILE, JSON.stringify(queue, null, 2));
 }
 
 async function fetchSessionData(
@@ -169,14 +219,50 @@ function getSessionIDFromEvent(event: any): string | null {
 
 export const TmuxSessionCachePlugin: Plugin = async ({ client, directory }) => {
   const worktree = directory;
+  const myPpid = process.ppid;
+  let currentSessionId = "";
   let updateTimer: ReturnType<typeof setTimeout> | null = null;
+
+  function updatePidMapping(sessionId: string): void {
+    currentSessionId = sessionId;
+    writePidMapping({
+      pid: process.pid,
+      ppid: myPpid,
+      worktree,
+      currentSessionId: sessionId,
+    });
+  }
+
+  // Prune stale PID files from dead processes before writing our own
+  pruneStalePidFiles();
+
+  // Write initial PID mapping (will be updated with sessionId on first event)
+  writePidMapping({
+    pid: process.pid,
+    ppid: myPpid,
+    worktree,
+    currentSessionId: "",
+  });
+
+  // Cleanup PID file on exit
+  const cleanup = () => cleanupPidFile(myPpid);
+  process.on("exit", cleanup);
+  process.on("SIGINT", () => {
+    cleanup();
+    process.exit(0);
+  });
+  process.on("SIGTERM", () => {
+    cleanup();
+    process.exit(0);
+  });
 
   async function handleTerminalEvent(
     sessionID: string,
     notifEvent: NotificationEntry["event"],
   ): Promise<void> {
+    updatePidMapping(sessionID);
     const data = await fetchSessionData(client, sessionID, worktree);
-    writeCache(worktree, data);
+    writeSessionCache(sessionID, data);
     appendNotification({
       worktree,
       event: notifEvent,
@@ -193,6 +279,26 @@ export const TmuxSessionCachePlugin: Plugin = async ({ client, directory }) => {
         if (!sessionID) return;
 
         switch ((event as any).type) {
+          case "session.created": {
+            // Pre-fill cache when a session is opened/switched to
+            updatePidMapping(sessionID);
+            try {
+              const data = await fetchSessionData(
+                client,
+                sessionID,
+                worktree,
+              );
+              writeSessionCache(sessionID, data);
+            } catch (err) {
+              // Session may be brand new with no data yet — that's fine
+              console.error(
+                "[tmux-session-cache] session.created cache prefill error:",
+                err,
+              );
+            }
+            break;
+          }
+
           case "session.idle": {
             if (updateTimer) clearTimeout(updateTimer);
             await handleTerminalEvent(sessionID, "complete");
@@ -206,6 +312,7 @@ export const TmuxSessionCachePlugin: Plugin = async ({ client, directory }) => {
           }
 
           case "permission.updated": {
+            updatePidMapping(sessionID);
             appendNotification({
               worktree,
               event: "permission",
@@ -221,12 +328,13 @@ export const TmuxSessionCachePlugin: Plugin = async ({ client, directory }) => {
             if (updateTimer) clearTimeout(updateTimer);
             updateTimer = setTimeout(async () => {
               try {
+                updatePidMapping(sessionID);
                 const data = await fetchSessionData(
                   client,
                   sessionID,
                   worktree,
                 );
-                writeCache(worktree, data);
+                writeSessionCache(sessionID, data);
               } catch (err) {
                 console.error(
                   "[tmux-session-cache] debounced update error:",
@@ -234,6 +342,12 @@ export const TmuxSessionCachePlugin: Plugin = async ({ client, directory }) => {
                 );
               }
             }, UPDATE_DEBOUNCE_MS);
+            break;
+          }
+
+          case "session.status": {
+            // Session became busy/idle — update PID mapping to track current session
+            updatePidMapping(sessionID);
             break;
           }
         }
@@ -247,6 +361,7 @@ export const TmuxSessionCachePlugin: Plugin = async ({ client, directory }) => {
         const sessionID = input?.sessionID ?? "";
 
         if (input.tool === "question") {
+          updatePidMapping(sessionID);
           appendNotification({
             worktree,
             event: "question",
@@ -257,6 +372,7 @@ export const TmuxSessionCachePlugin: Plugin = async ({ client, directory }) => {
         }
 
         if (input.tool === "plan_exit") {
+          updatePidMapping(sessionID);
           appendNotification({
             worktree,
             event: "plan_exit",
