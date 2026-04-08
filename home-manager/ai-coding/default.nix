@@ -151,6 +151,7 @@ in
         "gh pr list*" = "allow";
         "gh pr view*" = "allow";
         "gh pr diff*" = "allow";
+        "gh repo view*" = "allow";
         "f -L*" = "allow";
       };
     };
