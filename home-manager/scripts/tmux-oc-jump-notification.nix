@@ -19,7 +19,7 @@ let
 
     # Get current time
     now=$(${pkgs.coreutils}/bin/date +%s)
-    max_age_secs=1800  # 30 minutes
+    max_age_secs=900  # 15 minutes
     cutoff=$(( (now - max_age_secs) * 1000 ))  # convert to milliseconds
 
     # Find the last entry within the cutoff, including sessionId, event, timestamp

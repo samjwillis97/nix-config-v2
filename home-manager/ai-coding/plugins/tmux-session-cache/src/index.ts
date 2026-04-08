@@ -23,7 +23,7 @@ const NOTIFICATION_FILE = join(
 );
 const MAX_QUEUE_SIZE = 50;
 const UPDATE_DEBOUNCE_MS = 500;
-const MAX_NOTIFICATION_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours
+const MAX_NOTIFICATION_AGE_MS = 15 * 60 * 1000; // 15 minutes
 const MAX_SESSION_CACHE_AGE_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 interface SessionData {

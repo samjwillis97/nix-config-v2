@@ -8,9 +8,9 @@ let
       exit 0
     fi
 
-    # Count notifications within the last 30 minutes
+    # Count notifications within the last 15 minutes
     now=$(${pkgs.coreutils}/bin/date +%s)
-    cutoff=$(( (now - 1800) * 1000 ))
+    cutoff=$(( (now - 900) * 1000 ))
 
     count=$(${pkgs.jq}/bin/jq -r --argjson cutoff "$cutoff" \
       '[.[] | select(.timestamp >= $cutoff)] | length' \
