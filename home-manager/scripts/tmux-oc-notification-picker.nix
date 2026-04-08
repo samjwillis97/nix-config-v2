@@ -89,23 +89,27 @@ let
 
     # Launch fzf with actions
     # Columns: 1=[event] 2=worktree 3=title 4=age | 5=sessionId 6=worktree_full 7=timestamp 8=event_raw
-    result=$(printf '%s\n' "$entries" | \
+    # ctrl-d: dismiss selected notification and reload the list (stays in fzf)
+    # ctrl-x: clear all notifications and close (via --expect)
+    # enter: select notification for jump & dismiss (default accept)
+    selected=$(printf '%s\n' "$entries" | \
       ${pkgs.fzf}/bin/fzf \
         --with-nth=1..4 \
         --delimiter=$'\t' \
         --header=$'enter=jump & dismiss | ctrl-d=dismiss | ctrl-x=clear all' \
-        --expect='ctrl-d,ctrl-x' \
+        --expect='ctrl-x' \
+        --bind="ctrl-d:execute-silent(tmux-oc-dismiss-notification {5} {7})+reload(tmux-oc-notification-list)" \
         --no-sort \
         --border=none \
         --tabstop=16)
 
-    if [ -z "$result" ]; then
+    if [ -z "$selected" ]; then
       exit 0
     fi
 
     # Parse fzf output: first line is the key pressed (empty for enter), rest is selected line
-    key=$(printf '%s' "$result" | ${pkgs.coreutils}/bin/head -n1)
-    selected=$(printf '%s' "$result" | ${pkgs.coreutils}/bin/tail -n +2)
+    key=$(printf '%s' "$selected" | ${pkgs.coreutils}/bin/head -n1)
+    entry=$(printf '%s' "$selected" | ${pkgs.coreutils}/bin/tail -n +2)
 
     # Handle clear all
     if [ "$key" = "ctrl-x" ]; then
@@ -114,25 +118,19 @@ let
       exit 0
     fi
 
-    # For dismiss and jump, we need the selected entry
-    if [ -z "$selected" ]; then
+    # For jump, we need the selected entry
+    if [ -z "$entry" ]; then
       exit 0
     fi
 
     # Parse selected entry
-    session_id=$(printf '%s' "$selected" | ${pkgs.coreutils}/bin/cut -f5)
-    worktree=$(printf '%s' "$selected" | ${pkgs.coreutils}/bin/cut -f6)
-    timestamp=$(printf '%s' "$selected" | ${pkgs.coreutils}/bin/cut -f7)
-    event=$(printf '%s' "$selected" | ${pkgs.coreutils}/bin/cut -f8)
+    session_id=$(printf '%s' "$entry" | ${pkgs.coreutils}/bin/cut -f5)
+    worktree=$(printf '%s' "$entry" | ${pkgs.coreutils}/bin/cut -f6)
+    timestamp=$(printf '%s' "$entry" | ${pkgs.coreutils}/bin/cut -f7)
+    event=$(printf '%s' "$entry" | ${pkgs.coreutils}/bin/cut -f8)
 
     # Dismiss the notification
     tmux-oc-dismiss-notification "$session_id" "$timestamp"
-
-    # Handle dismiss without jump
-    if [ "$key" = "ctrl-d" ]; then
-      ${pkgs.tmux}/bin/tmux display-message "OC: dismissed"
-      exit 0
-    fi
 
     # Handle jump (enter key)
     # Strategy 1: Find tmux pane via PID mapping
