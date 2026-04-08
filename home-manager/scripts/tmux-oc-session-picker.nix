@@ -56,6 +56,7 @@ let
     # fzf shows column 1 (label), passes full line to preview
     selected=$(printf '%s\n' "$pane_list" | \
       ${pkgs.fzf}/bin/fzf \
+        --ansi \
         --with-nth=1 \
         --delimiter=$'\t' \
         --preview 'tmux-session-preview {2}' \

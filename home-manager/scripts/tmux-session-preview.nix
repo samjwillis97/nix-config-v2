@@ -92,15 +92,58 @@ let
       cost_formatted=$(printf '%.2f' "$total_cost" 2>/dev/null || echo "$total_cost")
       fmt_cost="\$$cost_formatted"
 
-      # Print formatted summary
-      echo "── OpenCode ──────────────────────────"
-      echo "Title:   $title"
-      echo "Model:   $model ($provider)"
-      echo "Tokens:  $tokens_in in / $tokens_out out"
-      echo "Cost:    $fmt_cost"
-      echo "Changes: +$additions / -$deletions across $files files"
-      echo "Updated: $rel"
-      echo "──────────────────────────────────────"
+      # Format token counts with comma separators
+      fmt_tokens_in=$(printf "%'d" "$tokens_in" 2>/dev/null || echo "$tokens_in")
+      fmt_tokens_out=$(printf "%'d" "$tokens_out" 2>/dev/null || echo "$tokens_out")
+      fmt_additions=$(printf "%'d" "$additions" 2>/dev/null || echo "$additions")
+      fmt_deletions=$(printf "%'d" "$deletions" 2>/dev/null || echo "$deletions")
+
+      # ANSI color codes
+      bold=$'\033[1m'
+      dim=$'\033[2m'
+      green=$'\033[32m'
+      red=$'\033[31m'
+      yellow=$'\033[33m'
+      cyan=$'\033[36m'
+      reset=$'\033[0m'
+
+      # Build content lines into an array
+      lines=()
+      lines+=("''${dim}── OpenCode ──────────────────────────''${reset}")
+      lines+=("''${dim}Title:   ''${reset}''${bold}$title''${reset}")
+      lines+=("''${dim}Model:   ''${reset}''${cyan}$model''${reset} ''${dim}($provider)''${reset}")
+      lines+=("''${dim}Tokens:  ''${reset}''${fmt_tokens_in} in / ''${fmt_tokens_out} out")
+      lines+=("''${dim}Cost:    ''${reset}''${yellow}''${fmt_cost}''${reset}")
+      lines+=("''${dim}Changes: ''${reset}''${green}+''${fmt_additions}''${reset} / ''${red}-''${fmt_deletions}''${reset} across $files files")
+      lines+=("''${dim}Updated: ''${reset}$rel")
+      lines+=("''${dim}──────────────────────────────────────''${reset}")
+
+      # Center vertically and horizontally in the preview pane
+      content_height=''${#lines[@]}
+
+      # Calculate actual max visible width by stripping ANSI escape codes
+      content_width=0
+      for line in "''${lines[@]}"; do
+        stripped=$(printf '%s' "$line" | ${pkgs.gnused}/bin/sed 's/\x1b\[[0-9;]*m//g')
+        w=''${#stripped}
+        [ "$w" -gt "$content_width" ] && content_width=$w
+      done
+
+      preview_lines=''${FZF_PREVIEW_LINES:-24}
+      preview_cols=''${FZF_PREVIEW_COLUMNS:-80}
+
+      top_pad=$(( (preview_lines - content_height) / 2 ))
+      left_pad=$(( (preview_cols - content_width) / 2 ))
+      [ "$top_pad" -lt 0 ] 2>/dev/null && top_pad=0
+      [ "$left_pad" -lt 0 ] 2>/dev/null && left_pad=0
+
+      pad_str=""
+      for (( i=0; i<left_pad; i++ )); do pad_str+=" "; done
+
+      for (( i=0; i<top_pad; i++ )); do echo ""; done
+      for line in "''${lines[@]}"; do
+        echo "''${pad_str}''${line}"
+      done
     else
       # No cache found -- fall back to pane capture
       ${pkgs.tmux}/bin/tmux capture-pane -t "$target" -p 2>/dev/null
