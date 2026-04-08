@@ -77,7 +77,7 @@
       bind a display-popup -E -w 80% -h 80% "tmux-oc-session-picker"
 
       # opencode notification picker
-      bind A display-popup -E -w 80% -h 80% "tmux-oc-notification-picker"
+      bind A if-shell "tmux-oc-notification-list | grep -q ." "display-popup -E -w 80% -h 80% 'tmux-oc-notification-picker'" "display-message 'No pending notifications'"
 
       # default statusbar colors
 
