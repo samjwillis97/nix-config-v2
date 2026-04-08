@@ -76,8 +76,8 @@
       # opencode-aware session picker
       bind a display-popup -E -w 80% -h 80% "tmux-oc-session-picker"
 
-      # jump to most recent opencode notification
-      bind A run-shell "tmux-oc-jump-notification"
+      # opencode notification picker
+      bind A display-popup -E -w 80% -h 80% "tmux-oc-notification-picker"
 
       # default statusbar colors
 
