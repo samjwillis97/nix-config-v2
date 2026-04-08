@@ -94,8 +94,11 @@ let
     # enter: select notification for jump & dismiss (default accept)
     selected=$(printf '%s\n' "$entries" | \
       ${pkgs.fzf}/bin/fzf \
+        --ansi \
         --with-nth=1..4 \
         --delimiter=$'\t' \
+        --preview 'tmux-session-preview --session {5}' \
+        --preview-window=right:60%:wrap \
         --header=$'enter=jump & dismiss | ctrl-d=dismiss | ctrl-x=clear all' \
         --expect='ctrl-x' \
         --bind="ctrl-d:execute-silent(tmux-oc-dismiss-notification {5} {7})+reload(tmux-oc-notification-list)" \

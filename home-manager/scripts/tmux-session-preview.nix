@@ -1,49 +1,83 @@
 { pkgs, ... }:
 let
   tmux-session-preview = pkgs.writeShellScriptBin "tmux-session-preview" ''
-    target="$1"
-    if [ -z "$target" ]; then
-      echo "Usage: tmux-session-preview <session:win.pane | session-name>"
+    # Parse arguments: --pane <target> | --session <sessionId> | <target> (backward compat)
+    mode="pane"
+    value=""
+    case "$1" in
+      --pane)
+        mode="pane"
+        value="$2"
+        ;;
+      --session)
+        mode="session"
+        value="$2"
+        ;;
+      "")
+        echo "Usage: tmux-session-preview [--pane <target> | --session <sessionId>]"
+        exit 1
+        ;;
+      *)
+        # Bare argument: backward compat, treat as pane target
+        mode="pane"
+        value="$1"
+        ;;
+    esac
+
+    if [ -z "$value" ]; then
+      echo "Usage: tmux-session-preview [--pane <target> | --session <sessionId>]"
       exit 1
     fi
 
     pids_dir="$HOME/.cache/opencode/tmux-cache/pids"
     sessions_dir="$HOME/.cache/opencode/tmux-cache/sessions"
 
-    # Get the pane PID for the target
-    pane_pid=$(${pkgs.tmux}/bin/tmux display-message -t "$target" -p '#{pane_pid}' 2>/dev/null)
-
-    # Try PID-based lookup: pane_pid -> PID mapping -> session ID -> session cache
     cache_file=""
-    if [ -n "$pane_pid" ]; then
-      pid_file="$pids_dir/$pane_pid.json"
-      if [ -f "$pid_file" ]; then
-        session_id=$(${pkgs.jq}/bin/jq -r '.currentSessionId // empty' "$pid_file" 2>/dev/null)
-        if [ -n "$session_id" ]; then
-          candidate="$sessions_dir/$session_id.json"
-          if [ -f "$candidate" ]; then
-            cache_file="$candidate"
+
+    if [ "$mode" = "session" ]; then
+      # Direct session cache lookup by session ID
+      candidate="$sessions_dir/$value.json"
+      if [ -f "$candidate" ]; then
+        cache_file="$candidate"
+      fi
+    else
+      # Pane mode: resolve pane PID -> session cache
+      target="$value"
+
+      # Get the pane PID for the target
+      pane_pid=$(${pkgs.tmux}/bin/tmux display-message -t "$target" -p '#{pane_pid}' 2>/dev/null)
+
+      # Try PID-based lookup: pane_pid -> PID mapping -> session ID -> session cache
+      if [ -n "$pane_pid" ]; then
+        pid_file="$pids_dir/$pane_pid.json"
+        if [ -f "$pid_file" ]; then
+          session_id=$(${pkgs.jq}/bin/jq -r '.currentSessionId // empty' "$pid_file" 2>/dev/null)
+          if [ -n "$session_id" ]; then
+            candidate="$sessions_dir/$session_id.json"
+            if [ -f "$candidate" ]; then
+              cache_file="$candidate"
+            fi
           fi
         fi
       fi
-    fi
 
-    # Fallback: if no cache from PID mapping, scrape the pane title and
-    # search session cache files by title match
-    if [ -z "$cache_file" ]; then
-      scraped_title=$(${pkgs.tmux}/bin/tmux capture-pane -t "$target" -p 2>/dev/null \
-        | ${pkgs.gnugrep}/bin/grep -m1 '# .*[0-9].*%.*\$' \
-        | ${pkgs.gnused}/bin/sed 's/.*# //' \
-        | ${pkgs.gnused}/bin/sed 's/[[:space:]]\{2,\}[0-9].*//')
-      if [ -n "$scraped_title" ] && [ -d "$sessions_dir" ]; then
-        for sf in "$sessions_dir"/*.json; do
-          [ -f "$sf" ] || continue
-          sf_title=$(${pkgs.jq}/bin/jq -r '.title // empty' "$sf" 2>/dev/null)
-          if [ "$sf_title" = "$scraped_title" ]; then
-            cache_file="$sf"
-            break
-          fi
-        done
+      # Fallback: if no cache from PID mapping, scrape the pane title and
+      # search session cache files by title match
+      if [ -z "$cache_file" ]; then
+        scraped_title=$(${pkgs.tmux}/bin/tmux capture-pane -t "$target" -p 2>/dev/null \
+          | ${pkgs.gnugrep}/bin/grep -m1 '# .*[0-9].*%.*\$' \
+          | ${pkgs.gnused}/bin/sed 's/.*# //' \
+          | ${pkgs.gnused}/bin/sed 's/[[:space:]]\{2,\}[0-9].*//')
+        if [ -n "$scraped_title" ] && [ -d "$sessions_dir" ]; then
+          for sf in "$sessions_dir"/*.json; do
+            [ -f "$sf" ] || continue
+            sf_title=$(${pkgs.jq}/bin/jq -r '.title // empty' "$sf" 2>/dev/null)
+            if [ "$sf_title" = "$scraped_title" ]; then
+              cache_file="$sf"
+              break
+            fi
+          done
+        fi
       fi
     fi
 
@@ -66,8 +100,10 @@ let
       )
 
       if [ -z "$title" ]; then
-        # jq failed or cache is corrupt -- fall back to pane capture
-        ${pkgs.tmux}/bin/tmux capture-pane -t "$target" -p 2>/dev/null
+        # jq failed or cache is corrupt
+        if [ "$mode" = "pane" ]; then
+          ${pkgs.tmux}/bin/tmux capture-pane -t "$value" -p 2>/dev/null
+        fi
         exit 0
       fi
 
@@ -145,8 +181,27 @@ let
         echo "''${pad_str}''${line}"
       done
     else
-      # No cache found -- fall back to pane capture
-      ${pkgs.tmux}/bin/tmux capture-pane -t "$target" -p 2>/dev/null
+      # No cache found
+      if [ "$mode" = "pane" ]; then
+        # Fall back to pane capture
+        ${pkgs.tmux}/bin/tmux capture-pane -t "$value" -p 2>/dev/null
+      else
+        # Session mode: show centered fallback message
+        dim=$'\033[2m'
+        reset=$'\033[0m'
+        msg="''${dim}No session data available''${reset}"
+        msg_len=26
+        preview_lines=''${FZF_PREVIEW_LINES:-24}
+        preview_cols=''${FZF_PREVIEW_COLUMNS:-80}
+        top_pad=$(( (preview_lines - 1) / 2 ))
+        left_pad=$(( (preview_cols - msg_len) / 2 ))
+        [ "$top_pad" -lt 0 ] 2>/dev/null && top_pad=0
+        [ "$left_pad" -lt 0 ] 2>/dev/null && left_pad=0
+        pad_str=""
+        for (( i=0; i<left_pad; i++ )); do pad_str+=" "; done
+        for (( i=0; i<top_pad; i++ )); do echo ""; done
+        echo "''${pad_str}''${msg}"
+      fi
     fi
   '';
 in
