@@ -70,14 +70,17 @@
       # easy reload
       bind-key r source-file ~/.config/tmux/tmux.conf \; display-message "~/.tmux.conf reloaded"
 
-      # order sessions by name
-      bind s choose-tree -sZ -O name
+      # fzf session picker
+      bind s display-popup -E -w 80% -h 80% "tmux-session-picker"
+
+      # fzf window picker
+      bind w display-popup -E -w 80% -h 80% "tmux-window-picker"
 
       # opencode-aware session picker
       bind a display-popup -E -w 80% -h 80% "tmux-oc-session-picker"
 
-      # opencode notification picker
-      bind A if-shell "tmux-oc-notification-list | grep -q ." "display-popup -E -w 80% -h 80% 'tmux-oc-notification-picker'" "display-message 'No pending notifications'"
+      # opencode notification picker (single notification jumps directly, multiple opens picker popup)
+      bind A run-shell "tmux-oc-notification-dispatch"
 
       # default statusbar colors
 

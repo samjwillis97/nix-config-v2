@@ -153,9 +153,12 @@ function appendNotification(entry: NotificationEntry): void {
     }
   }
 
-  // Prune entries older than 24 hours
+  // Prune entries older than 15 minutes
   const ageCutoff = Date.now() - MAX_NOTIFICATION_AGE_MS;
   queue = queue.filter((e) => e.timestamp >= ageCutoff);
+
+  // De-duplicate: keep only the latest notification per session
+  queue = queue.filter((e) => e.sessionId !== entry.sessionId);
 
   queue.push(entry);
 
@@ -167,11 +170,15 @@ function appendNotification(entry: NotificationEntry): void {
   atomicWrite(NOTIFICATION_FILE, JSON.stringify(queue, null, 2));
 }
 
+interface FetchedSessionData extends SessionData {
+  parentID?: string;
+}
+
 async function fetchSessionData(
   client: any,
   sessionID: string,
   worktree: string,
-): Promise<SessionData> {
+): Promise<FetchedSessionData> {
   const sessionResponse = await client.session.get({
     path: { id: sessionID },
   });
@@ -183,6 +190,7 @@ async function fetchSessionData(
   const messages: any[] = messagesResponse.data ?? [];
 
   const title = session?.title ?? "";
+  const parentID = session?.parentID ?? undefined;
   const additions = session?.summary?.additions ?? 0;
   const deletions = session?.summary?.deletions ?? 0;
   const files = session?.summary?.files ?? 0;
@@ -226,6 +234,7 @@ async function fetchSessionData(
     deletions,
     files,
     updatedAt,
+    parentID,
   };
 }
 
@@ -251,6 +260,7 @@ export const TmuxSessionCachePlugin: Plugin = async ({ client, directory }) => {
   const myPpid = process.ppid;
   let currentSessionId = "";
   let updateTimer: ReturnType<typeof setTimeout> | null = null;
+  const subagentSessionIds = new Set<string>();
 
   function updatePidMapping(sessionId: string): void {
     currentSessionId = sessionId;
@@ -292,6 +302,10 @@ export const TmuxSessionCachePlugin: Plugin = async ({ client, directory }) => {
     process.exit(0);
   });
 
+  function isSubagentSession(sessionID: string): boolean {
+    return subagentSessionIds.has(sessionID);
+  }
+
   async function handleTerminalEvent(
     sessionID: string,
     notifEvent: NotificationEntry["event"],
@@ -299,6 +313,17 @@ export const TmuxSessionCachePlugin: Plugin = async ({ client, directory }) => {
     updatePidMapping(sessionID);
     const data = await fetchSessionData(client, sessionID, worktree);
     writeSessionCache(sessionID, data);
+
+    // Track subagent status from API response if not already known
+    if (data.parentID) {
+      subagentSessionIds.add(sessionID);
+    }
+
+    // Only append notifications for subagent sessions if it's a permission request
+    if (isSubagentSession(sessionID) && notifEvent !== "permission") {
+      return;
+    }
+
     appendNotification({
       worktree,
       event: notifEvent,
@@ -316,6 +341,12 @@ export const TmuxSessionCachePlugin: Plugin = async ({ client, directory }) => {
 
         switch ((event as any).type) {
           case "session.created": {
+            // Track subagent sessions from the event payload
+            const eventInfo = (event as any)?.properties?.info;
+            if (eventInfo?.parentID) {
+              subagentSessionIds.add(sessionID);
+            }
+
             // Pre-fill cache when a session is opened/switched to
             updatePidMapping(sessionID);
             try {
@@ -395,6 +426,9 @@ export const TmuxSessionCachePlugin: Plugin = async ({ client, directory }) => {
     "tool.execute.before": async (input, _output) => {
       try {
         const sessionID = input?.sessionID ?? "";
+
+        // Skip question/plan_exit notifications for subagent sessions
+        if (isSubagentSession(sessionID)) return;
 
         if (input.tool === "question") {
           updatePidMapping(sessionID);

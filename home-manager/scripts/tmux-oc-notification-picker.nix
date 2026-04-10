@@ -75,58 +75,17 @@ let
     '
   '';
 
-  # Main picker script
-  tmux-oc-notification-picker = pkgs.writeShellScriptBin "tmux-oc-notification-picker" ''
-    notification_file="$HOME/.cache/opencode/tmux-notifications.json"
+  # Helper script to jump to a notification pane and dismiss it
+  # Takes a tab-separated entry line from tmux-oc-notification-list as $1
+  tmux-oc-notification-jump = pkgs.writeShellScriptBin "tmux-oc-notification-jump" ''
     pids_dir="$HOME/.cache/opencode/tmux-cache/pids"
+    entry="$1"
 
-    # Check if there are any notifications to show
-    entries=$(tmux-oc-notification-list)
-    if [ -z "$entries" ]; then
-      ${pkgs.tmux}/bin/tmux display-message "No pending notifications"
-      exit 0
-    fi
-
-    # Launch fzf with actions
-    # Columns: 1=[event] 2=worktree 3=title 4=age | 5=sessionId 6=worktree_full 7=timestamp 8=event_raw
-    # ctrl-d: dismiss selected notification and reload the list (stays in fzf)
-    # ctrl-x: clear all notifications and close (via --expect)
-    # enter: select notification for jump & dismiss (default accept)
-    selected=$(printf '%s\n' "$entries" | \
-      ${pkgs.fzf}/bin/fzf \
-        --ansi \
-        --with-nth=1..4 \
-        --delimiter=$'\t' \
-        --preview 'tmux-session-preview --session {5}' \
-        --preview-window=right:60%:wrap \
-        --header=$'enter=jump & dismiss | ctrl-d=dismiss | ctrl-x=clear all' \
-        --expect='ctrl-x' \
-        --bind="ctrl-d:execute-silent(tmux-oc-dismiss-notification {5} {7})+reload(tmux-oc-notification-list)" \
-        --no-sort \
-        --border=none \
-        --tabstop=16)
-
-    if [ -z "$selected" ]; then
-      exit 0
-    fi
-
-    # Parse fzf output: first line is the key pressed (empty for enter), rest is selected line
-    key=$(printf '%s' "$selected" | ${pkgs.coreutils}/bin/head -n1)
-    entry=$(printf '%s' "$selected" | ${pkgs.coreutils}/bin/tail -n +2)
-
-    # Handle clear all
-    if [ "$key" = "ctrl-x" ]; then
-      tmux-oc-clear-notifications
-      ${pkgs.tmux}/bin/tmux display-message "OC: all notifications cleared"
-      exit 0
-    fi
-
-    # For jump, we need the selected entry
     if [ -z "$entry" ]; then
       exit 0
     fi
 
-    # Parse selected entry
+    # Parse the tab-separated entry
     session_id=$(printf '%s' "$entry" | ${pkgs.coreutils}/bin/cut -f5)
     worktree=$(printf '%s' "$entry" | ${pkgs.coreutils}/bin/cut -f6)
     timestamp=$(printf '%s' "$entry" | ${pkgs.coreutils}/bin/cut -f7)
@@ -135,7 +94,6 @@ let
     # Dismiss the notification
     tmux-oc-dismiss-notification "$session_id" "$timestamp"
 
-    # Handle jump (enter key)
     # Strategy 1: Find tmux pane via PID mapping
     target=""
     if [ -n "$session_id" ] && [ -d "$pids_dir" ]; then
@@ -192,10 +150,76 @@ let
     ${pkgs.tmux}/bin/tmux select-pane -t "$sess:$winpane"
     ${pkgs.tmux}/bin/tmux display-message "OC: $event_label"
   '';
+
+  # Main picker script (used inside tmux popup for multiple notifications)
+  tmux-oc-notification-picker = pkgs.writeShellScriptBin "tmux-oc-notification-picker" ''
+    # Get entries (caller should have already verified there are notifications)
+    entries=$(tmux-oc-notification-list)
+    if [ -z "$entries" ]; then
+      exit 0
+    fi
+
+    # Launch fzf with actions
+    # Columns: 1=[event] 2=worktree 3=title 4=age | 5=sessionId 6=worktree_full 7=timestamp 8=event_raw
+    # ctrl-d: dismiss selected notification and reload the list (stays in fzf)
+    # ctrl-x: clear all notifications and close (via --expect)
+    # enter: select notification for jump & dismiss (default accept)
+    selected=$(printf '%s\n' "$entries" | \
+      ${pkgs.fzf}/bin/fzf \
+        --ansi \
+        --with-nth=1..4 \
+        --delimiter=$'\t' \
+        --preview 'tmux-session-preview --session {5}' \
+        --preview-window=right:60%:wrap \
+        --header=$'enter=jump & dismiss | ctrl-d=dismiss | ctrl-x=clear all' \
+        --expect='ctrl-x' \
+        --bind="ctrl-d:execute-silent(tmux-oc-dismiss-notification {5} {7})+reload(tmux-oc-notification-list)" \
+        --no-sort \
+        --border=none \
+        --tabstop=16)
+
+    if [ -z "$selected" ]; then
+      exit 0
+    fi
+
+    # Parse fzf output: first line is the key pressed (empty for enter), rest is selected line
+    key=$(printf '%s' "$selected" | ${pkgs.coreutils}/bin/head -n1)
+    entry=$(printf '%s' "$selected" | ${pkgs.coreutils}/bin/tail -n +2)
+
+    # Handle clear all
+    if [ "$key" = "ctrl-x" ]; then
+      tmux-oc-clear-notifications
+      ${pkgs.tmux}/bin/tmux display-message "OC: all notifications cleared"
+      exit 0
+    fi
+
+    # Jump to the selected notification
+    tmux-oc-notification-jump "$entry"
+  '';
+
+  # Dispatcher: checks notification count and either jumps directly or opens the picker popup
+  tmux-oc-notification-dispatch = pkgs.writeShellScriptBin "tmux-oc-notification-dispatch" ''
+    entries=$(tmux-oc-notification-list)
+    if [ -z "$entries" ]; then
+      ${pkgs.tmux}/bin/tmux display-message "No pending notifications"
+      exit 0
+    fi
+
+    entry_count=$(printf '%s\n' "$entries" | ${pkgs.coreutils}/bin/wc -l | ${pkgs.coreutils}/bin/tr -d ' ')
+    if [ "$entry_count" -eq 1 ]; then
+      # Single notification: jump directly without a popup
+      tmux-oc-notification-jump "$entries"
+    else
+      # Multiple notifications: open the picker in a popup
+      ${pkgs.tmux}/bin/tmux display-popup -E -w 80% -h 80% "tmux-oc-notification-picker"
+    fi
+  '';
 in
 {
   home.packages = [
+    tmux-oc-notification-dispatch
     tmux-oc-notification-picker
+    tmux-oc-notification-jump
     tmux-oc-notification-list
     tmux-oc-dismiss-notification
     tmux-oc-clear-notifications

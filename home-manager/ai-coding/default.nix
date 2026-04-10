@@ -102,6 +102,7 @@ in
         "~/.config/httpcraft/**" = "allow";
         "~/.config/opencode/**" = "allow";
         "~/.local/share/opencode/**" = "allow";
+        "~/.cache/opencode/**" = "allow";
         "~/nix/store/**" = "allow";
       };
       edit = {
