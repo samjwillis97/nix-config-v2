@@ -182,6 +182,11 @@ in
         };
         oauth = { };
       };
+      sentry = {
+        type = "http";
+        url = "https://mcp.sentry.dev/mcp";
+        oauth = { };
+      };
     };
 
     agents = {

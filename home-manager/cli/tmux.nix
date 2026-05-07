@@ -25,6 +25,9 @@
     plugins = [ ];
 
     extraConfig = with config.theme.colors; ''
+      # Clear MRU session tracking cache on server start / config reload
+      run-shell 'rm -rf $HOME/.cache/tmux-session-history && mkdir -p $HOME/.cache/tmux-session-history'
+
       # Better splitting
       bind | split-window -h -c "#{pane_current_path}"
       bind - split-window -v -c "#{pane_current_path}"
@@ -54,7 +57,7 @@
       bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'xclip -in -selection clipboard'
 
       # Better sessions
-      bind-key -r f run-shell "tmux neww ${pkgs.f}/bin/f -l"
+      bind-key -r f display-popup -E -w 80% -h 80% "${pkgs.f}/bin/f -l"
       bind-key -r i run-shell "tmux neww tmux-cht.sh"
 
       # Enabled 256 Color
@@ -69,6 +72,12 @@
 
       # easy reload
       bind-key r source-file ~/.config/tmux/tmux.conf \; display-message "~/.tmux.conf reloaded"
+
+      # Track session usage (MRU) - records timestamp when switching to a session
+      set-hook -g client-session-changed 'run-shell "tmux-session-track \"#{session_name}\""'
+
+      # Clean up MRU tracking file when a session is destroyed
+      set-hook -g session-closed 'run-shell "tmux-session-track-clean \"#{hook_session}\""'
 
       # fzf session picker
       bind s display-popup -E -w 80% -h 80% "tmux-session-picker"

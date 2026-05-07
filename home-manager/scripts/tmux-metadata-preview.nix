@@ -40,6 +40,25 @@ let
       printf '%s%-10s %s%s%s\n' "$dim" "$label" "$color" "$value" "$reset"
     }
 
+    relative_time() {
+      local ts="$1"
+      local now
+      now=$(${pkgs.coreutils}/bin/date +%s)
+      local delta=$(( now - ts ))
+      if [ "$delta" -lt 60 ]; then
+        echo "just now"
+      elif [ "$delta" -lt 3600 ]; then
+        local mins=$(( delta / 60 ))
+        if [ "$mins" -eq 1 ]; then echo "1 min ago"; else echo "$mins mins ago"; fi
+      elif [ "$delta" -lt 86400 ]; then
+        local hours=$(( delta / 3600 ))
+        if [ "$hours" -eq 1 ]; then echo "1 hour ago"; else echo "$hours hours ago"; fi
+      else
+        local days=$(( delta / 86400 ))
+        if [ "$days" -eq 1 ]; then echo "1 day ago"; else echo "$days days ago"; fi
+      fi
+    }
+
     # Determine if target is a session or a window
     if [[ "$target" == *:* ]]; then
       mode="window"
@@ -72,13 +91,9 @@ let
       fi
 
       # Format creation time
-      if command -v ${pkgs.coreutils}/bin/date &>/dev/null; then
-        created_str=$(${pkgs.coreutils}/bin/date -d "@$created" '+%Y-%m-%d %H:%M' 2>/dev/null \
-          || ${pkgs.coreutils}/bin/date -r "$created" '+%Y-%m-%d %H:%M' 2>/dev/null \
-          || echo "unknown")
-      else
-        created_str="unknown"
-      fi
+      created_str=$(${pkgs.coreutils}/bin/date -d "@$created" '+%Y-%m-%d %H:%M' 2>/dev/null \
+        || ${pkgs.coreutils}/bin/date -r "$created" '+%Y-%m-%d %H:%M' 2>/dev/null \
+        || echo "unknown")
 
       if [ "$win_count" = "1" ]; then
         win_label="1 window"
@@ -91,6 +106,23 @@ let
       hr
       label_value "Windows:" "$win_label" "$cyan"
       label_value "Created:" "$created_str" "$white"
+
+      # Last used (from MRU tracking)
+      # NOTE: cache dir and encoding must match tmux-session-picker.nix
+      mru_cache_dir="$HOME/.cache/tmux-session-history"
+      mru_encoded="''${session_name//%/%25}"
+      mru_encoded="''${mru_encoded//\//%2F}"
+      if [ -f "$mru_cache_dir/$mru_encoded" ]; then
+        mru_ts=$(< "$mru_cache_dir/$mru_encoded")
+        if [ -n "$mru_ts" ]; then
+          label_value "Last used:" "$(relative_time "$mru_ts")" "$yellow"
+        else
+          label_value "Last used:" "--" "$dim"
+        fi
+      else
+        label_value "Last used:" "--" "$dim"
+      fi
+
       if [ -n "$group" ]; then
         label_value "Group:" "$group" "$magenta"
       fi
