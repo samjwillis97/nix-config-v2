@@ -15,7 +15,9 @@ in
       aerospace = prev.callPackage ../packages/aerospace.nix { };
       opencode-notifier-deps = final.callPackage ../packages/opencode-notifier-deps.nix { };
       opencode-notifier = final.callPackage ../packages/opencode-notifier.nix { };
-      tmux-session-cache-plugin-deps = final.callPackage ../packages/tmux-session-cache-plugin-deps.nix { };
+      tmux-session-cache-plugin-deps =
+        final.callPackage ../packages/tmux-session-cache-plugin-deps.nix
+          { };
       tmux-session-cache-plugin = final.callPackage ../packages/tmux-session-cache-plugin.nix { };
       wallpapers = prev.callPackage ../packages/wallpapers { };
       agenix = flake.inputs.agenix.packages.${system}.default;
@@ -29,6 +31,7 @@ in
       httpcraft-mcp = flake.inputs.httpcraft-mcp.packages.${system}.default;
       ghostty = flake.inputs.ghostty.packages.${system}.default;
       nix-auth = inputs.nix-auth.packages.${system}.default;
+      pi-agent = inputs.pi-agent.packages.${system}.pi-agent;
     })
     inputs.nur.overlays.default
     inputs.brew-nix.overlays.default

@@ -27,6 +27,8 @@ in
       devenv
       jless
       llama-cpp
+      pi-agent
+      fd
     ]
     ++ (with pkgs; if isDarwin then [ f ] else [ inotify-info ]);
 

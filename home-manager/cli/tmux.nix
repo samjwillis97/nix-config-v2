@@ -67,6 +67,10 @@
       # Enable scrolling
       set -g mouse on
 
+      # Passing through enter properly
+      set -g extended-keys on
+      set -g extended-keys-format csi-u
+
       # Fix switching delay
       set -sg escape-time 0
 

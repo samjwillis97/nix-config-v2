@@ -146,6 +146,7 @@
     # LLM Stuff
     llm-agents.url = "github:numtide/llm-agents.nix";
     agent-sandbox.url = "github:samjwillis97/agent-sandbox.nix";
+    pi-agent.url = "github:rbright/nix-pi-agent";
 
     # Agent Skills
     superpowers = {
