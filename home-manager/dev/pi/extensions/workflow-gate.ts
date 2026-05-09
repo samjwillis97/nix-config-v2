@@ -201,6 +201,9 @@ export default function (pi: ExtensionAPI) {
 		}
 
 		// "question" and "unknown" — don't set any workflow phase, let the agent respond freely
+		if (taskType === "question" || taskType === "unknown") {
+			updateStatus(ctx);
+		}
 	});
 
 	// Gate: block write/edit during brainstorm phase
