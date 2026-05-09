@@ -79,6 +79,7 @@ in
       "$HOME/.cache"
       "$HOME/.agent-browser"
       "$HOME/.config/httpcraft"
+      "/nix/var/nix/daemon-socket"
     ];
 
     # rules = ./AGENTS.md;  # Uncomment when ready

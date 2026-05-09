@@ -146,7 +146,6 @@
     # LLM Stuff
     llm-agents.url = "github:numtide/llm-agents.nix";
     agent-sandbox.url = "github:samjwillis97/agent-sandbox.nix";
-    pi-agent.url = "github:rbright/nix-pi-agent";
 
     # Agent Skills
     superpowers = {
@@ -223,6 +222,7 @@
           ./home-manager/gaming
           ./home-manager/dev
           ./home-manager/dev/ops.nix
+          ./home-manager/dev/pi
           ./home-manager/ai-coding
           ./home-manager/vscode
           ./home-manager/firefox
@@ -318,6 +318,7 @@
           ./home-manager/firefox
           ./home-manager/cache
           ./home-manager/ai-coding
+          ./home-manager/dev/pi
           { modules.darwin.work = false; }
         ];
       })
@@ -334,6 +335,7 @@
           ./home-manager/dev/ops.nix
           ./home-manager/dev/node.nix
           ./home-manager/ai-coding
+          ./home-manager/dev/pi
           ./home-manager/wezterm
           ./home-manager/vscode
           ./home-manager/work
@@ -364,6 +366,7 @@
           ./home-manager/dev
           ./home-manager/dev/ops.nix
           ./home-manager/ai-coding
+          ./home-manager/dev/pi
           ./home-manager/vscode
         ];
         extraModules = [
