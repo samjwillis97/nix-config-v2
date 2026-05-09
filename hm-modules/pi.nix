@@ -189,6 +189,12 @@ in
       description = "Extension directories (for multi-file extensions like subagent/).";
     };
 
+    prompts = mkOption {
+      type = types.listOf types.path;
+      default = [ ];
+      description = "Prompt template files (.md) to deploy to ~/.pi/agent/prompts/.";
+    };
+
     rules = mkOption {
       type = types.nullOr types.path;
       default = null;
@@ -344,6 +350,32 @@ in
           echo "$agent_name" >> "$MANAGED_FILE"
           cp "${agent}" "$HOME/.pi/agent/agents/$agent_name"
         '') cfg.agents}
+      '';
+    })
+
+    # Prompts
+    (mkIf (cfg.prompts != [ ]) {
+      home.activation.pi-prompts = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        ${stripNixHashScript}
+        mkdir -p $HOME/.pi/agent/prompts
+
+        MANAGED_FILE="$HOME/.pi/agent/.nix-managed-prompts"
+        touch "$MANAGED_FILE"
+
+        # Remove previously managed prompts
+        while IFS= read -r old_prompt; do
+          if [ -n "$old_prompt" ] && [ -f "$HOME/.pi/agent/prompts/$old_prompt" ]; then
+            rm -f "$HOME/.pi/agent/prompts/$old_prompt"
+          fi
+        done < "$MANAGED_FILE"
+
+        > "$MANAGED_FILE"
+        ${concatMapStringsSep "\n" (prompt: ''
+          prompt_base="$(basename "${prompt}")"
+          prompt_name="$(strip_nix_hash "$prompt_base")"
+          echo "$prompt_name" >> "$MANAGED_FILE"
+          cp "${prompt}" "$HOME/.pi/agent/prompts/$prompt_name"
+        '') cfg.prompts}
       '';
     })
 

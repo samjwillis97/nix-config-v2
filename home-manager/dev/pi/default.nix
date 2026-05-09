@@ -21,17 +21,50 @@
       hideThinkingBlock = false;
     };
 
+    rules = ./AGENTS.md;
+
     agents = [
+      ./agents/brainstormer.md
       ./agents/explorer.md
       ./agents/planner.md
       ./agents/reviewer.md
       ./agents/scout.md
+      ./agents/spec-reviewer.md
       ./agents/worker.md
     ];
 
+    skills.local = [
+      ./skills/brainstorming
+      ./skills/dispatching-parallel-agents
+      ./skills/executing-plans
+      ./skills/git-workflow
+      ./skills/planning
+      ./skills/receiving-code-review
+      ./skills/systematic-debugging
+      ./skills/verification
+      ./skills/writing-skills
+    ];
+
+    prompts = [
+      ./prompts/brainstorm.md
+      ./prompts/debug.md
+      ./prompts/implement.md
+      ./prompts/implement-and-review.md
+      ./prompts/review.md
+      ./prompts/scout-and-plan.md
+    ];
+
     extensions = [
+      ./extensions/anti-rationalization.ts
+      ./extensions/context-curator.ts
+      ./extensions/debug-assistant.ts
       ./extensions/explore-repo.ts
+      ./extensions/plan-mode.ts
+      ./extensions/review-pipeline.ts
+      ./extensions/session-dashboard.ts
       ./extensions/session-name.ts
+      ./extensions/verification-tracker.ts
+      ./extensions/workflow-gate.ts
     ];
 
     extensionDirs = [
