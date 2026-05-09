@@ -19,6 +19,10 @@
     extraSettings = {
       defaultThinkingLevel = "medium";
       hideThinkingBlock = false;
+
+      packages = [
+        "git:github.com/apmantza/pi-lens@v3.8.42"
+      ];
     };
 
     rules = ./AGENTS.md;

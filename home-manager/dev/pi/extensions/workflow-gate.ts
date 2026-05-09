@@ -2,14 +2,16 @@
  * Workflow Gate Extension
  *
  * Enforces the brainstorm → plan → implement → review → verify workflow.
- * Tracks current phase and can block premature tool calls.
- * Shows current phase in status line.
+ * Uses a cheap LLM call to classify task intent (feature/bug/small/question).
+ * Tracks current phase and blocks premature tool calls.
  */
 
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { isToolCallEventType } from "@mariozechner/pi-coding-agent";
+import { complete, getModel } from "@mariozechner/pi-ai";
 
 type WorkflowPhase = "idle" | "brainstorm" | "plan" | "implement" | "review" | "verify" | "complete";
+type TaskType = "feature" | "bug" | "small" | "question" | "unknown";
 
 interface WorkflowState {
 	phase: WorkflowPhase;
@@ -30,34 +32,77 @@ const PHASE_ICONS: Record<WorkflowPhase, string> = {
 
 const PHASE_ORDER: WorkflowPhase[] = ["brainstorm", "plan", "implement", "review", "verify", "complete"];
 
-// Patterns that suggest the user is asking for something that should go through the full workflow
-const FEATURE_PATTERNS = [
-	/\b(?:add|create|build|implement|develop|make|design)\s+(?:a|an|the|new)?\s*\w+/i,
-	/\b(?:new\s+feature|feature\s+request)\b/i,
-	/\b(?:refactor|redesign|rearchitect|rewrite)\b/i,
-	/\bI\s+want\s+(?:to|a|an)\b/i,
-	/\b(?:can\s+you|could\s+you|please)\s+(?:add|create|build|implement|make)\b/i,
-];
+const CLASSIFY_PROMPT = `Classify the user's message into exactly one category. Reply with ONLY the category name, nothing else.
 
-const BUG_PATTERNS = [
-	/\b(?:bug|broken|doesn'?t\s+work|not\s+working|error|crash|fail|issue)\b/i,
-	/\b(?:fix|debug|troubleshoot|investigate)\b/i,
-];
+Categories:
+- feature: New functionality, significant changes, architecture decisions, refactoring, redesigning, adding capabilities. Things that benefit from design exploration before implementation.
+- bug: Bug reports, errors, crashes, things not working, debugging, fixing broken behaviour.
+- small: Minor/mechanical changes — config tweaks, renaming, typo fixes, doc updates, git operations (commits, merges, pushes, branching), dependency updates, formatting, style changes.
+- question: Questions about the codebase, explanations, "how does X work", "what does Y do", reading/exploring code without changes.
 
-const SMALL_CHANGE_PATTERNS = [
-	/\b(?:rename|update\s+(?:the\s+)?(?:version|readme|docs?|comment|typo))\b/i,
-	/\b(?:change\s+(?:the\s+)?(?:name|label|text|color|style))\b/i,
-	/\b(?:remove\s+(?:the\s+)?(?:unused|dead|old))\b/i,
-	/\b(?:commit|merge|push|pull|rebase|cherry-pick|stash|checkout|branch)\b/i,
-	/\b(?:git\s+\w+)\b/i,
-	/\b(?:stage|unstage)\b/i,
-];
+Reply with one word: feature, bug, small, or question.`;
 
-function detectTaskType(input: string): "feature" | "bug" | "small" | "unknown" {
-	if (SMALL_CHANGE_PATTERNS.some((p) => p.test(input))) return "small";
-	if (FEATURE_PATTERNS.some((p) => p.test(input))) return "feature";
-	if (BUG_PATTERNS.some((p) => p.test(input))) return "bug";
-	return "unknown";
+async function classifyWithLLM(
+	prompt: string,
+	ctx: { model: any; modelRegistry: any },
+): Promise<TaskType> {
+	try {
+		const candidates = [
+			getModel("github-copilot", "claude-haiku-4.5"),
+			getModel("anthropic", "claude-haiku-4-5"),
+			getModel("github-copilot", "gpt-4o-mini"),
+			getModel("openai", "gpt-4o-mini"),
+			ctx.model,
+		].filter((m) => m != null);
+
+		let classifyModel = ctx.model;
+		for (const candidate of candidates) {
+			const auth = await ctx.modelRegistry.getApiKeyAndHeaders(candidate);
+			if (auth.ok && auth.apiKey) {
+				classifyModel = candidate;
+				break;
+			}
+		}
+
+		if (!classifyModel) return "unknown";
+
+		const auth = await ctx.modelRegistry.getApiKeyAndHeaders(classifyModel);
+		if (!auth.ok || !auth.apiKey) return "unknown";
+
+		const response = await complete(
+			classifyModel,
+			{
+				systemPrompt: CLASSIFY_PROMPT,
+				messages: [
+					{
+						role: "user",
+						content: [{ type: "text", text: prompt.slice(0, 500) }],
+						timestamp: Date.now(),
+					},
+				],
+			},
+			{ apiKey: auth.apiKey, headers: auth.headers },
+		);
+
+		const result = response.content
+			.filter((c): c is { type: "text"; text: string } => c.type === "text")
+			.map((c) => c.text)
+			.join("")
+			.trim()
+			.toLowerCase();
+
+		const valid: TaskType[] = ["feature", "bug", "small", "question"];
+		if (valid.includes(result as TaskType)) return result as TaskType;
+
+		// Handle partial matches (model might say "feature." or "it's a feature")
+		for (const t of valid) {
+			if (result.includes(t)) return t;
+		}
+
+		return "unknown";
+	} catch {
+		return "unknown";
+	}
 }
 
 export default function (pi: ExtensionAPI) {
@@ -103,56 +148,59 @@ export default function (pi: ExtensionAPI) {
 		updateStatus(ctx);
 	});
 
-	// Detect task type from user input and suggest workflow
+	// Classify task type and set workflow phase
 	pi.on("before_agent_start", async (event, ctx) => {
 		const prompt = event.prompt;
 		if (!prompt) return;
 
-		const taskType = detectTaskType(prompt);
+		if (state.phase !== "idle" && state.phase !== "complete") return;
 
-		if (state.phase === "idle" || state.phase === "complete") {
-			state.taskDescription = prompt;
+		state.taskDescription = prompt;
 
-			if (taskType === "feature") {
-				setPhase("brainstorm");
-				updateStatus(ctx);
-				return {
-					message: {
-						customType: "superpowers:workflow-hint",
-						content: [
-							"🔒 WORKFLOW GATE: This looks like a new feature/significant change.",
-							"Start with brainstorming — explore approaches and tradeoffs before planning.",
-							"Load /skill:brainstorming if available, or discuss the design first.",
-							"Use /advance when ready to move to the next phase.",
-						].join("\n"),
-						display: true,
-					},
-				};
-			}
+		ctx.ui.setWidget("workflow", ["🔍 Classifying task..."], { placement: "belowEditor" });
 
-			if (taskType === "bug") {
-				setPhase("implement"); // Bugs go straight to investigate+fix
-				updateStatus(ctx);
-				return {
-					message: {
-						customType: "superpowers:workflow-hint",
-						content: [
-							"🔧 WORKFLOW: Bug fix detected.",
-							"Investigate the root cause first — don't guess at fixes.",
-							"Load /skill:systematic-debugging if available.",
-							"After fixing, verify with tests.",
-						].join("\n"),
-						display: true,
-					},
-				};
-			}
+		const taskType = await classifyWithLLM(prompt, ctx);
 
-			if (taskType === "small") {
-				setPhase("implement");
-				updateStatus(ctx);
-				// Small changes skip brainstorm/plan but still need verification
-			}
+		if (taskType === "feature") {
+			setPhase("brainstorm");
+			updateStatus(ctx);
+			return {
+				message: {
+					customType: "superpowers:workflow-hint",
+					content: [
+						"🔒 WORKFLOW GATE: This looks like a new feature/significant change.",
+						"Start with brainstorming — explore approaches and tradeoffs before planning.",
+						"Load the brainstorming skill, or discuss the design first.",
+						"Use /advance when ready to move to the next phase.",
+					].join("\n"),
+					display: true,
+				},
+			};
 		}
+
+		if (taskType === "bug") {
+			setPhase("implement");
+			updateStatus(ctx);
+			return {
+				message: {
+					customType: "superpowers:workflow-hint",
+					content: [
+						"🔧 WORKFLOW: Bug fix detected.",
+						"Investigate the root cause first — don't guess at fixes.",
+						"Load the systematic-debugging skill.",
+						"After fixing, verify with tests.",
+					].join("\n"),
+					display: true,
+				},
+			};
+		}
+
+		if (taskType === "small") {
+			setPhase("implement");
+			updateStatus(ctx);
+		}
+
+		// "question" and "unknown" — don't set any workflow phase, let the agent respond freely
 	});
 
 	// Gate: block write/edit during brainstorm phase
