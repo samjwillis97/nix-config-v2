@@ -48,6 +48,9 @@ const SMALL_CHANGE_PATTERNS = [
 	/\b(?:rename|update\s+(?:the\s+)?(?:version|readme|docs?|comment|typo))\b/i,
 	/\b(?:change\s+(?:the\s+)?(?:name|label|text|color|style))\b/i,
 	/\b(?:remove\s+(?:the\s+)?(?:unused|dead|old))\b/i,
+	/\b(?:commit|merge|push|pull|rebase|cherry-pick|stash|checkout|branch)\b/i,
+	/\b(?:git\s+\w+)\b/i,
+	/\b(?:stage|unstage)\b/i,
 ];
 
 function detectTaskType(input: string): "feature" | "bug" | "small" | "unknown" {
