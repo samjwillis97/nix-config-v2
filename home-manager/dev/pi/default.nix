@@ -35,6 +35,7 @@
 
     skills.local = [
       ./skills/brainstorming
+      ./skills/creating-a-commit
       ./skills/dispatching-parallel-agents
       ./skills/executing-plans
       ./skills/git-workflow
