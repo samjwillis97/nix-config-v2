@@ -75,7 +75,7 @@ let
   piSandboxed = agentSandbox.mkSandbox {
     pkg = pkgs.llm-agents.pi;
     binName = "pi";
-    outName = "pi-sandboxed";
+    outName = "pi";
     allowedPackages = sandboxCfg.allowedPackages ++ sandboxCfg.extraAllowedPackages;
     # Pi needs write access to its own config dirs so it can
     # install/update extensions and skills at runtime
@@ -280,7 +280,7 @@ in
   config = mkIf cfg.enable (mkMerge [
     {
       # Install pi-agent
-      home.packages = [ pkgs.llm-agents.pi ];
+      home.packages = lib.mkIf (!sandboxCfg.enable) [ pkgs.llm-agents.pi ];
 
       # Merge settings into ~/.pi/agent/settings.json
       # Preserves existing runtime state (auth, sessions, etc.)

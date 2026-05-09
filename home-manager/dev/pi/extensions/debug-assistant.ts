@@ -130,7 +130,7 @@ export default function (pi: ExtensionAPI) {
 			}
 
 			persistState();
-			ctx.ui.setStatus("debug", `🐛 Debugging: ${signature.slice(0, 50)}...`);
+			ctx.ui.setWidget("debug", [`🐛 Debugging: ${signature.slice(0, 50)}...`], { placement: "belowEditor" });
 		} else if (state.isDebugging && !event.isError) {
 			// Error seems resolved — check if last error is gone
 			const command = (event.input as any)?.command || "";
@@ -141,7 +141,7 @@ export default function (pi: ExtensionAPI) {
 				// Tests/build passed — mark issue as potentially resolved
 				const issue = state.issues.get(lastError);
 				if (issue) {
-					ctx.ui.setStatus("debug", `✅ Error may be resolved (${issue.attempts} attempts)`);
+					ctx.ui.setWidget("debug", [], { placement: "belowEditor" });
 					state.isDebugging = false;
 					lastError = null;
 					persistState();
@@ -222,7 +222,7 @@ export default function (pi: ExtensionAPI) {
 			state = { issues: new Map(), totalAttempts: 0, isDebugging: false };
 			lastError = null;
 			writesSinceLastError = 0;
-			ctx.ui.setStatus("debug", "");
+			ctx.ui.setWidget("debug", [], { placement: "belowEditor" });
 			ctx.ui.notify("Debug state cleared.", "info");
 		},
 	});

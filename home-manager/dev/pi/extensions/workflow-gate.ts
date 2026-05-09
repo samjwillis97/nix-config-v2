@@ -171,7 +171,7 @@ export default function (pi: ExtensionAPI) {
 					reason: [
 						"🔒 WORKFLOW GATE: Cannot write/edit code during brainstorming phase.",
 						"The design must be discussed and approved first.",
-						"Write design docs to docs/designs/ if needed.",
+						"Write design docs to docs/specs/ if needed.",
 						"Use /advance to move to the planning phase when the design is approved.",
 					].join("\n"),
 				};
@@ -192,7 +192,7 @@ export default function (pi: ExtensionAPI) {
 					block: true,
 					reason: [
 						"🔒 WORKFLOW GATE: Cannot write/edit code during planning phase.",
-						"Complete the plan first. Write plan docs to docs/plans/.",
+						"Complete the plan first. Write plan docs to docs/plans/ or use the plan tool.",
 						"Use /advance to move to the implementation phase.",
 					].join("\n"),
 				};
@@ -222,6 +222,46 @@ export default function (pi: ExtensionAPI) {
 			setPhase(nextPhase);
 			updateStatus(ctx);
 			ctx.ui.notify(`Advanced to: ${PHASE_ICONS[nextPhase]} ${nextPhase}`, "info");
+
+			// Tell the agent to proceed with the new phase
+			const phaseInstructions: Record<string, string> = {
+				plan: [
+					"The design has been approved. Move to planning.",
+					"Create a detailed implementation plan using the `plan` tool.",
+					"Break the work into small, verifiable steps (2-5 minutes each).",
+					"Each step needs: description, file paths, and a verification command.",
+					"Load the planning skill for guidance.",
+				].join(" "),
+				implement: [
+					"The plan is complete. Move to implementation.",
+					"Execute the plan step by step.",
+					"Use subagents to implement each step in isolation.",
+					"Update plan status after each step. Do not pause to ask — keep going unless blocked.",
+					"Load the executing-plans skill for guidance.",
+				].join(" "),
+				review: [
+					"Implementation is complete. Move to review.",
+					"Run a two-stage review: first spec compliance (did we build what was asked?),",
+					"then code quality (is it well-built?).",
+					"Use /review or dispatch spec-reviewer and reviewer subagents.",
+				].join(" "),
+				verify: [
+					"Review is complete. Move to verification.",
+					"Run the full test suite and build. Show the output.",
+					"Demonstrate the change works with concrete evidence.",
+					"No hedging — show actual results.",
+					"Load the verification skill for guidance.",
+				].join(" "),
+				complete: [
+					"Verification passed. The work is complete.",
+					"Summarise what was done, files changed, and verification results.",
+				].join(" "),
+			};
+
+			const instruction = phaseInstructions[nextPhase];
+			if (instruction) {
+				pi.sendUserMessage(instruction, { deliverAs: "followUp" });
+			}
 		},
 	});
 

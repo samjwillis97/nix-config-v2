@@ -51,13 +51,15 @@ Wait for the human to approve an approach before proceeding. Do NOT start coding
 
 ### 5. Document (for significant designs)
 
-Write a design doc to `docs/designs/`:
+Write a design doc to `docs/specs/`:
 
 ```
-docs/designs/YYYY-MM-DD-<topic>.md
+docs/specs/YYYY-MM-DD-<topic>-design.md
 ```
 
 Include: problem statement, chosen approach, key decisions, open questions.
+
+For smaller features, this is optional — a verbal discussion is sufficient.
 
 ## Red Flags — Rationalizations to Watch For
 

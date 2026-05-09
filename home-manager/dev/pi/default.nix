@@ -48,6 +48,7 @@
     prompts = [
       ./prompts/brainstorm.md
       ./prompts/debug.md
+      ./prompts/gc.md
       ./prompts/implement.md
       ./prompts/implement-and-review.md
       ./prompts/review.md
