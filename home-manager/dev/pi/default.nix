@@ -71,6 +71,7 @@
       ./extensions/session-name.ts
       ./extensions/verification-tracker.ts
       ./extensions/workflow-gate.ts
+      ./extensions/auto-orchestrator.ts
     ];
 
     extensionDirs = [
