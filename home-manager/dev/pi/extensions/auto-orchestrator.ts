@@ -236,6 +236,9 @@ export default function (pi: ExtensionAPI) {
 
 			isOrchestrating = false;
 
+			// Notify workflow gate to re-enable auto-transitions
+			pi.events.emit("auto:orchestration-stopped", undefined);
+
 			// Restore original model
 			if (originalModel) {
 				await pi.setModel(originalModel);
@@ -262,6 +265,9 @@ export default function (pi: ExtensionAPI) {
 			if (!isOrchestrating) return;
 
 			isOrchestrating = false;
+
+			// Notify workflow gate to re-enable auto-transitions
+			pi.events.emit("auto:orchestration-stopped", undefined);
 
 			// Restore original model
 			if (originalModel) {

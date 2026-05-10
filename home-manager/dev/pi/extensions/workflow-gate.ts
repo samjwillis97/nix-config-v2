@@ -16,7 +16,10 @@
  */
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { isToolCallEventType, isBashToolResult } from "@earendil-works/pi-coding-agent";
+import {
+	isToolCallEventType,
+	isBashToolResult,
+} from "@earendil-works/pi-coding-agent";
 import { complete } from "@earendil-works/pi-ai";
 
 type WorkflowPhase =
@@ -280,27 +283,6 @@ function hasTestFailures(output: string): boolean {
 	return TEST_FAILURE_PATTERNS.some((pattern) => pattern.test(output));
 }
 
-/** Extract the agent name from a subagent tool call input */
-function getSubagentName(input: Record<string, unknown>): string | undefined {
-	// Single mode: { agent: "worker", task: "..." }
-	if (typeof input.agent === "string") return input.agent;
-
-	// Chain mode: { chain: [{ agent: "scout", task: "..." }, ...] }
-	if (Array.isArray(input.chain) && input.chain.length > 0) {
-		// Return the first agent in the chain — the chain's intent is set by its first agent
-		const first = input.chain[0];
-		if (typeof first?.agent === "string") return first.agent;
-	}
-
-	// Parallel mode: { tasks: [{ agent: "worker", task: "..." }, ...] }
-	if (Array.isArray(input.tasks) && input.tasks.length > 0) {
-		const first = input.tasks[0];
-		if (typeof first?.agent === "string") return first.agent;
-	}
-
-	return undefined;
-}
-
 /** Get all agent names from a subagent tool call (for multi-agent dispatches) */
 function getAllSubagentNames(input: Record<string, unknown>): string[] {
 	const names: string[] = [];
@@ -332,6 +314,19 @@ export default function (pi: ExtensionAPI) {
 	};
 
 	let pendingClassification: Promise<TaskType> | null = null;
+
+	/** When true, the auto-orchestrator is active and manages its own phases.
+	 *  The workflow gate suppresses auto-transitions and steering messages,
+	 *  but keeps the phase widget updated for visibility. */
+	let autoOrchestratorActive = false;
+
+	// Listen for auto-orchestrator lifecycle events
+	pi.events.on("auto:orchestration-started", () => {
+		autoOrchestratorActive = true;
+	});
+	pi.events.on("auto:orchestration-stopped", () => {
+		autoOrchestratorActive = false;
+	});
 
 	function setPhase(phase: WorkflowPhase, reason?: string) {
 		const prev = state.phase;
@@ -528,8 +523,9 @@ export default function (pi: ExtensionAPI) {
 		}
 
 		// ── Auto-transitions on subagent dispatch ──
+		// (Suppressed when auto-orchestrator is active — it manages its own phases)
 
-		if (isToolCallEventType("subagent", event)) {
+		if (isToolCallEventType("subagent", event) && !autoOrchestratorActive) {
 			const agents = getAllSubagentNames(event.input);
 
 			// implement → review: dispatching a reviewer agent
@@ -546,9 +542,7 @@ export default function (pi: ExtensionAPI) {
 
 			// review → implement: dispatching a worker agent (fix cycle)
 			if (state.phase === "review") {
-				const dispatchingWorker = agents.some((a) =>
-					WORKER_AGENTS.includes(a),
-				);
+				const dispatchingWorker = agents.some((a) => WORKER_AGENTS.includes(a));
 				if (dispatchingWorker) {
 					setPhase("implement", `fix cycle — dispatched ${agents.join(", ")}`);
 					updateStatus(ctx);
@@ -643,6 +637,8 @@ export default function (pi: ExtensionAPI) {
 
 	pi.on("tool_result", async (event, ctx) => {
 		if (!state.gateEnabled) return;
+		// Suppress auto-transitions when auto-orchestrator manages its own phases
+		if (autoOrchestratorActive) return;
 
 		// Only care about bash results for test/build detection
 		if (!isBashToolResult(event)) return;
