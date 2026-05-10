@@ -3,91 +3,171 @@ name: receiving-code-review
 description: Use when you receive code review feedback (from a reviewer subagent, /review command, or human). Guides proper processing of feedback without dismissing or cherry-picking.
 ---
 
-# Receiving Code Review
+# Code Review Reception
 
-## When to Use
+## Overview
 
-- After a reviewer subagent returns findings
-- After `/review` command completes
-- When the human provides code review feedback
-- Any time someone points out issues in your code
+Code review requires technical evaluation, not emotional performance.
 
-## Process
+**Core principle:** Verify before implementing. Ask before assuming. Technical correctness over social comfort.
 
-### 1. Read Everything
-
-Read ALL feedback before responding. Don't start fixing after the first issue.
-
-Categorise what you received:
-- **Critical**: Must fix before proceeding
-- **Important**: Should fix, may require design changes
-- **Minor**: Consider fixing, low risk either way
-
-### 2. Acknowledge Without Defending
-
-For each issue:
-- ✅ "You're right, I missed that edge case. I'll fix it."
-- ✅ "Good catch — the error handling is incomplete."
-- ❌ "That's not really a problem because..."
-- ❌ "I intentionally did it that way" (without explaining why)
-- ❌ "That's out of scope" (unless it genuinely is, with explanation)
-
-If you genuinely disagree, explain your reasoning concretely — but default to accepting the feedback.
-
-### 3. Fix in Priority Order
-
-1. All Critical issues first
-2. Then Important issues
-3. Then Minor issues (unless explicitly deprioritised)
-
-For each fix:
-- Make the change
-- Run verification
-- Note what you changed and why
-
-### 4. Don't Introduce New Issues
-
-When fixing review feedback:
-- Only change what's needed for the fix
-- Don't refactor adjacent code "while you're in there"
-- Run the full test suite after fixes, not just the affected tests
-
-### 5. Report Back
-
-After addressing feedback:
+## The Response Pattern
 
 ```
-## Review Feedback Addressed
+WHEN receiving code review feedback:
 
-### Critical
-- [Issue]: Fixed by [change] in `file.ts:42`. Verified: [output]
-
-### Important
-- [Issue]: Fixed by [change]. Verified: [output]
-
-### Minor
-- [Issue]: Fixed / Deferred (reason)
-
-### Verification
-[Full test suite output]
+1. READ: Complete feedback without reacting
+2. UNDERSTAND: Restate requirement in own words (or ask)
+3. VERIFY: Check against codebase reality
+4. EVALUATE: Technically sound for THIS codebase?
+5. RESPOND: Technical acknowledgment or reasoned pushback
+6. IMPLEMENT: One item at a time, test each
 ```
 
-## Red Flags — Rationalizations to Watch For
+## Forbidden Responses
 
-| Excuse | Why It's Wrong | Do This Instead |
-|--------|---------------|-----------------|
-| "That's a style preference" | If the reviewer flagged it, consider it | Discuss briefly, then defer to the reviewer |
-| "It works fine as-is" | Working ≠ correct. Reviews catch subtle issues | Fix it unless you can prove it's a non-issue |
-| "I'll fix that in a follow-up" | Follow-ups get forgotten | Fix it now unless it's truly a separate concern |
-| "The reviewer doesn't understand the context" | Maybe, but assume they're right first | Re-read their feedback charitably |
-| "These are all minor issues" | Don't downgrade severity to dismiss feedback | Accept the reviewer's categorisation |
-| "I already considered that" | Then why is it in the code wrong? | Fix it and move on |
+**NEVER:**
 
-## Rules
+- "You're absolutely right!"
+- "Great point!" / "Excellent feedback!"
+- "Let me implement that now" (before verification)
 
-- Read ALL feedback before starting fixes
-- Default to accepting feedback — the reviewer caught something you missed
-- Fix Critical issues before anything else
-- Verify after every fix, not just at the end
-- Don't scope-creep fixes — change only what's needed
-- Report back with evidence, not just "fixed"
+**INSTEAD:**
+
+- Restate the technical requirement
+- Ask clarifying questions
+- Push back with technical reasoning if wrong
+- Just start working (actions > words)
+
+## Handling Unclear Feedback
+
+```
+IF any item is unclear:
+  STOP - do not implement anything yet
+  ASK for clarification on unclear items
+
+WHY: Items may be related. Partial understanding = wrong implementation.
+```
+
+**Example:**
+
+```
+Reviewer: "Fix items 1-6"
+You understand 1,2,3,6. Unclear on 4,5.
+
+❌ WRONG: Implement 1,2,3,6 now, ask about 4,5 later
+✅ RIGHT: "I understand items 1,2,3,6. Need clarification on 4 and 5 before proceeding."
+```
+
+## Source-Specific Handling
+
+### From the Human
+
+- **Trusted** — implement after understanding
+- **Still ask** if scope unclear
+- **No performative agreement**
+- **Skip to action** or technical acknowledgment
+
+### From Reviewer Subagents / External Reviewers
+
+```
+BEFORE implementing:
+  1. Check: Technically correct for THIS codebase?
+  2. Check: Breaks existing functionality?
+  3. Check: Reason for current implementation?
+  4. Check: Works on all platforms/versions?
+  5. Check: Does reviewer understand full context?
+
+IF suggestion seems wrong:
+  Push back with technical reasoning
+
+IF can't easily verify:
+  Say so: "I can't verify this without [X]. Should I [investigate/ask/proceed]?"
+
+IF conflicts with human's prior decisions:
+  Stop and discuss with the human first
+```
+
+## YAGNI Check
+
+```
+IF reviewer suggests "implementing properly":
+  grep codebase for actual usage
+
+  IF unused: "This isn't called anywhere. Remove it (YAGNI)?"
+  IF used: Then implement properly
+```
+
+## Implementation Order
+
+```
+FOR multi-item feedback:
+  1. Clarify anything unclear FIRST
+  2. Then implement in this order:
+     - Blocking issues (breaks, security)
+     - Simple fixes (typos, imports)
+     - Complex fixes (refactoring, logic)
+  3. Test each fix individually
+  4. Verify no regressions
+```
+
+## When to Push Back
+
+Push back when:
+
+- Suggestion breaks existing functionality
+- Reviewer lacks full context
+- Violates YAGNI (unused feature)
+- Technically incorrect for this stack
+- Legacy/compatibility reasons exist
+- Conflicts with human's architectural decisions
+
+**How to push back:**
+
+- Use technical reasoning, not defensiveness
+- Ask specific questions
+- Reference working tests/code
+- Involve the human if architectural
+
+## Acknowledging Correct Feedback
+
+When feedback IS correct:
+
+```
+✅ "Fixed. [Brief description of what changed]"
+✅ "Good catch - [specific issue]. Fixed in [location]."
+✅ [Just fix it and show in the code]
+
+❌ "You're absolutely right!"
+❌ "Great point!"
+❌ ANY gratitude expression
+```
+
+**Why no performative agreement:** Actions speak. Just fix it. The code itself shows you heard the feedback.
+
+## Gracefully Correcting Your Pushback
+
+If you pushed back and were wrong:
+
+```
+✅ "You were right - I checked [X] and it does [Y]. Implementing now."
+✅ "Verified this and you're correct. My initial understanding was wrong because [reason]. Fixing."
+
+❌ Long apology
+❌ Defending why you pushed back
+❌ Over-explaining
+```
+
+State the correction factually and move on.
+
+## Common Mistakes
+
+| Mistake                      | Fix                                 |
+| ---------------------------- | ----------------------------------- |
+| Performative agreement       | State requirement or just act       |
+| Blind implementation         | Verify against codebase first       |
+| Batch without testing        | One at a time, test each            |
+| Assuming reviewer is right   | Check if it breaks things           |
+| Avoiding pushback            | Technical correctness > comfort     |
+| Partial implementation       | Clarify all items first             |
+| Can't verify, proceed anyway | State limitation, ask for direction |

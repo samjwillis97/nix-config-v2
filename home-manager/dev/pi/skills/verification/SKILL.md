@@ -5,87 +5,128 @@ description: Use before claiming any work is complete. Ensures actual verificati
 
 # Verification Before Completion
 
-## When to Use
+## Overview
 
-- Before saying "done", "complete", "finished", "implemented", "fixed"
-- Before any completion claim whatsoever
-- Always. Every time. No exceptions.
+Claiming work is complete without verification is dishonesty, not efficiency.
 
-## Requirements
+**Core principle:** Evidence before claims, always.
 
-Before claiming completion, you MUST have:
+**Violating the letter of this rule is violating the spirit of this rule.**
 
-### 1. Test Evidence
+## The Iron Law
 
-Run the relevant tests and show the output:
-```bash
-# Run the test suite
-npm test
-# or the specific tests
-npx vitest run path/to/test.ts
+```
+NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
 ```
 
-Show the actual output. "Tests pass" without output is NOT sufficient.
+If you haven't run the verification command in this message, you cannot claim it passes.
 
-### 2. Build Evidence (if applicable)
+## The Gate Function
 
-```bash
-npm run build
-# or
-cargo build
-# or
-nix build
+```
+BEFORE claiming any status or expressing satisfaction:
+
+1. IDENTIFY: What command proves this claim?
+2. RUN: Execute the FULL command (fresh, complete)
+3. READ: Full output, check exit code, count failures
+4. VERIFY: Does output confirm the claim?
+   - If NO: State actual status with evidence
+   - If YES: State claim WITH evidence
+5. ONLY THEN: Make the claim
+
+Skip any step = lying, not verifying
 ```
 
-### 3. Behavioral Evidence
+## Common Failures
 
-Demonstrate the change works:
-- For API changes: curl/httpie showing the response
-- For CLI changes: run the command, show output
-- For UI changes: describe what you see, or take a screenshot
-- For config changes: show the config is loaded correctly
+| Claim                 | Requires                        | Not Sufficient                 |
+| --------------------- | ------------------------------- | ------------------------------ |
+| Tests pass            | Test command output: 0 failures | Previous run, "should pass"    |
+| Linter clean          | Linter output: 0 errors         | Partial check, extrapolation   |
+| Build succeeds        | Build command: exit 0           | Linter passing, logs look good |
+| Bug fixed             | Test original symptom: passes   | Code changed, assumed fixed    |
+| Regression test works | Red-green cycle verified        | Test passes once               |
+| Agent completed       | VCS diff shows changes          | Agent reports "success"        |
+| Requirements met      | Line-by-line checklist          | Tests passing                  |
 
-### 4. Regression Check
+## Red Flags — STOP
 
-Verify you didn't break existing functionality:
-- Run the full test suite, not just new tests
-- Check related features still work
+If you catch yourself:
 
-## Banned Language
+- Using "should", "probably", "seems to"
+- Expressing satisfaction before verification ("Great!", "Perfect!", "Done!", etc.)
+- About to commit/push/PR without verification
+- Trusting agent success reports
+- Relying on partial verification
+- Thinking "just this once"
+- Tired and wanting work over
+- **ANY wording implying success without having run verification**
 
-These phrases are NOT allowed in completion claims:
+## Rationalization Prevention
 
-| ❌ Don't say | ✅ Say instead |
-|---|---|
-| "should work" | "Tests pass: [output]" |
-| "probably fine" | "Verified by running: [command]" |
-| "I believe this is correct" | "Output confirms: [evidence]" |
-| "seems to work" | "Tested with: [specific test]" |
-| "likely works" | "All 14 tests pass: [output]" |
-| "this should fix it" | "Error no longer reproduces: [output]" |
+| Excuse                                  | Reality                   |
+| --------------------------------------- | ------------------------- |
+| "Should work now"                       | RUN the verification      |
+| "I'm confident"                         | Confidence ≠ evidence     |
+| "Just this once"                        | No exceptions             |
+| "Linter passed"                         | Linter ≠ compiler ≠ tests |
+| "Agent said success"                    | Verify independently      |
+| "I'm tired"                             | Exhaustion ≠ excuse       |
+| "Partial check is enough"               | Partial proves nothing    |
+| "Different words so rule doesn't apply" | Spirit over letter        |
 
-## Red Flags — Rationalizations to Watch For
+## Key Patterns
 
-| Excuse | Why It's Wrong | Do This Instead |
-|--------|---------------|------------------|
-| "I just ran the tests a few turns ago" | Stale evidence is not evidence | Run them again NOW, before claiming completion |
-| "The change is too small to need verification" | Small changes can break things in surprising ways | Verify anyway — it takes seconds |
-| "The tests would be the same as before" | You changed something — prove it still works | Run them and show output |
-| "I can tell from the code it's correct" | Code review is not verification | Run it, don't read it |
-| "There are no tests for this" | That's a problem, not an excuse | Write a test, or at minimum demonstrate the behaviour manually |
-| "The build system is slow" | Slow builds still need to pass | Run it. Time doesn't exempt you from verification |
+**Tests:**
 
-## Process
+```
+✅ [Run test command] [See: 34/34 pass] "All tests pass"
+❌ "Should pass now" / "Looks correct"
+```
 
-1. Run tests → paste output
-2. Run build → paste output (if applicable)
-3. Verify behavior → paste evidence
-4. THEN say "Complete" with a summary referencing the evidence
+**Build:**
 
-## Rules
+```
+✅ [Run build] [See: exit 0] "Build passes"
+❌ "Linter passed" (linter doesn't check compilation)
+```
 
-- No completion claims without fresh evidence from THIS turn
-- Evidence must be from commands you ran, not from memory
-- If tests fail, fix them before claiming completion
-- If there are no tests, that's a problem — mention it
-- Partial completion is fine: "Steps 1-3 complete (verified), step 4 remaining"
+**Requirements:**
+
+```
+✅ Re-read plan → Create checklist → Verify each → Report gaps or completion
+❌ "Tests pass, phase complete"
+```
+
+**Agent delegation:**
+
+```
+✅ Agent reports success → Check VCS diff → Verify changes → Report actual state
+❌ Trust agent report
+```
+
+## When To Apply
+
+**ALWAYS before:**
+
+- ANY variation of success/completion claims
+- ANY expression of satisfaction
+- ANY positive statement about work state
+- Committing, PR creation, task completion
+- Moving to next task
+- Delegating to agents
+
+**Rule applies to:**
+
+- Exact phrases
+- Paraphrases and synonyms
+- Implications of success
+- ANY communication suggesting completion/correctness
+
+## The Bottom Line
+
+**No shortcuts for verification.**
+
+Run the command. Read the output. THEN claim the result.
+
+This is non-negotiable.

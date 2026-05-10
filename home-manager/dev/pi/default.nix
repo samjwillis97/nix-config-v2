@@ -43,10 +43,12 @@
       ./skills/creating-a-commit
       ./skills/dispatching-parallel-agents
       ./skills/executing-plans
+      ./skills/finishing-work
       ./skills/git-workflow
       ./skills/planning
       ./skills/receiving-code-review
       ./skills/systematic-debugging
+      ./skills/testing-discipline
       ./skills/verification
       ./skills/writing-skills
     ];
