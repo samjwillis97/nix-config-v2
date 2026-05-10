@@ -44,7 +44,7 @@ in
           "${daemonScript}"
         ];
         EnvironmentVariables = {
-          PATH = lib.makeBinPath ([ cfg.nodePackage pkgs.coreutils pkgs.findutils pkgs.which pkgs.gnugrep pkgs.openssh pkgs.tmux pkgs.git ] ++ cfg.extraPackages);
+          PATH = lib.makeBinPath ([ cfg.nodePackage pkgs.coreutils pkgs.findutils pkgs.which pkgs.gnugrep pkgs.gnused pkgs.openssh pkgs.tmux pkgs.git ] ++ cfg.extraPackages);
           HOME = config.home.homeDirectory;
           REPO_DAEMON_SOCKET = socketPath;
         };
@@ -67,7 +67,7 @@ in
         Restart = "on-failure";
         RestartSec = 5;
         Environment = [
-          "PATH=${lib.makeBinPath ([ cfg.nodePackage pkgs.coreutils pkgs.findutils pkgs.which pkgs.gnugrep pkgs.openssh pkgs.tmux pkgs.git ] ++ cfg.extraPackages)}"
+          "PATH=${lib.makeBinPath ([ cfg.nodePackage pkgs.coreutils pkgs.findutils pkgs.which pkgs.gnugrep pkgs.gnused pkgs.openssh pkgs.tmux pkgs.git ] ++ cfg.extraPackages)}"
           "REPO_DAEMON_SOCKET=${socketPath}"
         ];
       };
