@@ -6,7 +6,7 @@
  */
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { complete, getModel } from "@earendil-works/pi-ai";
+import { complete } from "@earendil-works/pi-ai";
 
 export default function (pi: ExtensionAPI) {
 	let hasNamed = false;
@@ -40,8 +40,8 @@ export default function (pi: ExtensionAPI) {
 		try {
 			// Try cheap models first, fall back to current model
 			const candidates = [
-				getModel("github-copilot", "claude-haiku-4.5"),
-				getModel("anthropic", "claude-haiku-4-5"),
+				ctx.modelRegistry.find("github-copilot", "claude-haiku-4.5"),
+				ctx.modelRegistry.find("anthropic", "claude-haiku-4-5"),
 				ctx.model,
 			].filter((m) => m != null);
 

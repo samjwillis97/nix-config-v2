@@ -25,7 +25,21 @@
 const net = require("node:net");
 const fs = require("node:fs");
 const path = require("node:path");
-const { execFileSync } = require("node:child_process");
+const { execFile } = require("node:child_process");
+
+function execFileAsync(command, args, options) {
+	return new Promise((resolve, reject) => {
+		execFile(command, args, options, (error, stdout, stderr) => {
+			if (error) {
+				error.stdout = stdout;
+				error.stderr = stderr;
+				reject(error);
+			} else {
+				resolve({ stdout, stderr });
+			}
+		});
+	});
+}
 
 const SOCKET_PATH =
 	process.env.REPO_DAEMON_SOCKET ||
@@ -79,7 +93,7 @@ function getF() {
 	return F_BIN_CACHE.value;
 }
 
-function ensureRepo(owner, repo, branch) {
+async function ensureRepo(owner, repo, branch) {
 	const repoDir = path.join(CODE_ROOT, GIT_DOMAIN, owner, repo);
 
 	// Check if the branch worktree already exists
@@ -125,11 +139,9 @@ function ensureRepo(owner, repo, branch) {
 		: `${owner}/${repo}/main`;
 
 	try {
-		const result = execFileSync(fBin, ["-e", target], {
+		const { stdout: result } = await execFileAsync(fBin, ["-e", target], {
 			encoding: "utf-8",
 			timeout: 120000,
-			input: target + "\n",
-			stdio: ["pipe", "pipe", "pipe"],
 		});
 
 		const resultPath = result.trim();
@@ -156,7 +168,7 @@ function ensureRepo(owner, repo, branch) {
 
 		return { ok: false, error: `f completed but repo not found at expected path` };
 	} catch (err) {
-		// execFileSync error includes stderr noise (like 'which: no tmux')
+		// execFile error includes stderr noise (like 'which: no tmux')
 		// Extract just the meaningful part
 		const stderr = err.stderr?.toString().trim() || "";
 		const stdout = err.stdout?.toString().trim() || "";
@@ -187,7 +199,7 @@ function listBranches(owner, repo) {
 	}
 }
 
-function handleRequest(data) {
+async function handleRequest(data) {
 	try {
 		const req = JSON.parse(data);
 
@@ -255,8 +267,9 @@ function startServer() {
 				buffer = buffer.slice(newlineIdx + 1);
 
 				if (line) {
-					const response = handleRequest(line);
-					conn.write(JSON.stringify(response) + "\n");
+					handleRequest(line).then(response => {
+						conn.write(JSON.stringify(response) + "\n");
+					});
 				}
 			}
 		});

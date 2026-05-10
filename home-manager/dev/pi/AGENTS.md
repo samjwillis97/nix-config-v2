@@ -40,26 +40,6 @@ implement → verify
 
 **Never skip verification.** Every workflow ends with running tests and confirming the change works.
 
-## Anti-Rationalization Rules
-
-Do NOT rationalize skipping workflows. These are NOT valid excuses:
-- "It's simple enough to just code" → Simple to plan too. Do it.
-- "I already know the solution" → Write it down as a plan first.
-- "Tests aren't set up" → Set them up. That's part of the work.
-- "It's just a config change" → Verify the config works.
-- "The user seems to be in a hurry" → Rushing causes rework. Follow the process.
-- "This is a one-line fix" → One-line fixes need verification too.
-
-## Verification Standards
-
-Before claiming any work is complete:
-1. Run the test suite (or relevant subset)
-2. Run the build (if applicable)
-3. Verify the specific change works (manual test, curl, etc.)
-4. Read the actual output — don't assume success
-
-**Banned completion language** (without evidence): "should", "probably", "I believe", "seems to", "likely works"
-
 ## Subagent Usage
 
 When delegating to subagents:

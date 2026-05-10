@@ -118,6 +118,19 @@ export default function (pi: ExtensionAPI) {
 	}
 
 	pi.on("session_start", async (_event, ctx) => {
+		// Disable the built-in plan tool so only this extension's version is active.
+		// Both define a tool named 'plan', so we filter out the builtin one.
+		const allTools = pi.getAllTools();
+		const activeTools = pi.getActiveTools();
+		const builtinPlanNames = new Set(
+			allTools
+				.filter((t) => t.name === "plan" && t.sourceInfo?.source === "builtin")
+				.map((t) => t.name),
+		);
+		if (builtinPlanNames.size > 0) {
+			pi.setActiveTools(activeTools.filter((name) => !builtinPlanNames.has(name)));
+		}
+
 		activePlan = null;
 
 		// Restore from session

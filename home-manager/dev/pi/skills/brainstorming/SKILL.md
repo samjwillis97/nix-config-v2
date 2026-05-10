@@ -19,6 +19,7 @@ description: Use when starting a new feature, design change, or architecture dec
 Ask clarifying questions **one at a time**. Don't overwhelm with a list of 10 questions.
 
 Focus on:
+
 - What problem does this solve?
 - Who/what is affected?
 - What are the constraints?
@@ -63,14 +64,11 @@ For smaller features, this is optional — a verbal discussion is sufficient.
 
 ## Red Flags — Rationalizations to Watch For
 
-| Excuse | Why It's Wrong | Do This Instead |
-|--------|---------------|------------------|
-| "It's simple enough to just code" | Simple problems often have non-obvious tradeoffs | Brainstorm — it takes 2 minutes for simple things |
-| "I already know the best approach" | Confidence ≠ correctness. Explore alternatives | Present at least 2 approaches, even if one is clearly better |
-| "The user seems to want it done quickly" | Rushing leads to rework. Design is faster long-term | Brainstorm briefly — even 3 bullet points per approach helps |
-| "There's only one way to do this" | There's almost never only one way | Think harder. Different tradeoffs exist |
-| "Let me just prototype and we'll see" | Prototyping without design leads to commitment to bad approaches | Design first, then prototype the chosen approach |
-| "This is just a config/style/naming change" | If it doesn't need design, it doesn't need this skill — but be honest about whether it really is trivial | Skip brainstorming only for truly mechanical changes |
+| Excuse                                | Why It's Wrong                                                   | Do This Instead                                              |
+| ------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------ |
+| "I already know the best approach"    | Confidence ≠ correctness. Explore alternatives                   | Present at least 2 approaches, even if one is clearly better |
+| "There's only one way to do this"     | There's almost never only one way                                | Think harder. Different tradeoffs exist                      |
+| "Let me just prototype and we'll see" | Prototyping without design leads to commitment to bad approaches | Design first, then prototype the chosen approach             |
 
 ## Rules
 

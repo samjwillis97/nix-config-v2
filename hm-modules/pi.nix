@@ -317,12 +317,13 @@ in
         done < "$MANAGED_FILE"
 
         # Deploy and record
-        > "$MANAGED_FILE"
+        > "$MANAGED_FILE.new"
         ${concatMapStringsSep "\n" (skill: ''
           skill_name=$(strip_nix_hash "$(basename "${skill}")")
-          echo "$skill_name" >> "$MANAGED_FILE"
+          echo "$skill_name" >> "$MANAGED_FILE.new"
           ${pkgs.rsync}/bin/rsync -rL --chmod=u+rw --delete "${skill}/" "$HOME/.agents/skills/$skill_name/"
         '') allSkillPaths}
+        mv "$MANAGED_FILE.new" "$MANAGED_FILE"
       '';
     })
 
@@ -343,13 +344,14 @@ in
           fi
         done < "$MANAGED_FILE"
 
-        > "$MANAGED_FILE"
+        > "$MANAGED_FILE.new"
         ${concatMapStringsSep "\n" (agent: ''
           agent_base="$(basename "${agent}")"
           agent_name="$(strip_nix_hash "$agent_base")"
-          echo "$agent_name" >> "$MANAGED_FILE"
+          echo "$agent_name" >> "$MANAGED_FILE.new"
           cp "${agent}" "$HOME/.pi/agent/agents/$agent_name"
         '') cfg.agents}
+        mv "$MANAGED_FILE.new" "$MANAGED_FILE"
       '';
     })
 
@@ -369,13 +371,14 @@ in
           fi
         done < "$MANAGED_FILE"
 
-        > "$MANAGED_FILE"
+        > "$MANAGED_FILE.new"
         ${concatMapStringsSep "\n" (prompt: ''
           prompt_base="$(basename "${prompt}")"
           prompt_name="$(strip_nix_hash "$prompt_base")"
-          echo "$prompt_name" >> "$MANAGED_FILE"
+          echo "$prompt_name" >> "$MANAGED_FILE.new"
           cp "${prompt}" "$HOME/.pi/agent/prompts/$prompt_name"
         '') cfg.prompts}
+        mv "$MANAGED_FILE.new" "$MANAGED_FILE"
       '';
     })
 
@@ -401,19 +404,20 @@ in
           fi
         done < "$MANAGED_FILE"
 
-        > "$MANAGED_FILE"
+        > "$MANAGED_FILE.new"
         ${concatMapStringsSep "\n" (ext: ''
           ext_path="${ext}"
           ext_base="$(basename "$ext_path")"
           ext_name="$(strip_nix_hash "$ext_base")"
-          echo "$ext_name" >> "$MANAGED_FILE"
+          echo "$ext_name" >> "$MANAGED_FILE.new"
           cp "${ext}" "$HOME/.pi/agent/extensions/$ext_name"
         '') cfg.extensions}
         ${concatMapStringsSep "\n" (dir: ''
-          echo "${dir.name}/" >> "$MANAGED_FILE"
+          echo "${dir.name}/" >> "$MANAGED_FILE.new"
           rm -rf "$HOME/.pi/agent/extensions/${dir.name}"
           ${pkgs.rsync}/bin/rsync -rL --chmod=u+rw "${dir.src}/" "$HOME/.pi/agent/extensions/${dir.name}/"
         '') cfg.extensionDirs}
+        mv "$MANAGED_FILE.new" "$MANAGED_FILE"
       '';
     })
 

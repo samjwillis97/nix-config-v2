@@ -171,30 +171,30 @@ export default function (pi: ExtensionAPI) {
 			originalModel = ctx.model;
 			originalThinkingLevel = pi.getThinkingLevel();
 
-			// Switch to orchestrator model
+			// Try to switch to preferred orchestrator model, fall back to current model
 			const orchestratorModel = ctx.modelRegistry.find(
 				ORCHESTRATOR_MODEL_PROVIDER,
 				ORCHESTRATOR_MODEL_ID,
 			);
 
+			let usingFallback = false;
 			if (!orchestratorModel) {
-				ctx.ui.notify(
-					`Orchestrator model ${ORCHESTRATOR_MODEL_PROVIDER}/${ORCHESTRATOR_MODEL_ID} not found. Check model availability.`,
-					"error",
-				);
-				return;
+				usingFallback = true;
+			} else {
+				const modelSet = await pi.setModel(orchestratorModel);
+				if (!modelSet) {
+					usingFallback = true;
+				}
 			}
 
-			const modelSet = await pi.setModel(orchestratorModel);
-			if (!modelSet) {
+			if (usingFallback) {
 				ctx.ui.notify(
-					`No API key available for ${ORCHESTRATOR_MODEL_PROVIDER}/${ORCHESTRATOR_MODEL_ID}`,
-					"error",
+					`Falling back to current model — preferred orchestrator model ${ORCHESTRATOR_MODEL_PROVIDER}/${ORCHESTRATOR_MODEL_ID} not available`,
+					"warning",
 				);
-				return;
 			}
 
-			// Set max thinking
+			// Set max thinking regardless of model
 			pi.setThinkingLevel(ORCHESTRATOR_THINKING_LEVEL);
 
 			// Mark orchestration as active

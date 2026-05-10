@@ -48,6 +48,8 @@ const PHASE_ORDER: WorkflowPhase[] = [
 
 const CLASSIFY_PROMPT = `Classify the user's message into exactly one category. Reply with ONLY the category name, nothing else.
 
+You may receive conversation history before the current message. Consider the FULL SCOPE of work discussed, not just the latest message. If previous messages discussed significant changes and the current message asks to implement, plan, or action them, classify based on the scope of ALL the changes, not just the transition message.
+
 Categories:
 - feature: New functionality, significant changes, architecture decisions, refactoring, redesigning, adding capabilities. Things that benefit from design exploration before implementation.
 - bug: Bug reports, errors, crashes, things not working, debugging, fixing broken behaviour.
@@ -55,6 +57,71 @@ Categories:
 - question: Questions about the codebase, explanations, "how does X work", "what does Y do", reading/exploring code without changes.
 
 Reply with one word: feature, bug, small, or question.`;
+
+/**
+ * Build a condensed summary of conversation history for the classifier.
+ * Extracts the last few user/assistant exchanges so the classifier can
+ * understand the full scope of work, not just the latest message.
+ */
+function buildConversationContext(sessionManager: {
+	getEntries: () => any[];
+}): string | undefined {
+	const entries = sessionManager.getEntries();
+	if (entries.length === 0) return undefined;
+
+	const snippets: string[] = [];
+	let totalLen = 0;
+	const MAX_CONTEXT = 800;
+	const MAX_SNIPPET = 150;
+
+	// Walk entries in order, collect last user/assistant text exchanges
+	const exchanges: Array<{ role: string; text: string }> = [];
+	for (const entry of entries) {
+		if (entry.type !== "message" || !entry.message) continue;
+		const msg = entry.message;
+
+		if (msg.role === "user") {
+			const text =
+				typeof msg.content === "string"
+					? msg.content
+					: (msg.content || [])
+							.filter(
+								(c: any): c is { type: "text"; text: string } =>
+									c.type === "text",
+							)
+							.map((c: any) => c.text)
+							.join(" ");
+			if (text.trim()) exchanges.push({ role: "user", text: text.trim() });
+		} else if (msg.role === "assistant") {
+			const text = (msg.content || [])
+				.filter(
+					(c: any): c is { type: "text"; text: string } => c.type === "text",
+				)
+				.map((c: any) => c.text)
+				.join(" ");
+			if (text.trim()) exchanges.push({ role: "assistant", text: text.trim() });
+		}
+	}
+
+	// Take the last 6 exchanges (up to 3 user + 3 assistant)
+	const recent = exchanges.slice(-6);
+	if (recent.length === 0) return undefined;
+
+	for (const ex of recent) {
+		const truncated =
+			ex.text.length > MAX_SNIPPET
+				? ex.text.slice(0, MAX_SNIPPET) + "..."
+				: ex.text;
+		const line =
+			ex.role === "user" ? `- User: ${truncated}` : `- Assistant: ${truncated}`;
+		if (totalLen + line.length > MAX_CONTEXT) break;
+		snippets.push(line);
+		totalLen += line.length;
+	}
+
+	if (snippets.length === 0) return undefined;
+	return `Conversation so far:\n${snippets.join("\n")}\n\nCurrent message:`;
+}
 
 interface ClassifyResult {
 	taskType: TaskType;
@@ -65,6 +132,7 @@ interface ClassifyResult {
 async function classifyWithLLM(
 	prompt: string,
 	ctx: { model: any; modelRegistry: any },
+	contextPrefix?: string,
 ): Promise<ClassifyResult> {
 	// Use modelRegistry.find() instead of getModel() — the registry applies
 	// OAuth baseUrl overrides (e.g., Copilot for Business proxy-ep), while
@@ -112,7 +180,14 @@ async function classifyWithLLM(
 				messages: [
 					{
 						role: "user",
-						content: [{ type: "text", text: prompt.slice(0, 500) }],
+						content: [
+							{
+								type: "text",
+								text: contextPrefix
+									? `${contextPrefix}\n${prompt.slice(0, 500)}`
+									: prompt.slice(0, 500),
+							},
+						],
 						timestamp: Date.now(),
 					},
 				],
@@ -268,21 +343,26 @@ export default function (pi: ExtensionAPI) {
 
 		state.taskDescription = prompt;
 
+		// Build conversation context for classification (only if there's history)
+		const conversationContext = buildConversationContext(ctx.sessionManager);
+
 		ctx.ui.setWidget("workflow", ["🔍 Classifying task..."], {
 			placement: "belowEditor",
 		});
 
 		// Start classification in the background — don't await it
-		pendingClassification = classifyWithLLM(prompt, ctx).then(
-			({ taskType, model, error }) => {
-				if (error) {
-					ctx.ui.notify(`⚠️ Workflow gate: ${error}`, "warning");
-				}
-				applyClassification(taskType, ctx);
-				pendingClassification = null;
-				return taskType;
-			},
-		);
+		pendingClassification = classifyWithLLM(
+			prompt,
+			ctx,
+			conversationContext,
+		).then(({ taskType, model: _model, error }) => {
+			if (error) {
+				ctx.ui.notify(`⚠️ Workflow gate: ${error}`, "warning");
+			}
+			applyClassification(taskType, ctx);
+			pendingClassification = null;
+			return taskType;
+		});
 
 		// Return immediately — agent starts without waiting for classification
 	});
@@ -292,12 +372,14 @@ export default function (pi: ExtensionAPI) {
 	pi.on("tool_call", async (event, ctx) => {
 		if (!state.gateEnabled) return;
 
-		// Only care about write/edit for gating
-		const isWriteOrEdit =
-			isToolCallEventType("write", event) || isToolCallEventType("edit", event);
+		// Only care about write/edit/subagent for gating
+		const isGatedTool =
+			isToolCallEventType("write", event) ||
+			isToolCallEventType("edit", event) ||
+			isToolCallEventType("subagent", event);
 
-		// If classification is still in-flight and this is a write/edit, wait for it
-		if (pendingClassification && isWriteOrEdit) {
+		// If classification is still in-flight and this is a gated tool, wait for it
+		if (pendingClassification && isGatedTool) {
 			await pendingClassification;
 		}
 
@@ -328,6 +410,18 @@ export default function (pi: ExtensionAPI) {
 					].join("\n"),
 				};
 			}
+
+			if (isToolCallEventType("subagent", event)) {
+				updateStatus(ctx);
+				return {
+					block: true,
+					reason: [
+						"🔒 WORKFLOW GATE: Cannot dispatch subagents during brainstorming phase.",
+						"The design must be discussed and approved before delegating implementation work.",
+						"Use /advance to move to the next phase when the design is approved.",
+					].join("\n"),
+				};
+			}
 		}
 
 		if (state.phase === "plan") {
@@ -352,6 +446,18 @@ export default function (pi: ExtensionAPI) {
 					reason: [
 						"🔒 WORKFLOW GATE: Cannot write/edit code during planning phase.",
 						"Complete the plan first. Write plan docs to docs/plans/ or use the plan tool.",
+						"Use /advance to move to the implementation phase.",
+					].join("\n"),
+				};
+			}
+
+			if (isToolCallEventType("subagent", event)) {
+				updateStatus(ctx);
+				return {
+					block: true,
+					reason: [
+						"🔒 WORKFLOW GATE: Cannot dispatch subagents during planning phase.",
+						"Complete the plan first using the plan tool.",
 						"Use /advance to move to the implementation phase.",
 					].join("\n"),
 				};
