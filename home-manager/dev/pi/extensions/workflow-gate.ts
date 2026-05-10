@@ -8,7 +8,7 @@
 
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { isToolCallEventType } from "@mariozechner/pi-coding-agent";
-import { complete, getModel } from "@mariozechner/pi-ai";
+import { complete } from "@mariozechner/pi-ai";
 
 type WorkflowPhase =
 	| "idle"
@@ -56,33 +56,55 @@ Categories:
 
 Reply with one word: feature, bug, small, or question.`;
 
+interface ClassifyResult {
+	taskType: TaskType;
+	model?: string;
+	error?: string;
+}
+
 async function classifyWithLLM(
 	prompt: string,
 	ctx: { model: any; modelRegistry: any },
-): Promise<TaskType> {
-	try {
-		const candidates = [
-			getModel("github-copilot", "claude-haiku-4.5"),
-			getModel("anthropic", "claude-haiku-4-5"),
-			getModel("github-copilot", "gpt-4o-mini"),
-			getModel("openai", "gpt-4o-mini"),
-			ctx.model,
-		].filter((m) => m != null);
+): Promise<ClassifyResult> {
+	// Use modelRegistry.find() instead of getModel() — the registry applies
+	// OAuth baseUrl overrides (e.g., Copilot for Business proxy-ep), while
+	// getModel() returns static built-in definitions with wrong baseUrl.
+	const candidates = [
+		ctx.modelRegistry.find("github-copilot", "claude-haiku-4.5"),
+		ctx.modelRegistry.find("anthropic", "claude-haiku-4-5"),
+		ctx.modelRegistry.find("github-copilot", "gpt-4o-mini"),
+		ctx.modelRegistry.find("openai", "gpt-4o-mini"),
+		ctx.model,
+	].filter((m) => m != null);
 
-		let classifyModel = ctx.model;
-		for (const candidate of candidates) {
-			const auth = await ctx.modelRegistry.getApiKeyAndHeaders(candidate);
-			if (auth.ok && auth.apiKey) {
-				classifyModel = candidate;
-				break;
-			}
+	let classifyModel = ctx.model;
+	for (const candidate of candidates) {
+		const auth = await ctx.modelRegistry.getApiKeyAndHeaders(candidate);
+		if (auth.ok && auth.apiKey) {
+			classifyModel = candidate;
+			break;
 		}
+	}
 
-		if (!classifyModel) return "unknown";
+	if (!classifyModel) {
+		return {
+			taskType: "unknown",
+			error:
+				"No classifier model available (no model with valid API key found)",
+		};
+	}
 
-		const auth = await ctx.modelRegistry.getApiKeyAndHeaders(classifyModel);
-		if (!auth.ok || !auth.apiKey) return "unknown";
+	const modelLabel = `${classifyModel.provider}/${classifyModel.id}`;
+	const auth = await ctx.modelRegistry.getApiKeyAndHeaders(classifyModel);
+	if (!auth.ok || !auth.apiKey) {
+		return {
+			taskType: "unknown",
+			model: modelLabel,
+			error: `No API key for ${modelLabel}`,
+		};
+	}
 
+	try {
 		const response = await complete(
 			classifyModel,
 			{
@@ -106,16 +128,26 @@ async function classifyWithLLM(
 			.toLowerCase();
 
 		const valid: TaskType[] = ["feature", "bug", "small", "question"];
-		if (valid.includes(result as TaskType)) return result as TaskType;
+		if (valid.includes(result as TaskType))
+			return { taskType: result as TaskType, model: modelLabel };
 
 		// Handle partial matches (model might say "feature." or "it's a feature")
 		for (const t of valid) {
-			if (result.includes(t)) return t;
+			if (result.includes(t)) return { taskType: t, model: modelLabel };
 		}
 
-		return "unknown";
-	} catch {
-		return "unknown";
+		return {
+			taskType: "unknown",
+			model: modelLabel,
+			error: `Unexpected classifier response: "${result}"`,
+		};
+	} catch (err: any) {
+		const message = err?.message || String(err);
+		return {
+			taskType: "unknown",
+			model: modelLabel,
+			error: `Classification failed: ${message}`,
+		};
 	}
 }
 
@@ -241,11 +273,16 @@ export default function (pi: ExtensionAPI) {
 		});
 
 		// Start classification in the background — don't await it
-		pendingClassification = classifyWithLLM(prompt, ctx).then((taskType) => {
-			applyClassification(taskType, ctx);
-			pendingClassification = null;
-			return taskType;
-		});
+		pendingClassification = classifyWithLLM(prompt, ctx).then(
+			({ taskType, model, error }) => {
+				if (error) {
+					ctx.ui.notify(`⚠️ Workflow gate: ${error}`, "warning");
+				}
+				applyClassification(taskType, ctx);
+				pendingClassification = null;
+				return taskType;
+			},
+		);
 
 		// Return immediately — agent starts without waiting for classification
 	});
