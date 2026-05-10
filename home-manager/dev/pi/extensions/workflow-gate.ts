@@ -6,9 +6,9 @@
  * Tracks current phase and blocks premature tool calls.
  */
 
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { isToolCallEventType } from "@mariozechner/pi-coding-agent";
-import { complete } from "@mariozechner/pi-ai";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { isToolCallEventType } from "@earendil-works/pi-coding-agent";
+import { complete } from "@earendil-works/pi-ai";
 
 type WorkflowPhase =
 	| "idle"
@@ -376,7 +376,7 @@ export default function (pi: ExtensionAPI) {
 			if (currentIndex >= PHASE_ORDER.length - 1) {
 				setPhase("idle");
 				updateStatus(ctx);
-				ctx.ui.notify("Workflow complete! Ready for new tasks.", "success");
+				ctx.ui.notify("Workflow complete! Ready for new tasks.", "info");
 				return;
 			}
 

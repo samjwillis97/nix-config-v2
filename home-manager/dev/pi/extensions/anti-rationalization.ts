@@ -5,7 +5,7 @@
  * Tracks rationalization patterns and warns the user.
  */
 
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
 interface RationalizationEntry {
 	phrase: string;
@@ -15,7 +15,11 @@ interface RationalizationEntry {
 }
 
 // Rationalization patterns grouped by category
-const RATIONALIZATION_PATTERNS: Array<{ category: string; patterns: RegExp[]; counter: string }> = [
+const RATIONALIZATION_PATTERNS: Array<{
+	category: string;
+	patterns: RegExp[];
+	counter: string;
+}> = [
 	{
 		category: "skipping-design",
 		patterns: [
@@ -24,7 +28,8 @@ const RATIONALIZATION_PATTERNS: Array<{ category: string; patterns: RegExp[]; co
 			/\b(?:let'?s\s+)?(?:just\s+)?(?:jump|dive|go)\s+(?:straight\s+)?(?:in|into|to)\s+(?:coding|implementation|code)/i,
 			/\b(?:no\s+need|unnecessary)\s+to\s+(?:brainstorm|design|plan)\b/i,
 		],
-		counter: "Every change benefits from at least a brief plan. What's the approach?",
+		counter:
+			"Every change benefits from at least a brief plan. What's the approach?",
 	},
 	{
 		category: "skipping-tests",
@@ -35,7 +40,8 @@ const RATIONALIZATION_PATTERNS: Array<{ category: string; patterns: RegExp[]; co
 			/\b(?:we\s+can\s+(?:skip|forego|omit)\s+(?:the\s+)?tests?)\b/i,
 			/\b(?:no\s+test\s+(?:framework|infrastructure)\s+(?:set\s+up|available|configured))\b/i,
 		],
-		counter: "Tests are part of the work. If there's no test infrastructure, set it up.",
+		counter:
+			"Tests are part of the work. If there's no test infrastructure, set it up.",
 	},
 	{
 		category: "skipping-verification",
@@ -64,7 +70,8 @@ const RATIONALIZATION_PATTERNS: Array<{ category: string; patterns: RegExp[]; co
 			/\b(?:to\s+(?:save|speed\s+up|expedite))\b.*\b(?:skip|omit|forego)\b/i,
 			/\b(?:let'?s\s+)?(?:quickly|fast|rapidly)\s+(?:just\s+)?(?:do|make|implement)\b/i,
 		],
-		counter: "Rushing causes rework. Following the process is faster in the long run.",
+		counter:
+			"Rushing causes rework. Following the process is faster in the long run.",
 	},
 ];
 
@@ -77,7 +84,10 @@ export default function (pi: ExtensionAPI) {
 
 		// Restore from session
 		for (const entry of ctx.sessionManager.getEntries()) {
-			if (entry.type === "custom" && entry.customType === "superpowers:rationalization") {
+			if (
+				entry.type === "custom" &&
+				entry.customType === "superpowers:rationalization"
+			) {
 				const data = entry.data as RationalizationEntry;
 				if (data) history.push(data);
 			}
@@ -96,7 +106,11 @@ export default function (pi: ExtensionAPI) {
 			.map((c) => c.text)
 			.join(" ");
 
-		const detected: Array<{ category: string; phrase: string; counter: string }> = [];
+		const detected: Array<{
+			category: string;
+			phrase: string;
+			counter: string;
+		}> = [];
 
 		for (const group of RATIONALIZATION_PATTERNS) {
 			for (const pattern of group.patterns) {
@@ -110,14 +124,20 @@ export default function (pi: ExtensionAPI) {
 
 					history.push({
 						phrase: match[0],
-						context: text.slice(Math.max(0, match.index! - 50), match.index! + match[0].length + 50),
+						context: text.slice(
+							Math.max(0, match.index! - 50),
+							match.index! + match[0].length + 50,
+						),
 						timestamp: Date.now(),
 						category: group.category,
 					});
 
 					pi.appendEntry("superpowers:rationalization", {
 						phrase: match[0],
-						context: text.slice(Math.max(0, match.index! - 50), match.index! + match[0].length + 50),
+						context: text.slice(
+							Math.max(0, match.index! - 50),
+							match.index! + match[0].length + 50,
+						),
 						timestamp: Date.now(),
 						category: group.category,
 					});
@@ -131,7 +151,8 @@ export default function (pi: ExtensionAPI) {
 			rationalizationsThisTurn += detected.length;
 
 			const warnings = detected.map(
-				(d) => `⚠ Detected rationalization (${d.category}): "${d.phrase}"\n  → ${d.counter}`,
+				(d) =>
+					`⚠ Detected rationalization (${d.category}): "${d.phrase}"\n  → ${d.counter}`,
 			);
 
 			ctx.ui.notify(warnings.join("\n\n"), "warning");
@@ -163,7 +184,10 @@ export default function (pi: ExtensionAPI) {
 		description: "Show history of detected rationalization attempts",
 		handler: async (_args, ctx) => {
 			if (history.length === 0) {
-				ctx.ui.notify("No rationalizations detected in this session. 🎉", "success");
+				ctx.ui.notify(
+					"No rationalizations detected in this session. 🎉",
+					"info",
+				);
 				return;
 			}
 

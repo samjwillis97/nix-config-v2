@@ -5,8 +5,8 @@
  * Also provides /session-name [name] to set or show the name manually.
  */
 
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { complete, getModel } from "@mariozechner/pi-ai";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { complete, getModel } from "@earendil-works/pi-ai";
 
 export default function (pi: ExtensionAPI) {
 	let hasNamed = false;
@@ -22,10 +22,16 @@ export default function (pi: ExtensionAPI) {
 		const userMsg = event.messages.find((m) => m.role === "user");
 		if (!userMsg) return;
 
-		const userText = userMsg.content
-			.filter((c): c is { type: "text"; text: string } => c.type === "text")
-			.map((c) => c.text)
-			.join(" ");
+		const rawContent = userMsg.content;
+		const userText =
+			typeof rawContent === "string"
+				? rawContent
+				: rawContent
+						.filter(
+							(c): c is { type: "text"; text: string } => c.type === "text",
+						)
+						.map((c) => c.text)
+						.join(" ");
 
 		if (!userText.trim()) return;
 
@@ -92,7 +98,10 @@ export default function (pi: ExtensionAPI) {
 				ctx.ui.notify(`Session named: ${name}`, "info");
 			} else {
 				const current = pi.getSessionName();
-				ctx.ui.notify(current ? `Session: ${current}` : "No session name set", "info");
+				ctx.ui.notify(
+					current ? `Session: ${current}` : "No session name set",
+					"info",
+				);
 			}
 		},
 	});

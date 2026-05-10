@@ -12,7 +12,7 @@
 import type {
 	ExtensionAPI,
 	ExtensionContext,
-} from "@mariozechner/pi-coding-agent";
+} from "@earendil-works/pi-coding-agent";
 
 const ORCHESTRATOR_MODEL_PROVIDER = "github-copilot";
 const ORCHESTRATOR_MODEL_ID = "claude-opus-4-7";
@@ -214,7 +214,7 @@ export default function (pi: ExtensionAPI) {
 
 			// Set workflow gate phase to implement to avoid it blocking any direct writes
 			// The orchestrator delegates via subagents anyway, but just in case
-			pi.events.emit("auto:orchestration-started");
+			pi.events.emit("auto:orchestration-started", undefined);
 
 			// Send the task as a user message — this triggers the agent loop
 			// The ORCHESTRATION_PROMPT is injected via before_agent_start
@@ -276,7 +276,7 @@ export default function (pi: ExtensionAPI) {
 
 			ctx.ui.notify(
 				"✅ Autonomous orchestration complete. Model and thinking level restored.",
-				"success",
+				"info",
 			);
 		},
 	});

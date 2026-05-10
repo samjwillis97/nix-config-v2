@@ -7,8 +7,8 @@
  * No UI — purely agent-facing guidance.
  */
 
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { isBashToolResult } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { isBashToolResult } from "@earendil-works/pi-coding-agent";
 
 interface VerificationState {
 	testsRun: boolean;

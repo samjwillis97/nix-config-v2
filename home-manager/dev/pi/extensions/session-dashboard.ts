@@ -6,7 +6,10 @@
  * Reads state from other superpowers extensions via session entries.
  */
 
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import type {
+	ExtensionAPI,
+	ExtensionContext,
+} from "@earendil-works/pi-coding-agent";
 
 interface DashboardState {
 	workflowPhase: string;
@@ -36,7 +39,7 @@ const PHASE_ICONS: Record<string, string> = {
 };
 
 export default function (pi: ExtensionAPI) {
-	let state: DashboardState = {
+	const state: DashboardState = {
 		workflowPhase: "idle",
 		testsRun: false,
 		testsPassed: 0,
@@ -77,7 +80,9 @@ export default function (pi: ExtensionAPI) {
 					const data = entry.data as any;
 					if (data?.steps) {
 						state.planTotal = data.steps.length;
-						state.planComplete = data.steps.filter((s: any) => s.status === "done").length;
+						state.planComplete = data.steps.filter(
+							(s: any) => s.status === "done",
+						).length;
 						state.planName = data.name || "";
 					}
 					break;
@@ -94,7 +99,7 @@ export default function (pi: ExtensionAPI) {
 		}
 	}
 
-	function renderWidget(ctx: { ui: { setWidget: (id: string, lines: string[], placement?: string) => void } }) {
+	function renderWidget(ctx: ExtensionContext) {
 		const lines: string[] = [];
 		const parts: string[] = [];
 
@@ -178,17 +183,25 @@ export default function (pi: ExtensionAPI) {
 		description: "Show full session dashboard",
 		handler: async (_args, ctx) => {
 			const lines: string[] = ["═══ Session Dashboard ═══"];
-			lines.push(`Phase: ${PHASE_ICONS[state.workflowPhase] || "❓"} ${state.workflowPhase}`);
+			lines.push(
+				`Phase: ${PHASE_ICONS[state.workflowPhase] || "❓"} ${state.workflowPhase}`,
+			);
 			lines.push("");
 
 			lines.push("── Verification ──");
-			lines.push(`  Tests: ${state.testsRun ? `${state.testsPassed} passed, ${state.testsFailed} failed` : "not run"}`);
-			lines.push(`  Build: ${state.buildPassed === null ? "not run" : state.buildPassed ? "passed" : "failed"}`);
+			lines.push(
+				`  Tests: ${state.testsRun ? `${state.testsPassed} passed, ${state.testsFailed} failed` : "not run"}`,
+			);
+			lines.push(
+				`  Build: ${state.buildPassed === null ? "not run" : state.buildPassed ? "passed" : "failed"}`,
+			);
 			lines.push("");
 
 			if (state.planTotal > 0) {
 				lines.push("── Plan ──");
-				lines.push(`  ${state.planName || "Active plan"}: ${state.planComplete}/${state.planTotal} steps`);
+				lines.push(
+					`  ${state.planName || "Active plan"}: ${state.planComplete}/${state.planTotal} steps`,
+				);
 				lines.push("");
 			}
 
@@ -204,7 +217,8 @@ export default function (pi: ExtensionAPI) {
 			lines.push(`  Duration: ${elapsed} minutes`);
 			lines.push(`  Turns: ${state.totalTurns}`);
 			lines.push(`  Files changed: ${state.filesChanged.size}`);
-			if (state.totalCost > 0) lines.push(`  Cost: $${state.totalCost.toFixed(4)}`);
+			if (state.totalCost > 0)
+				lines.push(`  Cost: $${state.totalCost.toFixed(4)}`);
 
 			if (state.filesChanged.size > 0) {
 				lines.push("");

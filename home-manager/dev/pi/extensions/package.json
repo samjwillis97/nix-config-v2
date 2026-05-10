@@ -1,0 +1,16 @@
+{
+  "name": "pi-extensions-dev",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Development types for pi extensions. Run npm install to set up type checking.",
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "^0.74.0",
+    "@earendil-works/pi-ai": "^0.74.0",
+    "@earendil-works/pi-tui": "^0.74.0",
+    "@earendil-works/pi-agent-core": "^0.74.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}
