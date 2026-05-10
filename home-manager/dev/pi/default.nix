@@ -62,7 +62,7 @@
 
     extensions = [
       ./extensions/anti-rationalization.ts
-      ./extensions/context-curator.ts
+      # ./extensions/context-curator.ts  # disabled: redundant with AGENTS.md skill hints and natural tool use
       ./extensions/debug-assistant.ts
       ./extensions/explore-repo.ts
       ./extensions/plan-mode.ts

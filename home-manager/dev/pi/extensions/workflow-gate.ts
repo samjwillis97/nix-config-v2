@@ -10,7 +10,14 @@ import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { isToolCallEventType } from "@mariozechner/pi-coding-agent";
 import { complete, getModel } from "@mariozechner/pi-ai";
 
-type WorkflowPhase = "idle" | "brainstorm" | "plan" | "implement" | "review" | "verify" | "complete";
+type WorkflowPhase =
+	| "idle"
+	| "brainstorm"
+	| "plan"
+	| "implement"
+	| "review"
+	| "verify"
+	| "complete";
 type TaskType = "feature" | "bug" | "small" | "question" | "unknown";
 
 interface WorkflowState {
@@ -30,7 +37,14 @@ const PHASE_ICONS: Record<WorkflowPhase, string> = {
 	complete: "🎉",
 };
 
-const PHASE_ORDER: WorkflowPhase[] = ["brainstorm", "plan", "implement", "review", "verify", "complete"];
+const PHASE_ORDER: WorkflowPhase[] = [
+	"brainstorm",
+	"plan",
+	"implement",
+	"review",
+	"verify",
+	"complete",
+];
 
 const CLASSIFY_PROMPT = `Classify the user's message into exactly one category. Reply with ONLY the category name, nothing else.
 
@@ -113,16 +127,74 @@ export default function (pi: ExtensionAPI) {
 		gateEnabled: true,
 	};
 
+	// Pending classification promise — tool_call can await this for write/edit gating
+	let pendingClassification: Promise<TaskType> | null = null;
+
 	function setPhase(phase: WorkflowPhase) {
 		state.phase = phase;
 		state.phaseHistory.push({ phase, timestamp: Date.now() });
-		pi.appendEntry("superpowers:workflow", { phase, taskDescription: state.taskDescription });
+		pi.appendEntry("superpowers:workflow", {
+			phase,
+			taskDescription: state.taskDescription,
+		});
 	}
 
-	function updateStatus(ctx: { ui: { setWidget: (id: string, lines: string[], options?: any) => void } }) {
+	function updateStatus(ctx: {
+		ui: { setWidget: (id: string, lines: string[], options?: any) => void };
+	}) {
 		const icon = PHASE_ICONS[state.phase];
 		const gate = state.gateEnabled ? "🔒" : "🔓";
-		ctx.ui.setWidget("workflow", [`${icon} ${state.phase} ${gate}`], { placement: "belowEditor" });
+		ctx.ui.setWidget("workflow", [`${icon} ${state.phase} ${gate}`], {
+			placement: "belowEditor",
+		});
+	}
+
+	/** Apply classification result: update phase, send steering message if needed */
+	function applyClassification(
+		taskType: TaskType,
+		ctx: {
+			ui: { setWidget: (id: string, lines: string[], options?: any) => void };
+		},
+	) {
+		if (taskType === "feature") {
+			setPhase("brainstorm");
+			updateStatus(ctx);
+			pi.sendMessage(
+				{
+					customType: "superpowers:workflow-hint",
+					content: [
+						"🔒 WORKFLOW GATE: This looks like a new feature/significant change.",
+						"Start with brainstorming — explore approaches and tradeoffs before planning.",
+						"Load the brainstorming skill, or discuss the design first.",
+						"Use /advance when ready to move to the next phase.",
+					].join("\n"),
+					display: true,
+				},
+				{ deliverAs: "steer" },
+			);
+		} else if (taskType === "bug") {
+			setPhase("implement");
+			updateStatus(ctx);
+			pi.sendMessage(
+				{
+					customType: "superpowers:workflow-hint",
+					content: [
+						"🔧 WORKFLOW: Bug fix detected.",
+						"Investigate the root cause first — don't guess at fixes.",
+						"Load the systematic-debugging skill.",
+						"After fixing, verify with tests.",
+					].join("\n"),
+					display: true,
+				},
+				{ deliverAs: "steer" },
+			);
+		} else if (taskType === "small") {
+			setPhase("implement");
+			updateStatus(ctx);
+		} else {
+			// "question" or "unknown" — no workflow phase, let the agent respond freely
+			updateStatus(ctx);
+		}
 	}
 
 	pi.on("session_start", async (_event, ctx) => {
@@ -132,12 +204,19 @@ export default function (pi: ExtensionAPI) {
 			phaseHistory: [],
 			gateEnabled: true,
 		};
+		pendingClassification = null;
 
 		// Restore state from session
 		const entries = ctx.sessionManager.getEntries();
 		for (const entry of entries) {
-			if (entry.type === "custom" && entry.customType === "superpowers:workflow") {
-				const data = entry.data as { phase: WorkflowPhase; taskDescription: string };
+			if (
+				entry.type === "custom" &&
+				entry.customType === "superpowers:workflow"
+			) {
+				const data = entry.data as {
+					phase: WorkflowPhase;
+					taskDescription: string;
+				};
 				if (data?.phase) {
 					state.phase = data.phase;
 					state.taskDescription = data.taskDescription || "";
@@ -148,7 +227,7 @@ export default function (pi: ExtensionAPI) {
 		updateStatus(ctx);
 	});
 
-	// Classify task type and set workflow phase
+	// Classify task type — fire-and-forget, does NOT block agent startup
 	pi.on("before_agent_start", async (event, ctx) => {
 		const prompt = event.prompt;
 		if (!prompt) return;
@@ -157,65 +236,47 @@ export default function (pi: ExtensionAPI) {
 
 		state.taskDescription = prompt;
 
-		ctx.ui.setWidget("workflow", ["🔍 Classifying task..."], { placement: "belowEditor" });
+		ctx.ui.setWidget("workflow", ["🔍 Classifying task..."], {
+			placement: "belowEditor",
+		});
 
-		const taskType = await classifyWithLLM(prompt, ctx);
+		// Start classification in the background — don't await it
+		pendingClassification = classifyWithLLM(prompt, ctx).then((taskType) => {
+			applyClassification(taskType, ctx);
+			pendingClassification = null;
+			return taskType;
+		});
 
-		if (taskType === "feature") {
-			setPhase("brainstorm");
-			updateStatus(ctx);
-			return {
-				message: {
-					customType: "superpowers:workflow-hint",
-					content: [
-						"🔒 WORKFLOW GATE: This looks like a new feature/significant change.",
-						"Start with brainstorming — explore approaches and tradeoffs before planning.",
-						"Load the brainstorming skill, or discuss the design first.",
-						"Use /advance when ready to move to the next phase.",
-					].join("\n"),
-					display: true,
-				},
-			};
-		}
-
-		if (taskType === "bug") {
-			setPhase("implement");
-			updateStatus(ctx);
-			return {
-				message: {
-					customType: "superpowers:workflow-hint",
-					content: [
-						"🔧 WORKFLOW: Bug fix detected.",
-						"Investigate the root cause first — don't guess at fixes.",
-						"Load the systematic-debugging skill.",
-						"After fixing, verify with tests.",
-					].join("\n"),
-					display: true,
-				},
-			};
-		}
-
-		if (taskType === "small") {
-			setPhase("implement");
-			updateStatus(ctx);
-		}
-
-		// "question" and "unknown" — don't set any workflow phase, let the agent respond freely
-		if (taskType === "question" || taskType === "unknown") {
-			updateStatus(ctx);
-		}
+		// Return immediately — agent starts without waiting for classification
 	});
 
-	// Gate: block write/edit during brainstorm phase
+	// Gate: block write/edit during brainstorm/plan phase.
+	// If classification is still pending, await it before deciding.
 	pi.on("tool_call", async (event, ctx) => {
 		if (!state.gateEnabled) return;
 
+		// Only care about write/edit for gating
+		const isWriteOrEdit =
+			isToolCallEventType("write", event) || isToolCallEventType("edit", event);
+
+		// If classification is still in-flight and this is a write/edit, wait for it
+		if (pendingClassification && isWriteOrEdit) {
+			await pendingClassification;
+		}
+
 		if (state.phase === "brainstorm") {
-			if (isToolCallEventType("write", event) || isToolCallEventType("edit", event)) {
+			if (
+				isToolCallEventType("write", event) ||
+				isToolCallEventType("edit", event)
+			) {
 				const path = (event.input as any)?.path || "";
 
 				// Allow writing design docs
-				if (path.includes("docs/") || path.includes("designs/") || path.includes("plans/")) {
+				if (
+					path.includes("docs/") ||
+					path.includes("designs/") ||
+					path.includes("plans/")
+				) {
 					return;
 				}
 
@@ -233,11 +294,18 @@ export default function (pi: ExtensionAPI) {
 		}
 
 		if (state.phase === "plan") {
-			if (isToolCallEventType("write", event) || isToolCallEventType("edit", event)) {
+			if (
+				isToolCallEventType("write", event) ||
+				isToolCallEventType("edit", event)
+			) {
 				const path = (event.input as any)?.path || "";
 
 				// Allow writing plan docs
-				if (path.includes("docs/") || path.includes("plans/") || path.includes("designs/")) {
+				if (
+					path.includes("docs/") ||
+					path.includes("plans/") ||
+					path.includes("designs/")
+				) {
 					return;
 				}
 
@@ -261,7 +329,10 @@ export default function (pi: ExtensionAPI) {
 			const currentIndex = PHASE_ORDER.indexOf(state.phase);
 
 			if (state.phase === "idle") {
-				ctx.ui.notify("No active workflow. Start by describing a task.", "warning");
+				ctx.ui.notify(
+					"No active workflow. Start by describing a task.",
+					"warning",
+				);
 				return;
 			}
 
@@ -275,7 +346,10 @@ export default function (pi: ExtensionAPI) {
 			const nextPhase = PHASE_ORDER[currentIndex + 1];
 			setPhase(nextPhase);
 			updateStatus(ctx);
-			ctx.ui.notify(`Advanced to: ${PHASE_ICONS[nextPhase]} ${nextPhase}`, "info");
+			ctx.ui.notify(
+				`Advanced to: ${PHASE_ICONS[nextPhase]} ${nextPhase}`,
+				"info",
+			);
 
 			// Tell the agent to proceed with the new phase
 			const phaseInstructions: Record<string, string> = {
@@ -321,13 +395,25 @@ export default function (pi: ExtensionAPI) {
 
 	// /phase - set phase directly
 	pi.registerCommand("phase", {
-		description: "Set workflow phase (brainstorm, plan, implement, review, verify, complete, idle)",
+		description:
+			"Set workflow phase (brainstorm, plan, implement, review, verify, complete, idle)",
 		handler: async (args, ctx) => {
 			const phase = args.trim().toLowerCase() as WorkflowPhase;
-			const validPhases: WorkflowPhase[] = ["idle", "brainstorm", "plan", "implement", "review", "verify", "complete"];
+			const validPhases: WorkflowPhase[] = [
+				"idle",
+				"brainstorm",
+				"plan",
+				"implement",
+				"review",
+				"verify",
+				"complete",
+			];
 
 			if (!validPhases.includes(phase)) {
-				ctx.ui.notify(`Invalid phase. Valid: ${validPhases.join(", ")}`, "error");
+				ctx.ui.notify(
+					`Invalid phase. Valid: ${validPhases.join(", ")}`,
+					"error",
+				);
 				return;
 			}
 
