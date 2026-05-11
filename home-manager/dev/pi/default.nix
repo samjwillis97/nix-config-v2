@@ -103,6 +103,8 @@ in
       bun
       pnpm
       rsync
+      openssh
+      difftastic
     ];
 
     sandbox.extraStateDirs = [
@@ -110,6 +112,7 @@ in
       "$HOME/.cache"
       "$HOME/.config/gh"
       "$HOME/.config/git"
+      "$HOME/.ssh"
       "/nix/var/nix/daemon-socket"
     ];
   };
