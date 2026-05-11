@@ -99,13 +99,9 @@ in
     sandbox.extraAllowedPackages = with pkgs; [
       gh
       f
-      nix
       bun
       pnpm
       rsync
-      openssh
-      difftastic
-      gnused
     ];
 
     sandbox.extraStateDirs = [

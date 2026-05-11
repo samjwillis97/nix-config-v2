@@ -189,18 +189,20 @@ in
     };
 
     extensionDirs = mkOption {
-      type = types.listOf (types.submodule {
-        options = {
-          name = mkOption {
-            type = types.str;
-            description = "Directory name under ~/.pi/agent/extensions/.";
+      type = types.listOf (
+        types.submodule {
+          options = {
+            name = mkOption {
+              type = types.str;
+              description = "Directory name under ~/.pi/agent/extensions/.";
+            };
+            src = mkOption {
+              type = types.path;
+              description = "Source directory to copy.";
+            };
           };
-          src = mkOption {
-            type = types.path;
-            description = "Source directory to copy.";
-          };
-        };
-      });
+        }
+      );
       default = [ ];
       description = "Extension directories (for multi-file extensions like subagent/).";
     };
@@ -223,6 +225,7 @@ in
       allowedPackages = mkOption {
         type = types.listOf types.package;
         default = with pkgs; [
+          file
           coreutils
           which
           git
@@ -233,6 +236,11 @@ in
           findutils
           jq
           nodejs
+          python3
+          openssh
+          difftastic
+          gnused
+          nix
         ];
         description = "Base set of packages available inside the sandbox.";
       };
