@@ -64,12 +64,18 @@ let
   allSkillPaths = cfg.skills.local ++ builtins.concatMap resolveSkillSource cfg.skills.sources;
 
   # Build the settings.json content
+  # Merge nixPackages store paths into the packages list as local path entries
+  extraPackages = cfg.extraSettings.packages or [ ];
+  nixPackagePaths = map (pkg: "${pkg}") cfg.nixPackages;
+  mergedPackages = extraPackages ++ nixPackagePaths;
+
   piSettings =
     lib.filterAttrs (_: v: v != null) {
       defaultProvider = cfg.defaultProvider;
       defaultModel = cfg.defaultModel;
     }
-    // cfg.extraSettings;
+    // cfg.extraSettings
+    // (if mergedPackages != [ ] then { packages = mergedPackages; } else { });
 
   # Sandbox derivation
   piSandboxed = agentSandbox.mkSandbox {
@@ -115,6 +121,16 @@ in
         Freeform settings merged into ~/.pi/agent/settings.json.
         These are merged on top of existing settings, preserving
         runtime state (auth, sessions, lastChangelogVersion, etc.).
+      '';
+    };
+
+    nixPackages = mkOption {
+      type = types.listOf types.package;
+      default = [ ];
+      description = ''
+        Nix-built pi packages (e.g. npm packages built as derivations).
+        Each package's store path is added as a local path entry in the
+        packages list in settings.json.
       '';
     };
 
@@ -425,7 +441,9 @@ in
     (mkIf (cfg.rules != null) {
       home.activation.pi-rules = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         mkdir -p $HOME/.pi/agent
+        rm -f "$HOME/.pi/agent/AGENTS.md"
         cp "${cfg.rules}" "$HOME/.pi/agent/AGENTS.md"
+        chmod u+w "$HOME/.pi/agent/AGENTS.md"
       '';
     })
 

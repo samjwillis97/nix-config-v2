@@ -4,6 +4,9 @@
   flake,
   ...
 }:
+let
+  rpivAskUser = import ./packages/rpiv-ask-user-question.nix { inherit pkgs; };
+in
 {
   imports = [
     ../../../hm-modules/pi.nix
@@ -23,10 +26,11 @@
       packages = [
         "git:github.com/apmantza/pi-lens@v3.8.42"
         "git:github.com/MasuRii/pi-tool-display@v0.3.6"
-        # "npm:@juicesharp/rpiv-ask-user-question@1.4.0"
         "git:github.com/Gurpartap/pi-mermaid@v0.3.0"
       ];
     };
+
+    nixPackages = [ rpivAskUser ];
 
     rules = ./AGENTS.md;
 
