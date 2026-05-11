@@ -15,7 +15,7 @@
 
   programs = {
     dconf.enable = true;
-    light.enable = true;
+    # light.enable = true;
   };
 
   services.libinput = {
@@ -44,5 +44,12 @@
     ];
   };
 
-  programs.regreet.enable = true;
+  programs.regreet = {
+    enable = true;
+    cageArgs = [
+      "-s"
+      "-m"
+      "last"
+    ];
+  };
 }

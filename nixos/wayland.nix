@@ -7,7 +7,7 @@
 
 {
   # Enable PAM integration necessary for e.g.: swaylock
-  security.pam.services.hyprlock = {};
+  security.pam.services.hyprlock = { };
 
   environment.sessionVariables = {
     MOZ_ENABLE_WAYLAND = "1";
@@ -22,7 +22,7 @@
   # Configure special programs (i.e. hardware access)
   programs = {
     dconf.enable = true;
-    light.enable = true;
+    # light.enable = true;
   };
 
   services = {

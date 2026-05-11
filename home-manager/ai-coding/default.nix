@@ -26,7 +26,7 @@ let
   ++ getFilesInDir ./plugins ".js"
   ++ (if pkgs.stdenv.isDarwin then getFilesInDir ./plugins/darwin ".js" else [ ]);
 
-  workEnabled = config.modules.darwin.work;
+  # workEnabled = config.modules.darwin.work;
 in
 {
   imports = [
@@ -400,19 +400,19 @@ in
       extraSettings = {
         share = "disabled";
         plugin = [ ];
-        provider = lib.mkIf workEnabled {
-          amazon-bedrock = {
-            options = {
-              region = "ap-southeast-2";
-              profile = "default";
-            };
-            models = {
-              "anthropic-claude-sonnet-4.5" = {
-                id = "{file:~/.config/opencode/bedrock/inference-profile.txt}";
-              };
-            };
-          };
-        };
+        # provider = lib.mkIf workEnabled {
+        #   amazon-bedrock = {
+        #     options = {
+        #       region = "ap-southeast-2";
+        #       profile = "default";
+        #     };
+        #     models = {
+        #       "anthropic-claude-sonnet-4.5" = {
+        #         id = "{file:~/.config/opencode/bedrock/inference-profile.txt}";
+        #       };
+        #     };
+        #   };
+        # };
         instructions = [
           ".instructions.md"
           "CONTRIBUTING.md"
