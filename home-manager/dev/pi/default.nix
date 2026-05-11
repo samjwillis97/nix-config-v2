@@ -109,6 +109,7 @@ in
       "$HOME/.npm"
       "$HOME/.cache"
       "$HOME/.config/gh"
+      "$HOME/.config/git"
       "/nix/var/nix/daemon-socket"
     ];
   };
