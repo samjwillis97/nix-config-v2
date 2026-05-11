@@ -91,6 +91,17 @@ implement → verify
 
 **Never skip verification.** Every workflow ends with running tests and confirming the change works.
 
+## Workflow Gate
+
+The `brainstorm` and `plan` phases are **gated** — you cannot write code, edit files, or dispatch subagents until the user runs `/advance` to move to the next phase. The `implement → review → verify` phases auto-transition based on your actions.
+
+Because the user must manually advance gated phases, you **must** tell them when you've finished a phase and are ready to move on. Don't leave them guessing.
+
+- When you finish brainstorming and the design is agreed upon, say clearly: _"The design is ready. Please run `/advance` to move to planning."_
+- When the plan is complete, say clearly: _"The plan is ready. Please run `/advance` to move to implementation."_
+- If you have a question at the same time as finishing a phase, ask it — the user can answer and advance together by running `/advance <their answer>`.
+- Never assume the user knows about the gate. Always be explicit about what's needed.
+
 ## Subagent Usage
 
 When delegating to subagents:

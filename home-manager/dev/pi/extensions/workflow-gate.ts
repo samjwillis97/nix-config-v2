@@ -476,6 +476,25 @@ export default function(pi: ExtensionAPI) {
     updateStatus(ctx);
   });
 
+  // ── Phase context injection ────────────────────────────────────────
+
+  pi.on("before_agent_start", async (event, ctx) => {
+    // Always inject current phase so the agent knows where it is
+    if (state.phase !== "idle") {
+      const isManualGate = MANUAL_GATE_PHASES.includes(state.phase);
+      const gateNote = isManualGate
+        ? " (gated — user must run /advance to proceed)"
+        : "";
+      return {
+        message: {
+          customType: "superpowers:workflow-phase",
+          content: `Current workflow phase: ${PHASE_ICONS[state.phase]} ${state.phase}${gateNote}`,
+          display: false,
+        },
+      };
+    }
+  });
+
   // ── Classification ─────────────────────────────────────────────────
 
   pi.on("before_agent_start", async (event, ctx) => {
@@ -704,7 +723,7 @@ export default function(pi: ExtensionAPI) {
 
   pi.registerCommand("advance", {
     description: "Advance to the next workflow phase",
-    handler: async (_args, ctx) => {
+    handler: async (args, ctx) => {
       const currentIndex = PHASE_ORDER.indexOf(state.phase);
 
       if (state.phase === "idle") {
@@ -776,6 +795,12 @@ export default function(pi: ExtensionAPI) {
       const instruction = phaseInstructions[nextPhase];
       if (instruction) {
         pi.sendUserMessage(instruction, { deliverAs: "followUp" });
+      }
+
+      // If the user provided extra context with /advance, send it as a follow-up
+      const extraContext = args.trim();
+      if (extraContext) {
+        pi.sendUserMessage(extraContext, { deliverAs: "followUp" });
       }
     },
   });
