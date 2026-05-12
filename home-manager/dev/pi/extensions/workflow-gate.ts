@@ -447,14 +447,24 @@ export default function(pi: ExtensionAPI) {
   // ── Session lifecycle ──────────────────────────────────────────────
 
   pi.on("session_start", async (_event, ctx) => {
+    // Disable workflow gate entirely inside subagent processes.
+    // Subagents are short-lived workers that should execute their task
+    // without classification, steering, or tool blocking.
+    const isSubagent = process.env.PI_SUBAGENT === "1";
+
     state = {
       phase: "idle",
       taskDescription: "",
       phaseHistory: [],
-      gateEnabled: true,
+      gateEnabled: !isSubagent,
       verificationPassed: false,
     };
     pendingClassification = null;
+
+    if (isSubagent) {
+      updateStatus(ctx);
+      return;
+    }
 
     const entries = ctx.sessionManager.getEntries();
     for (const entry of entries) {
