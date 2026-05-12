@@ -18,6 +18,8 @@ interface VerificationState {
 	buildPassed: boolean;
 	lastVerifiedAt: number | null;
 	turnsSinceVerification: number;
+	/** Whether any code-modifying tools (write/edit) were used this session */
+	codeModified: boolean;
 }
 
 const TEST_PATTERNS = [
@@ -119,6 +121,9 @@ function hasTestOutput(output: string): boolean {
 }
 
 export default function (pi: ExtensionAPI) {
+	/** Disabled inside subagent processes — they don't need verification nudges. */
+	const disabled = process.env.PI_SUBAGENT === "1";
+
 	let state: VerificationState = {
 		testsRun: false,
 		testsPassed: 0,
@@ -127,6 +132,7 @@ export default function (pi: ExtensionAPI) {
 		buildPassed: false,
 		lastVerifiedAt: null,
 		turnsSinceVerification: 0,
+		codeModified: false,
 	};
 
 	function resetState() {
@@ -138,11 +144,14 @@ export default function (pi: ExtensionAPI) {
 			buildPassed: false,
 			lastVerifiedAt: null,
 			turnsSinceVerification: 0,
+			codeModified: false,
 		};
 	}
 
 	pi.on("session_start", async (_event, ctx) => {
 		resetState();
+
+		if (disabled) return;
 
 		for (const entry of ctx.sessionManager.getEntries()) {
 			if (entry.type === "custom" && entry.customType === "superpowers:verification") {
@@ -153,10 +162,21 @@ export default function (pi: ExtensionAPI) {
 	});
 
 	pi.on("turn_start", async (_event, _ctx) => {
+		if (disabled) return;
 		state.turnsSinceVerification++;
 	});
 
+	// Track code-modifying tool calls so we only nudge for verification
+	// when code was actually changed (not during brainstorming/planning).
+	pi.on("tool_call", async (event, _ctx) => {
+		if (disabled) return;
+		if (event.toolName === "write" || event.toolName === "edit") {
+			state.codeModified = true;
+		}
+	});
+
 	pi.on("tool_result", async (event, _ctx) => {
+		if (disabled) return;
 		if (!isBashToolResult(event)) return;
 
 		const command = (event.input as any)?.command || "";
@@ -185,6 +205,7 @@ export default function (pi: ExtensionAPI) {
 	});
 
 	pi.on("message_end", async (event, _ctx) => {
+		if (disabled) return;
 		if (event.message.role !== "assistant") return;
 
 		const text = event.message.content
@@ -196,7 +217,7 @@ export default function (pi: ExtensionAPI) {
 		const hasWeaselWords = WEASEL_WORDS.some((p) => p.test(text));
 
 		// Steer the agent back to verification when it claims completion without evidence
-		if (isCompletion && !state.testsRun && state.turnsSinceVerification > 0) {
+		if (isCompletion && !state.testsRun && state.codeModified && state.turnsSinceVerification > 0) {
 			pi.sendMessage(
 				{
 					customType: "superpowers:verification-nudge",
