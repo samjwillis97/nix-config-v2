@@ -70,6 +70,9 @@ function isFixAttempt(command: string): boolean {
 }
 
 export default function (pi: ExtensionAPI) {
+	/** Disabled inside subagent processes — short-lived and don't need fix-attempt tracking. */
+	const isSubagent = process.env.PI_SUBAGENT === "1";
+
 	let state: DebugState = {
 		issues: new Map(),
 		totalAttempts: 0,
@@ -97,6 +100,7 @@ export default function (pi: ExtensionAPI) {
 
 	// Track errors from bash output
 	pi.on("tool_result", async (event, ctx) => {
+		if (isSubagent) return;
 		if (!isBashToolResult(event)) return;
 
 		const output = event.content
@@ -152,6 +156,7 @@ export default function (pi: ExtensionAPI) {
 
 	// Track write/edit as fix attempts when debugging
 	pi.on("tool_call", async (event, ctx) => {
+		if (isSubagent) return;
 		if (!state.isDebugging || !lastError) return;
 
 		if (event.toolName === "write" || event.toolName === "edit") {

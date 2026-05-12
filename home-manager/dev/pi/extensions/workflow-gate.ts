@@ -489,6 +489,8 @@ export default function(pi: ExtensionAPI) {
   // ── Phase context injection ────────────────────────────────────────
 
   pi.on("before_agent_start", async (event, ctx) => {
+    if (!state.gateEnabled) return;
+
     // Always inject current phase so the agent knows where it is
     if (state.phase !== "idle") {
       const isManualGate = MANUAL_GATE_PHASES.includes(state.phase);
@@ -508,6 +510,8 @@ export default function(pi: ExtensionAPI) {
   // ── Classification ─────────────────────────────────────────────────
 
   pi.on("before_agent_start", async (event, ctx) => {
+    if (!state.gateEnabled) return;
+
     const prompt = event.prompt;
     if (!prompt) return;
 
