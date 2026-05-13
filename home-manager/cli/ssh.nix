@@ -16,12 +16,12 @@ in
 
   programs.ssh = {
     enable = true;
-    compression = true;
-    forwardAgent = true;
 
     matchBlocks."github.com" = {
       identityFile = builtins.replaceStrings [ "$HOME" ] [ "~" ] config.age.secrets."ssh-key".path;
       identitiesOnly = true;
+      compression = true;
+      forwardAgent = true;
     };
   };
 

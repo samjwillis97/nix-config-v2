@@ -1,8 +1,29 @@
-{ ... }:
+{ pkgs, ... }:
+let
+  isDarwin = pkgs.stdenv.isDarwin;
+in
 {
-  imports = [
-    ../../hm-modules/ghostty
-  ];
+  programs.ghostty = {
+    enable = true;
 
-  modules.ghostty.enable = true;
+    systemd.enable = true;
+
+    settings = {
+      title = " ";
+      macos-titlebar-style = "hidden";
+      cursor-style = "block";
+      font-feature = "-calt";
+      font-thicken = true;
+      shell-integration-features = "no-cursor";
+    }
+    // (
+      if isDarwin then
+        {
+
+          window-colorspace = "display-p3";
+        }
+      else
+        { }
+    );
+  };
 }

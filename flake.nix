@@ -23,6 +23,19 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Theme manager
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    base16 = {
+      url = "github:SenchoPens/base16.nix";
+    };
+    tt-schemes = {
+      url = "github:tinted-theming/schemes";
+      flake = false;
+    };
+
     # Hyprland Window Manager
     hyprland = {
       url = "github:hyprwm/Hyprland";
@@ -56,7 +69,6 @@
     microvm = {
       url = "github:astro/microvm.nix";
       inputs = {
-        flake-utils.follows = "flake-utils";
         nixpkgs.follows = "nixpkgs";
       };
     };
@@ -166,21 +178,9 @@
     {
       self,
       nixpkgs,
-      nur,
       flake-utils,
-      modular-neovim,
-      agenix,
-      nix-serve,
-      hyprland,
-      microvm,
-      f,
-      httpcraft,
-      httpcraft-mcp,
       deploy-rs,
-      firefox-darwin,
-      terranix,
       nixos-wsl,
-      nix-auth,
       ...
     }@inputs:
     let
@@ -400,7 +400,7 @@
           pkgs = import self.inputs.nixpkgs { inherit system; };
         in
         {
-          formatter = pkgs.nixfmt-rfc-style;
+          formatter = pkgs.nixfmt;
         }
       ))
 

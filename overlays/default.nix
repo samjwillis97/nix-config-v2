@@ -32,6 +32,16 @@ in
       ghostty = flake.inputs.ghostty.packages.${system}.default;
       nix-auth = inputs.nix-auth.packages.${system}.default;
       pi-agent = inputs.pi-agent.packages.${system}.pi-agent;
+      # cage 0.2.1 segfaults with newer libwayland-server; override to 0.3.0
+      # cage = prev.cage.overrideAttrs (old: rec {
+      #   version = "0.3.0";
+      #   src = prev.fetchFromGitHub {
+      #     owner = "cage-kiosk";
+      #     repo = "cage";
+      #     rev = "v${version}";
+      #     hash = "sha256-NLoz11bfeZwesmwLmyytuB6/vSwIsnDWKzyAXFe+YZ0=";
+      #   };
+      # });
     })
     inputs.nur.overlays.default
     inputs.brew-nix.overlays.default

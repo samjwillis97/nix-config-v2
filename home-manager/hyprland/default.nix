@@ -38,8 +38,8 @@ let
 in
 {
   imports = [
-    ./wofi.nix # drun menu
-    ./waybar.nix # status bar
+    ./rofi.nix # drun menu
+    ./ashell.nix # status bar
     ./hyprlock.nix # lock screen
     ./hypridle.nix # idle management
     ./swaync.nix # notifications
@@ -87,12 +87,10 @@ in
         follow_mouse = 2; # Cursor focus will be detached from keyboard focus. Clicking on a window will move keyboard focus to that window.
       };
 
-      general = with config.theme.colors; {
+      general = {
         border_size = 2;
         gaps_in = 8;
         gaps_out = 15;
-        "col.active_border" = "rgb(${lib.removePrefix "#" base0D})";
-        "col.inactive_border" = "rgb(${lib.removePrefix "#" base01})";
       };
 
       decoration = {
@@ -109,7 +107,6 @@ in
       };
 
       misc = {
-        # font_family = "";
         vrr = 3;
       };
 
@@ -123,8 +120,11 @@ in
       ];
 
       bind = [
-        "$mod, Return, exec, alacritty"
-        "$mod, d, exec, wofi --show run"
+        "$mod, Return, exec, ghostty"
+        "$mod, d, exec, rofi -show drun"
+
+        # Other Rofi
+        "$mod, TAB, exec, rofi -show window -modi window"
 
         "$mod, Space, toggleFloating"
 
@@ -236,7 +236,9 @@ in
         "pin on, match:title ^(Picture.in.[Pp]icture)$"
 
         # Runelite
-        "float on, match:title ^Runelite.*$"
+        "float on, match:title ^Bolt Launcher$"
+        "float on, match:title ^RuneLite$"
+        "float on, match:title ^RuneLite Launcher$"
 
         # Plexamp
         "float on, match:class ^(Plexamp)$"

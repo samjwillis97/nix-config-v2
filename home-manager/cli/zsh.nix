@@ -12,7 +12,7 @@ let
 
   p10kTheme = ./zsh/p10k.zsh;
 
-  initExtra = with config.theme.colors; ''
+  initExtra = ''
     setopt INC_APPEND_HISTORY   # Write to history file immediate, not on exit
     setopt HIST_SAVE_NO_DUPS    # DO no write a duplicate event
     setopt HIST_VERIFY          # Do not execute immediately
@@ -29,11 +29,6 @@ let
     bindkey -s ^f "${pkgs.f}/bin/f -l\n\n"
 
     export CDPATH="$CDPATH:../:../../"
-
-    export FZF_DEFAULT_OPTS=" \
-        --color=bg+:${base02},bg:${base00},spinner:${base06},hl:${base08} \
-        --color=fg:${base05},header:${base08},info:${base0E},pointer:${base06} \
-        --color=marker:${base06},fg+:${base05},prompt:${base0E},hl+:${base08}"
 
     # See: https://discourse.nixos.org/t/brew-not-on-path-on-m1-mac/26770/4
     # Cache brew shellenv to avoid repeated subprocess calls
@@ -60,6 +55,9 @@ let
     # Seems to be a problem once I removed oh-mh-zsh, delete key would enter a ~
     bindkey "^[[3~" delete-char
 
+    # Use emacs keybindings (^A, ^E, ^K, etc.)
+    bindkey -e
+
     # better history completion
     autoload -U up-line-or-beginning-search
     autoload -U down-line-or-beginning-search
@@ -67,6 +65,9 @@ let
     zle -N down-line-or-beginning-search
     bindkey "^[[A" up-line-or-beginning-search
     bindkey "^[[B" down-line-or-beginning-search
+    # Also bind application cursor keys (sent by some terminals in DECCKM mode)
+    bindkey "^[OA" up-line-or-beginning-search
+    bindkey "^[OB" down-line-or-beginning-search
 
     source ${p10kTheme}
   '';

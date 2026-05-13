@@ -52,6 +52,8 @@ in
           (baseModule // { meta.extraHomeModules = extraHomeModules; })
           ../hosts/${hostname}
           inputs.agenix.nixosModules.default
+          inputs.stylix.nixosModules.stylix
+          inputs.base16.nixosModule
           ../shared
           ../modules
         ]
@@ -68,6 +70,7 @@ in
               ;
             extraHomeModules = [
               inputs.httpcraft.homeManagerModules.${system}.httpcraft
+              # inputs.stylix.homeModules.stylix
             ]
             ++ extraHomeModules;
             isDarwin = false;
@@ -101,6 +104,8 @@ in
           ../hosts/${hostname}
           inputs.agenix.darwinModules.default
           inputs.nix-homebrew.darwinModules.nix-homebrew
+          inputs.stylix.darwinModules.stylix
+          inputs.base16.nixosModule
           ../shared
         ]
         ++ extraModules;
@@ -115,6 +120,7 @@ in
             extraHomeModules = [
               inputs.httpcraft.homeManagerModules.${system}.httpcraft
               inputs.agenix.homeManagerModules.age
+              inputs.stylix.homeModules.stylix
               ../hm-modules
             ]
             ++ extraHomeModules;
@@ -158,7 +164,11 @@ in
           super.meta = {
             hostname = hostname;
             username = username;
-            extraHomeModules = [ inputs.agenix.homeManagerModules.age ] ++ extraHomeModules;
+            extraHomeModules = [
+              inputs.agenix.homeManagerModules.age
+              inputs.stylix.homeModules.stylix
+            ]
+            ++ extraHomeModules;
             isDarwin = isDarwin;
           };
         };

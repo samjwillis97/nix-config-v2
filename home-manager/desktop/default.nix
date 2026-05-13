@@ -28,8 +28,8 @@
     xclip
     chromium
     filezilla
-    xfce.thunar
-    xfce.thunar-archive-plugin
+    thunar
+    thunar-archive-plugin
     obs-studio
     peek
     btop

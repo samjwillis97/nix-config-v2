@@ -11,9 +11,6 @@
   # Okay now I have the most plain cursor in the world on personal-desktop so I am confused
   home = {
     pointerCursor = {
-      package = pkgs.adwaita-icon-theme;
-      name = "Adwaita";
-      size = 16;
       x11.enable = true;
       gtk.enable = true;
     };
@@ -25,49 +22,30 @@
 
   gtk = {
     enable = true;
-    font = {
-      package = pkgs.noto-fonts;
-      name = "Noto Sans";
-    };
-    iconTheme = {
-      package = pkgs.arc-icon-theme;
-      name = "Arc";
-    };
-    theme = {
-      name = "Arc-Dark";
-      package = pkgs.arc-theme;
-    };
-  };
-
-  dconf.settings = {
-    "org/gnome/desktop/interface" = {
-      color-scheme = "prefer-dark";
-    };
   };
 
   qt = {
     enable = true;
-    style.name = "gtk2";
   };
 
   services.xsettingsd = {
     enable = true;
-    settings =
-      with config;
-      {
-        # When running, most GNOME/GTK+ applications prefer those settings
-        # instead of *.ini files
-        "Net/IconThemeName" = gtk.iconTheme.name;
-        "Net/ThemeName" = gtk.theme.name;
-        "Gtk/CursorThemeName" = xsession.pointerCursor.name;
-      }
-      // lib.optionalAttrs (super ? fonts.fontconfig) {
-        # Applications like Java/Wine doesn't use Fontconfig settings,
-        # but uses it from here
-        "Xft/Hinting" = super.fonts.fontconfig.hinting.enable;
-        "Xft/HintStyle" = super.fonts.fontconfig.hinting.style;
-        "Xft/Antialias" = super.fonts.fontconfig.antialias;
-        "Xft/RGBA" = super.fonts.fontconfig.subpixel.lcdfilter;
-      };
+    # settings =
+    # with config;
+    # {
+    #   # When running, most GNOME/GTK+ applications prefer those settings
+    #   # instead of *.ini files
+    #   "Net/IconThemeName" = gtk.iconTheme.name;
+    #   "Net/ThemeName" = gtk.theme.name;
+    #   "Gtk/CursorThemeName" = xsession.pointerCursor.name;
+    # }
+    # // lib.optionalAttrs (super ? fonts.fontconfig) {
+    #   # Applications like Java/Wine doesn't use Fontconfig settings,
+    #   # but uses it from here
+    #   "Xft/Hinting" = super.fonts.fontconfig.hinting.enable;
+    #   "Xft/HintStyle" = super.fonts.fontconfig.hinting.style;
+    #   "Xft/Antialias" = super.fonts.fontconfig.antialias;
+    #   "Xft/RGBA" = super.fonts.fontconfig.subpixel.lcdfilter;
+    # };
   };
 }

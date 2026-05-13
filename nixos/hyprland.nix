@@ -44,12 +44,13 @@
     ];
   };
 
-  programs.regreet = {
+  services.greetd = {
     enable = true;
-    cageArgs = [
-      "-s"
-      "-m"
-      "last"
-    ];
+    settings = {
+      default_session = {
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --cmd '${pkgs.uwsm}/bin/uwsm start -e -D Hyprland hyprland.desktop'";
+        user = "greeter";
+      };
+    };
   };
 }
