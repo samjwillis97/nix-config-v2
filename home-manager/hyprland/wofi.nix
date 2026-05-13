@@ -7,83 +7,58 @@
 {
   programs.wofi = {
     enable = true;
-    # plugins = [
-    #     pkgs.rofi-emoji
-    #     pkgs.rofi-calc
-    #     pkgs.rofi-file-browser
-    # ];
 
-    # extraConfig = {
-    #   modi = "window,drun,run,ssh,emoji,calc,filebrowser";
-    #   terminal = "alacritty";
-    #   show-icons = true;
-    #   drun-display-format = "{icon} {name}";
-    #   hide-scrollbar = true;
-    # };
+    settings = {
+      show = "drun";
+      allow_images = true;
+      image_size = 28;
+      hide_scroll = true;
+      insensitive = true;
+    };
 
-    # font = with config.theme.fonts; "${gui.package} 14";
+    # NOTE: Wofi has limited plugin support compared to rofi.
+    # There are no equivalents for rofi-emoji, rofi-calc, rofi-file-browser, etc.
+    # For window switching, use `wofi --show window` via a Hyprland keybinding.
 
-    # theme =
-    #   let l = config.lib.formats.rasi.mkLiteral;
-    #   in
-    #   with config.theme.colors; {
-    #     "*" = {
-    #       background-color = l base00;
-    #       border-color = l base01;
-    #       text-color = l base05;
-    #       spacing = 0;
-    #       width = l "512px";
-    #     };
+    style = with config.theme.colors; ''
+      * {
+        font-family: "${config.theme.fonts.gui.name}", sans-serif;
+        font-size: 14px;
+      }
 
-    #     window = {
-    #       height = l "360px";
-    #       border = l "3px";
-    #       border-color = l base01;
-    #       background-color = l base00;
-    #     };
+      window {
+        background-color: ${base00};
+        color: ${base05};
+        border: 2px solid ${base0D};
+        border-radius: 8px;
+      }
 
-    #     inputbar = {
-    #       border = l "0 0 1px 0";
-    #       children = map l [ "prompt" "entry" ];
-    #     };
+      #outer-box {
+        margin: 4px;
+      }
 
-    #     prompt = {
-    #       padding = l "16px";
-    #       border = l "0 1px 0 0";
-    #     };
+      #input {
+        margin: 4px;
+        padding: 8px 12px;
+        border: none;
+        border-bottom: 2px solid ${base0D};
+        background-color: ${base01};
+        color: ${base05};
+      }
 
-    #     textbox = {
-    #       background-color = l base01;
-    #       border = l "0 0 1px 0";
-    #       border-color = l base00;
-    #       padding = l "8px 16px";
-    #     };
+      #scroll {
+        margin: 4px;
+      }
 
-    #     entry = { padding = l "16px"; };
+      #entry {
+        padding: 4px 8px;
+        border-radius: 4px;
+      }
 
-    #     listview = {
-    #       cycle = true;
-    #       margin = l "0 0 -1px 0";
-    #       scrollbar = false;
-    #     };
-
-    #     element = {
-    #       border = l "2px";
-    #       border-color = l base00;
-    #       padding = l "8px";
-    #     };
-
-    #     element-icon = {
-    #       size = l "28px";
-    #       border = l "0 4px";
-    #       border-color = l base00;
-    #     };
-
-    #     "element selected" = {
-    #       border-color = l base0D;
-    #       color = l base00;
-    #     };
-    #   };
-    # };
+      #entry:selected {
+        background-color: ${base0D};
+        color: ${base00};
+      }
+    '';
   };
 }

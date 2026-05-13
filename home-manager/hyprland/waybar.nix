@@ -18,7 +18,7 @@
         spacing = 4;
 
         "custom/notification" = {
-          format = "  ";
+          format = "  ";
           on-click = pkgs.writeShellScript "open-notifications" ''
             ${config.services.swaync.package}/bin/swaync-client -t -sw
           '';
@@ -26,11 +26,71 @@
         };
 
         "custom/powermenu" = {
-          format = " ⏻ ";
+          format = " ⏻  ";
           on-click = pkgs.writeShellScript "open-power-menu" ''
             ${pkgs.wlogout}/bin/wlogout
           '';
           on-click-right = "hyprlock";
+        };
+
+        "custom/mic" = {
+          format = "{}";
+          exec = pkgs.writeShellScript "mic-status" ''
+            if ${pkgs.wireplumber}/bin/wpctl get-volume @DEFAULT_SOURCE@ | grep -q "\[MUTED\]"; then
+              echo "󰍭  MUTED"
+            else
+              echo "󰍬  MIC ON"
+            fi
+          '';
+          interval = 1;
+          on-click = pkgs.writeShellScript "mic-toggle" ''
+            ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SOURCE@ toggle
+          '';
+        };
+
+        pulseaudio = {
+          format = "{icon} {volume}%";
+          format-bluetooth = "{volume}%";
+          format-muted = "";
+          format-icons = {
+            default = [
+              ""
+              ""
+              ""
+            ];
+          };
+          on-click = pkgs.writeShellScript "audio-toggle-mute" ''
+            ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SINK@ toggle
+          '';
+        };
+
+        cpu = {
+          format = "   {usage}%";
+          interval = 1;
+        };
+
+        memory = {
+          format = "  {percentage}%";
+        };
+
+        disk = {
+          path = "/";
+          format = "  {percentage_used}%";
+        };
+
+        network = {
+          format-wifi = "{essid}";
+          format-ethernet = "󰈀  {ipaddr}";
+          format-disconnected = "󰖪 Disconnected";
+        };
+
+        load = {
+          format = "   {load1}";
+          interval = 1;
+        };
+
+        tray = {
+          spacing = 10;
         };
 
         modules-left = [
@@ -43,6 +103,14 @@
 
         modules-right = [
           "mpd"
+          "tray"
+          "network"
+          "disk"
+          "cpu"
+          "memory"
+          "load"
+          "pulseaudio"
+          "custom/mic"
           "clock"
           "custom/notification"
           "custom/powermenu"
@@ -79,7 +147,7 @@
       }
 
       #waybar {
-      	font-family: 'Source Code Pro', sans-serif;
+      	font-family: '${config.theme.fonts.gui.name}', 'Font Awesome 5 Free Solid', 'Font Awesome 5 Brands', 'FiraCode Nerd Font Mono', sans-serif;
       	font-size: 1.2em;
       	font-weight: 400;
         color: @base04;
@@ -123,7 +191,7 @@
         border-left: none;
       }
 
-      #mode, #battery, #cpu, #memory, #network, #pulseaudio, #idle_inhibitor, #backlight, #custom-storage, #custom-updates, #custom-weather, #custom-mail, #clock, #temperature {
+      #mode, #battery, #cpu, #memory, #network, #pulseaudio, #idle_inhibitor, #backlight, #custom-storage, #custom-updates, #custom-weather, #custom-mail, #clock, #temperature, #disk, #custom-mic, #load {
         margin: 4px 2px;
         padding: 0 6px;
         background-color: @base02;
@@ -137,6 +205,10 @@
 
       #pulseaudio.bluetooth {
         color: @base0C;
+      }
+
+      #custom-mic {
+        color: @base0B;
       }
 
       #clock {

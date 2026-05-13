@@ -6,6 +6,35 @@
 }:
 let
   workspaceCount = 9;
+
+  toggleMuteScript = pkgs.writeShellApplication {
+    name = "toggle-mute";
+    runtimeInputs = [
+      pkgs.wireplumber
+      pkgs.libnotify
+      pkgs.gnugrep
+    ];
+    text = ''
+      wpctl set-mute @DEFAULT_SOURCE@ toggle && \
+      if wpctl get-volume @DEFAULT_SOURCE@ | grep -q "\\[MUTED\\]"; then \
+        notify-send -u critical -t 5000 --replace-id=432 'Microphone: OFF'; \
+      else \
+        notify-send -u critical -t 5000 --replace-id=432 'Microphone: ON'; \
+      fi
+    '';
+  };
+
+  screenshotDir = "${config.xdg.userDirs.pictures}";
+
+  fullScreenShot = pkgs.writeShellScript "full-screenshot" ''
+    ${pkgs.grim}/bin/grim "${screenshotDir}/$(date +%Y-%m-%d_%H-%M-%S)-screenshot.png" && \
+    ${pkgs.libnotify}/bin/notify-send -u normal -t 5000 'Full screenshot taken'
+  '';
+
+  areaScreenShot = pkgs.writeShellScript "area-screenshot" ''
+    ${pkgs.grim}/bin/grim -g "$(${pkgs.slurp}/bin/slurp)" "${screenshotDir}/$(date +%Y-%m-%d_%H-%M-%S)-screenshot.png" && \
+    ${pkgs.libnotify}/bin/notify-send -u normal -t 5000 'Area screenshot taken'
+  '';
 in
 {
   imports = [
@@ -31,18 +60,6 @@ in
     systemd = {
       enable = false;
     };
-
-    # TODO: Pipewire (screen sharing)
-    # TODO: Authentication Agent?..
-    # TODO: QT Wayland Support
-    # TODO: Clipboard Manager
-
-    # TODO: Theme
-    # TODO: Background
-    # TODO: Media Keys
-    # TODO: STatus Bard
-
-    # hyprctl dispatch exit
 
     settings = {
       # Monitor settings
@@ -70,8 +87,21 @@ in
         follow_mouse = 2; # Cursor focus will be detached from keyboard focus. Clicking on a window will move keyboard focus to that window.
       };
 
+      general = with config.theme.colors; {
+        border_size = 2;
+        gaps_in = 8;
+        gaps_out = 15;
+        "col.active_border" = "rgb(${lib.removePrefix "#" base0D})";
+        "col.inactive_border" = "rgb(${lib.removePrefix "#" base01})";
+      };
+
       decoration = {
         rounding = 4;
+      };
+
+      dwindle = {
+        pseudotile = true;
+        preserve_split = true;
       };
 
       animations = {
@@ -110,11 +140,108 @@ in
 
         "$mod SHIFT, q, killactive"
 
+        # Browser
+        "$mod, N, exec, firefox"
+
+        # Fullscreen
+        "$mod, F, fullscreen"
+
+        # Split orientation (dwindle)
+        "$mod, S, layoutmsg, preselect d"
+        "$mod, V, layoutmsg, preselect r"
+
+        # Group (tabbed equivalent)
+        "$mod SHIFT, W, togglegroup"
+        "$mod SHIFT, E, changegroupactive, f"
+        "$mod SHIFT, O, changegroupactive, b"
+
+        # Focus mode toggle
+        "$mod SHIFT, Space, alterzorder, top"
+
+        # Sticky window
+        "$mod CONTROL, Space, pin"
+
+        # Scratchpad
+        "$mod SHIFT, minus, movetoworkspacesilent, special:scratchpad"
+        "$mod, minus, togglespecialworkspace, scratchpad"
+
+        # Resize with $mod+Ctrl+hjkl
+        "$mod CONTROL, H, resizeactive, -20 0"
+        "$mod CONTROL, J, resizeactive, 0 20"
+        "$mod CONTROL, K, resizeactive, 0 -20"
+        "$mod CONTROL, L, resizeactive, 20 0"
+
+        # Reload config
+        "$mod SHIFT, C, exec, hyprctl reload"
+
+        # Window switcher (Alt+Tab style)
+        "$mod, Tab, cyclenext"
+        "$mod SHIFT, Tab, cyclenext, prev"
+
+        # Move workspace to monitor
+        "$mod CONTROL SUPER, H, movecurrentworkspacetomonitor, l"
+        "$mod CONTROL SUPER, J, movecurrentworkspacetomonitor, d"
+        "$mod CONTROL SUPER, K, movecurrentworkspacetomonitor, u"
+        "$mod CONTROL SUPER, L, movecurrentworkspacetomonitor, r"
+
+        # Close all notifications
+        "CONTROL SHIFT, Space, exec, swaync-client --close-all"
+
+        # Mute toggle with notification
+        "$mod, M, exec, ${lib.getExe toggleMuteScript}"
+
+        # Screenshots
+        ", Print, exec, ${fullScreenShot}"
+        "SHIFT, Print, exec, ${areaScreenShot}"
       ]
       ++ (lib.genList (n: "$mod, ${toString (n + 1)}, workspace, ${toString (n + 1)}") workspaceCount)
       ++ (lib.genList (
         n: "$mod SHIFT, ${toString (n + 1)}, movetoworkspace, ${toString (n + 1)}"
       ) workspaceCount);
+
+      bindel = [
+        ", XF86AudioRaiseVolume, exec, ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
+        ", XF86AudioLowerVolume, exec, ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+        ", XF86MonBrightnessUp, exec, ${pkgs.brightnessctl}/bin/brightnessctl set 5%+"
+        ", XF86MonBrightnessDown, exec, ${pkgs.brightnessctl}/bin/brightnessctl set 5%-"
+      ];
+
+      bindl = [
+        ", XF86AudioMute, exec, ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+        ", XF86AudioMicMute, exec, ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SOURCE@ toggle"
+        ", XF86AudioPlay, exec, ${pkgs.playerctl}/bin/playerctl play-pause"
+        ", XF86AudioStop, exec, ${pkgs.playerctl}/bin/playerctl stop"
+        ", XF86AudioNext, exec, ${pkgs.playerctl}/bin/playerctl next"
+        ", XF86AudioPrev, exec, ${pkgs.playerctl}/bin/playerctl previous"
+      ];
+
+      windowrule = [
+        # Steam windows
+        "float on, match:class ^(steam)$, match:title ^(Friends)$"
+        "float on, match:class ^(steam)$, match:title ^(Steam - News)$"
+        "float on, match:class ^(steam)$, match:title .* - Chat$"
+        "float on, match:class ^(steam)$, match:title ^(Settings)$"
+        "float on, match:class ^(steam)$, match:title .* - event started$"
+        "float on, match:class ^(steam)$, match:title .* CD key$"
+        "float on, match:class ^(steam)$, match:title ^(Steam - Self Updater)$"
+        "float on, match:class ^(steam)$, match:title ^(Screenshot Uploader)$"
+        "float on, match:class ^(steam)$, match:title ^(Steam Guard).*$"
+
+        # Pop-ups and dialogs
+        "float on, match:title ^(Settings)$"
+        "float on, match:title ^(splash)$"
+
+        # PiP
+        "float on, match:title ^(Picture.in.[Pp]icture)$"
+        "pin on, match:title ^(Picture.in.[Pp]icture)$"
+
+        # Runelite
+        "float on, match:title ^Runelite.*$"
+
+        # Plexamp
+        "float on, match:class ^(Plexamp)$"
+        "pin on, match:class ^(Plexamp)$"
+      ];
     };
   };
 }

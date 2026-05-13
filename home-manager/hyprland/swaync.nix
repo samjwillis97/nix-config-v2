@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 {
   home.packages = with pkgs; [
     libnotify
@@ -11,7 +11,7 @@
       timeout = 10;
       transition-time = 200;
 
-      keyboard-shortcutes = true;
+      keyboard-shortcuts = true;
 
       image-visibility = "when-available";
 
@@ -38,24 +38,38 @@
       # notification-body-image-width = 200;
     };
 
-    style = ''
-    * {
-      font-family: "Fire Sans", sans-serif;
-      font-size: 14px;
-    }
+    style = with config.theme.colors; ''
+      * {
+        font-family: "${config.theme.fonts.gui.name}", sans-serif;
+        font-size: 14px;
+      }
 
-    .notification {
-      background-color: #222222;
-      border-radius: 10px;
-      color: #ffffff;
-      border: 1px solid #444444;
-    }
+      .notification {
+        background-color: ${base01};
+        border-radius: 10px;
+        color: ${base05};
+        border: 1px solid ${base02};
+      }
 
-    .control-center {
-      background-color: #333333;
-      border-radius: 10px;
-      color: #ffffff;
-    }
+      .low-urgency {
+        border-left: 4px solid ${base0D};
+      }
+
+      .normal-urgency {
+        border-left: 4px solid ${base0B};
+      }
+
+      .critical-urgency {
+        background-color: ${base02};
+        border-left: 4px solid ${base08};
+      }
+
+      .control-center {
+        background-color: ${base00};
+        border-radius: 10px;
+        color: ${base05};
+        border: 1px solid ${base01};
+      }
     '';
   };
 }
