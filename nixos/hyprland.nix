@@ -32,7 +32,6 @@
     withUWSM = true;
 
     xwayland.enable = true;
-
   };
 
   xdg.portal = {

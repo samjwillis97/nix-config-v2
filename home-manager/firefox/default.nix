@@ -113,6 +113,7 @@ in
       };
       settings = {
         "browser.quitShortcut.disabled" = true;
+        "general.autoScroll" = true;
       };
     };
     # TODO: Bookmarks

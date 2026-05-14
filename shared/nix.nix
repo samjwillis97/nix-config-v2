@@ -22,4 +22,14 @@ in
     # Ensure we can still build when missing-server is not accessible
     fallback = true
   '';
+
+  # Automatically run garbage collection weekly, removing generations older than 30 days
+  gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
+
+  # Automatically optimise the store (dedup via hardlinks) after each build
+  optimise.automatic = true;
 }

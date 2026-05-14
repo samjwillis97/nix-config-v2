@@ -71,6 +71,9 @@
       set -g extended-keys on
       set -g extended-keys-format csi-u
 
+      # Pass through title
+      set -g set-titles-string '#{pane_title}'
+
       # Fix switching delay
       set -sg escape-time 0
 

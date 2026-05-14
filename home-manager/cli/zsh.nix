@@ -12,12 +12,23 @@ let
 
   p10kTheme = ./zsh/p10k.zsh;
 
+  # Must run first - before plugins are loaded
+  initInstantPrompt = ''
+    # Enable Powerlevel10k instant prompt. Must be at the very top of .zshrc.
+    # Initialization code that may require console input (password prompts, [y/n]
+    # confirmations, etc.) must go above this block; everything else may go below.
+    if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
+      source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
+    fi
+  '';
+
   initExtra = ''
     setopt INC_APPEND_HISTORY   # Write to history file immediate, not on exit
     setopt HIST_SAVE_NO_DUPS    # DO no write a duplicate event
     setopt HIST_VERIFY          # Do not execute immediately
     setopt HIST_NO_STORE        # Do not store the history command
     setopt HIST_REDUCE_BLANKS   # Remove leading and trailing blanks
+    setopt PROMPT_SUBST         # Enable parameter expansion in prompts (required by p10k in tmux)
 
     export PATH="$PATH:${homeDirectory}/.dotnet/tools"
     export PATH="$PATH:${homeDirectory}/go/bin"
@@ -44,13 +55,6 @@ let
       else
         ""
     }
-
-    # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-    # Initialization code that may require console input (password prompts, [y/n]
-    # confirmations, etc.) must go above this block; everything else may go below.
-    if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
-      source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
-    fi
 
     # Seems to be a problem once I removed oh-mh-zsh, delete key would enter a ~
     bindkey "^[[3~" delete-char
@@ -99,7 +103,10 @@ in
   ];
 
   programs.zsh = {
-    initContent = initExtra;
+    initContent = lib.mkMerge [
+      (lib.mkOrder 500 initInstantPrompt)
+      (lib.mkOrder 1000 initExtra)
+    ];
 
     enable = true;
 

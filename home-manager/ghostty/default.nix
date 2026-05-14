@@ -9,12 +9,12 @@ in
     systemd.enable = true;
 
     settings = {
-      title = " ";
+      title = "Ghostty";
       macos-titlebar-style = "hidden";
       cursor-style = "block";
       font-feature = "-calt";
       font-thicken = true;
-      shell-integration-features = "no-cursor";
+      shell-integration-features = "no-cursor, title";
     }
     // (
       if isDarwin then

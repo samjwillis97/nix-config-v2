@@ -193,6 +193,9 @@ in
         # Screenshots
         ", Print, exec, ${fullScreenShot}"
         "SHIFT, Print, exec, ${areaScreenShot}"
+
+        # Enter game mode
+        "$mod SHIFT, G, submap, gaming"
       ]
       ++ (lib.genList (n: "$mod, ${toString (n + 1)}, workspace, ${toString (n + 1)}") workspaceCount)
       ++ (lib.genList (
@@ -245,5 +248,22 @@ in
         "pin on, match:class ^(Plexamp)$"
       ];
     };
+
+    extraConfig =
+      let
+        workspaceBinds = lib.concatStringsSep "\n" (
+          lib.genList (n: ''
+            bind = $mod, ${toString (n + 1)}, workspace, ${toString (n + 1)}
+            bind = $mod SHIFT, ${toString (n + 1)}, movetoworkspace, ${toString (n + 1)}
+          '') workspaceCount
+        );
+      in
+      ''
+        # Game mode submap — suppresses all $mod bindings except workspace switching and exit
+        submap = gaming
+        ${workspaceBinds}
+        bind = $mod SHIFT, G, submap, reset
+        submap = reset
+      '';
   };
 }

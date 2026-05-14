@@ -18,5 +18,6 @@
     git
     wget
     agenix
+    lm_sensors
   ];
 }
