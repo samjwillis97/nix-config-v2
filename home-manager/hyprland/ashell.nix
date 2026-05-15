@@ -1,3 +1,4 @@
+{ config, ... }:
 {
   programs.ashell = {
     enable = true;
@@ -5,6 +6,12 @@
     systemd.enable = true;
 
     settings = {
+      appearance = {
+        style = "Islands";
+        # fontName = builtins.head config.fonts.fontConfig.defaultFonts.monospace;
+        fontName = config.stylix.fonts.monospace.name;
+      };
+
       modules = {
         left = [
           "Workspaces"
@@ -39,7 +46,6 @@
           "Temperature"
           "Cpu"
           "Memory"
-          # "Disk"
         ];
         interval = 1;
 
@@ -52,11 +58,6 @@
           warnThreshold = 70;
           alertThreshold = 85;
         };
-
-        # disk = {
-        #   warnThreshold = 80;
-        #   alertThreshold = 90;
-        # };
 
         temperature = {
           warnThreshold = 60;

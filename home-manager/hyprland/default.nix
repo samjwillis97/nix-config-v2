@@ -42,7 +42,7 @@ in
     ./ashell.nix # status bar
     ./hyprlock.nix # lock screen
     ./hypridle.nix # idle management
-    ./swaync.nix # notifications
+    ./mako.nix # notifications
     ./wlogout.nix # logout menu
     ./hyprpaper.nix # wallpaper manager
   ];
