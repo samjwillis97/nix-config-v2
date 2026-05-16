@@ -6,6 +6,7 @@
     ./meta.nix
     ./user.nix
     ./theme.nix
+    ./theming.nix
   ];
   # This is due to 1Passwordgui being broken for darwin
   # I have a work around currently

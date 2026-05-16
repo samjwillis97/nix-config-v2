@@ -7,7 +7,6 @@
     ./ssh.nix
     ./locale.nix
     ./tailscale.nix
-    ./theming.nix
   ];
 
   modules.networking.mdns.enable = true;
