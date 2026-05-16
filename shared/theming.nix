@@ -1,4 +1,9 @@
-{ flake, pkgs, ... }:
+{
+  flake,
+  pkgs,
+  lib,
+  ...
+}:
 {
   stylix = {
     enable = true;
@@ -61,7 +66,7 @@
       popups = 0.9;
     };
 
-    cursor = {
+    cursor = lib.mkIf pkgs.stdenv.isLinux {
       name = "Adwaita";
       package = pkgs.adwaita-icon-theme;
       size = 16;
