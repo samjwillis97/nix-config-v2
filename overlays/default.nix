@@ -29,7 +29,6 @@ in
       f = flake.inputs.f.packages.${system}.default;
       httpcraft = flake.inputs.httpcraft.packages.${system}.default;
       httpcraft-mcp = flake.inputs.httpcraft-mcp.packages.${system}.default;
-      ghostty = flake.inputs.ghostty.packages.${system}.default;
       nix-auth = inputs.nix-auth.packages.${system}.default;
       pi-agent = inputs.pi-agent.packages.${system}.pi-agent;
       # cage 0.2.1 segfaults with newer libwayland-server; override to 0.3.0

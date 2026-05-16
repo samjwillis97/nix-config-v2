@@ -133,10 +133,6 @@
       };
     };
 
-    ghostty = {
-      url = "github:ghostty-org/ghostty";
-    };
-
     nix-vscode-extensions = {
       url = "github:nix-community/nix-vscode-extensions";
     };
