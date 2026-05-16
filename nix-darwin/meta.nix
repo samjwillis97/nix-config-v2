@@ -15,6 +15,11 @@ in
       enable = true; # FIXME was breaking tings
       ephemeral = true;
     };
+
+    gc = {
+      automatic = true;
+      options = "--delete-older-than 30d";
+    };
   };
 
   # FIXME: What was this migrated to?
@@ -24,9 +29,5 @@ in
   # '';
 
   # Automatically run garbage collection weekly, removing generations older than 30 days
-  gc = {
-    automatic = true;
-    options = "--delete-older-than 30d";
-  };
 
 }
