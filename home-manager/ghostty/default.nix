@@ -6,6 +6,8 @@ in
   programs.ghostty = {
     enable = true;
 
+    package = if isDarwin then pkgs.ghostty-bin else pkgs.ghostty;
+
     systemd.enable = if isDarwin then false else true;
 
     settings = {
