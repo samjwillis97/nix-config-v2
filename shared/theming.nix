@@ -8,11 +8,6 @@
         enable = true;
         fonts.enable = true;
       };
-
-      fontconfig = {
-        enable = true;
-        fonts.enable = true;
-      };
     };
 
     # image = pkgs.fetchurl {
