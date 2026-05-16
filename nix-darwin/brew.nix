@@ -34,7 +34,6 @@ in
       # "displaylink"
       "betterdisplay"
       "disk-inventory-x"
-      "ghostty"
       # "proxyman"
       # "logi-options-plus"
     ];
