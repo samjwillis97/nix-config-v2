@@ -23,13 +23,6 @@ in
     fallback = true
   '';
 
-  # Automatically run garbage collection weekly, removing generations older than 30 days
-  gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 30d";
-  };
-
   # Automatically optimise the store (dedup via hardlinks) after each build
   optimise.automatic = true;
 }
