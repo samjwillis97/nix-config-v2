@@ -6,7 +6,7 @@ in
   programs.ghostty = {
     enable = true;
 
-    systemd.enable = if isDarwin then true else false;
+    systemd.enable = if isDarwin then false else true;
 
     settings = {
       title = "Ghostty";
