@@ -70,7 +70,6 @@ in
               ;
             extraHomeModules = [
               inputs.httpcraft.homeManagerModules.${system}.httpcraft
-              # inputs.stylix.homeModules.stylix
             ]
             ++ extraHomeModules;
             isDarwin = false;
@@ -120,7 +119,6 @@ in
             extraHomeModules = [
               inputs.httpcraft.homeManagerModules.${system}.httpcraft
               inputs.agenix.homeManagerModules.age
-              inputs.stylix.homeModules.stylix
               ../hm-modules
             ]
             ++ extraHomeModules;
