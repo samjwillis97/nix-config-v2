@@ -161,9 +161,6 @@ in
         "extensions.ignoreRecommendations" = true;
 
         # Styling
-        "editor.fontFamily" = "FiraMono Nerd Font Mono";
-        "workbench.colorTheme" = "Catppuccin Mocha";
-        "workbench.iconTheme" = "catppuccin-mocha";
         "editor.bracketPairColorization.enabled" = true;
         "workbench.editor.showTabs" = "none";
         "workbench.editor.enablePreview" = false;

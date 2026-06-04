@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 {
   home.packages = with pkgs; [
     libnotify
@@ -11,7 +11,7 @@
       timeout = 10;
       transition-time = 200;
 
-      keyboard-shortcutes = true;
+      keyboard-shortcuts = true;
 
       image-visibility = "when-available";
 
@@ -37,25 +37,5 @@
       # notification-body-image-height = 100;
       # notification-body-image-width = 200;
     };
-
-    style = ''
-    * {
-      font-family: "Fire Sans", sans-serif;
-      font-size: 14px;
-    }
-
-    .notification {
-      background-color: #222222;
-      border-radius: 10px;
-      color: #ffffff;
-      border: 1px solid #444444;
-    }
-
-    .control-center {
-      background-color: #333333;
-      border-radius: 10px;
-      color: #ffffff;
-    }
-    '';
   };
 }

@@ -25,6 +25,12 @@ in
     exporters.system.enable = false;
   };
 
+  # Raise the soft open file descriptor limit for systemd user sessions.
+  # Waybar and other desktop services require more than the default 1024.
+  systemd.user.extraConfig = ''
+    DefaultLimitNOFILE=524288
+  '';
+
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;

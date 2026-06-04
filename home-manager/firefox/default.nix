@@ -9,6 +9,10 @@ let
     if pkgs.stdenv.isDarwin then lib.makeOverridable ({ ... }: pkgs.firefox-bin) { } else pkgs.firefox;
 in
 {
+  home.sessionVariables = {
+    XRE_PROFILE_PATH = "${config.home.homeDirectory}/.mozilla/firefox/${config.home.username}";
+  };
+
   programs.firefox = {
     enable = true;
     # package = pkgs.firefox-bin;
@@ -113,6 +117,7 @@ in
       };
       settings = {
         "browser.quitShortcut.disabled" = true;
+        "general.autoScroll" = true;
       };
     };
     # TODO: Bookmarks

@@ -15,6 +15,11 @@ in
       enable = true; # FIXME was breaking tings
       ephemeral = true;
     };
+
+    gc = {
+      automatic = true;
+      options = "--delete-older-than 30d";
+    };
   };
 
   # FIXME: What was this migrated to?
@@ -22,4 +27,7 @@ in
   #   # Following line should allow us to avoid a logout/login cycle
   #   /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
   # '';
+
+  # Automatically run garbage collection weekly, removing generations older than 30 days
+
 }

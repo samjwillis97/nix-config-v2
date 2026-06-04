@@ -1,3 +1,4 @@
+{ pkgs, ... }:
 {
   services.hypridle = {
     enable = true;
@@ -11,6 +12,10 @@
       };
 
       listener = [
+        {
+          timeout = 870;
+          on-timeout = "${pkgs.libnotify}/bin/notify-send -u critical -t 30000 'Idle Warning' 'Screen will lock in 30 seconds'";
+        }
         {
           timeout = 900;
           on-timeout = "hyprlock";

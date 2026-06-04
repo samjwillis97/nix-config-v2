@@ -12,12 +12,23 @@ let
 
   p10kTheme = ./zsh/p10k.zsh;
 
-  initExtra = with config.theme.colors; ''
+  # Must run first - before plugins are loaded
+  initInstantPrompt = ''
+    # Enable Powerlevel10k instant prompt. Must be at the very top of .zshrc.
+    # Initialization code that may require console input (password prompts, [y/n]
+    # confirmations, etc.) must go above this block; everything else may go below.
+    if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
+      source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
+    fi
+  '';
+
+  initExtra = ''
     setopt INC_APPEND_HISTORY   # Write to history file immediate, not on exit
     setopt HIST_SAVE_NO_DUPS    # DO no write a duplicate event
     setopt HIST_VERIFY          # Do not execute immediately
     setopt HIST_NO_STORE        # Do not store the history command
     setopt HIST_REDUCE_BLANKS   # Remove leading and trailing blanks
+    setopt PROMPT_SUBST         # Enable parameter expansion in prompts (required by p10k in tmux)
 
     export PATH="$PATH:${homeDirectory}/.dotnet/tools"
     export PATH="$PATH:${homeDirectory}/go/bin"
@@ -29,11 +40,6 @@ let
     bindkey -s ^f "${pkgs.f}/bin/f -l\n\n"
 
     export CDPATH="$CDPATH:../:../../"
-
-    export FZF_DEFAULT_OPTS=" \
-        --color=bg+:${base02},bg:${base00},spinner:${base06},hl:${base08} \
-        --color=fg:${base05},header:${base08},info:${base0E},pointer:${base06} \
-        --color=marker:${base06},fg+:${base05},prompt:${base0E},hl+:${base08}"
 
     # See: https://discourse.nixos.org/t/brew-not-on-path-on-m1-mac/26770/4
     # Cache brew shellenv to avoid repeated subprocess calls
@@ -50,15 +56,11 @@ let
         ""
     }
 
-    # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-    # Initialization code that may require console input (password prompts, [y/n]
-    # confirmations, etc.) must go above this block; everything else may go below.
-    if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
-      source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
-    fi
-
     # Seems to be a problem once I removed oh-mh-zsh, delete key would enter a ~
     bindkey "^[[3~" delete-char
+
+    # Use emacs keybindings (^A, ^E, ^K, etc.)
+    bindkey -e
 
     # better history completion
     autoload -U up-line-or-beginning-search
@@ -67,6 +69,9 @@ let
     zle -N down-line-or-beginning-search
     bindkey "^[[A" up-line-or-beginning-search
     bindkey "^[[B" down-line-or-beginning-search
+    # Also bind application cursor keys (sent by some terminals in DECCKM mode)
+    bindkey "^[OA" up-line-or-beginning-search
+    bindkey "^[OB" down-line-or-beginning-search
 
     source ${p10kTheme}
   '';
@@ -98,7 +103,10 @@ in
   ];
 
   programs.zsh = {
-    initContent = initExtra;
+    initContent = lib.mkMerge [
+      (lib.mkOrder 500 initInstantPrompt)
+      (lib.mkOrder 1000 initExtra)
+    ];
 
     enable = true;
 

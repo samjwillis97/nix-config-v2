@@ -12,14 +12,14 @@
 {
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
-  virtualisation.vmVariant = {
-    virtualisation = {
-      memorySize = 16384;
-      cores = 8;
-    };
-  };
-
-  virtualisation.libvirtd.enable = true;
+  # virtualisation.vmVariant = {
+  #   virtualisation = {
+  #     memorySize = 16384;
+  #     cores = 8;
+  #   };
+  # };
+  #
+  # virtualisation.libvirtd.enable = true;
 
   boot.initrd.availableKernelModules = [
     "nvme"
@@ -66,6 +66,9 @@
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+
+  hardware.graphics.enable = true;
+  hardware.graphics.enable32Bit = true;
 
   # services.xserver.videoDrivers = [ "amdgpu" ];
   # hardware.graphics.extraPackages = [

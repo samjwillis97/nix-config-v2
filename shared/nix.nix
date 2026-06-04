@@ -22,4 +22,7 @@ in
     # Ensure we can still build when missing-server is not accessible
     fallback = true
   '';
+
+  # Automatically optimise the store (dedup via hardlinks) after each build
+  optimise.automatic = true;
 }

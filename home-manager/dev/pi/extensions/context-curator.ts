@@ -120,6 +120,9 @@ function detectProject(cwd: string): ProjectContext {
 }
 
 export default function (pi: ExtensionAPI) {
+	/** Disabled inside subagent processes — they have their own system prompts. */
+	const isSubagent = process.env.PI_SUBAGENT === "1";
+
 	let projectContext: ProjectContext | null = null;
 
 	pi.on("session_start", async (_event, ctx) => {
@@ -127,6 +130,8 @@ export default function (pi: ExtensionAPI) {
 	});
 
 	pi.on("before_agent_start", async (event, ctx) => {
+		if (isSubagent) return;
+
 		const prompt = event.prompt;
 		if (!prompt) return;
 

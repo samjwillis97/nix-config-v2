@@ -24,7 +24,7 @@
 
     plugins = [ ];
 
-    extraConfig = with config.theme.colors; ''
+    extraConfig = with config.lib.stylix.colors; ''
       # Clear MRU session tracking cache on server start / config reload
       run-shell 'rm -rf $HOME/.cache/tmux-session-history && mkdir -p $HOME/.cache/tmux-session-history'
 
@@ -71,6 +71,9 @@
       set -g extended-keys on
       set -g extended-keys-format csi-u
 
+      # Pass through title
+      set -g set-titles-string '#{pane_title}'
+
       # Fix switching delay
       set -sg escape-time 0
 
@@ -97,43 +100,22 @@
 
       # default statusbar colors
 
-      thm_bg="${base00}"
-      thm_fg="${base05}"
-      thm_cyan="${base0C}"
-      thm_black="${base00}"
-      thm_gray="${base02}"
-      thm_magenta="${base0E}"
-      thm_pink="${base0F}"
-      thm_red="${base08}"
-      thm_green="${base0B}"
-      thm_yellow="${base0A}"
-      thm_blue="${base0D}"
-      thm_orange="${base09}"
-      thm_black4="${base03}"
-
-      # ----------------------------=== Theme ===--------------------------
-      # status
-      set-option -gq status "on"
-      set-option -gq status-bg "''${thm_bg}"
-      set-option -gq status-justify "left"
-      set-option -gq status-left-length "100"
-      set-option -gq status-right-length "100"
+      thm_bg="#${base00}"
+      thm_fg="#${base05}"
+      thm_cyan="#${base0C}"
+      thm_black="#${base00}"
+      thm_gray="#${base02}"
+      thm_magenta="#${base0E}"
+      thm_pink="#${base0F}"
+      thm_red="#${base08}"
+      thm_green="#${base0B}"
+      thm_yellow="#${base0A}"
+      thm_blue="#${base0D}"
+      thm_orange="#${base09}"
+      thm_black4="#${base03}"
 
       # Refresh status bar every 5 seconds for notification indicator
       set-option -gq status-interval 5
-
-      # messages
-      set-option -gq message-style "fg=''${thm_cyan},bg=''${thm_gray},align=centre"
-      set-option -gq message-command-style "fg=''${thm_cyan},bg=''${thm_gray},align=centre"
-
-      # panes
-      set-option -gq pane-border-style "fg=''${thm_gray}"
-      set-option -gq pane-active-border-style "fg=''${thm_blue}"
-
-      # windows
-      set-window-option -gq window-status-activity-style "fg=''${thm_fg},bg=''${thm_bg},none"
-      set-window-option -gq window-status-separator ""
-      set-window-option -gq window-status-style "fg=''${thm_fg},bg=''${thm_bg},none"
 
       # --------=== Statusline
 

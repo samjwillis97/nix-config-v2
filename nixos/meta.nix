@@ -14,7 +14,14 @@
     # nixos-cleanup
   ];
 
-  nix = import ../shared/nix.nix { inherit pkgs flake; };
+  nix = import ../shared/nix.nix { inherit pkgs flake; } // {
+    # Automatically run garbage collection weekly, removing generations older than 30 days
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 30d";
+    };
+  };
 
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database
@@ -29,4 +36,5 @@
 
   # Enable unfree packages
   nixpkgs.config.allowUnfree = true;
+
 }
