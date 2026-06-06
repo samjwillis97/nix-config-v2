@@ -374,11 +374,6 @@ in
           exclude = [ "using-git-worktrees" ];
         }
         {
-          name = "github-skills";
-          src = flake.inputs.github-skills;
-          include = [ "gh-cli" ];
-        }
-        {
           name = "agent-browser";
           src = flake.inputs.vercel-labs-agent-browser;
         }

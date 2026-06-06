@@ -25,7 +25,7 @@
 
     # Theme manager
     stylix = {
-      url = "github:nix-community/stylix";
+      url = "github:samjwillis97/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     base16 = {
@@ -153,15 +153,11 @@
 
     # LLM Stuff
     llm-agents.url = "github:numtide/llm-agents.nix";
-    agent-sandbox.url = "github:samjwillis97/agent-sandbox.nix";
+    agent-sandbox.url = "github:samjwillis97/agent-sandbox.nix/tunnel";
 
     # Agent Skills
     superpowers = {
       url = "github:obra/superpowers";
-      flake = false;
-    };
-    github-skills = {
-      url = "github:github/awesome-copilot";
       flake = false;
     };
     vercel-labs-agent-browser = {

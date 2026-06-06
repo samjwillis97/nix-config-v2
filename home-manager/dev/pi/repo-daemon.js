@@ -93,6 +93,98 @@ function getF() {
 	return F_BIN_CACHE.value;
 }
 
+// Find git binary on PATH (falls back to bare "git")
+function findGit() {
+	const pathDirs = (process.env.PATH || "").split(":");
+	for (const dir of pathDirs) {
+		const candidate = path.join(dir, "git");
+		try {
+			fs.accessSync(candidate, fs.constants.X_OK);
+			return candidate;
+		} catch {}
+	}
+	return "git";
+}
+
+const GIT_BIN_CACHE = { value: undefined };
+
+function getGit() {
+	if (GIT_BIN_CACHE.value === undefined) {
+		GIT_BIN_CACHE.value = findGit();
+	}
+	return GIT_BIN_CACHE.value;
+}
+
+// Best-effort: fetch and fast-forward an existing worktree so explorations
+// stay current. Never rewrites local work — skips if the worktree is dirty,
+// has no upstream, or has diverged from its upstream. Any failure is
+// swallowed and reported via the returned status string.
+async function updateWorktree(worktreeDir) {
+	const git = getGit();
+	const run = (args) =>
+		execFileAsync(git, ["-C", worktreeDir, ...args], {
+			encoding: "utf-8",
+			timeout: 60000,
+		});
+
+	try {
+		// Must be inside a work tree
+		await run(["rev-parse", "--is-inside-work-tree"]);
+
+		// Skip if there are uncommitted changes
+		const { stdout: status } = await run(["status", "--porcelain"]);
+		if (status.trim() !== "") {
+			return "skipped-dirty";
+		}
+
+		// Must have an upstream to update from
+		let upstream;
+		try {
+			const { stdout } = await run([
+				"rev-parse",
+				"--abbrev-ref",
+				"--symbolic-full-name",
+				"@{u}",
+			]);
+			upstream = stdout.trim();
+		} catch {
+			return "skipped-no-upstream";
+		}
+		if (!upstream) {
+			return "skipped-no-upstream";
+		}
+
+		// Refresh remote refs
+		await run(["fetch", "--quiet"]);
+
+		// Compare local HEAD against upstream: "<behind>\t<ahead>"
+		const { stdout: counts } = await run([
+			"rev-list",
+			"--left-right",
+			"--count",
+			"@{u}...HEAD",
+		]);
+		const [behind, ahead] = counts
+			.trim()
+			.split(/\s+/)
+			.map((n) => parseInt(n, 10) || 0);
+
+		if (ahead > 0) {
+			// Local commits not on upstream — don't touch (would not be a ff)
+			return behind > 0 ? "skipped-diverged" : "skipped-ahead";
+		}
+		if (behind === 0) {
+			return "up-to-date";
+		}
+
+		// Clean and strictly behind — safe to fast-forward
+		await run(["merge", "--ff-only", "--quiet", "@{u}"]);
+		return "fast-forwarded";
+	} catch {
+		return "skipped-error";
+	}
+}
+
 async function ensureRepo(owner, repo, branch) {
 	const repoDir = path.join(CODE_ROOT, GIT_DOMAIN, owner, repo);
 
@@ -100,7 +192,8 @@ async function ensureRepo(owner, repo, branch) {
 	if (branch) {
 		const branchDir = path.join(repoDir, branch);
 		if (fs.existsSync(branchDir)) {
-			return { ok: true, path: branchDir, source: "existing" };
+			const update = await updateWorktree(branchDir);
+			return { ok: true, path: branchDir, source: "existing", update };
 		}
 	} else {
 		// No branch specified — find any existing worktree
@@ -110,19 +203,15 @@ async function ensureRepo(owner, repo, branch) {
 				const dirs = entries.filter((e) => e.isDirectory()).map((e) => e.name);
 				for (const preferred of ["main", "master"]) {
 					if (dirs.includes(preferred)) {
-						return {
-							ok: true,
-							path: path.join(repoDir, preferred),
-							source: "existing",
-						};
+						const wt = path.join(repoDir, preferred);
+						const update = await updateWorktree(wt);
+						return { ok: true, path: wt, source: "existing", update };
 					}
 				}
 				if (dirs.length > 0) {
-					return {
-						ok: true,
-						path: path.join(repoDir, dirs[0]),
-						source: "existing",
-					};
+					const wt = path.join(repoDir, dirs[0]);
+					const update = await updateWorktree(wt);
+					return { ok: true, path: wt, source: "existing", update };
 				}
 			} catch {}
 		}

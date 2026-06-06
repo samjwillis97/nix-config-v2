@@ -21,7 +21,6 @@ in
     // (
       if isDarwin then
         {
-
           window-colorspace = "display-p3";
         }
       else

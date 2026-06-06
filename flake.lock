@@ -32,15 +32,16 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1778502945,
-        "narHash": "sha256-SRsuhUr+mMNNLGKL88AL4HX2YrexKMs7x22muN9kEAI=",
+        "lastModified": 1780630071,
+        "narHash": "sha256-juE4oksKK4U9Numrf3xuCA/MK7AaYVPA29idVA+LCBg=",
         "owner": "samjwillis97",
         "repo": "agent-sandbox.nix",
-        "rev": "90c71ffcb20422277383a6ab035e171cfebb9805",
+        "rev": "d6e0f336014ddc9029a595fd039fc0e7aa4ccd42",
         "type": "github"
       },
       "original": {
         "owner": "samjwillis97",
+        "ref": "tunnel",
         "repo": "agent-sandbox.nix",
         "type": "github"
       }
@@ -760,22 +761,6 @@
       "original": {
         "owner": "cachix",
         "repo": "git-hooks.nix",
-        "type": "github"
-      }
-    },
-    "github-skills": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1780424302,
-        "narHash": "sha256-53aq3EvBxqrx1vHZRCew8cYIBoEWJzLBJrk7/R8k0DE=",
-        "owner": "github",
-        "repo": "awesome-copilot",
-        "rev": "776d84143238cb91f7242665f188887b9e8d2aa9",
-        "type": "github"
-      },
-      "original": {
-        "owner": "github",
-        "repo": "awesome-copilot",
         "type": "github"
       }
     },
@@ -1862,7 +1847,6 @@
         "firefox-darwin": "firefox-darwin",
         "flake-compat": "flake-compat",
         "flake-utils": "flake-utils",
-        "github-skills": "github-skills",
         "home-manager": "home-manager",
         "homebrew-cask": "homebrew-cask",
         "homebrew-core": "homebrew-core",
@@ -1923,15 +1907,15 @@
         "tinted-zed": "tinted-zed"
       },
       "locked": {
-        "lastModified": 1780498403,
-        "narHash": "sha256-ptk4OrUyr3ubnjZcuqM1qL97L3q7wgnL24oudQEYUno=",
-        "owner": "nix-community",
+        "lastModified": 1780722639,
+        "narHash": "sha256-qgDHcFSTFmqvqJuCcYOM2xNBn90y4uk/FPWk5O+EVfQ=",
+        "owner": "samjwillis97",
         "repo": "stylix",
-        "rev": "525965744b770af79c985ae5c43c65e441dc8b29",
+        "rev": "8a82de93cefef9fc7a18508bdb1efd56ea8dcd98",
         "type": "github"
       },
       "original": {
-        "owner": "nix-community",
+        "owner": "samjwillis97",
         "repo": "stylix",
         "type": "github"
       }
