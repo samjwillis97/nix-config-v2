@@ -77,6 +77,9 @@ let
     // cfg.extraSettings
     // (if mergedPackages != [ ] then { packages = mergedPackages; } else { });
 
+  # MCP server registration merged into ~/.pi/agent/mcp.json
+  piMcp = { mcpServers = cfg.mcpServers; };
+
   # Sandbox derivation
   piSandboxed = agentSandbox.mkSandbox {
     pkg = pkgs.llm-agents.pi;
@@ -131,6 +134,17 @@ in
         Nix-built pi packages (e.g. npm packages built as derivations).
         Each package's store path is added as a local path entry in the
         packages list in settings.json.
+      '';
+    };
+
+    mcpServers = mkOption {
+      type = types.attrsOf types.anything;
+      default = { };
+      description = ''
+        MCP servers merged into ~/.pi/agent/mcp.json under the
+        "mcpServers" key. Each attribute name is the server id and its
+        value is the server spec (e.g. { command = "node"; args = [ ... ]; }).
+        Merged on top of existing mcp.json, preserving manually-added servers.
       '';
     };
 
@@ -321,6 +335,23 @@ in
         fi
       '';
     }
+
+    # Merge MCP servers into ~/.pi/agent/mcp.json
+    # Preserves existing/manually-added servers via deep jq merge.
+    (mkIf (cfg.mcpServers != { }) {
+      home.activation.pi-mcp = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        PI_DIR="$HOME/.pi/agent"
+        mkdir -p "$PI_DIR"
+        MCP_JSON='${builtins.toJSON piMcp}'
+        MCP_FILE="$PI_DIR/mcp.json"
+        if [ -f "$MCP_FILE" ]; then
+          ${pkgs.jq}/bin/jq -s '.[0] * .[1]' "$MCP_FILE" <(echo "$MCP_JSON") > "$MCP_FILE.tmp" \
+            && mv "$MCP_FILE.tmp" "$MCP_FILE"
+        else
+          echo "$MCP_JSON" > "$MCP_FILE"
+        fi
+      '';
+    })
 
     # Skills — deploy to ~/.agents/skills/ (shared agent skills standard)
     (mkIf (allSkillPaths != [ ]) {
