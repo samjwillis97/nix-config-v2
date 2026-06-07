@@ -10,32 +10,19 @@ let
   homeDirectory =
     if super.meta.isDarwin then "/Users/${super.meta.username}" else "/home/${super.meta.username}";
 
-  p10kTheme = ./zsh/p10k.zsh;
-
-  # Must run first - before plugins are loaded
-  initInstantPrompt = ''
-    # Enable Powerlevel10k instant prompt. Must be at the very top of .zshrc.
-    # Initialization code that may require console input (password prompts, [y/n]
-    # confirmations, etc.) must go above this block; everything else may go below.
-    if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
-      source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
-    fi
-  '';
-
   initExtra = ''
+    fpath+=(${pkgs.pure-prompt}/share/pure)
+
     setopt INC_APPEND_HISTORY   # Write to history file immediate, not on exit
-    setopt HIST_SAVE_NO_DUPS    # DO no write a duplicate event
+    setopt HIST_SAVE_NO_DUPS    # Do no write a duplicate event
     setopt HIST_VERIFY          # Do not execute immediately
     setopt HIST_NO_STORE        # Do not store the history command
     setopt HIST_REDUCE_BLANKS   # Remove leading and trailing blanks
-    setopt PROMPT_SUBST         # Enable parameter expansion in prompts (required by p10k in tmux)
 
     export PATH="$PATH:${homeDirectory}/.dotnet/tools"
     export PATH="$PATH:${homeDirectory}/go/bin"
     export PATH="$PATH:${homeDirectory}/.local/bin"
     export PATH="$PATH:${homeDirectory}/.npm-packages/bin"
-
-    # alias nvim="nix run github:samjwillis97/neovim-flake --"
 
     bindkey -s ^f "${pkgs.f}/bin/f -l\n\n"
 
@@ -73,38 +60,34 @@ let
     bindkey "^[OA" up-line-or-beginning-search
     bindkey "^[OB" down-line-or-beginning-search
 
-    source ${p10kTheme}
+    autoload -U promptinit; promptinit
+    prompt pure
   '';
 
   completionInit = ''
     # Optimized compinit with caching
     autoload -Uz compinit
-    setopt EXTENDEDGLOB
 
     # Only regenerate compdump once per day
     local zcompdump="${homeDirectory}/.zcompdump"
-    if [[ -n $zcompdump(#qNmh+24) ]]; then
-      compinit -u -d "$zcompdump"  # -u skips security check
+    if [[ -n $zcompdump(#qNmh-24) ]]; then
+      compinit -C
     else
-      compinit -C -d "$zcompdump"  # -C skips both check and regeneration
+      compinit
     fi
-
-    unsetopt EXTENDEDGLOB
   '';
 in
-# Disabling shc whilst doing some development
-# . <(${pkgs.shc-cli}/bin/shc-cli --completion)
 {
   home.packages = with pkgs; [
     bat
     rsync
     gnutar
     f
+    pure-prompt
   ];
 
   programs.zsh = {
     initContent = lib.mkMerge [
-      (lib.mkOrder 500 initInstantPrompt)
       (lib.mkOrder 1000 initExtra)
     ];
 
@@ -112,9 +95,9 @@ in
 
     zprof.enable = false;
 
-    # Syntax highlighting enabled - the brew caching and p10k instant prompt
-    # provide most of the speedup
     syntaxHighlighting.enable = true;
+    autosuggestion.enable = true;
+
     enableCompletion = true;
     completionInit = completionInit;
 
@@ -134,47 +117,31 @@ in
       ll = "ls -alFh";
       lt = "ls --human-readable --size -1 -S --classify";
       cat = "${pkgs.bat}/bin/bat";
-      cp = "${pkgs.rsync}/bin/rsync -ah --progress";
       count-file-watchers = ''
         find /proc/*/fd -user "$USER" -lname anon_inode:inotify -printf "%hinfo/%f\n" 2>/dev/null | xargs cat | grep -c "^inotify"
       '';
       untar = "tar -zxvf";
     };
 
-    # See: https://github.com/NixOS/nixpkgs/issues/154696#issuecomment-1238433989
     plugins = [
       {
-        # A prompt will appear the first time to configure it properly
-        # make sure to select MesloLGS NF as the font in Konsole
-        name = "powerlevel10k";
-        src = pkgs.zsh-powerlevel10k;
-        file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
+        name = "fzf-tab";
+        src = pkgs.zsh-fzf-tab;
+        file = "share/fzf-tab/fzf-tab.plugin.zsh";
       }
     ];
-
-    oh-my-zsh = {
-      enable = false;
-      plugins = [
-        "git"
-      ];
-      theme = "robbyrussell";
-    };
   };
 
   programs = {
     dircolors.enable = true;
     direnv = {
-      # TODO: Change cache location
-      # TODO: Set the variable for this https://github.com/direnv/direnv/pull/1234
       enable = true;
+      enableZshIntegration = true;
       nix-direnv.enable = true;
       config = {
         hide_env_diff = true;
         warn_timeout = "30s"; # Reduce timeout overhead
       };
-      # stdlib = ''
-      #   DIRENV_LOG_FORMAT=""
-      # '';
     };
     fzf = {
       enable = true;

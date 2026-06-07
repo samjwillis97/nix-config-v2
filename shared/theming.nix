@@ -3,6 +3,8 @@
   stylix = {
     enable = true;
 
+    autoEnable = true;
+
     targets = {
       font-packages = {
         enable = true;
@@ -44,7 +46,7 @@
 
       sizes = {
         desktop = 11;
-        terminal = 10;
+        terminal = 11;
         applications = 10;
         popups = 10;
       };
