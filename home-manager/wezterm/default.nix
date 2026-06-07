@@ -33,7 +33,7 @@
         selection_fg = base00;
       };
     };
-    enableZshIntegration = true;
+    enableZshIntegration = false;
     # `text_background_opacity` effects the background colors of neovim
     extraConfig = ''
       wezterm.on('increase-opacity', function(window, pane)

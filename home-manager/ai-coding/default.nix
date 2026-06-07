@@ -159,11 +159,6 @@ in
     };
 
     mcpServers = {
-      nixos = {
-        type = "stdio";
-        command = "${pkgs.mcp-nixos}/bin/mcp-nixos";
-        enabled = false;
-      };
       atlassian = {
         type = "stdio";
         command = "${pkgs.nodejs_24}/bin/npx";

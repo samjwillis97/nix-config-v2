@@ -36,7 +36,7 @@ in
 
   programs.httpcraft = {
     enable = true;
-    enableZshIntegration = true;
+    enableZshIntegration = false;
   };
 
   programs.bat = {

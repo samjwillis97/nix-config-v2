@@ -5,6 +5,7 @@ in
 {
   programs.ghostty = {
     enable = true;
+    enableZshIntegration = false;
 
     package = if isDarwin then pkgs.ghostty-bin else pkgs.ghostty;
 
