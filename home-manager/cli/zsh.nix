@@ -11,6 +11,8 @@ let
     if super.meta.isDarwin then "/Users/${super.meta.username}" else "/home/${super.meta.username}";
 
   initExtra = ''
+    export NOSYSZSHRC=1
+
     fpath+=(${pkgs.pure-prompt}/share/pure)
 
     setopt INC_APPEND_HISTORY   # Write to history file immediate, not on exit

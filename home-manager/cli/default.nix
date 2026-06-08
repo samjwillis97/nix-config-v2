@@ -31,6 +31,7 @@ in
       agenix
       nix-sweep
       nix-auth
+      hyperfine
     ]
     ++ osSpecificPackages;
 
