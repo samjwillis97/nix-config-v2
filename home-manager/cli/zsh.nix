@@ -14,6 +14,7 @@ let
     export NOSYSZSHRC=1
 
     fpath+=(${pkgs.pure-prompt}/share/pure)
+    eval "$(${pkgs.zsh-patina}/bin/zsh-patina activate)"
 
     setopt INC_APPEND_HISTORY   # Write to history file immediate, not on exit
     setopt HIST_SAVE_NO_DUPS    # Do no write a duplicate event
@@ -108,6 +109,7 @@ in
     gnutar
     f
     pure-prompt
+    zsh-patina
   ];
 
   programs.zsh = {
@@ -122,8 +124,8 @@ in
 
     zprof.enable = false;
 
-    syntaxHighlighting.enable = true;
-    autosuggestion.enable = true;
+    syntaxHighlighting.enable = false;
+    autosuggestion.enable = false;
 
     enableCompletion = true;
     completionInit = completionInit;

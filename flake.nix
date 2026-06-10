@@ -41,6 +41,12 @@
       url = "github:hyprwm/Hyprland";
     };
 
+    # ZSH
+    zsh-patina = {
+      url = "github:michel-kraemer/zsh-patina";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     flake-utils = {
       url = "github:numtide/flake-utils";
       inputs.systems.follows = "systems";
