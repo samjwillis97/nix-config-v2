@@ -35,8 +35,6 @@ in
 
   home.packages = with pkgs; [
     gh
-    # acli
-    # jira-cli-go
     llm-agents.agent-browser
   ];
 

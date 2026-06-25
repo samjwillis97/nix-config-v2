@@ -1,12 +1,13 @@
 {
   age = {
     secrets = {
-      "jira-url" = {
-        file = ./jira-url.age;
-      };
-      "jira-username" = {
-        file = ./jira-username.age;
-      };
+      # TODO: add jira-url.age and jira-username.age secret files before enabling
+      # "jira-url" = {
+      #   file = ./jira-url.age;
+      # };
+      # "jira-username" = {
+      #   file = ./jira-username.age;
+      # };
       "jira-token" = {
         file = ./jira-token.age;
       };

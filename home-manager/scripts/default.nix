@@ -12,6 +12,7 @@
     ./tmux-window-picker.nix
     ./tmux-metadata-preview.nix
     ./tmux-oc-notification-status.nix
+    ./cleanup-stale-worktrees.nix
     ./nix-shells
     # ./tmux-cht.nix
   ];

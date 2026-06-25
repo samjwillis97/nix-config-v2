@@ -119,6 +119,7 @@ let
 
     # ctrl-x: kill session, remove tracking file, and reload list (stays in fzf)
     # ctrl-r: rename session (exits fzf via --expect, then uses tmux command-prompt)
+    # ctrl-f: jump to the f selector (same as prefix + f)
     # enter: switch to session
     selected=$(printf '%s\n' "$session_list" | \
       ${pkgs.fzf}/bin/fzf \
@@ -127,8 +128,9 @@ let
         --delimiter=$'\t' \
         --preview 'tmux-metadata-preview {2}' \
         --preview-window=right:60% \
-        --header=$'enter: switch | ctrl-x: kill | ctrl-r: rename' \
+        --header=$'enter: switch | ctrl-x: kill | ctrl-r: rename | ctrl-f: find' \
         --expect='ctrl-r' \
+        --bind="ctrl-f:become(${pkgs.f}/bin/f -l)" \
         --bind="ctrl-x:execute-silent(${pkgs.tmux}/bin/tmux kill-session -t '{2}')+reload(tmux-session-list)" \
         --no-sort \
         --border=none)

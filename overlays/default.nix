@@ -41,6 +41,7 @@ in
       #     hash = "sha256-NLoz11bfeZwesmwLmyytuB6/vSwIsnDWKzyAXFe+YZ0=";
       #   };
       # });
+      zsh-patina = flake.inputs.zsh-patina.packages.${system}.default;
     })
     inputs.nur.overlays.default
     inputs.brew-nix.overlays.default
