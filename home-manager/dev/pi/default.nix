@@ -26,9 +26,9 @@ in
       theme = "stylix";
 
       packages = [
-        "git:github.com/apmantza/pi-lens@v3.8.42"
-        "git:github.com/MasuRii/pi-tool-display@v0.3.6"
-        "git:github.com/nicobailon/pi-subagents@v0.28.0"
+        "git:github.com/apmantza/pi-lens@v3.8.61"
+        "git:github.com/MasuRii/pi-tool-display@v0.4.3"
+        "git:github.com/nicobailon/pi-subagents@v0.31.0"
       ];
     };
 
