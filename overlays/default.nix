@@ -47,6 +47,6 @@ in
     inputs.brew-nix.overlays.default
     inputs.nix-vscode-extensions.overlays.default
     inputs.firefox-darwin.overlay
-    inputs.llm-agents.overlays.default
+    inputs.llm-agents.overlays.shared-nixpkgs
   ];
 }

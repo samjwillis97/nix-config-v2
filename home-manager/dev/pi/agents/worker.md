@@ -1,5 +1,8 @@
 ---
 name: worker
+model: gpt-5.6-luna
+thinking: xhigh
+timeoutMs: 1200000
 description: General-purpose subagent with full capabilities, isolated context
 ---
 

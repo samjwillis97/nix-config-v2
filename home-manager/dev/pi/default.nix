@@ -6,6 +6,7 @@
 }:
 let
   rpivAskUser = import ./packages/rpiv-ask-user-question.nix { inherit pkgs; };
+  workEnabled = config.modules.darwin.work;
 in
 {
   imports = [
@@ -16,19 +17,40 @@ in
   modules.pi = {
     enable = true;
 
-    defaultProvider = "github-copilot";
-    defaultModel = "claude-opus-4.8";
+    defaultProvider = if workEnabled then "github-copilot" else "openai-codex";
+    defaultModel = "gpt-5.6-terra";
 
     extraSettings = {
       defaultThinkingLevel = "medium";
+
+      subagents.agentOverrides = {
+        worker = {
+          model = "gpt-5.6-luna";
+          thinking = "xhigh";
+          timeoutMs = 1200000;
+        };
+
+        scout = {
+          model = "gpt-5.6-luna";
+          thinking = "low";
+          timeoutMs = 1200000;
+        };
+
+        reviewer = {
+          model = "gpt-5.6-terra";
+          thinking = "high";
+          timeoutMs = 1200000;
+        };
+      };
+
       hideThinkingBlock = false;
 
       theme = "stylix";
 
       packages = [
-        "git:github.com/apmantza/pi-lens@v3.8.61"
-        "git:github.com/MasuRii/pi-tool-display@v0.4.3"
-        "git:github.com/nicobailon/pi-subagents@v0.31.0"
+        "git:github.com/apmantza/pi-lens@v3.8.70"
+        "git:github.com/MasuRii/pi-tool-display@v0.5.0"
+        "git:github.com/nicobailon/pi-subagents@v0.35.1"
       ];
     };
 
@@ -37,6 +59,9 @@ in
     rules = ./AGENTS.md;
 
     agents = [
+      ./agents/scout.md
+      ./agents/worker.md
+      ./agents/reviewer.md
     ];
 
     skills.local = [
@@ -77,6 +102,14 @@ in
         # CA bundle (SSL_CERT_FILE), so it cannot use the MITM path.
         "github.com" = "tunnel";
         "api.github.com" = "tunnel";
+
+        "openai.com" = "tunnel";
+        "chatgpt.com" = "tunnel";
+
+        "ui.shadcn.com" = [
+          "GET"
+          "HEAD"
+        ];
 
         # Domain required for user content
         "githubusercontent.com" = [

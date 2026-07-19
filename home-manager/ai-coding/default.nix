@@ -35,7 +35,7 @@ in
 
   home.packages = with pkgs; [
     gh
-    llm-agents.agent-browser
+    # llm-agents.agent-browser
   ];
 
   home.file.".config/opencode/opencode-notifier.json".text = builtins.toJSON {
@@ -63,7 +63,7 @@ in
       gh
       f
       httpcraft
-      llm-agents.agent-browser
+      # llm-agents.agent-browser
       nix
       bun
       pnpm
@@ -75,7 +75,7 @@ in
     sandbox.extraStateDirs = [
       "$HOME/.npm"
       "$HOME/.cache"
-      "$HOME/.agent-browser"
+      # "$HOME/.agent-browser"
       "$HOME/.config/httpcraft"
       "/nix/var/nix/daemon-socket"
     ];
@@ -96,7 +96,7 @@ in
 
     permissions = {
       external_directory = {
-        "~/.agent-browser/**" = "allow";
+        # "~/.agent-browser/**" = "allow";
         "~/code/**" = "allow";
         "~/.config/httpcraft/**" = "allow";
         "~/.config/opencode/**" = "allow";
@@ -144,7 +144,7 @@ in
         "readlink*" = "allow";
         "f*" = "allow";
         "httpcraft*" = "allow";
-        "agent-browser*" = "allow";
+        # "agent-browser*" = "allow";
         "gh api*" = "allow";
         "gh api *" = "allow";
         "gh browse*" = "allow";
@@ -366,10 +366,10 @@ in
           src = flake.inputs.superpowers;
           exclude = [ "using-git-worktrees" ];
         }
-        {
-          name = "agent-browser";
-          src = flake.inputs.vercel-labs-agent-browser;
-        }
+        # {
+        #   name = "agent-browser";
+        #   src = flake.inputs.vercel-labs-agent-browser;
+        # }
         {
           name = "f";
           src = flake.inputs.f;

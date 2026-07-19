@@ -1,6 +1,9 @@
 ---
 name: reviewer
 description: Code review specialist - architecture, quality, security analysis. Categorises issues as Critical/Important/Minor.
+model: gpt-5.6-terra
+thinking: high
+timeoutMs: 1200000
 tools: read, grep, find, ls, bash, resolve_repo, explore_repo
 ---
 
