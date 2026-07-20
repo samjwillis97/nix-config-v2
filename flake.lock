@@ -1259,6 +1259,22 @@
         "type": "github"
       }
     },
+    "mattpocock-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1784192592,
+        "narHash": "sha256-S6pARK99oGGSi6XdFm6zYKHT4gjOCN0wIPZFcl1hREE=",
+        "owner": "mattpocock",
+        "repo": "skills",
+        "rev": "9603c1cc8118d08bc1b3bf34cf714f62178dea3b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mattpocock",
+        "repo": "skills",
+        "type": "github"
+      }
+    },
     "microvm": {
       "inputs": {
         "nixpkgs": [
@@ -1828,6 +1844,7 @@
         "httpcraft-mcp": "httpcraft-mcp",
         "hyprland": "hyprland",
         "llm-agents": "llm-agents",
+        "mattpocock-skills": "mattpocock-skills",
         "microvm": "microvm",
         "modular-neovim": "modular-neovim",
         "nix-auth": "nix-auth",

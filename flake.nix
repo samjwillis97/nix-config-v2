@@ -166,6 +166,10 @@
       url = "github:obra/superpowers";
       flake = false;
     };
+    mattpocock-skills = {
+      url = "github:mattpocock/skills";
+      flake = false;
+    };
     vercel-labs-agent-browser = {
       url = "github:vercel-labs/agent-browser";
       flake = false;
@@ -333,7 +337,8 @@
           ./home-manager/dev/ops.nix
           ./home-manager/dev/node.nix
           ./home-manager/ai-coding
-          ./home-manager/dev/pi
+          # ./home-manager/dev/pi
+          ./home-manager/dev/omp
           ./home-manager/wezterm
           ./home-manager/vscode
           ./home-manager/work
