@@ -14,7 +14,7 @@ let
     ;
 
   cfg = config.modules.omp;
-  # sandboxCfg = cfg.sandbox;
+  workEnabled = config.modules.darwin.work;
 
   # Import agent-sandbox
   agentSandbox = import flake.inputs.agent-sandbox { inherit pkgs; };
@@ -57,10 +57,12 @@ let
         src = flake.inputs.mattpocock-skills;
         path = "skills/engineering";
         include = [
+          "code-review"
           "codebase-design"
           "domain-modeling"
           "grill-with-docs"
           "implement"
+          "prototype"
           "improve-codebase-architecture"
           "to-spec"
           "to-tickets"
@@ -102,16 +104,29 @@ let
     debug.enabled = true;
     advisor.enabled = false;
     skills.enabled = true;
-    modelRoles = {
-      default = "github-copilot/gpt-5.6-terra:medium";
-      advisor = "github-copilot/gpt-5.6-terra:medium";
-      task = "github-copilot/gpt-5.6-luna:high";
-      smol = "github-copilot/gpt-5.6-luna:low";
-      slow = "github-copilot/gpt-5.6-terra:high";
-      plan = "github-copilot/gpt-5.6-terra:high";
-      tiny = "github-copilot/gemini-3.5-flash";
-      commit = "github-copilot/claude-haiku-4.5";
-    };
+    modelRoles =
+      if workEnabled then
+        {
+          default = "github-copilot/gpt-5.6-terra:medium";
+          advisor = "github-copilot/gpt-5.6-terra:medium";
+          task = "github-copilot/gpt-5.6-luna:high";
+          smol = "github-copilot/gpt-5.6-luna:low";
+          slow = "github-copilot/gpt-5.6-terra:high";
+          plan = "github-copilot/gpt-5.6-terra:high";
+          tiny = "github-copilot/gemini-3.5-flash";
+          commit = "github-copilot/claude-haiku-4.5";
+        }
+      else
+        {
+          default = "openai-codex/gpt-5.6-luna:high";
+          advisor = "openai-codex/gpt-5.6-terra:medium";
+          task = "openai-codex/gpt-5.6-luna:high";
+          smol = "openai-codex/gpt-5.6-luna:low";
+          slow = "openai-codex/gpt-5.6-terra:high";
+          plan = "openai-codex/gpt-5.6-terra:high";
+          tiny = "openai-codex/gpt-5.4-nano";
+          commit = "openai-codex/gpt-5.4-nano";
+        };
   };
 
   lspPackages = with pkgs; [
@@ -119,6 +134,28 @@ let
     nil
     typescript-language-server
   ];
+
+  allowedGetDomains = [
+    "githubusercontent.com"
+    "npmjs.org"
+    "nodejs.org"
+    "developer.mozilla.org"
+    "omp.sh"
+    "html.duckduckgo.com"
+    "typescriptlang.org"
+    "tanstack.com"
+    "shadcn.com"
+  ];
+
+  sandboxGetDomainsMapped = builtins.listToAttrs (
+    map (domain: {
+      name = domain;
+      value = [
+        "GET"
+        "HEAD"
+      ];
+    }) allowedGetDomains
+  );
 
   # Sandbox derivation
   ompSandboxed = agentSandbox.mkSandbox {
@@ -157,8 +194,13 @@ let
     readOnlyDirs = [ ];
     extraEnv = {
       GITHUB_TOKEN = "$GITHUB_TOKEN";
+      # Keep the OAuth callback on the host loopback interface, rather than
+      # routing it through the sandbox's outbound filtering proxy.
+      NO_PROXY = "localhost,127.0.0.1,::1";
+      no_proxy = "localhost,127.0.0.1,::1";
     };
     restrictNetwork = true;
+    allowNetworkBind = true;
     allowedDomains = {
       # Copilot required domains (MITM-filtered)
       "githubcopilot.com" = "*";
@@ -171,42 +213,8 @@ let
 
       "openai.com" = "tunnel";
       "chatgpt.com" = "tunnel";
-
-      "ui.shadcn.com" = [
-        "GET"
-        "HEAD"
-      ];
-
-      # Domain required for user content
-      "githubusercontent.com" = [
-        "GET"
-        "HEAD"
-      ];
-      "npmjs.org" = [
-        "GET"
-        "HEAD"
-      ];
-      "nodejs.org" = [
-        "GET"
-        "HEAD"
-      ];
-      "developer.mozilla.org" = [
-        "GET"
-        "HEAD"
-      ];
-      "omp.sh" = [
-        "GET"
-        "HEAD"
-      ];
-      "html.duckduckgo.com" = [
-        "GET"
-        "HEAD"
-      ];
-      "typescriptlang.org" = [
-        "GET"
-        "HEAD"
-      ];
-    };
+    }
+    // sandboxGetDomainsMapped;
   };
 in
 {

@@ -32,16 +32,15 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1780630071,
-        "narHash": "sha256-juE4oksKK4U9Numrf3xuCA/MK7AaYVPA29idVA+LCBg=",
+        "lastModified": 1784538566,
+        "narHash": "sha256-Xk21DMtDEFOKqh95F3G84gFEA6XsQC92Vvpoag+Vggs=",
         "owner": "samjwillis97",
         "repo": "agent-sandbox.nix",
-        "rev": "d6e0f336014ddc9029a595fd039fc0e7aa4ccd42",
+        "rev": "fe17e07caed196986b0bac71ece28b0ea36849e2",
         "type": "github"
       },
       "original": {
         "owner": "samjwillis97",
-        "ref": "tunnel",
         "repo": "agent-sandbox.nix",
         "type": "github"
       }

@@ -159,7 +159,7 @@
 
     # LLM Stuff
     llm-agents.url = "github:numtide/llm-agents.nix";
-    agent-sandbox.url = "github:samjwillis97/agent-sandbox.nix/tunnel";
+    agent-sandbox.url = "github:samjwillis97/agent-sandbox.nix";
 
     # Agent Skills
     superpowers = {
@@ -321,6 +321,7 @@
           ./home-manager/cache
           ./home-manager/ai-coding
           ./home-manager/dev/pi
+          ./home-manager/dev/omp
           { modules.darwin.work = false; }
         ];
       })
