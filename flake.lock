@@ -32,11 +32,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1784538566,
-        "narHash": "sha256-Xk21DMtDEFOKqh95F3G84gFEA6XsQC92Vvpoag+Vggs=",
+        "lastModified": 1784599186,
+        "narHash": "sha256-DReEZEcObRhO2COhItxWoA369NFLmH+MeGzowDHY/aE=",
         "owner": "samjwillis97",
         "repo": "agent-sandbox.nix",
-        "rev": "fe17e07caed196986b0bac71ece28b0ea36849e2",
+        "rev": "d1bae0d9bc2da4189e1d0e18c67791f7235f712b",
         "type": "github"
       },
       "original": {

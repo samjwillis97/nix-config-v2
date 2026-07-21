@@ -53,6 +53,15 @@ let
   skills = {
     sources = [
       {
+        name = "httpcraft";
+        src = flake.inputs.httpcraft;
+        path = "skills";
+        include = [
+          "authoring-httpcraft-configs"
+          "using-httpcraft-cli"
+        ];
+      }
+      {
         name = "mattpocock/skills";
         src = flake.inputs.mattpocock-skills;
         path = "skills/engineering";
@@ -102,17 +111,17 @@ let
     };
     setupVersion = 1;
     debug.enabled = true;
-    advisor.enabled = false;
+    advisor.enabled = if workEnabled then true else false;
     skills.enabled = true;
     modelRoles =
       if workEnabled then
         {
-          default = "github-copilot/gpt-5.6-terra:medium";
-          advisor = "github-copilot/gpt-5.6-terra:medium";
+          default = "github-copilot/gpt-5.6-luna:xhigh";
+          advisor = "github-copilot/gpt-5.6-terra:high";
           task = "github-copilot/gpt-5.6-luna:high";
           smol = "github-copilot/gpt-5.6-luna:low";
           slow = "github-copilot/gpt-5.6-terra:high";
-          plan = "github-copilot/gpt-5.6-terra:high";
+          plan = "github-copilot/gpt-5.6-sol:high";
           tiny = "github-copilot/gemini-3.5-flash";
           commit = "github-copilot/claude-haiku-4.5";
         }
@@ -165,6 +174,8 @@ let
     allowedPackages =
       with pkgs;
       [
+        curl
+        wget
         file
         coreutils
         which
@@ -184,23 +195,35 @@ let
         nix
         man
         llm-agents.omp
+        bun
+        rsync
+        gh
+        httpcraft
       ]
       ++ lspPackages;
-    stateDirs = [
+    rwDirs = [
       "$HOME/.omp"
+      "$HOME/.npm"
+      "$HOME/.cache"
+      "$HOME/.config/gh"
+      "$HOME/.config/git"
+      "$HOME/.config/httpcraft"
+      "$HOME/.ssh"
+      "/nix/var/nix/daemon-socket"
     ];
-    stateFiles = [
+    roDirs = [
+      "$HOME/code"
     ];
-    readOnlyDirs = [ ];
-    extraEnv = {
+    env = {
       GITHUB_TOKEN = "$GITHUB_TOKEN";
+      GH_TOKEN = "$(${pkgs.gh}/bin/gh auth token)";
       # Keep the OAuth callback on the host loopback interface, rather than
       # routing it through the sandbox's outbound filtering proxy.
       NO_PROXY = "localhost,127.0.0.1,::1";
       no_proxy = "localhost,127.0.0.1,::1";
     };
-    restrictNetwork = true;
     allowNetworkBind = true;
+    allowedLocalPorts = null;
     allowedDomains = {
       # Copilot required domains (MITM-filtered)
       "githubcopilot.com" = "*";

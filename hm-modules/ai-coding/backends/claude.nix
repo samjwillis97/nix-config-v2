@@ -7,9 +7,22 @@
   ...
 }:
 let
-  inherit (lib) mkOption mkEnableOption mkIf mkMerge types concatMapStringsSep
-    filterAttrs mapAttrs mapAttrsToList optionalAttrs recursiveUpdate
-    concatLists optional optionals;
+  inherit (lib)
+    mkOption
+    mkEnableOption
+    mkIf
+    mkMerge
+    types
+    concatMapStringsSep
+    filterAttrs
+    mapAttrs
+    mapAttrsToList
+    optionalAttrs
+    recursiveUpdate
+    concatLists
+    optional
+    optionals
+    ;
 
   aiTypes = import ../types.nix { inherit lib; };
   cfg = config.modules.ai-coding;
@@ -23,7 +36,10 @@ let
   # Returns a list because some DSL tools map to multiple Claude tools
   toolNameMap = {
     bash = [ "Bash" ];
-    edit = [ "Edit" "Write" ];
+    edit = [
+      "Edit"
+      "Write"
+    ];
     read = [ "Read" ];
     webfetch = [ "WebFetch" ];
     glob = [ "Glob" ];
@@ -31,79 +47,130 @@ let
     list = [ "List" ];
     task = [ "Task" ];
     skill = [ "Skill" ];
-    external_directory = [ "Read" "Edit" ];
+    external_directory = [
+      "Read"
+      "Edit"
+    ];
   };
 
   # Tools that are OpenCode-specific and should be silently skipped
-  opencodeOnlyTools = [ "doom_loop" "question" "lsp" "codesearch" "websearch" ];
+  opencodeOnlyTools = [
+    "doom_loop"
+    "question"
+    "lsp"
+    "codesearch"
+    "websearch"
+  ];
 
   # Map a DSL tool name to Claude tool name(s)
-  mapToolNames = toolName:
-    if builtins.hasAttr toolName toolNameMap then toolNameMap.${toolName}
-    else if builtins.elem toolName opencodeOnlyTools then [ ]
-    else [ toolName ]; # Pass through unknown tools as-is
+  mapToolNames =
+    toolName:
+    if builtins.hasAttr toolName toolNameMap then
+      toolNameMap.${toolName}
+    else if builtins.elem toolName opencodeOnlyTools then
+      [ ]
+    else
+      [ toolName ]; # Pass through unknown tools as-is
 
   # Compile permissions to Claude's flat list format
   # Returns { allow = [...]; deny = [...]; ask = [...]; }
-  compilePermissions = permissions: let
-    # Process a single tool's rules
-    processToolRules = toolName: rule:
-      if builtins.isString rule then
-        # Blanket rule: e.g. webfetch = "deny"
-        let claudeNames = mapToolNames toolName;
-        in if rule == "deny" then { allow = []; deny = claudeNames; ask = []; }
-        else if rule == "allow" then { allow = claudeNames; deny = []; ask = []; }
-        else { allow = []; deny = []; ask = []; } # "ask" is Claude default, skip
-      else
-        # Pattern map: e.g. bash = { "*" = "ask"; "git status*" = "allow"; }
-        let
-          claudeNames = mapToolNames toolName;
-          patternRules = filterAttrs (pat: _: pat != "*") rule;
-          mkEntries = action:
-            concatLists (map (claudeName:
-              map (pat: "${claudeName}(${pat})")
-                (builtins.attrNames (filterAttrs (_: a: a == action) patternRules))
-            ) claudeNames);
-        in {
-          allow = mkEntries "allow";
-          deny = mkEntries "deny";
-          ask = mkEntries "ask";
-        };
+  compilePermissions =
+    permissions:
+    let
+      # Process a single tool's rules
+      processToolRules =
+        toolName: rule:
+        if builtins.isString rule then
+          # Blanket rule: e.g. webfetch = "deny"
+          let
+            claudeNames = mapToolNames toolName;
+          in
+          if rule == "deny" then
+            {
+              allow = [ ];
+              deny = claudeNames;
+              ask = [ ];
+            }
+          else if rule == "allow" then
+            {
+              allow = claudeNames;
+              deny = [ ];
+              ask = [ ];
+            }
+          else
+            {
+              allow = [ ];
+              deny = [ ];
+              ask = [ ];
+            } # "ask" is Claude default, skip
+        else
+          # Pattern map: e.g. bash = { "*" = "ask"; "git status*" = "allow"; }
+          let
+            claudeNames = mapToolNames toolName;
+            patternRules = filterAttrs (pat: _: pat != "*") rule;
+            mkEntries =
+              action:
+              concatLists (
+                map (
+                  claudeName:
+                  map (pat: "${claudeName}(${pat})") (
+                    builtins.attrNames (filterAttrs (_: a: a == action) patternRules)
+                  )
+                ) claudeNames
+              );
+          in
+          {
+            allow = mkEntries "allow";
+            deny = mkEntries "deny";
+            ask = mkEntries "ask";
+          };
 
-    # Process all tools
-    allResults = mapAttrsToList processToolRules permissions;
+      # Process all tools
+      allResults = mapAttrsToList processToolRules permissions;
 
-    # Merge all results
-    mergeResults = builtins.foldl' (acc: r: {
-      allow = acc.allow ++ r.allow;
-      deny = acc.deny ++ r.deny;
-      ask = acc.ask ++ r.ask;
-    }) { allow = []; deny = []; ask = []; } allResults;
+      # Merge all results
+      mergeResults =
+        builtins.foldl'
+          (acc: r: {
+            allow = acc.allow ++ r.allow;
+            deny = acc.deny ++ r.deny;
+            ask = acc.ask ++ r.ask;
+          })
+          {
+            allow = [ ];
+            deny = [ ];
+            ask = [ ];
+          }
+          allResults;
 
-  in mergeResults;
+    in
+    mergeResults;
 
   # Merge shared + extra permissions
   mergedPermissions = recursiveUpdate cfg.permissions claudeCfg.extraPermissions;
   compiledPermissions = compilePermissions mergedPermissions;
 
-   # Compile MCP servers for Claude
-   # All servers are included regardless of enabled/disabled state
-   allMcpServers = let
-     shared = cfg.mcpServers;
-     extra = claudeCfg.extraMcpServers;
-     merged = recursiveUpdate shared extra;
-   in filterAttrs (name: _:
-     !(builtins.elem name claudeCfg.disabledMcpServers)
-   ) merged;
+  # Compile MCP servers for Claude
+  # All servers are included regardless of enabled/disabled state
+  allMcpServers =
+    let
+      shared = cfg.mcpServers;
+      extra = claudeCfg.extraMcpServers;
+      merged = recursiveUpdate shared extra;
+    in
+    filterAttrs (name: _: !(builtins.elem name claudeCfg.disabledMcpServers)) merged;
 
-  compileMcpServer = name: server: {
-    inherit (server) type;
-  } // (if server.command != null then { inherit (server) command args; } else { })
-  // (if server.url != null then { inherit (server) url; } else { })
-  // (if server.env != { } then { inherit (server) env; } else { })
-   // (if server.headers != { } then { inherit (server) headers; } else { });
-   # oauth is NOT passed to Claude (not supported)
-   # enabled is NOT passed (disabled servers already filtered out)
+  compileMcpServer =
+    name: server:
+    {
+      inherit (server) type;
+    }
+    // (if server.command != null then { inherit (server) command args; } else { })
+    // (if server.url != null then { inherit (server) url; } else { })
+    // (if server.env != { } then { inherit (server) env; } else { })
+    // (if server.headers != { } then { inherit (server) headers; } else { });
+  # oauth is NOT passed to Claude (not supported)
+  # enabled is NOT passed (disabled servers already filtered out)
 
   compiledMcpServers = mapAttrs compileMcpServer allMcpServers;
 
@@ -114,63 +181,97 @@ let
   claudeSettings = {
     "$schema" = "https://json.schemastore.org/claude-code-settings.json";
   }
-  // (if compiledPermissions.allow != [] || compiledPermissions.deny != [] || compiledPermissions.ask != [] then {
-    permissions = {
-      allow = compiledPermissions.allow;
-      deny = compiledPermissions.deny;
-      ask = compiledPermissions.ask;
-    };
-  } else { })
+  // (
+    if
+      compiledPermissions.allow != [ ]
+      || compiledPermissions.deny != [ ]
+      || compiledPermissions.ask != [ ]
+    then
+      {
+        permissions = {
+          allow = compiledPermissions.allow;
+          deny = compiledPermissions.deny;
+          ask = compiledPermissions.ask;
+        };
+      }
+    else
+      { }
+  )
   // claudeCfg.extraSettings;
 
   # Compile agent to Claude markdown with frontmatter
-  compileAgent = name: agent: let
-    # Build tools list from tools attrset
-    toolsList = if agent.tools == null then null
-      else let
-        enabledTools = builtins.attrNames (filterAttrs (k: v: v && k != "*") agent.tools);
-        # Map DSL tool names to Claude names
-        claudeToolNames = concatLists (map (t:
-          if builtins.hasAttr t toolNameMap then toolNameMap.${t}
-          else [ t ]
-        ) enabledTools);
-      in claudeToolNames;
+  compileAgent =
+    name: agent:
+    let
+      # Build tools list from tools attrset
+      toolsList =
+        if agent.tools == null then
+          null
+        else
+          let
+            enabledTools = builtins.attrNames (filterAttrs (k: v: v && k != "*") agent.tools);
+            # Map DSL tool names to Claude names
+            claudeToolNames = concatLists (
+              map (t: if builtins.hasAttr t toolNameMap then toolNameMap.${t} else [ t ]) enabledTools
+            );
+          in
+          claudeToolNames;
 
-    disallowedTools = if agent.tools == null then null
-      else let
-        disabledTools = builtins.attrNames (filterAttrs (k: v: !v && k != "*") agent.tools);
-        claudeToolNames = concatLists (map (t:
-          if builtins.hasAttr t toolNameMap then toolNameMap.${t}
-          else [ t ]
-        ) disabledTools);
-      in claudeToolNames;
+      disallowedTools =
+        if agent.tools == null then
+          null
+        else
+          let
+            disabledTools = builtins.attrNames (filterAttrs (k: v: !v && k != "*") agent.tools);
+            claudeToolNames = concatLists (
+              map (t: if builtins.hasAttr t toolNameMap then toolNameMap.${t} else [ t ]) disabledTools
+            );
+          in
+          claudeToolNames;
 
-    frontmatter = { inherit name; inherit (agent) description; }
+      frontmatter = {
+        inherit name;
+        inherit (agent) description;
+      }
       // (if agent.model != null then { model = agent.model; } else { })
       // (if agent.color != null then { inherit (agent) color; } else { })
-      // (if toolsList != null && toolsList != [] then {
-        tools = builtins.concatStringsSep ", " toolsList;
-      } else { })
-      // (if disallowedTools != null && disallowedTools != [] then {
-        disallowedTools = builtins.concatStringsSep ", " disallowedTools;
-      } else { })
+      // (
+        if toolsList != null && toolsList != [ ] then
+          {
+            tools = builtins.concatStringsSep ", " toolsList;
+          }
+        else
+          { }
+      )
+      // (
+        if disallowedTools != null && disallowedTools != [ ] then
+          {
+            disallowedTools = builtins.concatStringsSep ", " disallowedTools;
+          }
+        else
+          { }
+      )
       // agent.claude;
 
-    yamlLines = mapAttrsToList (k: v:
-      if builtins.isList v then
-        "${k}:\n${builtins.concatStringsSep "\n" (map (item: "  - ${builtins.toJSON item}") v)}"
-      else "${k}: ${if builtins.isString v then v else builtins.toJSON v}"
-    ) frontmatter;
-    yamlFrontmatter = builtins.concatStringsSep "\n" yamlLines;
+      yamlLines = mapAttrsToList (
+        k: v:
+        if builtins.isList v then
+          "${k}:\n${builtins.concatStringsSep "\n" (map (item: "  - ${builtins.toJSON item}") v)}"
+        else
+          "${k}: ${if builtins.isString v then v else builtins.toJSON v}"
+      ) frontmatter;
+      yamlFrontmatter = builtins.concatStringsSep "\n" yamlLines;
 
-    instructionContent = builtins.readFile agent.instructions;
-  in ''
----
-${yamlFrontmatter}
----
-${instructionContent}'';
+      instructionContent = builtins.readFile agent.instructions;
+    in
+    ''
+      ---
+      ${yamlFrontmatter}
+      ---
+      ${instructionContent}'';
 
-  agentFiles = mapAttrs (name: agent:
+  agentFiles = mapAttrs (
+    name: agent:
     pkgs.writeTextFile {
       name = "${name}.md";
       text = compileAgent name agent;
@@ -178,25 +279,31 @@ ${instructionContent}'';
   ) cfg.agents;
 
   # Skill resolution (same as OpenCode backend)
-  getDirNames = dir:
-    lib.attrNames (filterAttrs (_: value: value == "directory") (builtins.readDir dir));
+  getDirNames =
+    dir: lib.attrNames (filterAttrs (_: value: value == "directory") (builtins.readDir dir));
 
   localSkillNames = builtins.concatMap (path: getDirNames path) cfg.skills.local;
 
-  resolveSkillSource = { name, src, path ? "skills", exclude ? [ ], include ? null }:
+  resolveSkillSource =
+    {
+      name,
+      src,
+      path ? "skills",
+      exclude ? [ ],
+      include ? null,
+    }:
     let
       skillsDir = "${src}/${path}";
       allNames = getDirNames skillsDir;
       selectedNames =
-        if include != null then lib.filter (n: builtins.elem n allNames) include
-        else allNames;
-      filteredNames = lib.filter (n:
-        !(builtins.elem n exclude) && !(builtins.elem n localSkillNames)
+        if include != null then lib.filter (n: builtins.elem n allNames) include else allNames;
+      filteredNames = lib.filter (
+        n: !(builtins.elem n exclude) && !(builtins.elem n localSkillNames)
       ) selectedNames;
-    in map (n: "${skillsDir}/${n}") filteredNames;
+    in
+    map (n: "${skillsDir}/${n}") filteredNames;
 
-  allSkillPaths = cfg.skills.local
-    ++ builtins.concatMap resolveSkillSource cfg.skills.sources;
+  allSkillPaths = cfg.skills.local ++ builtins.concatMap resolveSkillSource cfg.skills.sources;
 
   stripNixHashScript = ''
     strip_nix_hash() {
@@ -209,20 +316,24 @@ ${instructionContent}'';
     pkg = pkgs.claude-code;
     binName = "claude";
     outName = "claude-sandboxed";
-    allowedPackages = cfg.sandbox.allowedPackages
-      ++ cfg.sandbox.extraAllowedPackages
-      ++ sandboxCfg.extraAllowedPackages;
-    stateDirs = [
+    allowedPackages =
+      cfg.sandbox.allowedPackages ++ cfg.sandbox.extraAllowedPackages ++ sandboxCfg.extraAllowedPackages;
+    rwDirs = [
       "$HOME/.claude"
-    ] ++ cfg.sandbox.extraStateDirs ++ sandboxCfg.extraStateDirs;
-    stateFiles = [
+    ]
+    ++ cfg.sandbox.extraStateDirs
+    ++ sandboxCfg.extraStateDirs;
+    rwFiles = [
       "$HOME/.claude.json"
       "$HOME/.claude.json.lock"
-    ] ++ cfg.sandbox.extraStateFiles ++ sandboxCfg.extraStateFiles;
-    extraEnv = {
+    ]
+    ++ cfg.sandbox.extraStateFiles
+    ++ sandboxCfg.extraStateFiles;
+    env = {
       CLAUDE_CODE_OAUTH_TOKEN = "$CLAUDE_CODE_OAUTH_TOKEN";
-    } // cfg.sandbox.extraEnv // sandboxCfg.extraEnv;
-    restrictNetwork = cfg.sandbox.restrictNetwork || sandboxCfg.restrictNetwork;
+    }
+    // cfg.sandbox.extraEnv
+    // sandboxCfg.extraEnv;
     allowedDomains = cfg.sandbox.allowedDomains // sandboxCfg.allowedDomains;
   };
 
@@ -329,21 +440,34 @@ in
       '';
 
       # CLAUDE.md (rules)
-      home.activation.ai-coding-claude-rules = mkIf (cfg.rules != null)
-        (lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      home.activation.ai-coding-claude-rules = mkIf (cfg.rules != null) (
+        lib.hm.dag.entryAfter [ "writeBoundary" ] ''
           cp "${cfg.rules}" "$HOME/.claude/CLAUDE.md"
-        '');
+        ''
+      );
 
       # Agent files
       home.activation.ai-coding-claude-agents = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         mkdir -p $HOME/.claude/agents
         rm -f $HOME/.claude/agents/*
-        ${concatMapStringsSep "\n" (nameAgentPair: let
-          name = builtins.elemAt nameAgentPair 0;
-          file = builtins.elemAt nameAgentPair 1;
-        in ''
-          cp "${file}" "$HOME/.claude/agents/${name}.md"
-        '') (mapAttrsToList (name: file: [ name file ]) agentFiles)}
+        ${concatMapStringsSep "\n"
+          (
+            nameAgentPair:
+            let
+              name = builtins.elemAt nameAgentPair 0;
+              file = builtins.elemAt nameAgentPair 1;
+            in
+            ''
+              cp "${file}" "$HOME/.claude/agents/${name}.md"
+            ''
+          )
+          (
+            mapAttrsToList (name: file: [
+              name
+              file
+            ]) agentFiles
+          )
+        }
       '';
 
       # Skills (shared + external, via rsync)
