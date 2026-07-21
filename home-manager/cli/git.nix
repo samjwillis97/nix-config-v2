@@ -26,6 +26,7 @@
       ".direnv/"
       ".envrc"
       ".opencode/"
+      "plans/"
     ];
 
     settings = {

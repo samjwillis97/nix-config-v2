@@ -64,6 +64,14 @@ let
       {
         name = "mattpocock/skills";
         src = flake.inputs.mattpocock-skills;
+        path = "skills/misc";
+        include = [
+          "setup-pre-commit"
+        ];
+      }
+      {
+        name = "mattpocock/skills";
+        src = flake.inputs.mattpocock-skills;
         path = "skills/engineering";
         include = [
           "code-review"
@@ -75,6 +83,8 @@ let
           "improve-codebase-architecture"
           "to-spec"
           "to-tickets"
+          "resolving-merge-conflicts"
+          "setup-matt-pocock-skills"
           "wayfinder"
         ];
       }
@@ -154,6 +164,9 @@ let
     "typescriptlang.org"
     "tanstack.com"
     "shadcn.com"
+    "supabase.com"
+    "nextjs.org"
+    "react.dev"
   ];
 
   sandboxGetDomainsMapped = builtins.listToAttrs (
