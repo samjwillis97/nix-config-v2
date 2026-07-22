@@ -15,6 +15,7 @@ in
       aerospace = prev.callPackage ../packages/aerospace.nix { };
       opencode-notifier-deps = final.callPackage ../packages/opencode-notifier-deps.nix { };
       opencode-notifier = final.callPackage ../packages/opencode-notifier.nix { };
+      lavish-axi = final.callPackage ../packages/lavish-axi.nix { };
       tmux-session-cache-plugin-deps =
         final.callPackage ../packages/tmux-session-cache-plugin-deps.nix
           { };
