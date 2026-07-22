@@ -224,6 +224,10 @@ let
       "$HOME/.ssh"
       "/nix/var/nix/daemon-socket"
     ];
+    roFiles = [
+      "$TMPDIR/agenix/ssh-key"
+      "$TMPDIR/agenix/ssh-key.pub"
+    ];
     roDirs = [
       "$HOME/code"
     ];
@@ -235,6 +239,8 @@ let
       NO_PROXY = "localhost,127.0.0.1,::1";
       no_proxy = "localhost,127.0.0.1,::1";
     };
+    allowNix = true;
+    allowUnixSocketConnect = true;
     allowNetworkBind = true;
     allowedLocalPorts = null;
     allowedDomains = {
