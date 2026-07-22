@@ -62,7 +62,18 @@ let
         ];
       }
       {
-        name = "mattpocock/skills";
+        name = "mattpocock/productivity";
+        src = flake.inputs.mattpocock-skills;
+        path = "skills/productivity";
+        include = [
+          "grill-me"
+          "grilling"
+          "handoff"
+          "writing-great-skills"
+        ];
+      }
+      {
+        name = "mattpocock/misc";
         src = flake.inputs.mattpocock-skills;
         path = "skills/misc";
         include = [
@@ -70,7 +81,7 @@ let
         ];
       }
       {
-        name = "mattpocock/skills";
+        name = "mattpocock/engineering";
         src = flake.inputs.mattpocock-skills;
         path = "skills/engineering";
         include = [
@@ -212,6 +223,7 @@ let
         rsync
         gh
         httpcraft
+        lavish-axi
       ]
       ++ lspPackages;
     rwDirs = [
@@ -266,7 +278,10 @@ in
 
   config = mkIf cfg.enable (mkMerge [
     {
-      home.packages = [ ompSandboxed ];
+      home.packages = [
+        ompSandboxed
+        pkgs.lavish-axi
+      ];
       home.file = {
         ".omp/agent/config.yml".source = yamlFormat.generate "omp-config.yml" settings;
         ".omp/agent/dap.json".source = jsonFormat.generate "omp-dap.json" {

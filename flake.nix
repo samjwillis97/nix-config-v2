@@ -170,6 +170,10 @@
       url = "github:mattpocock/skills";
       flake = false;
     };
+    lavish-axi = {
+      url = "github:kunchenguid/lavish-axi";
+      flake = false;
+    };
     vercel-labs-agent-browser = {
       url = "github:vercel-labs/agent-browser";
       flake = false;

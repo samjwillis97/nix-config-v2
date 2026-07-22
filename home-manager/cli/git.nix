@@ -27,6 +27,7 @@
       ".envrc"
       ".opencode/"
       "plans/"
+      ".lavish/"
     ];
 
     settings = {

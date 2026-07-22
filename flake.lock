@@ -1236,6 +1236,22 @@
         "type": "github"
       }
     },
+    "lavish-axi": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1784695679,
+        "narHash": "sha256-CirTDJW8jgzHos3p0eJk7DCGn0OsYvBZHhZkwSyGWPA=",
+        "owner": "kunchenguid",
+        "repo": "lavish-axi",
+        "rev": "966f4d58f769b0ceab5a8baf49982dba0fde4769",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kunchenguid",
+        "repo": "lavish-axi",
+        "type": "github"
+      }
+    },
     "llm-agents": {
       "inputs": {
         "bun2nix": "bun2nix",
@@ -1842,6 +1858,7 @@
         "httpcraft": "httpcraft",
         "httpcraft-mcp": "httpcraft-mcp",
         "hyprland": "hyprland",
+        "lavish-axi": "lavish-axi",
         "llm-agents": "llm-agents",
         "mattpocock-skills": "mattpocock-skills",
         "microvm": "microvm",
