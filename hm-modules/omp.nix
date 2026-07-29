@@ -92,6 +92,7 @@ let
           "implement"
           "prototype"
           "improve-codebase-architecture"
+          "tdd"
           "to-spec"
           "to-tickets"
           "resolving-merge-conflicts"
@@ -279,9 +280,18 @@ in
   config = mkIf cfg.enable (mkMerge [
     {
       home.packages = [
-        ompSandboxed
         pkgs.lavish-axi
-      ];
+      ]
+      ++ (
+        if workEnabled then
+          [
+            ompSandboxed
+          ]
+        else
+          [
+            pkgs.llm-agents.omp
+          ]
+      );
       home.file = {
         ".omp/agent/config.yml".source = yamlFormat.generate "omp-config.yml" settings;
         ".omp/agent/dap.json".source = jsonFormat.generate "omp-dap.json" {

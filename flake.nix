@@ -323,7 +323,7 @@
           ./home-manager/social
           ./home-manager/firefox
           ./home-manager/cache
-          ./home-manager/ai-coding
+          # ./home-manager/ai-coding
           # ./home-manager/dev/pi
           ./home-manager/dev/omp
           { modules.darwin.work = false; }
