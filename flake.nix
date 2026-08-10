@@ -228,11 +228,12 @@
           ./home-manager/gaming
           ./home-manager/dev
           ./home-manager/dev/ops.nix
-          ./home-manager/dev/pi
-          ./home-manager/ai-coding
+          # ./home-manager/dev/pi
+          # ./home-manager/ai-coding
           ./home-manager/vscode
           ./home-manager/firefox
           ./home-manager/hyprland
+          ./home-manager/dev/omp
           {
             modules.gaming.runescape.enable = true;
           }

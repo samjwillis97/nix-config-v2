@@ -14,6 +14,8 @@
     # nixos-cleanup
   ];
 
+  programs.nix-ld.enable = true;
+
   nix = import ../shared/nix.nix { inherit pkgs flake; } // {
     # Automatically run garbage collection weekly, removing generations older than 30 days
     gc = {

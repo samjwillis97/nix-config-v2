@@ -15,6 +15,7 @@ let
 
   cfg = config.modules.omp;
   workEnabled = config.modules.darwin.work;
+  # workEnabled = false;
 
   # Import agent-sandbox
   agentSandbox = import flake.inputs.agent-sandbox { inherit pkgs; };
@@ -149,7 +150,7 @@ let
         }
       else
         {
-          default = "openai-codex/gpt-5.6-luna:high";
+          default = "openai-codex/gpt-5.6-luna:xhigh";
           advisor = "openai-codex/gpt-5.6-terra:medium";
           task = "openai-codex/gpt-5.6-luna:high";
           smol = "openai-codex/gpt-5.6-luna:low";
@@ -288,8 +289,10 @@ in
             ompSandboxed
           ]
         else
+          with pkgs;
           [
-            pkgs.llm-agents.omp
+            gh
+            llm-agents.omp
           ]
       );
       home.file = {
