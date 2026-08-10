@@ -180,6 +180,7 @@ let
     "supabase.com"
     "nextjs.org"
     "react.dev"
+    "docs.aws.amazon.com"
   ];
 
   sandboxGetDomainsMapped = builtins.listToAttrs (
