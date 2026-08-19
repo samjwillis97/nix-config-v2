@@ -342,17 +342,17 @@
           ./home-manager/dev
           ./home-manager/dev/ops.nix
           ./home-manager/dev/node.nix
-          ./home-manager/ai-coding
+          # ./home-manager/ai-coding
           # ./home-manager/dev/pi
           ./home-manager/dev/omp
-          ./home-manager/wezterm
+          # ./home-manager/wezterm
           ./home-manager/vscode
           ./home-manager/work
-          ./home-manager/aerospace
+          # ./home-manager/aerospace
           ./home-manager/darwin
           ./home-manager/social
-          ./home-manager/firefox
-          ./home-manager/moonlight
+          # ./home-manager/firefox
+          # ./home-manager/moonlight
           (
             { pkgs, ... }:
             {

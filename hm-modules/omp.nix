@@ -127,20 +127,64 @@ let
   allSkillPaths = builtins.concatMap resolveSkillSource skills.sources;
 
   settings = {
+    setupVersion = 1;
     symbolPreset = "nerd";
     theme = {
       dark = "titanium";
       light = "light";
     };
-    setupVersion = 1;
+    statusLine = {
+      separator = "slash";
+    };
+    tui = {
+      tight = true;
+    };
+    personality = "pragmatic";
     debug.enabled = true;
-    advisor.enabled = if workEnabled then true else false;
+    advisor = {
+      enabled = if workEnabled then true else false;
+      syncBacklog = 3;
+    };
+    startup = {
+      quiet = true;
+      setupWizard = false;
+      checkUpdate = false;
+      changeLogMode = "hidden";
+    };
+    features = {
+      unexpectedStopDetection = true;
+    };
+    lsp = {
+      enabled = true;
+      lazy = true;
+      shared = false;
+      formatOnWrite = false;
+      diagnosticsOnWrite = true;
+      diagnosticsOnEdit = true;
+      diagnosticsDeduplicate = true;
+    };
+    github = {
+      enabled = true;
+      cache.enabled = true;
+    };
+    browser = {
+      enabled = if workEnabled then false else true;
+    };
+    dev = {
+      autoqa = false;
+    };
+    task = {
+      eager = "preferred";
+      enableEffort = true;
+      enableLsp = true;
+      maxRecursionDepth = 3;
+    };
     skills.enabled = true;
     modelRoles =
       if workEnabled then
         {
           default = "github-copilot/gpt-5.6-luna:xhigh";
-          advisor = "github-copilot/gpt-5.6-terra:high";
+          advisor = "github-copilot/gpt-5.6-luna:max";
           task = "github-copilot/gpt-5.6-luna:high";
           smol = "github-copilot/gpt-5.6-luna:low";
           slow = "github-copilot/gpt-5.6-terra:high";
@@ -151,7 +195,7 @@ let
       else
         {
           default = "openai-codex/gpt-5.6-luna:xhigh";
-          advisor = "openai-codex/gpt-5.6-terra:medium";
+          advisor = "openai-codex/gpt-5.6-luna:max";
           task = "openai-codex/gpt-5.6-luna:high";
           smol = "openai-codex/gpt-5.6-luna:low";
           slow = "openai-codex/gpt-5.6-terra:high";

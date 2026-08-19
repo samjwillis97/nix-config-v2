@@ -2,14 +2,12 @@
   pkgs,
   config,
   super,
-  lib,
   ...
 }:
 let
   inherit (super.meta) username;
   firefoxEnabled = config.home-manager.users.${username}.programs.firefox.enable;
   firefoxPackage = config.home-manager.users.${username}.programs.firefox.package;
-  workEnabled = config.home-manager.users.${username}.modules.darwin.work;
 in
 {
   system.defaults.dock = {
@@ -31,7 +29,12 @@ in
     largesize = 56;
     persistent-apps = builtins.filter (a: a != "") ([
       # "/Applications/Safari.app/"
-      (lib.optionalString firefoxEnabled "${firefoxPackage}/Applications/Firefox.app")
+      (
+        if firefoxEnabled then
+          "${firefoxPackage}/Applications/Firefox.app"
+        else
+          "/Applications/Google Chrome.app"
+      )
       "/system/Applications/Messages.app/"
       # "/system/Applications/Mail.app"
       "/system/Applications/Calendar.app/"
@@ -42,9 +45,8 @@ in
       # commented out until https://github.com/NixOS/nixpkgs/pull/403993
       # "${pkgs.zoom-us}/Applications/zoom.us.app"
 
-      "${pkgs.discord}/Applications/Discord.app"
       "${pkgs.ghostty-bin}/Applications/Ghostty.app"
-      (lib.optionalString workEnabled "${pkgs.brewCasks.proxyman}/Applications/Proxyman.app")
+      "${pkgs.discord}/Applications/Discord.app"
       "/system/Applications/Music.app"
       "/system/Applications/iPhone Mirroring.app/"
       "/Applications/1Password.app"
