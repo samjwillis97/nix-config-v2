@@ -1,3 +1,6 @@
+> [!WARNING]
+> This repo has now been archived, all my configurations have been moved back into my original repo [samjwillis97/nix-config](https://github.com/samjwillis97/nix-config). This repo will no longer be maintained, will be kept here for reference.
+
 # My Nix Configs ❄️
 
 This repository is home to the nix code that builds my systems 🎉.
